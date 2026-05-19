@@ -17,10 +17,10 @@ export const SocialButton = styled.a`
   justify-content: center;
 
   border-radius: 50%;
-  background: ${({ theme }) => theme.colors.surface};
+  background: ${({ theme }) => theme.colors.backgroundCard};
   color: ${({ theme }) => theme.colors.primary};
 
-  font-size: 1.4rem;
+  font-size: 1.6rem;
 
   border: 1px solid ${({ theme }) => theme.colors.primary}33;
 
@@ -29,7 +29,7 @@ export const SocialButton = styled.a`
   &:hover {
     transform: translateY(-5px);
     background: ${({ theme }) => theme.colors.primary};
-    color: #fff;
+    color: #000000;
 
     box-shadow:
       0 0 15px ${({ theme }) => theme.colors.primary}66,

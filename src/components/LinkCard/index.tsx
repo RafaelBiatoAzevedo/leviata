@@ -7,7 +7,7 @@ interface CardLinkProps {
   description: string;
 }
 
-export function CardLink({ to, acronym, title, description }: CardLinkProps) {
+export function LinkCard({ to, acronym, title, description }: CardLinkProps) {
   return (
     <Container to={to}>
       <Top>

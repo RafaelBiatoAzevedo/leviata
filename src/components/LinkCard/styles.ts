@@ -13,7 +13,7 @@ export const Container = styled(Link)`
 
   text-decoration: none;
 
-  background: ${({ theme }) => theme.colors.textSoft}20;
+  background: ${({ theme }) => theme.colors.surface};
 
   border: 1px solid rgba(255, 255, 255, 0.06);
 

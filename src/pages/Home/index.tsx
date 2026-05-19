@@ -1,4 +1,5 @@
 import {
+  Carousel,
   Container,
   Content,
   HrDivisor,
@@ -6,8 +7,75 @@ import {
   LinesLInksWrapper,
 } from "./styles";
 import leviataHero from "../../assets/images/leviataHero.png";
+import bookLary from "../../assets/images/bookLary.webp";
+import bookGabriel from "../../assets/images/bookGabriel.webp";
+import bookMaria from "../../assets/images/bookMaria.webp";
+import bookMarilia from "../../assets/images/bookMarilia.webp";
 import { Button } from "../../components/Button";
-import { CardLink } from "../../components/CardLink";
+import { LinkCard } from "../../components/LinkCard";
+import { BookCard } from "../../components/BookCard";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
+
+const booksMocks = [
+  {
+    author: "Gabriel Ferreira Gurian",
+    title: "Do conflito e do convívio",
+    to: "https://livraria.cepe.com.br/do-conflito-e-do-convivio",
+    year: 2026,
+    cover: bookGabriel,
+  },
+  {
+    author: "Larissa Biato de Azevedo",
+    title: "Policiar no tempo da escravidão",
+    to: "https://edufscar.com.br/policiar-no-tempo-da-escravidao-502000057",
+    year: 2025,
+    cover: bookLary,
+  },
+  {
+    author: "Maria Isabela da Silva Gomes",
+    title: "Dicionário Histórias entrelaçadas de mulheres afrodiaspóricas",
+    to: "https://www.editoramale.com.br/product-page/dicion%C3%A1rio-biogr%C3%A1fico-hist%C3%B3rias-entrela%C3%A7adas-de-mulheres-afrodiasp%C3%B3ricas-vol-2",
+    year: 2025,
+    cover: bookMaria,
+  },
+  {
+    author: "Marília Tofanetto Alves",
+    title: "Concubinato: a bastardia tingida pela cor",
+    to: "https://www.amazon.com.br/dp/8546229406",
+    year: 2025,
+    cover: bookMarilia,
+  },
+  {
+    author: "Gabriel Ferreira Gurian",
+    title: "Do conflito e do convívio",
+    to: "https://livraria.cepe.com.br/do-conflito-e-do-convivio",
+    year: 2026,
+    cover: bookGabriel,
+  },
+  {
+    author: "Larissa Biato de Azevedo",
+    title: "Policiar no tempo da escravidão",
+    to: "https://edufscar.com.br/policiar-no-tempo-da-escravidao-502000057",
+    year: 2025,
+    cover: bookLary,
+  },
+  {
+    author: "Maria Isabela da Silva Gomes",
+    title: "Dicionário Histórias entrelaçadas de mulheres afrodiaspóricas",
+    to: "https://www.editoramale.com.br/product-page/dicion%C3%A1rio-biogr%C3%A1fico-hist%C3%B3rias-entrela%C3%A7adas-de-mulheres-afrodiasp%C3%B3ricas-vol-2",
+    year: 2025,
+    cover: bookMaria,
+  },
+  {
+    author: "Marília Tofanetto Alves",
+    title: "Concubinato: a bastardia tingida pela cor",
+    to: "https://www.amazon.com.br/dp/8546229406",
+    year: 2025,
+    cover: bookMarilia,
+  },
+];
 
 export function Home() {
   return (
@@ -26,24 +94,48 @@ export function Home() {
         <HrDivisor />
         <h1>Linhas Temáticas</h1>
         <LinesLInksWrapper>
-          <CardLink
+          <LinkCard
             to="/grupo/pesquisadores"
             acronym="CSA"
             description="Cativeiro, saúde e alimentação: séculos XVII e XVIII"
-          ></CardLink>
-          <CardLink
+          ></LinkCard>
+          <LinkCard
             to="/grupo/pesquisadores"
             acronym="MCE"
             description="Monarquia, Cristianismo e Escravidão no Mundo Luso-brasileiro (séculos XVII e XVIII)"
-          ></CardLink>
-          <CardLink
+          ></LinkCard>
+          <LinkCard
             to="/grupo/pesquisadores"
             acronym="EIE"
             description="Estado, Imprensa e Escravidão no Brasil do Século XIX"
-          ></CardLink>
+          ></LinkCard>
         </LinesLInksWrapper>
         <HrDivisor />
         <h1>Publicações recentes</h1>
+
+        <Carousel>
+          <Swiper
+            modules={[Autoplay, Pagination, Navigation]}
+            slidesPerView={"auto"}
+            spaceBetween={50}
+            loop
+            navigation
+            speed={700}
+            pagination={{
+              clickable: true,
+            }}
+            // autoplay={{
+            //   delay: 3000,
+            //   disableOnInteraction: false,
+            // }}
+          >
+            {booksMocks.map((book, index) => (
+              <SwiperSlide key={index} style={{ width: "350px" }}>
+                <BookCard {...book} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </Carousel>
         <Button title="Mais"></Button>
         <HrDivisor />
         <h1>Notícias</h1>
