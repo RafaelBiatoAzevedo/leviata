@@ -19,7 +19,7 @@ export const ImageHero = styled.img`
 `;
 
 export const LinesLInksWrapper = styled.div`
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   display: flex;
   flex-direction: row;
@@ -44,7 +44,7 @@ export const Carousel = styled.div`
   .swiper {
     width: 100%;
     height: 100%;
-    padding: 1rem 2rem 3rem 2rem;
+    padding: 2rem 2rem 4rem 2rem;
   }
 
   .swiper-button-next,

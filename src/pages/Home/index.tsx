@@ -7,16 +7,24 @@ import {
   LinesLInksWrapper,
 } from "./styles";
 import leviataHero from "../../assets/images/leviataHero.png";
+
 import bookLary from "../../assets/images/bookLary.webp";
 import bookGabriel from "../../assets/images/bookGabriel.webp";
 import bookMaria from "../../assets/images/bookMaria.webp";
 import bookMarilia from "../../assets/images/bookMarilia.webp";
+
+import groupLeviata from "../../assets/images/grupoLeviataEncontro.webp";
+import projectJuris from "../../assets/images/ProjetoJuris.webp";
+import simposio from "../../assets/images/Simposio.webp";
+import meetLeviata from "../../assets/images/leviataEncrontro.webp";
+
 import { Button } from "../../components/Button";
 import { LinkCard } from "../../components/LinkCard";
 import { BookCard } from "../../components/BookCard";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
+import { NewsCard } from "../../components/NewsCard";
 
 const booksMocks = [
   {
@@ -74,6 +82,42 @@ const booksMocks = [
     to: "https://www.amazon.com.br/dp/8546229406",
     year: 2025,
     cover: bookMarilia,
+  },
+];
+
+const newsMocks = [
+  {
+    image: groupLeviata,
+    to: "https://leviataeocativeiro.com.br/2026/05/15/ii-encontro-internacional-do-grupo-leviata-e-o-cativeiro/",
+    date: "15 de maio de 2026",
+    title: "II Encontro Internacional do Grupo Leviatã e o Cativeiro",
+    description:
+      "Aconteceu, entre os dias 5 e 7 de maio de 2026, o II Encontro do Grupo de Pesquisa Leviatã e…",
+  },
+  {
+    image: projectJuris,
+    to: "https://leviataeocativeiro.com.br/2026/05/08/projeto-juris-historicos-recebe-certificacao-ods/",
+    date: "8 de maio de 2026",
+    title: "Projeto “Júris Históricos” recebe certificação ODS",
+    description:
+      "O Projeto de extensão universitária “Júris Históricos” recebeu o Selo ODS Educação pelas ações realizadas no ano de…",
+  },
+  {
+    image: simposio,
+    to: "https://leviataeocativeiro.com.br/2026/04/20/iii-simposio-do-lhpl-ufes/",
+    date: "20 de abril de 2026",
+    title: "III Simpósio do LHPL – UFES",
+    description:
+      "Entre os dias 14 e 15 de abril de 2026, Ricardo Alexandre Ferreira e Larissa Biato de Azevedo participaram…",
+  },
+  {
+    image: meetLeviata,
+    to: "https://leviataeocativeiro.com.br/2026/04/06/ii-encontro-internacional-do-grupo-de-pesquisa-leviata-e-o-cativeiro/",
+    date: "8 de maio de 2026",
+    title:
+      "II Encontro Internacional do Grupo de Pesquisa Leviatã e o Cativeiro",
+    description:
+      "Encontram-se abertas as inscrições para o II Encontro Internacional do Grupo de Pesquisa Leviatã e o Cativeiro – Mobilidades, Experiências…",
   },
 ];
 
@@ -139,6 +183,12 @@ export function Home() {
         <Button title="Mais"></Button>
         <HrDivisor />
         <h1>Notícias</h1>
+
+        <LinesLInksWrapper>
+          {newsMocks.map((newMock, index) => (
+            <NewsCard {...newMock} key={index} />
+          ))}
+        </LinesLInksWrapper>
       </Content>
     </Container>
   );
