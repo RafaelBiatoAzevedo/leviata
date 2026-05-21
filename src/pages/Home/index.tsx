@@ -6,7 +6,7 @@ import {
   ImageHero,
   LinesLInksWrapper,
 } from "./styles";
-import leviataHero from "../../assets/images/leviataHero.png";
+import leviataHero from "../../assets/images/leviataHero.webp";
 
 import bookLary from "../../assets/images/bookLary.webp";
 import bookGabriel from "../../assets/images/bookGabriel.webp";
