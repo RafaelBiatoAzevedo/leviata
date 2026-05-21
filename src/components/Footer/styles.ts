@@ -52,6 +52,7 @@ export const Content = styled.div`
   display: flex;
   flex-direction: row;
   gap: 2rem;
+  padding: 0px 8rem;
 `;
 
 export const TitleWrapper = styled.div`

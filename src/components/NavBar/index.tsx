@@ -15,6 +15,7 @@ import {
   SwitchCircle,
   ThemeSwitch,
 } from "./styles";
+import { useTranslation } from "react-i18next";
 
 import { useEffect, useState } from "react";
 import leviataLogo from "../../assets/images/leviataLogo.png";
@@ -36,16 +37,16 @@ interface NavbarProps {
   toggleTheme: () => void;
   theme: string;
 }
-
-const sectionAndIcons = {
-  hero: FiHome,
-  about: FiUser,
-  projects: FiGrid,
-  experiences: FiBriefcase,
-  education: FiBookOpen,
-  courses: FiAward,
-  contact: FiMail,
-};
+//using in other project
+// const sectionAndIcons = {
+//   hero: FiHome,
+//   about: FiUser,
+//   projects: FiGrid,
+//   experiences: FiBriefcase,
+//   education: FiBookOpen,
+//   courses: FiAward,
+//   contact: FiMail,
+// };
 
 export const menus = [
   {
@@ -158,7 +159,9 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
   const [active, setActive] = useState("hero");
   const [isOpen, setIsOpen] = useState(false);
   const { colors } = useTheme();
+  const { i18n, t } = useTranslation();
 
+  //using in other project
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -182,9 +185,9 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
   }, []);
 
   const toggleLanguage = () => {
-    // const newLang = i18n.language === "pt" ? "en" : "pt";
-    // i18n.changeLanguage(newLang);
-    // localStorage.setItem("portfolio-language", newLang);
+    const newLang = i18n.language === "pt" ? "en" : "pt";
+    i18n.changeLanguage(newLang);
+    localStorage.setItem("portfolio-language", newLang);
   };
 
   const handleClick = () => setIsOpen(false);
@@ -202,7 +205,7 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
               key={menu.label}
               as="a"
               href={`#${name}`}
-              //$active={active === name}
+              $active={active === name}
             >
               {menu.label}
             </MenuItem>
@@ -211,7 +214,7 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
       </DesktopOnly>
 
       <DesktopOnly>
-        {/* <ActionsWrapper>
+        <ActionsWrapper>
           <ThemeSwitch onClick={toggleTheme}>
             <SwitchCircle themeMode={theme}>
               {theme === "dark" ? "🌙" : "☀️"}
@@ -219,12 +222,12 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
           </ThemeSwitch>
 
           <LanguageButton onClick={toggleLanguage}>
-            {true ? "🇧🇷 PT" : "🇺🇸 EN"}
+            {i18n.language === "pt" ? "🇧🇷 PT" : "🇺🇸 EN"}
           </LanguageButton>
-        </ActionsWrapper> */}
+        </ActionsWrapper>
       </DesktopOnly>
 
-      {/* <MobileOnly>
+      <MobileOnly>
         {isOpen ? (
           <FiX
             size={"3rem"}
@@ -274,7 +277,7 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
           <SocialLinks />
           <Copy>© {new Date().getFullYear()} Rafael Azevedo</Copy>
         </FooterMenuMobile>
-      </MobileMenu> */}
+      </MobileMenu>
     </Container>
   );
 };
