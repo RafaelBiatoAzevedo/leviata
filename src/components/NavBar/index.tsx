@@ -3,6 +3,9 @@ import {
   Container,
   Copy,
   DesktopOnly,
+  Dropdown,
+  DropdownArrow,
+  DropdownContent,
   FooterMenuMobile,
   LanguageButton,
   Logo,
@@ -12,176 +15,103 @@ import {
   MenuWrapper,
   MobileMenu,
   MobileOnly,
+  SubmenuItem,
   SwitchCircle,
   ThemeSwitch,
 } from "./styles";
+
+//import { useTranslation } from "react-i18next";
+
+import { useEffect, useRef, useState } from "react";
+
+import leviataLogo from "../../assets/images/leviataLogo.png";
+
+import { SocialLinks } from "../SocialLinks";
+
+import { FiChevronDown, FiChevronUp, FiMenu, FiX } from "react-icons/fi";
+
+import { useTheme } from "styled-components";
+
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { useEffect, useState } from "react";
-import leviataLogo from "../../assets/images/leviataLogo.png";
-import { SocialLinks } from "../SocialLinks";
-import {
-  FiAward,
-  FiBookOpen,
-  FiBriefcase,
-  FiGrid,
-  FiHome,
-  FiMail,
-  FiMenu,
-  FiUser,
-  FiX,
-} from "react-icons/fi";
-import { useTheme } from "styled-components";
+const menus = [
+  {
+    label: "O Grupo",
+    path: "/grupo",
+    children: [
+      { label: "Pesquisadores", path: "/grupo/pesquisadores" },
+      { label: "Linhas Temáticas", path: "/grupo/linhas-tematicas" },
+    ],
+  },
+  { label: "Publicações", path: "/publicacoes" },
+  {
+    label: "Instrumentos de Pesquisa",
+    path: "/instrumentos",
+    children: [
+      { label: "Planilhas", path: "/instrumentos/planilhas" },
+      { label: "Catálogos", path: "/instrumentos/catalogos" },
+      { label: "Banco de Dados", path: "/instrumentos/banco-de-dados" },
+    ],
+  },
+  {
+    label: "Atividades",
+    path: "/atividades",
+    children: [
+      { label: "Pesquisas", path: "/atividades/pesquisas" },
+      { label: "Júris", path: "/atividades/juris" },
+      { label: "Encontros", path: "/atividades/encontros" },
+    ],
+  },
+  {
+    label: "Agenda",
+    path: "/agenda",
+    children: [
+      { label: "Encontros", path: "/agenda/encontros" },
+      { label: "Bancas", path: "/agenda/bancas" },
+      { label: "Seminários", path: "/agenda/seminarios" },
+    ],
+  },
+  {
+    label: "Notícias",
+    path: "/noticias",
+    children: [{ label: "Newsletter", path: "/noticias/newsletter" }],
+  },
+  { label: "Contato", path: "#contact" },
+];
 
 interface NavbarProps {
   toggleTheme: () => void;
   theme: string;
 }
-//using in other project
-// const sectionAndIcons = {
-//   hero: FiHome,
-//   about: FiUser,
-//   projects: FiGrid,
-//   experiences: FiBriefcase,
-//   education: FiBookOpen,
-//   courses: FiAward,
-//   contact: FiMail,
-// };
-
-export const menus = [
-  {
-    label: "O Grupo",
-    path: "/grupo",
-
-    children: [
-      {
-        label: "Pesquisadores",
-        path: "/grupo/pesquisadores",
-      },
-
-      {
-        label: "Linhas Temáticas",
-        path: "/grupo/linhas-tematicas",
-      },
-    ],
-  },
-
-  {
-    label: "Publicações",
-    path: "/publicacoes",
-  },
-
-  {
-    label: "Instrumentos de Pesquisa",
-    path: "/instrumentos",
-
-    children: [
-      {
-        label: "Planilhas",
-        path: "/instrumentos/planilhas",
-      },
-
-      {
-        label: "Catálogos",
-        path: "/instrumentos/catalogos",
-      },
-
-      {
-        label: "Banco de Dados",
-        path: "/instrumentos/banco-de-dados",
-      },
-    ],
-  },
-
-  {
-    label: "Atividades",
-    path: "/atividades",
-
-    children: [
-      {
-        label: "Pesquisas",
-        path: "/atividades/pesquisas",
-      },
-
-      {
-        label: "Júris",
-        path: "/atividades/juris",
-      },
-
-      {
-        label: "Encontros",
-        path: "/atividades/encontros",
-      },
-    ],
-  },
-
-  {
-    label: "Agenda",
-    path: "/agenda",
-
-    children: [
-      {
-        label: "Encontros",
-        path: "/agenda/encontros",
-      },
-
-      {
-        label: "Bancas",
-        path: "/agenda/bancas",
-      },
-
-      {
-        label: "Seminários",
-        path: "/agenda/seminarios",
-      },
-    ],
-  },
-
-  {
-    label: "Notícias",
-    path: "/noticias",
-
-    children: [
-      {
-        label: "Newsletter",
-        path: "/noticias/newsletter",
-      },
-    ],
-  },
-
-  {
-    label: "Contato",
-    path: "/contato",
-  },
-];
 
 export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
-  const [active, setActive] = useState("hero");
   const [isOpen, setIsOpen] = useState(false);
+
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
   const { colors } = useTheme();
-  const { i18n, t } = useTranslation();
 
-  //using in other project
+  const { i18n } = useTranslation();
+
+  const location = useLocation();
+
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActive(entry.target.id);
-          }
-        });
-      },
-      {
-        rootMargin: "-50% 0px -50% 0px",
-      },
-    );
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setOpenDropdown(null);
+      }
+    };
 
-    Object.keys(sectionAndIcons).forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
+    document.addEventListener("mousedown", handleClickOutside);
 
-    return () => observer.disconnect();
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const toggleLanguage = () => {
@@ -190,31 +120,76 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
     localStorage.setItem("portfolio-language", newLang);
   };
 
-  const handleClick = () => setIsOpen(false);
+  const handleDropdown = (menu: string) => {
+    setOpenDropdown((prev) => (prev === menu ? null : menu));
+  };
 
   return (
     <Container>
-      <LogoWrapper>
-        <Logo src={leviataLogo} alt="Leviata e o cativeiro logo" />
+      <LogoWrapper to={"/"}>
+        <Logo src={leviataLogo} alt="Leviata e o cativeiro" />
       </LogoWrapper>
 
       <DesktopOnly>
         <Menu>
-          {menus.map((menu) => (
-            <MenuItem
-              key={menu.label}
-              as="a"
-              href={`#${name}`}
-              $active={active === name}
-            >
-              {menu.label}
-            </MenuItem>
-          ))}
+          {menus.map((menu) => {
+            const isHashLink = menu.path.startsWith("#");
+
+            const isActive =
+              location.pathname === menu.path ||
+              menu.children?.some((child) => child.path === location.pathname);
+
+            return (
+              <Dropdown
+                key={menu.label}
+                ref={openDropdown === menu.label ? dropdownRef : null}
+              >
+                <MenuItem
+                  as={isHashLink ? "a" : Link}
+                  href={isHashLink ? menu.path : undefined}
+                  to={!isHashLink ? menu.path : undefined}
+                  $active={isActive}
+                >
+                  {menu.label}
+
+                  {menu.children && (
+                    <DropdownArrow
+                      onClick={(e) => {
+                        e.preventDefault();
+
+                        handleDropdown(menu.label);
+                      }}
+                    >
+                      {openDropdown === menu.label ? (
+                        <FiChevronUp />
+                      ) : (
+                        <FiChevronDown />
+                      )}
+                    </DropdownArrow>
+                  )}
+                </MenuItem>
+
+                {menu.children && openDropdown === menu.label && (
+                  <DropdownContent>
+                    {menu.children.map((submenu) => (
+                      <SubmenuItem
+                        key={submenu.path}
+                        as={Link}
+                        to={submenu.path}
+                      >
+                        {submenu.label}
+                      </SubmenuItem>
+                    ))}
+                  </DropdownContent>
+                )}
+              </Dropdown>
+            );
+          })}
         </Menu>
       </DesktopOnly>
 
       <DesktopOnly>
-        <ActionsWrapper>
+        <ActionsWrapper style={{ display: "none" }}>
           <ThemeSwitch onClick={toggleTheme}>
             <SwitchCircle themeMode={theme}>
               {theme === "dark" ? "🌙" : "☀️"}
@@ -232,33 +207,42 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
           <FiX
             size={"3rem"}
             color={colors.textSoft}
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen(false)}
           />
         ) : (
           <FiMenu
             size={"3rem"}
             color={colors.textSoft}
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsOpen(true)}
           />
         )}
       </MobileOnly>
 
       <MobileMenu $open={isOpen}>
         <MenuWrapper>
-          {Object.entries(sectionAndIcons).map(([name, Icon]) => {
-            return (
+          {menus.map((menu) => (
+            <div key={menu.label}>
               <MenuItem
-                key={name}
-                as="a"
-                href={`#${name}`}
-                $active={active === name}
-                onClick={handleClick}
+                as={Link}
+                to={menu.path}
+                onClick={() => setIsOpen(false)}
+                $active={location.pathname === menu.path}
               >
-                <Icon />
-                {t(`nav.${name}`)}
+                {menu.label}
               </MenuItem>
-            );
-          })}
+
+              {menu.children?.map((submenu) => (
+                <SubmenuItem
+                  key={submenu.path}
+                  as={Link}
+                  to={submenu.path}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {submenu.label}
+                </SubmenuItem>
+              ))}
+            </div>
+          ))}
 
           <ActionsWrapper>
             <ThemeSwitch onClick={toggleTheme}>
@@ -275,6 +259,7 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
 
         <FooterMenuMobile>
           <SocialLinks />
+
           <Copy>© {new Date().getFullYear()} Rafael Azevedo</Copy>
         </FooterMenuMobile>
       </MobileMenu>

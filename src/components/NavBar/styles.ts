@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Container = styled.nav`
@@ -31,10 +32,26 @@ export const Container = styled.nav`
   }
 `;
 
-export const LogoWrapper = styled.div`
+export const LogoWrapper = styled(Link)`
   display: flex;
   justify-content: center;
+
   position: relative;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+
+  filter: drop-shadow(0 0 12px ${({ theme }) => theme.colors.primary}40);
+
+  &:hover {
+    transform: scale(1.03);
+
+    filter: drop-shadow(0 0 18px ${({ theme }) => theme.colors.primary}70)
+      drop-shadow(0 0 32px ${({ theme }) => theme.colors.primary}30);
+  }
 `;
 
 export const Logo = styled.img`
@@ -42,7 +59,7 @@ export const Logo = styled.img`
   height: 40px;
   border-radius: 100%;
   padding: 1px;
-  border: solid ${({ theme }) => theme.colors.border} 1px;
+  border: solid ${({ theme }) => theme.colors.primary} 1px;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     width: 36px;
@@ -71,7 +88,7 @@ export const MenuItem = styled.a<{ $active?: boolean }>`
   transition: 0.3s;
 
   &:hover {
-    color: ${({ theme }) => theme.colors.primary}3;
+    color: ${({ theme }) => theme.colors.primary};
   }
 `;
 
@@ -165,7 +182,7 @@ export const MobileMenu = styled.div<{ $open: boolean }>`
   width: 50%;
   height: 100dvh;
 
-  background: ${({ theme }) => theme.colors.surface};
+  background: ${({ theme }) => theme.colors.background};
 
   display: flex;
   flex-direction: column;
@@ -214,4 +231,56 @@ export const Copy = styled.p`
   margin-top: 3rem;
   font-size: 0.8rem;
   color: ${({ theme }) => theme.colors.textSoft};
+`;
+
+export const Dropdown = styled.div`
+  position: relative;
+`;
+
+export const DropdownArrow = styled.div`
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+`;
+
+export const DropdownContent = styled.div`
+  position: absolute;
+  top: 130%;
+  left: 0;
+
+  min-width: 220px;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 12px;
+
+  border-radius: 10px;
+
+  background: ${({ theme }) => theme.colors.secondary};
+
+  border: 1px solid ${({ theme }) => theme.colors.border};
+
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+
+  z-index: 100;
+`;
+
+export const SubmenuItem = styled(Link)`
+  padding: 12px;
+
+  border-radius: 8px;
+
+  text-decoration: none;
+
+  color: ${({ theme }) => theme.colors.textSoft};
+
+  transition: 0.3s;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.backgroundCard};
+
+    color: ${({ theme }) => theme.colors.accent};
+  }
 `;

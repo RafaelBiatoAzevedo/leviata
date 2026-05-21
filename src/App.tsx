@@ -30,7 +30,7 @@ function App() {
 
   return (
     <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
-      <GlobalStyle />;
+      <GlobalStyle />
       <Navbar toggleTheme={toggleTheme} theme={theme} />
       <main>
         <Router />
