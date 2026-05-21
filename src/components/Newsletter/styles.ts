@@ -15,8 +15,14 @@ export const Container = styled.div`
 `;
 
 export const Form = styled.form`
+  align-items: center;
   display: flex;
+  flex-direction: row;
   gap: 8px;
+
+  button {
+    align-self: flex-end;
+  }
 
   @media (max-width: 600px) {
     flex-direction: column;
@@ -24,8 +30,7 @@ export const Form = styled.form`
 `;
 
 export const Input = styled.input`
-  flex: 1;
-
+  width: 100%;
   padding: 12px 14px;
 
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -41,21 +46,10 @@ export const Input = styled.input`
   }
 `;
 
-// export const Button = styled.button`
-//   padding: 12px 18px;
+export const MainInputWrapper = styled.div`
+  display: flex;
+  flex: 1;
 
-//   border: none;
-//   border-radius: 6px;
-
-//   background: ${({ theme }) => theme.colors.primary};
-//   color: black;
-
-//   font-weight: 600;
-//   cursor: pointer;
-
-//   transition: 0.2s;
-
-//   &:hover {
-//     filter: brightness(1.1);
-//   }
-// `;
+  flex-direction: column;
+  gap: 1rem;
+`;

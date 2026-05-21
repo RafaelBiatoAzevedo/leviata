@@ -2,7 +2,6 @@ import {
   Carousel,
   Container,
   Content,
-  HrDivisor,
   ImageHero,
   LinesLInksWrapper,
 } from "./styles";
@@ -25,6 +24,7 @@ import { BookCard } from "../../components/BookCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { NewsCard } from "../../components/NewsCard";
+import { HistoryDivider } from "../../components/HistotyDivider";
 
 const booksMocks = [
   {
@@ -135,7 +135,7 @@ export function Home() {
           Imprensa – e a escravidão de africanos e descendentes.
         </h1>
         <Button title="Saiba mais"></Button>
-        <HrDivisor />
+        <HistoryDivider symbol="✠" />
         <h1>Linhas Temáticas</h1>
         <LinesLInksWrapper>
           <LinkCard
@@ -154,7 +154,7 @@ export function Home() {
             description="Estado, Imprensa e Escravidão no Brasil do Século XIX"
           ></LinkCard>
         </LinesLInksWrapper>
-        <HrDivisor />
+        <HistoryDivider symbol="✠" />
         <h1>Publicações recentes</h1>
 
         <Carousel>
@@ -181,7 +181,7 @@ export function Home() {
           </Swiper>
         </Carousel>
         <Button title="Mais"></Button>
-        <HrDivisor />
+        <HistoryDivider symbol="✠" />
         <h1>Notícias</h1>
 
         <LinesLInksWrapper>

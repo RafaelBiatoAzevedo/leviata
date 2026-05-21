@@ -38,7 +38,7 @@ export const Footer = () => {
             <h2>escravidão.</h2>
           </TitleWrapper>
 
-          <Newsletter />
+          <Newsletter isFormComplete={false} />
         </Content>
 
         <SocialLinks />

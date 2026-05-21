@@ -27,13 +27,6 @@ export const LinesLInksWrapper = styled.div`
   gap: 4rem;
 `;
 
-export const HrDivisor = styled.div`
-  width: 100%;
-  height: 1px;
-
-  background: ${({ theme }) => theme.colors.primary};
-`;
-
 export const Carousel = styled.div`
   display: flex;
   align-items: center;
