@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { Container, Form, Input, MainInputWrapper } from "./styles";
+import { Container, Form, Input, MainInputWrapper, TextArea } from "./styles";
 import { Button } from "../Button";
 
-interface INewsletterProps {
-  isFormComplete?: boolean;
+interface INewsletterFormProps {
+  type: "single" | "middle" | "complete";
+  size?: "small" | "larger";
 }
 
-export function Newsletter({ isFormComplete = true }: INewsletterProps) {
+export function NewsletterForm({
+  type,
+  size = "larger",
+}: INewsletterFormProps) {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
-  const [lastName, setlastName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -18,29 +22,29 @@ export function Newsletter({ isFormComplete = true }: INewsletterProps) {
     // aqui depois você chama sua API
     setEmail("");
     setName("");
-    setlastName("");
+    setLastName("");
   }
 
   return (
-    <Container>
+    <Container size={size}>
       <h3>Assine nossa newsletter</h3>
 
       <Form onSubmit={handleSubmit}>
         <MainInputWrapper>
-          {isFormComplete && (
+          {(type === "middle" || type === "complete") && (
             <Input
               type="text"
               placeholder="Seu nome"
               value={name}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
             />
           )}
-          {isFormComplete && (
+          {(type === "middle" || type === "complete") && (
             <Input
               type="text"
               placeholder="Seu sobrenome"
               value={lastName}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setLastName(e.target.value)}
             />
           )}
           <Input
@@ -50,6 +54,7 @@ export function Newsletter({ isFormComplete = true }: INewsletterProps) {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+          {type === "complete" && <TextArea placeholder="Sua mensagem..." />}
         </MainInputWrapper>
         <Button title="Assinar" type="submit" />
       </Form>

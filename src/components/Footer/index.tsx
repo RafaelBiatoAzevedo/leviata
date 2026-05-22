@@ -10,7 +10,7 @@ import {
 import { SocialLinks } from "../../components/SocialLinks";
 import { FiArrowUp } from "react-icons/fi";
 import leviataLogo from "../../assets/images/leviataLogo.png";
-import { Newsletter } from "../Newsletter";
+import { NewsletterForm } from "../NewsletterForm";
 
 export const Footer = () => {
   const scrollToTop = () => {
@@ -38,7 +38,7 @@ export const Footer = () => {
             <h2>escravidão.</h2>
           </TitleWrapper>
 
-          <Newsletter isFormComplete={false} />
+          <NewsletterForm type="single" size="small" />
         </Content>
 
         <SocialLinks />

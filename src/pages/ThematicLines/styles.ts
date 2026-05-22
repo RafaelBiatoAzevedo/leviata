@@ -9,7 +9,7 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4rem;
-  padding: 4rem 10rem;
+  padding: 4rem 16rem;
 `;
 
 export const Title = styled.h1`

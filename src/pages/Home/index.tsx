@@ -135,7 +135,7 @@ export function Home() {
           Imprensa – e a escravidão de africanos e descendentes.
         </h1>
         <Button title="Saiba mais"></Button>
-        <HistoryDivider symbol="✠" />
+        <HistoryDivider />
         <h1>Linhas Temáticas</h1>
         <LinesLInksWrapper>
           <LinkCard
@@ -154,7 +154,7 @@ export function Home() {
             description="Estado, Imprensa e Escravidão no Brasil do Século XIX"
           ></LinkCard>
         </LinesLInksWrapper>
-        <HistoryDivider symbol="✠" />
+        <HistoryDivider />
         <h1>Publicações recentes</h1>
 
         <Carousel>
@@ -181,7 +181,7 @@ export function Home() {
           </Swiper>
         </Carousel>
         <Button title="Mais"></Button>
-        <HistoryDivider symbol="✠" />
+        <HistoryDivider />
         <h1>Notícias</h1>
 
         <LinesLInksWrapper>

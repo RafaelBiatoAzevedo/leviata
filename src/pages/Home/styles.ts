@@ -10,7 +10,7 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 4rem;
-  padding: 4rem 10rem;
+  padding: 4rem 16rem;
 `;
 
 export const ImageHero = styled.img`

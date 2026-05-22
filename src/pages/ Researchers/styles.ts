@@ -2,47 +2,16 @@ import styled from "styled-components";
 
 export const Container = styled.section`
   width: 100%;
-
-  padding: 120px 8%;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 60px;
+  margin-top: 70px;
 `;
 
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 4rem;
-  padding: 4rem 10rem;
-`;
-
-export const Header = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  gap: 16px;
-
-  max-width: 900px;
-`;
-
-export const Title = styled.h1`
-  font-size: 2.6rem;
-
-  color: ${({ theme }) => theme.colors.text};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    font-size: 2.2rem;
-  }
-`;
-
-export const Subtitle = styled.p`
-  font-size: 1.1rem;
-
-  line-height: 1.8;
-
-  color: ${({ theme }) => theme.colors.textSoft};
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 16rem;
+  gap: 3rem;
 `;
 
 export const Grid = styled.div`

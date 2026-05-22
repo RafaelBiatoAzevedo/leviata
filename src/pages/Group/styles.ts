@@ -10,7 +10,7 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 10rem;
+  padding: 4rem 16rem;
   gap: 3rem;
 `;
 
@@ -30,6 +30,7 @@ export const PresentationSection = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 4rem 0px;
 
   gap: 1rem;
 `;

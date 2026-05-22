@@ -5,6 +5,7 @@ import { lightTheme, darkTheme } from "./styles/themes";
 import { Router } from "./routes";
 import { Navbar } from "./components/NavBar";
 import { Footer } from "./components/Footer";
+import { ScrollToTop } from "./components/ScrollToTop";
 
 function App() {
   const [theme, setTheme] = useState(() => {
@@ -31,6 +32,7 @@ function App() {
   return (
     <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
       <GlobalStyle />
+      <ScrollToTop />
       <Navbar toggleTheme={toggleTheme} theme={theme} />
       <main>
         <Router />

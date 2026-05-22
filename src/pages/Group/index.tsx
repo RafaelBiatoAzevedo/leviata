@@ -1,4 +1,4 @@
-import { Newsletter } from "../../components/Newsletter";
+import { NewsletterForm } from "../../components/NewsletterForm";
 import {
   Container,
   Content,
@@ -50,7 +50,7 @@ export function Group() {
           </VideoWrapper>
         </PresentationSection>
 
-        <Newsletter />
+        <NewsletterForm type="middle" />
       </Content>
     </Container>
   );

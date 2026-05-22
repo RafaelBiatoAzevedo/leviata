@@ -48,6 +48,14 @@ export const GlobalStyle = createGlobalStyle`
     letter-spacing: 0.5px;
   }
 
+  input,
+  textarea,
+  button,
+  select {
+    font-family: ${({ theme }) => theme.fonts.body};
+    letter-spacing: 0.5px;
+  }
+
   @media (max-width: ${({ theme }) => theme.breakpoints.desktop}) {
     html {
       font-size: 11px;

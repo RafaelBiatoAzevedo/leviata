@@ -77,7 +77,7 @@ const menus = [
     path: "/noticias",
     children: [{ label: "Newsletter", path: "/noticias/newsletter" }],
   },
-  { label: "Contato", path: "#contact" },
+  { label: "Contato", path: "/contato" },
 ];
 
 interface NavbarProps {

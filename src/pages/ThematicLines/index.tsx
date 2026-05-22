@@ -1,4 +1,5 @@
 import { LinkCard } from "../../components/LinkCard";
+import { SectionHeader } from "../../components/SectionHeader";
 import {
   Container,
   Content,
@@ -12,15 +13,13 @@ export function ThematicLines() {
   return (
     <Container>
       <Content>
-        <Header>
-          <Title>Linhas Temáticas</Title>
-
-          <Subtitle>
-            Conheça as principais linhas de investigação que orientam as
+        <SectionHeader
+          title="Linhas Temáticas"
+          subtitle="Conheça as principais linhas de investigação que orientam as
             pesquisas do grupo, abrangendo diferentes abordagens da história,
-            memória e construção do conhecimento histórico.
-          </Subtitle>
-        </Header>
+            memória e construção do conhecimento histórico."
+        />
+
         <LinesLInksWrapper>
           <LinkCard
             to="/grupo/pesquisadores"
