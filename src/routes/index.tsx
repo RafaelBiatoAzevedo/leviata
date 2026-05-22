@@ -11,6 +11,8 @@ import { Instruments } from "../pages/Instruments";
 import { Activities } from "../pages/Activities";
 import { Publications } from "../pages/ Publications";
 import { Schedule } from "../pages/Schecdule";
+import { ResearchCenter } from "../pages/ResearchCenter";
+import { Seminars } from "../pages/Seminars";
 
 export function Router() {
   return (
@@ -26,6 +28,12 @@ export function Router() {
       <Route path="/instrumentos" element={<Instruments />} />
 
       <Route path="/atividades" element={<Activities />} />
+      <Route
+        path="/atividades/nucleo-de-pesquisa-em-costas-negras"
+        element={<ResearchCenter />}
+      />
+      <Route path="/atividades/juris-historicos" element={<Activities />} />
+      <Route path="/atividades/encontros-e-seminarios" element={<Seminars />} />
 
       <Route path="/agenda" element={<Schedule />} />
 

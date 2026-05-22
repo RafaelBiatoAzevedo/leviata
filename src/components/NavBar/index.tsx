@@ -61,9 +61,15 @@ const menus = [
     path: "/atividades",
     children: [
       { label: "Atividades", path: "/atividades" },
-      { label: "Pesquisas", path: "/atividades/pesquisas" },
-      { label: "Júris", path: "/atividades/juris" },
-      { label: "Encontros", path: "/atividades/encontros" },
+      {
+        label: 'Nucleo de Pesquisa "Em costas negras"',
+        path: "/atividades/nucleo-de-pesquisa-em-costas-negras",
+      },
+      { label: "Júris Históricos", path: "/atividades/juris-historicos" },
+      {
+        label: "Encontros e Seminários",
+        path: "/atividades/encontros-e-seminarios",
+      },
     ],
   },
   {

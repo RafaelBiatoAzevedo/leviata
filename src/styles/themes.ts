@@ -41,7 +41,6 @@ export const darkTheme = {
     backgroundCard: " #0485C910",
     surface: "#111827",
     primary: "#C6A15B",
-    //primary: "#e3ca9a",
     secondary: "#111827",
     onSecondary: "#E5E7EB",
     text: "#000000",

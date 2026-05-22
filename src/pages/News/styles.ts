@@ -13,6 +13,7 @@ export const Content = styled.div`
   padding: 4rem 16rem;
   gap: 3rem;
 `;
+
 export const LinesLInksWrapper = styled.div`
   align-items: stretch;
   justify-content: center;
