@@ -2,17 +2,17 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  padding-top: 70px;
+  margin-top: 70px;
 `;
 
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4rem;
+  justify-content: center;
   padding: 4rem 16rem;
+  gap: 3rem;
 `;
-
 export const LinesLInksWrapper = styled.div`
   align-items: stretch;
   justify-content: center;

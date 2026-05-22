@@ -5,8 +5,12 @@ export const lightTheme = {
     surface: "#9CA3AF20",
     primary: "#C6A15B",
     secondary: "#111827",
+
+    onSecondary: "#E5E7EB",
+
     text: "#000000",
     textSoft: "#9CA3AF",
+
     border: "#C6A15B",
 
     accent: "#C6A15B",

@@ -7,6 +7,10 @@ import { ThematicLines } from "../pages/ThematicLines";
 import { Newsletter } from "../pages/Newsletter";
 import { Contact } from "../pages/Contact";
 import { News } from "../pages/News";
+import { Instruments } from "../pages/Instruments";
+import { Activities } from "../pages/Activities";
+import { Publications } from "../pages/ Publications";
+import { Schedule } from "../pages/Schecdule";
 
 export function Router() {
   return (
@@ -16,6 +20,14 @@ export function Router() {
       <Route path="/grupo" element={<Group />} />
       <Route path="/grupo/pesquisadores" element={<Researchers />} />
       <Route path="/grupo/linhas-tematicas" element={<ThematicLines />} />
+
+      <Route path="/publicacoes" element={<Publications />} />
+
+      <Route path="/instrumentos" element={<Instruments />} />
+
+      <Route path="/atividades" element={<Activities />} />
+
+      <Route path="/agenda" element={<Schedule />} />
 
       <Route path="/noticias" element={<News />} />
       <Route path="/noticias/newsletter" element={<Newsletter />} />

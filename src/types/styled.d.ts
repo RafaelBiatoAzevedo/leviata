@@ -8,6 +8,7 @@ declare module "styled-components" {
       surface: string;
       primary: string;
       secondary: string;
+      onSecondary: string;
       text: string;
       textSoft: string;
       border: string;

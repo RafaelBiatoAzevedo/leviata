@@ -40,6 +40,7 @@ const menus = [
     label: "O Grupo",
     path: "/grupo",
     children: [
+      { label: "O Grupo", path: "/grupo" },
       { label: "Pesquisadores", path: "/grupo/pesquisadores" },
       { label: "Linhas Temáticas", path: "/grupo/linhas-tematicas" },
     ],
@@ -49,6 +50,7 @@ const menus = [
     label: "Instrumentos de Pesquisa",
     path: "/instrumentos",
     children: [
+      { label: "Intrumentos de Pesquisa", path: "/instrumentos" },
       { label: "Planilhas", path: "/instrumentos/planilhas" },
       { label: "Catálogos", path: "/instrumentos/catalogos" },
       { label: "Banco de Dados", path: "/instrumentos/banco-de-dados" },
@@ -58,6 +60,7 @@ const menus = [
     label: "Atividades",
     path: "/atividades",
     children: [
+      { label: "Atividades", path: "/atividades" },
       { label: "Pesquisas", path: "/atividades/pesquisas" },
       { label: "Júris", path: "/atividades/juris" },
       { label: "Encontros", path: "/atividades/encontros" },
@@ -67,6 +70,7 @@ const menus = [
     label: "Agenda",
     path: "/agenda",
     children: [
+      { label: "Agenda", path: "/agenda" },
       { label: "Encontros", path: "/agenda/encontros" },
       { label: "Bancas", path: "/agenda/bancas" },
       { label: "Seminários", path: "/agenda/seminarios" },
@@ -75,7 +79,10 @@ const menus = [
   {
     label: "Notícias",
     path: "/noticias",
-    children: [{ label: "Newsletter", path: "/noticias/newsletter" }],
+    children: [
+      { label: "Notícias", path: "/noticias" },
+      { label: "Newsletter", path: "/noticias/newsletter" },
+    ],
   },
   { label: "Contato", path: "/contato" },
 ];
