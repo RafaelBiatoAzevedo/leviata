@@ -43,6 +43,7 @@ export const darkTheme = {
     primary: "#C6A15B",
     //primary: "#e3ca9a",
     secondary: "#111827",
+    onSecondary: "#E5E7EB",
     text: "#000000",
     textSoft: "#9CA3AF",
     border: "#1F2937",
