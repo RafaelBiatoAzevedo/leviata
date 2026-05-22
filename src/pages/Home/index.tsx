@@ -195,7 +195,11 @@ export function Home() {
           ></LinkCard>
         </LinesLInksWrapper>
         <HistoryDivider />
-        <h1>Publicações recentes</h1>
+        <SectionHeader
+          center
+          title="Publicações recentes"
+          subtitle="As publicações recentes reúnem os trabalhos mais atuais desenvolvidos pelo grupo “Leviatã e o Cativeiro”, destacando pesquisas, artigos e produções acadêmicas que investigam as relações entre Estado Moderno e escravidão no amplo arco temporal dos séculos XVI ao XIX."
+        />
 
         <Carousel>
           <Swiper

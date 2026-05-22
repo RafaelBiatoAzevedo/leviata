@@ -3,9 +3,12 @@ import { PersonCard } from "../../components/PersonCard";
 import { SectionHeader } from "../../components/SectionHeader";
 import { Container, Content, Grid } from "./styles";
 
+import larrissaImage from "../../assets/images/Larissa.webp";
+import ricardoImage from "../../assets/images/Ricardo.webp";
+
 const researchers = [
   {
-    image: "/images/pessoas/ricardo.jpg",
+    image: ricardoImage,
     name: "Prof. Dr. Ricardo Alexandre Ferreira",
     description:
       "Pesquisador e professor dedicado aos estudos históricos, memória social e construção documental.",
@@ -16,8 +19,8 @@ const researchers = [
     description: "Especialista em história contemporânea e estudos culturais.",
   },
   {
-    image: "/images/pessoas/joao.jpg",
-    name: "Dr. João Pereira",
+    image: larrissaImage,
+    name: "Dra. Larissa Biato de Azevedo",
     description:
       "Atua em pesquisa sobre arquivos históricos e preservação documental.",
   },
