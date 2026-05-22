@@ -1,13 +1,6 @@
 import { LinkCard } from "../../components/LinkCard";
 import { SectionHeader } from "../../components/SectionHeader";
-import {
-  Container,
-  Content,
-  Header,
-  LinesLInksWrapper,
-  Subtitle,
-  Title,
-} from "./styles";
+import { Container, Content, LinesLInksWrapper } from "./styles";
 
 export function ThematicLines() {
   return (

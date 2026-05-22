@@ -6,6 +6,7 @@ import { Researchers } from "../pages/ Researchers";
 import { ThematicLines } from "../pages/ThematicLines";
 import { Newsletter } from "../pages/Newsletter";
 import { Contact } from "../pages/Contact";
+import { News } from "../pages/News";
 
 export function Router() {
   return (
@@ -16,6 +17,7 @@ export function Router() {
       <Route path="/grupo/pesquisadores" element={<Researchers />} />
       <Route path="/grupo/linhas-tematicas" element={<ThematicLines />} />
 
+      <Route path="/noticias" element={<News />} />
       <Route path="/noticias/newsletter" element={<Newsletter />} />
       <Route path="/newsletter" element={<Newsletter />} />
 

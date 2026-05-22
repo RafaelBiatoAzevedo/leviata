@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
   position: relative;
   width: 100%;
+  margin-top: 4rem;
 `;
 
 export const BackTopButton = styled.button`

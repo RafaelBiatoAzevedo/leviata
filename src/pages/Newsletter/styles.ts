@@ -58,7 +58,7 @@ export const YearBlock = styled.div`
 export const YearTitle = styled.h2`
   font-size: 2rem;
 
-  color: ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.primary};
 
   padding-bottom: 12px;
 
