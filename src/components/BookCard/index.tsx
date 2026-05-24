@@ -10,7 +10,7 @@ interface BookCardProps {
 
 export function BookCard({ to, cover, title, author, year }: BookCardProps) {
   return (
-    <Container to={to}>
+    <Container to={to} target="_blank">
       <Cover>
         <img src={cover} alt={title} />
       </Cover>

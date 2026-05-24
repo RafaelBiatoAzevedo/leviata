@@ -52,14 +52,6 @@ export const TabButton = styled.button<{
   }
 `;
 
-export const CarouselWrapper = styled.div`
-  width: 100%;
-
-  .swiper {
-    padding-bottom: 50px;
-  }
-`;
-
 export const Timeline = styled.div`
   display: flex;
   flex-direction: column;
