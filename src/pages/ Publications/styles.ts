@@ -217,3 +217,21 @@ export const Carousel = styled.div`
     }
   } */
 `;
+
+export const TimeLineAuthor = styled.span`
+  color: ${({ theme }) => theme.colors.accent};
+
+  font-size: 0.95rem;
+
+  font-weight: 600;
+
+  letter-spacing: 0.5px;
+`;
+
+export const TimeLineEvent = styled.p`
+  color: ${({ theme }) => theme.colors.textSoft};
+
+  font-size: 1rem;
+
+  line-height: 1.8;
+`;

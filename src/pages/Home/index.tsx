@@ -198,7 +198,7 @@ export function Home() {
         <SectionHeader
           center
           title="Publicações recentes"
-          subtitle="As publicações recentes reúnem os trabalhos mais atuais desenvolvidos pelo grupo “Leviatã e o Cativeiro”, destacando pesquisas, artigos e produções acadêmicas que investigam as relações entre Estado Moderno e escravidão no amplo arco temporal dos séculos XVI ao XIX."
+          subtitle="As publicações recentes reúnem os trabalhos mais atuais desenvolvidos pelo grupo “Leviatã e o Cativeiro”, destacando pesquisas, artigos e produções acadêmicas."
         />
 
         <Carousel>
@@ -218,7 +218,7 @@ export function Home() {
             // }}
           >
             {booksMocks.map((book, index) => (
-              <SwiperSlide key={index} style={{ width: "350px" }}>
+              <SwiperSlide key={index} style={{ width: "290px" }}>
                 <BookCard {...book} />
               </SwiperSlide>
             ))}
@@ -229,7 +229,7 @@ export function Home() {
         <SectionHeader
           center
           title="Notícias"
-          subtitle="As notícias reúnem atualizações sobre as atividades, pesquisas, eventos e produções do grupo “Leviatã e o Cativeiro”, que desde 2019 investiga o Estado Moderno e a escravidão entre os séculos XVI e XIX, com foco nas instituições luso-brasileiras e suas relações com a experiência da escravização de africanos e seus descendentes."
+          subtitle="As notícias reúnem atualizações sobre as atividades, pesquisas, eventos e produções do grupo “Leviatã e o Cativeiro”."
         />
 
         <Carousel>
@@ -237,16 +237,10 @@ export function Home() {
             modules={[Autoplay, Pagination, Navigation]}
             slidesPerView={"auto"}
             spaceBetween={50}
-            loop
             navigation
-            speed={700}
             pagination={{
               clickable: true,
             }}
-            // autoplay={{
-            //   delay: 3000,
-            //   disableOnInteraction: false,
-            // }}
             style={{ alignItems: "stretch" }}
           >
             {newsMocks.map((newMock, index) => (

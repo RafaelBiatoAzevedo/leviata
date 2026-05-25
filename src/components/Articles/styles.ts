@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const Container = styled(Link)`
-  width: 100%;
+  width: 340px;
   height: 100%;
 
   display: flex;

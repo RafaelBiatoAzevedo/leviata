@@ -51,7 +51,10 @@ const menus = [
     path: "/instrumentos",
     children: [
       { label: "Intrumentos de Pesquisa", path: "/instrumentos" },
-      { label: "Planilhas", path: "/instrumentos/planilhas" },
+      {
+        label: "Planilhas Biblio-Temáticas",
+        path: "/instrumentos/planilhas-biblio-tematicas",
+      },
       { label: "Catálogos", path: "/instrumentos/catalogos" },
       { label: "Banco de Dados", path: "/instrumentos/banco-de-dados" },
     ],

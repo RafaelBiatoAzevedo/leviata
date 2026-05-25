@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 export const Container = styled(Link)`
   display: flex;
   flex-direction: column;
-  width: 350px;
-  height: 580px;
+  width: 290px;
+  height: 480px;
 
   overflow: hidden;
 

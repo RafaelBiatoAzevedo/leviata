@@ -13,6 +13,9 @@ import { Publications } from "../pages/ Publications";
 import { Schedule } from "../pages/Schecdule";
 import { ResearchCenter } from "../pages/ResearchCenter";
 import { Seminars } from "../pages/Seminars";
+import { BibliographicSpreadsheets } from "../pages/BibliographicSpreadsheets";
+import { Catalogs } from "../pages/ Catalogs";
+import { Database } from "../pages/Database";
 
 export function Router() {
   return (
@@ -26,6 +29,12 @@ export function Router() {
       <Route path="/publicacoes" element={<Publications />} />
 
       <Route path="/instrumentos" element={<Instruments />} />
+      <Route
+        path="/instrumentos/planilhas-biblio-tematicas"
+        element={<BibliographicSpreadsheets />}
+      />
+      <Route path="/instrumentos/catalogos" element={<Catalogs />} />
+      <Route path="/instrumentos/" element={<Database />} />
 
       <Route path="/atividades" element={<Activities />} />
       <Route

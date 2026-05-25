@@ -14,6 +14,9 @@ import bookGabriel from "../../assets/images/bookGabriel.webp";
 import bookMaria from "../../assets/images/bookMaria.webp";
 import bookMarilia from "../../assets/images/bookMarilia.webp";
 
+import dossieContruction from "../../assets/images/dossieConstrucao.webp";
+import dossieEscravidao from "../../assets/images/dossieEscravidao.webp";
+
 import {
   Container,
   Content,
@@ -25,8 +28,9 @@ import {
   TimelineContent,
   TimelineYear,
   TimelineTitle,
-  TimelineDescription,
   Carousel,
+  TimeLineAuthor,
+  TimeLineEvent,
 } from "./styles";
 import { ArticleCard } from "../../components/Articles";
 
@@ -249,8 +253,8 @@ const dossiersMock = [
     journal: "Revista Ensaios de História",
     volume: "v. 26",
     year: "2026",
-    cover: "/images/articles/epigrafe.jpg",
-    to: "#",
+    cover: dossieContruction,
+    to: "https://periodicos.franca.unesp.br/index.php/ensaiosdehistoria/issue/view/218",
   },
   {
     title:
@@ -259,54 +263,116 @@ const dossiersMock = [
     journal: "Revista Ágora",
     volume: "v. 35",
     year: "2024",
-    cover: "/images/articles/epigrafe.jpg",
-    to: "#",
+    cover: dossieEscravidao,
+    to: "https://periodicos.ufes.br/agora/issue/view/1632",
   },
 ];
 
-const presentationsMock = [
+export const presentedWorksMock = [
   {
-    year: "2026",
-    title: "Seminário Internacional de História Atlântica",
-    description:
-      "Apresentação sobre instituições luso-brasileiras e escravidão.",
-  },
+    author: "Marília Tofanetto Alves",
 
-  {
+    title:
+      "Concubinato, família, e tensões domésticas e conjugais na São Paulo setecentista",
+
+    event:
+      "Companheiras ou Propriedade: Concubinato e Escravidão no Mundo Luso-Atlântico",
+
     year: "2025",
-    title: "Encontro de Pesquisa Colonial",
-    description: "Debates sobre memória, arquivos e sociedade escravista.",
   },
-
   {
+    author: "Gabriel do Nascimento Barbosa",
+
+    title:
+      "Da escravidão ao pós-abolição em Franca-SP: a trajetória de Manoel Vallim (1860-1921)",
+
+    event:
+      "I Encontro Internacional do Grupo de Pesquisa “Leviatã e o Cativeiro”: Escravidão, Direito e instituições luso-brasileiras",
+
     year: "2024",
-    title: "Congresso de História Moderna",
-    description: "Discussão sobre estruturas do Estado Moderno.",
   },
   {
-    year: "2023",
-    title: "Seminário Internacional de História Atlântica",
-    description:
-      "Apresentação sobre instituições luso-brasileiras e escravidão.",
-  },
+    author: "Larissa Biato de Azevedo",
 
+    title:
+      "O contrabando de africanos no expediente das primeiras autoridades policiais do Império brasileiro (1827-1841)",
+
+    event:
+      "II Encontro Internacional de Novos Pesquisadores em História da Polícia e do Crime",
+
+    year: "2024",
+  },
   {
+    author: "Maria Fernanda Minutti Teixeira",
+
+    title:
+      "O papel dos relatos de viagem e de pensamentos iluministas no debate antiescravista europeu",
+
+    event:
+      "I Encontro Internacional do Grupo de Pesquisa “Leviatã e o Cativeiro”: Escravidão, Direito e instituições luso-brasileiras",
+
+    year: "2024",
+  },
+  {
+    author: "Mariana de Oliveira Lima",
+
+    title:
+      "O caminho e o papel da criança escrava no tráfico interno no século XIX (1809-1834)",
+
+    event:
+      "I Encontro Internacional do Grupo de Pesquisa “Leviatã e o Cativeiro”: Escravidão, Direito e instituições luso-brasileiras",
+
+    year: "2024",
+  },
+  {
+    author: "Ricardo Alexandre Ferreira",
+
+    title: "Pensamiento jurídico sobre la esclavitud (siglos XVII y XVIII)",
+
+    event:
+      "XX Congreso de la Asociación de Historiadores Latinoamericanista Europeos (AHILA): Entre América y Mediterráneo. Actores, ideas, circulaciones en los mundos ibéricos",
+
+    year: "2024",
+  },
+  {
+    author: "Sofia Zambelli Menck",
+
+    title:
+      "Os ‘Quakers’ e a condenação da escravidão no Rio de Janeiro (1840-1850)",
+
+    event:
+      "I Encontro Internacional do Grupo de Pesquisa “Leviatã e o Cativeiro”: Escravidão, Direito e instituições luso-brasileiras",
+
+    year: "2024",
+  },
+  {
+    author: "Talyssa de Souza Soares",
+
+    title:
+      "Entre a cruz e os grilhões: Duas perspectivas católicas sobre a escravidão de africanos no Brasil colonial",
+
+    event:
+      "I Encontro Internacional do Grupo de Pesquisa “Leviatã e o Cativeiro”: Escravidão, Direito e instituições luso-brasileiras",
+
+    year: "2024",
+  },
+  {
+    author: "Maria Isabela da Silva Gomes",
+
+    title:
+      "A reafirmação da cidadania de negros e mestiços livres na primeira metade do século XIX em O Homem De Côr (1833)",
+
+    event:
+      "XIII Encontro Estadual da ANPUH-GO: História, Crise Ambiental e Vulnerabilidades Sociais",
+
     year: "2022",
-    title: "Encontro de Pesquisa Colonial",
-    description: "Debates sobre memória, arquivos e sociedade escravista.",
-  },
-
-  {
-    year: "2020",
-    title: "Congresso de História Moderna",
-    description: "Discussão sobre estruturas do Estado Moderno.",
   },
 ];
 
-type TabType = "livros" | "artigos" | "apresentacoes" | "dossies";
+type TabType = "books" | "articles" | "presentations" | "dossiers";
 
 export function Publications() {
-  const [activeTab, setActiveTab] = useState<TabType>("livros");
+  const [activeTab, setActiveTab] = useState<TabType>("books");
 
   return (
     <Container>
@@ -318,53 +384,56 @@ export function Publications() {
 
         <Tabs>
           <TabButton
-            $active={activeTab === "livros"}
-            onClick={() => setActiveTab("livros")}
+            $active={activeTab === "books"}
+            onClick={() => setActiveTab("books")}
           >
             Livros
           </TabButton>
 
           <TabButton
-            $active={activeTab === "artigos"}
-            onClick={() => setActiveTab("artigos")}
+            $active={activeTab === "articles"}
+            onClick={() => setActiveTab("articles")}
           >
             Artigos
           </TabButton>
 
           <TabButton
-            $active={activeTab === "apresentacoes"}
-            onClick={() => setActiveTab("apresentacoes")}
+            $active={activeTab === "presentations"}
+            onClick={() => setActiveTab("presentations")}
           >
             Apresentações de Trabalhos
           </TabButton>
 
           <TabButton
-            $active={activeTab === "dossies"}
-            onClick={() => setActiveTab("dossies")}
+            $active={activeTab === "dossiers"}
+            onClick={() => setActiveTab("dossiers")}
           >
             Dossiês
           </TabButton>
         </Tabs>
 
-        {activeTab === "livros" && (
+        {activeTab === "books" && (
           <Carousel>
             <Swiper
               modules={[Autoplay, Pagination, Navigation]}
               slidesPerView={"auto"}
               spaceBetween={50}
-              loop
               navigation
-              speed={700}
               pagination={{
                 clickable: true,
               }}
-              // autoplay={{
-              //   delay: 3000,
-              //   disableOnInteraction: false,
-              // }}
+              style={{ alignItems: "stretch" }}
             >
               {booksMocks.map((book, index) => (
-                <SwiperSlide key={index} style={{ width: "350px" }}>
+                <SwiperSlide
+                  key={index}
+                  style={{
+                    width: "290px",
+                    height: "auto",
+                    display: "flex",
+                    alignItems: "stretch",
+                  }}
+                >
                   <BookCard {...book} />
                 </SwiperSlide>
               ))}
@@ -372,17 +441,17 @@ export function Publications() {
           </Carousel>
         )}
 
-        {activeTab === "artigos" && (
+        {activeTab === "articles" && (
           <Carousel>
             <Swiper
               modules={[Navigation, Pagination]}
               slidesPerView={"auto"}
-              spaceBetween={40}
+              spaceBetween={50}
               navigation
               pagination={{ clickable: true }}
             >
               {articlesMock.map((article, index) => (
-                <SwiperSlide key={index} style={{ width: "300px" }}>
+                <SwiperSlide key={index} style={{ width: "340px" }}>
                   <ArticleCard {...article} />
                 </SwiperSlide>
               ))}
@@ -390,37 +459,37 @@ export function Publications() {
           </Carousel>
         )}
 
-        {activeTab === "apresentacoes" && (
+        {activeTab === "presentations" && (
           <Timeline>
-            {presentationsMock.map((presentation, index) => (
+            {presentedWorksMock.map((work, index) => (
               <TimelineItem key={index}>
                 <TimelineDot />
 
                 <TimelineContent>
-                  <TimelineYear>{presentation.year}</TimelineYear>
+                  <TimeLineAuthor>{work.author}</TimeLineAuthor>
 
-                  <TimelineTitle>{presentation.title}</TimelineTitle>
+                  <TimelineTitle>{work.title}</TimelineTitle>
 
-                  <TimelineDescription>
-                    {presentation.description}
-                  </TimelineDescription>
+                  <TimeLineEvent>{work.event}</TimeLineEvent>
+
+                  <TimelineYear>{work.year}</TimelineYear>
                 </TimelineContent>
               </TimelineItem>
             ))}
           </Timeline>
         )}
 
-        {activeTab === "dossies" && (
+        {activeTab === "dossiers" && (
           <Carousel>
             <Swiper
               modules={[Navigation, Pagination]}
               slidesPerView={"auto"}
-              spaceBetween={40}
+              spaceBetween={50}
               navigation
               pagination={{ clickable: true }}
             >
               {dossiersMock.map((dossier, index) => (
-                <SwiperSlide key={index} style={{ width: "300px" }}>
+                <SwiperSlide key={index} style={{ width: "340px" }}>
                   <ArticleCard {...dossier} />
                 </SwiperSlide>
               ))}
