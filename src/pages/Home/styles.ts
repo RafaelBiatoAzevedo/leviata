@@ -11,6 +11,10 @@ export const Content = styled.div`
   align-items: center;
   gap: 4rem;
   padding: 4rem 16rem;
+
+  h1 {
+    text-align: center;
+  }
 `;
 
 export const ImageHero = styled.img`

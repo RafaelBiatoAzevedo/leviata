@@ -15,6 +15,7 @@ import {
 const instruments = [
   {
     icon: <FiClipboard />,
+    to: "/instrumentos/planilhas-biblio-tematicas",
     title: "Levantamentos de Dossiês",
     description:
       "Coleções organizadas de documentos, registros e materiais históricos utilizados nas pesquisas do grupo.",
@@ -22,6 +23,7 @@ const instruments = [
 
   {
     icon: <FiBookOpen />,
+    to: "/instrumentos/catalogos",
     title: "Catálogos",
     description:
       "Catálogos temáticos produzidos para auxiliar consultas, análises documentais e investigações historiográficas.",
@@ -29,6 +31,7 @@ const instruments = [
 
   {
     icon: <FiDatabase />,
+    to: "/instrumentos/banco-de-dados",
     title: "Bancos de Dados",
     description:
       "Bases estruturadas de informações históricas reunindo fontes, registros e dados relevantes para pesquisa acadêmica.",
@@ -46,7 +49,7 @@ export function Instruments() {
 
         <Grid>
           {instruments.map((instrument, index) => (
-            <InstrumentCard key={index}>
+            <InstrumentCard key={index} to={instrument.to}>
               <IconWrapper>{instrument.icon}</IconWrapper>
 
               <CardTitle>{instrument.title}</CardTitle>

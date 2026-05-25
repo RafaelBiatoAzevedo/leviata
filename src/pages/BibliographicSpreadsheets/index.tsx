@@ -5,7 +5,7 @@ export function BibliographicSpreadsheets() {
   return (
     <Container>
       <Content>
-        <SectionHeader title="Planilhas biblio-temáticas" />
+        <SectionHeader center title="Planilhas biblio-temáticas" />
         <Paragraph>
           As planilhas disponibilizadas (navegue pelo menu) visam facilitar o
           acesso dos públicos especializado e não-especializado aos trabalhos

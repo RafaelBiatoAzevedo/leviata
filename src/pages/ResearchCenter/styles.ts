@@ -15,7 +15,7 @@ export const Content = styled.div`
 `;
 
 export const Paragraph = styled.p`
-  text-align: left;
+  text-align: justify;
   font-size: 1.4rem;
-  width: 800px;
+  width: 900px;
 `;

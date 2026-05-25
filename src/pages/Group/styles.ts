@@ -19,9 +19,9 @@ export const Title = styled.h1`
 `;
 
 export const Paragraph = styled.p`
-  text-align: center;
+  text-align: justify;
   font-size: 1.4rem;
-  padding: 0px 8rem;
+  width: 900px;
 `;
 
 export const PresentationSection = styled.section`

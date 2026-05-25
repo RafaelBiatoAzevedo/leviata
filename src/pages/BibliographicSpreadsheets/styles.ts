@@ -14,7 +14,7 @@ export const Content = styled.div`
 `;
 
 export const Paragraph = styled.p`
-  text-align: center;
-  font-size: 1.4rem;
-  padding: 0px 8rem;
+  text-align: justify;
+  font-size: 1.2rem;
+  width: 900px;
 `;

@@ -168,7 +168,7 @@ export function Home() {
           diversas instituições luso-brasileiras – Inquisição, família, polícia,
           Imprensa – e a escravidão de africanos e descendentes.
         </h1>
-        <Button title="Saiba mais"></Button>
+        <Button to="/grupo/" title="Saiba mais"></Button>
         <HistoryDivider />
         <SectionHeader
           center
@@ -224,7 +224,7 @@ export function Home() {
             ))}
           </Swiper>
         </Carousel>
-        <Button title="Mais"></Button>
+        <Button to="/publicacoes" title="Mais"></Button>
         <HistoryDivider />
         <SectionHeader
           center

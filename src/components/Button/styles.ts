@@ -1,20 +1,62 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-export const Container = styled.button`
+interface IContainerProps {
+  $isLink?: boolean;
+}
+
+export const Container = styled.button<IContainerProps>`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   padding: 12px 18px;
 
-  border: none;
   border-radius: 20px;
 
-  background: ${({ theme }) => theme.colors.primary};
-  color: black;
+  border: none;
 
-  font-weight: 600;
   cursor: pointer;
 
-  transition: 0.2s;
+  text-decoration: none;
+
+  background: ${({ theme }) => theme.colors.primary};
+
+  color: ${({ theme }) => theme.colors.text};
+
+  font-weight: 600;
+
+  transition: 0.3s;
 
   &:hover {
-    filter: brightness(1.1);
+    transform: translateY(-2px);
+
+    box-shadow: 0 0 20px ${({ theme }) => theme.colors.accentGlow};
+  }
+`;
+
+export const LinkContainer = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 18px;
+
+  border-radius: 20px;
+
+  text-decoration: none;
+
+  background: ${({ theme }) => theme.colors.primary};
+
+  color: ${({ theme }) => theme.colors.text};
+
+  font-weight: 600;
+
+  transition: 0.3s;
+
+  &:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 0 20px ${({ theme }) => theme.colors.accentGlow};
   }
 `;

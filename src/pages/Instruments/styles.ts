@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   width: 100%;
@@ -32,9 +33,11 @@ export const Grid = styled.div`
   }
 `;
 
-export const InstrumentCard = styled.div`
+export const InstrumentCard = styled(Link)`
   display: flex;
   flex-direction: column;
+
+  text-decoration: none;
 
   gap: 22px;
 

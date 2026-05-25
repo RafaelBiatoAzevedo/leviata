@@ -17,7 +17,7 @@ export function Catalogs() {
   return (
     <Container>
       <Content>
-        <SectionHeader title="Catálogos" />
+        <SectionHeader center title="Catálogos" />
         <Title>
           Escritos sobre o negro e a escravidão africana: um guia de obras
           disponíveis nas bases do banco de dados digital Escritos Sobre os
@@ -60,6 +60,12 @@ export function Catalogs() {
           pdf={pdf}
           externalLink="https://repositorio.unesp.br/entities/publication/83388b8c-a51b-4368-ab87-1b4aafb9f121"
         />
+
+        <ParagraphDecoration>
+          Como citar: FERREIRA, R. A. Escritos sobre o negro e a escravidão
+          africana: um guia de obras disponíveis nas bases de dados digital
+          ‘Escritos sobre os Novos Mundos’. Dados de Pesquisa, 2017.
+        </ParagraphDecoration>
       </Content>
     </Container>
   );

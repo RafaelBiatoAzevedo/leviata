@@ -17,7 +17,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -31,6 +31,7 @@ interface IDocumentViewerProps {
 
 export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
   const [pages, setPages] = useState(0);
+  const [width, setWidth] = useState(900);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -41,6 +42,22 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
   function handleNextPage() {
     setCurrentPage((prev) => (prev < pages ? prev + 1 : prev));
   }
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth < 768) {
+        setWidth(window.innerWidth - 40);
+      } else {
+        setWidth(900);
+      }
+    }
+
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <Container>
@@ -57,11 +74,14 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
       <Viewer>
         <Document
           file={pdf}
+          loading={null}
           onLoadSuccess={({ numPages }) => setPages(numPages)}
         >
           <Page
+            key={currentPage}
             pageNumber={currentPage}
-            width={900}
+            width={width}
+            loading={null}
             renderTextLayer={false}
             renderAnnotationLayer={false}
           />

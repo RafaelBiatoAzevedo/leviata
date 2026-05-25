@@ -34,7 +34,7 @@ export function Router() {
         element={<BibliographicSpreadsheets />}
       />
       <Route path="/instrumentos/catalogos" element={<Catalogs />} />
-      <Route path="/instrumentos/" element={<Database />} />
+      <Route path="/instrumentos/banco-de-dados" element={<Database />} />
 
       <Route path="/atividades" element={<Activities />} />
       <Route

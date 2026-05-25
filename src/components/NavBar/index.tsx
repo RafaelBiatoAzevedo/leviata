@@ -192,6 +192,7 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
                         key={submenu.path}
                         as={Link}
                         to={submenu.path}
+                        onClick={() => setOpenDropdown(null)}
                       >
                         {submenu.label}
                       </SubmenuItem>

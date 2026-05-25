@@ -73,6 +73,8 @@ export const Viewer = styled.div`
     border-radius: 12px;
 
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+
+    transition: opacity 0.2s ease;
   }
 
   canvas {
