@@ -16,6 +16,9 @@ import { Seminars } from "../pages/Seminars";
 import { BibliographicSpreadsheets } from "../pages/BibliographicSpreadsheets";
 import { Catalogs } from "../pages/ Catalogs";
 import { Database } from "../pages/Database";
+import { DossierDetails } from "../pages/DossierDetails";
+import { ThematicDetails } from "../pages/ThematicDetails";
+import { HistoricalJuris } from "../pages/ HistoricalJuris";
 
 export function Router() {
   return (
@@ -25,6 +28,10 @@ export function Router() {
       <Route path="/grupo" element={<Group />} />
       <Route path="/grupo/pesquisadores" element={<Researchers />} />
       <Route path="/grupo/linhas-tematicas" element={<ThematicLines />} />
+      <Route
+        path="/grupo/linhas-tematicas/tematica/:id"
+        element={<ThematicDetails />}
+      />
 
       <Route path="/publicacoes" element={<Publications />} />
 
@@ -32,6 +39,10 @@ export function Router() {
       <Route
         path="/instrumentos/planilhas-biblio-tematicas"
         element={<BibliographicSpreadsheets />}
+      />
+      <Route
+        path="/instrumentos/planilhas-biblio-tematicas/dossie/:id"
+        element={<DossierDetails />}
       />
       <Route path="/instrumentos/catalogos" element={<Catalogs />} />
       <Route path="/instrumentos/banco-de-dados" element={<Database />} />
@@ -41,7 +52,10 @@ export function Router() {
         path="/atividades/nucleo-de-pesquisa-em-costas-negras"
         element={<ResearchCenter />}
       />
-      <Route path="/atividades/juris-historicos" element={<Activities />} />
+      <Route
+        path="/atividades/juris-historicos"
+        element={<HistoricalJuris />}
+      />
       <Route path="/atividades/encontros-e-seminarios" element={<Seminars />} />
 
       <Route path="/agenda" element={<Schedule />} />

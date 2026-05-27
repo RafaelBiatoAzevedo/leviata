@@ -12,11 +12,23 @@ export const Content = styled.div`
   padding: 4rem 16rem;
 `;
 
-export const LinesLInksWrapper = styled.div`
-  align-items: stretch;
-  justify-content: center;
+export const ThematicLinesGrid = styled.div`
+  width: 1300px;
+  align-self: center;
+
   display: flex;
-  flex-direction: row;
-  width: 100%;
   gap: 4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;

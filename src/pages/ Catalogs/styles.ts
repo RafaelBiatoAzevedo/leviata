@@ -19,12 +19,6 @@ export const Title = styled.h2`
   width: 900px;
 `;
 
-export const Paragraph = styled.p`
-  text-align: justify;
-  font-size: 1.2rem;
-  width: 900px;
-`;
-
 export const ParagraphDecoration = styled.p`
   text-align: center;
   font-size: 1rem;

@@ -1,8 +1,8 @@
 import { NewsletterForm } from "../../components/NewsletterForm";
+import { ParagraphText } from "../../components/ParagraphText";
 import {
   Container,
   Content,
-  Paragraph,
   PresentationLabel,
   PresentationSection,
   PresentationTitle,
@@ -10,13 +10,7 @@ import {
   VideoWrapper,
 } from "./styles";
 
-export function Group() {
-  return (
-    <Container>
-      <Content>
-        <Title>O Grupo</Title>
-        <Paragraph>
-          Criado em 2019, o grupo de pesquisa “Leviatã e o Cativeiro” reúne
+const text = `Criado em 2019, o grupo de pesquisa “Leviatã e o Cativeiro” reúne
           pesquisadores em torno do binômio temático Estado Moderno e
           escravidão. Ao considerar um largo arco temporal, que vai do século
           XVI ao XIX, nossas pesquisas procuram analisar, com base em diferentes
@@ -27,8 +21,15 @@ export function Group() {
           período imperial, nossas investigações perpassam indagações e
           respostas aos temas pungentes na sociedade brasileira atual, agregando
           novos tópicos aos debates estabelecidos entre os especialistas e
-          abrindo a comunicação com todo o público interessado.
-        </Paragraph>
+          abrindo a comunicação com todo o público interessado.`;
+
+export function Group() {
+  return (
+    <Container>
+      <Content>
+        <Title>O Grupo</Title>
+
+        <ParagraphText text={text} />
 
         <PresentationSection>
           <PresentationLabel>

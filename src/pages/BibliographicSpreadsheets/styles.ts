@@ -18,3 +18,23 @@ export const Paragraph = styled.p`
   font-size: 1.2rem;
   width: 900px;
 `;
+
+export const DossiersGrid = styled.div`
+  width: 1100px;
+
+  display: flex;
+  gap: 4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;

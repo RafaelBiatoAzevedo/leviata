@@ -5,7 +5,7 @@ export const Container = styled(Link)`
   display: flex;
   flex-direction: column;
   width: 290px;
-  height: 480px;
+  height: 100%;
 
   overflow: hidden;
 
@@ -62,7 +62,7 @@ export const Container = styled(Link)`
 
 export const Cover = styled.div`
   width: 100%;
-  height: 450px;
+  height: 380px;
 
   overflow: hidden;
 

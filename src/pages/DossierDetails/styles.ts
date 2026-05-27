@@ -5,6 +5,14 @@ export const Container = styled.div`
   padding-top: 70px;
 `;
 
+export const ContainerLoading = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 800px;
+  align-items: center;
+  justify-content: center;
+`;
+
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
@@ -16,6 +24,19 @@ export const Content = styled.div`
 export const Title = styled.h2`
   font-size: 2rem;
   text-align: center;
+  width: 900px;
+`;
+
+export const Subtitle = styled.h3`
+  font-size: 1.6rem;
+  text-align: center;
+  color: ${({ theme }) => theme.colors.primary};
+  width: 900px;
+`;
+
+export const Paragraph = styled.p`
+  text-align: justify;
+  font-size: 1.2rem;
   width: 900px;
 `;
 

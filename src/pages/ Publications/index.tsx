@@ -32,7 +32,7 @@ import {
   TimeLineAuthor,
   TimeLineEvent,
 } from "./styles";
-import { ArticleCard } from "../../components/Articles";
+import { ArticleCard } from "../../components/ArticlesCard";
 
 const booksMocks = [
   {

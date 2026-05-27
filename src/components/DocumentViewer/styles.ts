@@ -10,9 +10,10 @@ export const Container = styled.div`
 `;
 
 export const Actions = styled.div`
+  width: 100%;
   display: flex;
   justify-content: flex-end;
-  gap: 18px;
+  gap: 0.5rem;
 
   flex-wrap: wrap;
 `;
@@ -22,19 +23,19 @@ export const ActionButton = styled.a`
   align-items: center;
   gap: 1rem;
 
-  padding: 12px 18px;
+  padding: 8px 12px;
 
   border-radius: 12px;
 
   text-decoration: none;
 
-  background: ${({ theme }) => theme.colors.secondary};
-
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  //border: 1px solid ${({ theme }) => theme.colors.border};
 
   color: ${({ theme }) => theme.colors.onSecondary};
 
   transition: 0.3s;
+
+  cursor: pointer;
 
   svg {
     font-size: 1.2rem;
@@ -51,7 +52,11 @@ export const ActionButton = styled.a`
   }
 `;
 
-export const Viewer = styled.div`
+interface IViewerProps {
+  width: number;
+}
+
+export const Viewer = styled.div<IViewerProps>`
   width: 100%;
 
   max-height: 90vh;
@@ -59,15 +64,19 @@ export const Viewer = styled.div`
   overflow: auto;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 
   padding: 20px;
+  gap: 1rem;
 
   border-radius: 18px;
 
   background: ${({ theme }) => theme.colors.backgroundCard};
 
   .react-pdf__Page {
+    width: ${({ width }) => width};
     overflow: hidden;
 
     border-radius: 12px;
