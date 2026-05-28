@@ -10,6 +10,6 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 16rem;
+  padding: 2rem 16rem;
   gap: 3rem;
 `;

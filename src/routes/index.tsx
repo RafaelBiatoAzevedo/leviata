@@ -19,6 +19,8 @@ import { Database } from "../pages/Database";
 import { DossierDetails } from "../pages/DossierDetails";
 import { ThematicDetails } from "../pages/ThematicDetails";
 import { HistoricalJuris } from "../pages/ HistoricalJuris";
+import Painels from "../pages/Painels";
+import { MeetingsAndSeminars } from "../pages/MeetingsAndSeminars";
 
 export function Router() {
   return (
@@ -56,12 +58,18 @@ export function Router() {
         path="/atividades/juris-historicos"
         element={<HistoricalJuris />}
       />
-      <Route path="/atividades/encontros-e-seminarios" element={<Seminars />} />
+      <Route
+        path="/atividades/encontros-e-seminarios"
+        element={<MeetingsAndSeminars />}
+      />
 
       <Route path="/agenda" element={<Schedule />} />
+      <Route path="/agenda/bancas" element={<Painels />} />
+      <Route path="/agenda/seminarios" element={<Seminars />} />
 
       <Route path="/noticias" element={<News />} />
       <Route path="/noticias/newsletter" element={<Newsletter />} />
+
       <Route path="/newsletter" element={<Newsletter />} />
 
       <Route path="/contato" element={<Contact />} />

@@ -1,21 +1,17 @@
 import styled from "styled-components";
 
-export const Container = styled.section`
+export const Container = styled.div`
   width: 100%;
+  margin-top: 70px;
 `;
 
 export const Content = styled.div`
-  width: 100%;
-  max-width: 1400px;
-
-  margin: 0 auto;
-
-  padding: 120px 8%;
-
   display: flex;
   flex-direction: column;
-
-  gap: 60px;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 16rem;
+  gap: 3rem;
 `;
 
 export const Intro = styled.p`

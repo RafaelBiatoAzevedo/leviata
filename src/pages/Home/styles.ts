@@ -10,7 +10,7 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 4rem;
-  padding: 4rem 16rem;
+  padding: 2rem 16rem;
 
   h1 {
     text-align: center;
@@ -105,4 +105,25 @@ export const Carousel = styled.div`
       height: 200px;
     }
   } */
+`;
+
+export const ThematicLinesGrid = styled.div`
+  width: 1300px;
+  align-self: center;
+
+  display: flex;
+  gap: 4rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  @media (max-width: 1200px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;

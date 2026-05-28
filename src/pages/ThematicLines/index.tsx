@@ -1,4 +1,4 @@
-import { LinkCard } from "../../components/LinkCard";
+import { ThematicLinkCard } from "../../components/ThematicLinkCard";
 import { SectionHeader } from "../../components/SectionHeader";
 import { Container, Content, ThematicLinesGrid } from "./styles";
 
@@ -34,7 +34,7 @@ export function ThematicLines() {
 
         <ThematicLinesGrid>
           {thematicLines.map((thematic) => (
-            <LinkCard
+            <ThematicLinkCard
               to={`/grupo/linhas-tematicas/tematica/${thematic.id}`}
               acronym={thematic.acronym}
               description={thematic.description}

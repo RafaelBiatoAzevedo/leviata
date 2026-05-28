@@ -1,24 +1,26 @@
-import { Acronym, Bottom, Container, Description, Title, Top } from "./styles";
+import { CardDescription, CardTitle, Container, IconWrapper } from "./styles";
+import type { JSX } from "react";
 
-interface CardLinkProps {
+interface ILinkCardProps {
   to: string;
-  acronym: string;
-  title?: string;
+  icon: JSX.Element;
+  title: string;
   description: string;
 }
 
-export function LinkCard({ to, acronym, title, description }: CardLinkProps) {
+export function LinkCard({
+  to,
+  icon: Icon,
+  title,
+  description,
+}: ILinkCardProps) {
   return (
     <Container to={to}>
-      <Top>
-        <Acronym>{acronym}</Acronym>
-      </Top>
+      <IconWrapper>{Icon}</IconWrapper>
 
-      <Bottom>
-        {!!title && <Title>{title}</Title>}
+      <CardTitle>{title}</CardTitle>
 
-        <Description>{description}</Description>
-      </Bottom>
+      <CardDescription>{description}</CardDescription>
     </Container>
   );
 }

@@ -2,15 +2,8 @@ import { FiDatabase, FiBookOpen, FiClipboard } from "react-icons/fi";
 
 import { SectionHeader } from "../../components/SectionHeader";
 
-import {
-  Container,
-  Content,
-  Grid,
-  InstrumentCard,
-  IconWrapper,
-  CardTitle,
-  CardDescription,
-} from "./styles";
+import { Container, Content, Grid } from "./styles";
+import { LinkCard } from "../../components/LinkCard";
 
 const instruments = [
   {
@@ -49,13 +42,13 @@ export function Instruments() {
 
         <Grid>
           {instruments.map((instrument, index) => (
-            <InstrumentCard key={index} to={instrument.to}>
-              <IconWrapper>{instrument.icon}</IconWrapper>
-
-              <CardTitle>{instrument.title}</CardTitle>
-
-              <CardDescription>{instrument.description}</CardDescription>
-            </InstrumentCard>
+            <LinkCard
+              key={index}
+              to={instrument.to}
+              icon={instrument.icon}
+              title={instrument.title}
+              description={instrument.description}
+            />
           ))}
         </Grid>
       </Content>

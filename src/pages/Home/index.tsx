@@ -3,7 +3,7 @@ import {
   Container,
   Content,
   ImageHero,
-  LinesLInksWrapper,
+  ThematicLinesGrid,
 } from "./styles";
 import leviataHero from "../../assets/images/leviataHero.webp";
 
@@ -18,7 +18,7 @@ import simposio from "../../assets/images/Simposio.webp";
 import meetLeviata from "../../assets/images/leviataEncrontro.webp";
 
 import { Button } from "../../components/Button";
-import { LinkCard } from "../../components/LinkCard";
+import { ThematicLinkCard } from "../../components/ThematicLinkCard";
 import { BookCard } from "../../components/BookCard";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -155,6 +155,25 @@ const newsMocks = [
   },
 ];
 
+const thematicLinesMock = [
+  {
+    id: 1,
+    acronym: "CSA",
+    description: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
+  },
+  {
+    id: 2,
+    acronym: "MCE",
+    description:
+      "Monarquia, Cristianismo e Escravidão no Mundo Luso-brasileiro (séculos XVII e XVIII)",
+  },
+  {
+    id: 3,
+    acronym: "EIE",
+    description: "Estado, Imprensa e Escravidão no Brasil do Século XIX",
+  },
+];
+
 export function Home() {
   return (
     <Container>
@@ -177,23 +196,15 @@ export function Home() {
             pesquisas do grupo, abrangendo diferentes abordagens da história,
             memória e construção do conhecimento histórico."
         />
-        <LinesLInksWrapper>
-          <LinkCard
-            to="/grupo/pesquisadores"
-            acronym="CSA"
-            description="Cativeiro, saúde e alimentação: séculos XVII e XVIII"
-          ></LinkCard>
-          <LinkCard
-            to="/grupo/pesquisadores"
-            acronym="MCE"
-            description="Monarquia, Cristianismo e Escravidão no Mundo Luso-brasileiro (séculos XVII e XVIII)"
-          ></LinkCard>
-          <LinkCard
-            to="/grupo/pesquisadores"
-            acronym="EIE"
-            description="Estado, Imprensa e Escravidão no Brasil do Século XIX"
-          ></LinkCard>
-        </LinesLInksWrapper>
+        <ThematicLinesGrid>
+          {thematicLinesMock.map((thematic) => (
+            <ThematicLinkCard
+              to={`/grupo/linhas-tematicas/tematica/${thematic.id}`}
+              acronym={thematic.acronym}
+              description={thematic.description}
+            />
+          ))}
+        </ThematicLinesGrid>
         <HistoryDivider />
         <SectionHeader
           center
@@ -208,17 +219,21 @@ export function Home() {
             spaceBetween={50}
             loop
             navigation
-            speed={700}
             pagination={{
               clickable: true,
             }}
-            // autoplay={{
-            //   delay: 3000,
-            //   disableOnInteraction: false,
-            // }}
+            style={{ alignItems: "stretch" }}
           >
             {booksMocks.map((book, index) => (
-              <SwiperSlide key={index} style={{ width: "290px" }}>
+              <SwiperSlide
+                key={index}
+                style={{
+                  width: "290px",
+                  height: "auto",
+                  display: "flex",
+                  alignItems: "stretch",
+                }}
+              >
                 <BookCard {...book} />
               </SwiperSlide>
             ))}
@@ -237,6 +252,7 @@ export function Home() {
             modules={[Autoplay, Pagination, Navigation]}
             slidesPerView={"auto"}
             spaceBetween={50}
+            loop
             navigation
             pagination={{
               clickable: true,

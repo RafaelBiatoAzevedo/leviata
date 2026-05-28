@@ -10,7 +10,7 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 4rem 16rem;
+  padding: 2rem 16rem;
   gap: 3rem;
 `;
 
@@ -49,6 +49,19 @@ export const TabButton = styled.button<{
     border-color: ${({ theme }) => theme.colors.accent};
 
     transform: translateY(-2px);
+  }
+`;
+
+export const Subtitle = styled.h3`
+  text-align: center;
+
+  margin-bottom: 2rem;
+
+  line-height: 1.1;
+
+  color: ${({ theme }) => theme.colors.text};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
   }
 `;
 

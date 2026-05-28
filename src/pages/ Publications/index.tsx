@@ -31,6 +31,7 @@ import {
   Carousel,
   TimeLineAuthor,
   TimeLineEvent,
+  Subtitle,
 } from "./styles";
 import { ArticleCard } from "../../components/ArticlesCard";
 
@@ -418,6 +419,7 @@ export function Publications() {
               modules={[Autoplay, Pagination, Navigation]}
               slidesPerView={"auto"}
               spaceBetween={50}
+              loop
               navigation
               pagination={{
                 clickable: true,
@@ -446,12 +448,22 @@ export function Publications() {
             <Swiper
               modules={[Navigation, Pagination]}
               slidesPerView={"auto"}
+              loop
               spaceBetween={50}
               navigation
               pagination={{ clickable: true }}
+              style={{ alignItems: "stretch" }}
             >
               {articlesMock.map((article, index) => (
-                <SwiperSlide key={index} style={{ width: "340px" }}>
+                <SwiperSlide
+                  key={index}
+                  style={{
+                    width: "340px",
+                    height: "auto",
+                    display: "flex",
+                    alignItems: "stretch",
+                  }}
+                >
                   <ArticleCard {...article} />
                 </SwiperSlide>
               ))}
@@ -460,23 +472,29 @@ export function Publications() {
         )}
 
         {activeTab === "presentations" && (
-          <Timeline>
-            {presentedWorksMock.map((work, index) => (
-              <TimelineItem key={index}>
-                <TimelineDot />
+          <div>
+            <Subtitle>
+              Confira os trabalhos mais recentes apresentados pelos
+              pesquisadores do grupo.
+            </Subtitle>
+            <Timeline>
+              {presentedWorksMock.map((work, index) => (
+                <TimelineItem key={index}>
+                  <TimelineDot />
 
-                <TimelineContent>
-                  <TimeLineAuthor>{work.author}</TimeLineAuthor>
+                  <TimelineContent>
+                    <TimeLineAuthor>{work.author}</TimeLineAuthor>
 
-                  <TimelineTitle>{work.title}</TimelineTitle>
+                    <TimelineTitle>{work.title}</TimelineTitle>
 
-                  <TimeLineEvent>{work.event}</TimeLineEvent>
+                    <TimeLineEvent>{work.event}</TimeLineEvent>
 
-                  <TimelineYear>{work.year}</TimelineYear>
-                </TimelineContent>
-              </TimelineItem>
-            ))}
-          </Timeline>
+                    <TimelineYear>{work.year}</TimelineYear>
+                  </TimelineContent>
+                </TimelineItem>
+              ))}
+            </Timeline>
+          </div>
         )}
 
         {activeTab === "dossiers" && (
@@ -485,11 +503,21 @@ export function Publications() {
               modules={[Navigation, Pagination]}
               slidesPerView={"auto"}
               spaceBetween={50}
+              loop
               navigation
               pagination={{ clickable: true }}
+              style={{ alignItems: "stretch" }}
             >
               {dossiersMock.map((dossier, index) => (
-                <SwiperSlide key={index} style={{ width: "340px" }}>
+                <SwiperSlide
+                  key={index}
+                  style={{
+                    width: "340px",
+                    height: "auto",
+                    display: "flex",
+                    alignItems: "stretch",
+                  }}
+                >
                   <ArticleCard {...dossier} />
                 </SwiperSlide>
               ))}

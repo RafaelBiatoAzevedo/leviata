@@ -2,15 +2,8 @@ import { FiUsers, FiBookOpen, FiMic } from "react-icons/fi";
 
 import { SectionHeader } from "../../components/SectionHeader";
 
-import {
-  Container,
-  Content,
-  Grid,
-  ActivityCard,
-  IconWrapper,
-  CardTitle,
-  CardDescription,
-} from "./styles";
+import { Container, Content, Grid } from "./styles";
+import { LinkCard } from "../../components/LinkCard";
 
 const activities = [
   {
@@ -22,7 +15,7 @@ const activities = [
   },
 
   {
-    to: "/atividades/nucleo-de-pesquisa-em-costas-negras",
+    to: "/atividades/juris-historicos",
     icon: <FiBookOpen />,
     title: "Júris Históricos",
     description:
@@ -30,7 +23,7 @@ const activities = [
   },
 
   {
-    to: "/atividades/nucleo-de-pesquisa-em-costas-negras",
+    to: "/atividades/encontros-e-seminarios",
     icon: <FiMic />,
     title: "Encontros e Seminários",
     description:
@@ -49,13 +42,13 @@ export function Activities() {
 
         <Grid>
           {activities.map((activity, index) => (
-            <ActivityCard to={activity.to} key={index}>
-              <IconWrapper>{activity.icon}</IconWrapper>
-
-              <CardTitle>{activity.title}</CardTitle>
-
-              <CardDescription>{activity.description}</CardDescription>
-            </ActivityCard>
+            <LinkCard
+              key={index}
+              to={activity.to}
+              icon={activity.icon}
+              title={activity.title}
+              description={activity.description}
+            ></LinkCard>
           ))}
         </Grid>
       </Content>
