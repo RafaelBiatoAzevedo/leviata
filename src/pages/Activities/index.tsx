@@ -14,6 +14,7 @@ import {
 
 const activities = [
   {
+    to: "/atividades/nucleo-de-pesquisa-em-costas-negras",
     icon: <FiUsers />,
     title: "Núcleo de pesquisa “Em costas negras”",
     description:
@@ -21,6 +22,7 @@ const activities = [
   },
 
   {
+    to: "/atividades/nucleo-de-pesquisa-em-costas-negras",
     icon: <FiBookOpen />,
     title: "Júris Históricos",
     description:
@@ -28,6 +30,7 @@ const activities = [
   },
 
   {
+    to: "/atividades/nucleo-de-pesquisa-em-costas-negras",
     icon: <FiMic />,
     title: "Encontros e Seminários",
     description:
@@ -46,7 +49,7 @@ export function Activities() {
 
         <Grid>
           {activities.map((activity, index) => (
-            <ActivityCard key={index}>
+            <ActivityCard to={activity.to} key={index}>
               <IconWrapper>{activity.icon}</IconWrapper>
 
               <CardTitle>{activity.title}</CardTitle>

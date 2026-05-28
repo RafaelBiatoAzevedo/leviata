@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -32,7 +33,7 @@ export const Grid = styled.div`
   }
 `;
 
-export const ActivityCard = styled.div`
+export const ActivityCard = styled(Link)`
   display: flex;
   flex-direction: column;
 
