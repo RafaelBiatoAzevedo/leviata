@@ -33,7 +33,7 @@ export const painelsMock: IPanels[] = [
       "Olhares estrangeiros: a escravidão no Brasil presente nos relatos de viajantes ingleses (1740-1793)",
     candidata: "Maria Fernanda Minutti Teixeira",
     banca: [
-      "Prof. Dr. Ricardo Alexandre Ferreira (Orientador – UNESP/Franca)",
+      "Prof. Dr. Ricardo Alexandre Ferreira (UNESP/Franca) - Orientador",
       "Profa. Dra. Ana Paula Ribeiro F. M. Avelar (UAB/Portugal)",
       "Profa. Dra. Ana Carolina de Carvalho Viotti (UNESP/Marília)",
     ],
@@ -63,7 +63,7 @@ export default function Painels() {
   return (
     <Container>
       <Content>
-        <SectionHeader center title="Bancas" />
+        {/* <SectionHeader center title="Bancas" /> */}
         <SectionHeader
           title="Exames de Qualificação"
           subtitle="  Acompanhe as bancas de qualificação e defesas vinculadas às

@@ -14,8 +14,29 @@ export const Content = styled.div`
   gap: 3rem;
 `;
 
-export const Paragraph = styled.p`
+export const InfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 1.5rem;
+  align-self: flex-start;
+`;
+
+export const Label = styled.h2`
+  align-self: flex-start;
+  font-size: 1.8rem;
+  letter-spacing: 0.08em;
+
+  margin-bottom: 0.5rem;
+
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+export const Text = styled.p`
+  line-height: 1.9;
+  margin-left: 1rem;
+
+  color: ${({ theme }) => theme.colors.text};
+
   text-align: justify;
-  font-size: 1.4rem;
-  width: 900px;
 `;

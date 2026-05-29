@@ -1,5 +1,5 @@
 import { SectionHeader } from "../../components/SectionHeader";
-import { Carousel, Container, Content } from "./styles";
+import { Container, Content } from "./styles";
 
 import groupLeviata from "../../assets/images/grupoLeviataEncontro.webp";
 import projectJuris from "../../assets/images/ProjetoJuris.webp";
@@ -8,6 +8,7 @@ import meetLeviata from "../../assets/images/leviataEncrontro.webp";
 import { NewsCard } from "../../components/NewsCard";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Carousel } from "../../components/Carousel";
 const newsMocks = [
   {
     image: groupLeviata,

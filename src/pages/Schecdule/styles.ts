@@ -23,14 +23,14 @@ export const SectionTitle = styled.h3`
 `;
 
 export const Timeline = styled.div`
+  position: relative;
+
   display: flex;
   flex-direction: column;
 
-  gap: 36px;
+  gap: 2rem;
 
-  position: relative;
-
-  padding-left: 32px;
+  padding-left: 2rem;
 
   &::before {
     content: "";
@@ -39,11 +39,15 @@ export const Timeline = styled.div`
 
     left: 10px;
     top: 0;
+    bottom: 0;
 
     width: 2px;
-    height: 100%;
 
     background: ${({ theme }) => theme.colors.border};
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 1.5rem;
   }
 `;
 
@@ -51,58 +55,57 @@ export const TimelineItem = styled.div`
   position: relative;
 
   display: flex;
+  align-items: flex-start;
+  width: 900px;
 `;
 
 export const TimelineDot = styled.div`
+  position: absolute;
+
+  left: -1.91rem;
+  top: 1.8rem;
+
   width: 20px;
   height: 20px;
 
   border-radius: 50%;
 
-  background: ${({ theme }) => theme.colors.accent};
+  border: 4px solid ${({ theme }) => theme.colors.background};
 
-  position: absolute;
+  z-index: 2;
+  background: ${({ theme }) => theme.colors.primary};
 
-  left: -32px;
-  top: 8px;
-
-  box-shadow: 0 0 20px ${({ theme }) => theme.colors.accentGlow};
+  @media (max-width: 768px) {
+    left: -1.45rem;
+  }
 `;
 
 export const TimelineContent = styled.div`
-  width: 900px;
+  width: 100%;
 
-  display: flex;
-  flex-direction: column;
-
-  gap: 12px;
-
-  padding: 28px;
+  padding: 2rem;
 
   border-radius: 18px;
 
-  background: ${({ theme }) => theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.surface};
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid ${({ theme }) => theme.colors.border};
 
-  transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+
+  transition: 0.2s ease;
 
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
+  }
 
-    border-color: ${({ theme }) => theme.colors.accent};
-
-    box-shadow:
-      0 20px 40px rgba(0, 0, 0, 0.35),
-      0 0 20px ${({ theme }) => theme.colors.accentGlow};
+  @media (max-width: 768px) {
+    padding: 1.5rem;
   }
 `;
 
 export const EventTitle = styled.h3`
-  color: ${({ theme }) => theme.colors.onSecondary};
+  color: ${({ theme }) => theme.colors.text};
 
   font-size: 1.4rem;
 

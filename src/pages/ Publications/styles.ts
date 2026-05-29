@@ -66,14 +66,14 @@ export const Subtitle = styled.h3`
 `;
 
 export const Timeline = styled.div`
+  position: relative;
+
   display: flex;
   flex-direction: column;
 
-  gap: 40px;
+  gap: 2rem;
 
-  position: relative;
-
-  padding-left: 30px;
+  padding-left: 2rem;
 
   &::before {
     content: "";
@@ -82,53 +82,69 @@ export const Timeline = styled.div`
 
     left: 10px;
     top: 0;
+    bottom: 0;
 
     width: 2px;
-    height: 100%;
 
     background: ${({ theme }) => theme.colors.border};
+  }
+
+  @media (max-width: 768px) {
+    padding-left: 1.5rem;
   }
 `;
 
 export const TimelineItem = styled.div`
-  display: flex;
-
-  gap: 24px;
-
   position: relative;
+
+  display: flex;
+  align-items: flex-start;
+  width: 900px;
 `;
 
 export const TimelineDot = styled.div`
+  position: absolute;
+
+  left: -1.91rem;
+  top: 1.8rem;
+
   width: 20px;
   height: 20px;
 
   border-radius: 50%;
 
-  background: ${({ theme }) => theme.colors.accent};
+  border: 4px solid ${({ theme }) => theme.colors.background};
 
-  box-shadow: 0 0 15px ${({ theme }) => theme.colors.accentGlow};
+  z-index: 2;
+  background: ${({ theme }) => theme.colors.primary};
 
-  position: absolute;
-
-  left: -30px;
-  top: 8px;
+  @media (max-width: 768px) {
+    left: -1.45rem;
+  }
 `;
 
 export const TimelineContent = styled.div`
-  display: flex;
-  flex-direction: column;
+  width: 100%;
 
-  gap: 10px;
-
-  padding: 24px;
+  padding: 2rem;
 
   border-radius: 18px;
 
-  background: ${({ theme }) => theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.surface};
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid ${({ theme }) => theme.colors.border};
 
-  width: 800px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+
+  transition: 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
 `;
 
 export const TimelineYear = styled.span`
@@ -142,7 +158,7 @@ export const TimelineYear = styled.span`
 `;
 
 export const TimelineTitle = styled.h3`
-  color: ${({ theme }) => theme.colors.onSecondary};
+  color: ${({ theme }) => theme.colors.text};
 
   font-size: 1.4rem;
 

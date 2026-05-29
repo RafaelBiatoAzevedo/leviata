@@ -84,16 +84,17 @@ export const TimelineItem = styled.div`
 
   display: flex;
   align-items: flex-start;
+  width: 900px;
 `;
 
 export const TimelineDot = styled.div<ITypeProps>`
   position: absolute;
 
-  left: -1.95rem;
+  left: -1.91rem;
   top: 1.8rem;
 
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
 
   border-radius: 50%;
 
@@ -170,9 +171,10 @@ export const DateText = styled.span`
 
   margin-bottom: 1rem;
 
-  font-size: 0.92rem;
+  font-size: 1rem;
+  font-weight: bold;
 
-  color: ${({ theme }) => theme.colors.textSoft};
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 export const Title = styled.h2`
