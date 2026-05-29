@@ -61,7 +61,7 @@ export const Container = styled.div`
 
 export const Cover = styled.div`
   width: 100%;
-  height: 240px;
+  height: 400px;
 
   overflow: hidden;
 
@@ -91,7 +91,8 @@ export const Content = styled.div`
 export const Description = styled.p`
   color: ${({ theme }) => theme.colors.textSoft};
 
-  line-height: 1.8;
+  line-height: 1.6;
+  white-space: pre-line;
 
   font-size: 0.95rem;
 `;

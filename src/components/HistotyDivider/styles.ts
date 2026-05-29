@@ -1,13 +1,18 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+interface IContainerProps {
+  hasMarginVertical: boolean;
+}
+
+export const Container = styled.div<IContainerProps>`
   width: 100%;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin: 80px 0;
+  margin: ${({ hasMarginVertical }) =>
+    hasMarginVertical ? " 80px 0px" : "0px 0px"};
 
   position: relative;
 

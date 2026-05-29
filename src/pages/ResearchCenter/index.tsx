@@ -30,10 +30,10 @@ temático do acervo com o objetivo de otimizar a utilização das obras e docume
 centro em seus próprios projetos de pesquisa.`;
 
 const searchers = [
-  "Ricardo Alexandre Ferreira (UNESP/Franca) – Coordenador",
-  "Ana Carolina de Carvalho Viotti (UNESP/Marília)",
-  "Adriana Pereira Campos (UFES)",
-  "Larissa Biato de Azevedo (UNESP/Franca)",
+  "Prof. Dr. Ricardo Alexandre Ferreira (UNESP/Franca) – Coordenador",
+  "Prof. Dra Ana Carolina de Carvalho Viotti (UNESP/Marília)",
+  "Prof. Dra. Adriana Pereira Campos (UFES)",
+  "Prof. Dra. Larissa Biato de Azevedo (UNESP/Franca)",
 ];
 
 const students = ["Mariana de Oliveira Lima", "Rafaela Cia Vieira"];
@@ -41,19 +41,20 @@ const students = ["Mariana de Oliveira Lima", "Rafaela Cia Vieira"];
 const imagesMock = [
   {
     imageUrl: image1,
-    description: "image 1",
+    description: "Acervo do Núcleo",
   },
   {
     imageUrl: image2,
-    description: "image 2",
+    description: "Discentes: \nRafaela Vieira\nMariana Lima",
   },
   {
     imageUrl: image3,
-    description: "image 3",
+    description:
+      "Bibliotecaria Andréia Pereira\nProf. Dr. Ricardo Ferreira (coordenador do projeto)\nMaria Isabela Gomes\nProfa. Dra. Larissa Biato de Azevedo\nMariana Lima",
   },
   {
     imageUrl: image4,
-    description: "image 4",
+    description: "Prof. Dr. Ricardo Ferreira\nProf. Dra. Adriana Campos",
   },
 ];
 
@@ -103,7 +104,7 @@ export function ResearchCenter() {
               <SwiperSlide
                 key={index}
                 style={{
-                  width: "350px",
+                  width: "400px",
                   height: "auto",
                   display: "flex",
                   alignItems: "stretch",
