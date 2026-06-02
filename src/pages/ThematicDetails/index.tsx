@@ -1,22 +1,27 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
+  AssociatedPresentationLabel,
+  AssociatedPresentationSection,
+  AssociatedPresentationTitle,
+  AssociatedWrapper,
   Container,
   ContainerLoading,
   Content,
   PresentationLabel,
   PresentationSection,
   PresentationTitle,
-  Title,
   VideoWrapper,
 } from "./styles";
 import { Loading } from "../../components/Loading";
+import { SectionHeader } from "../../components/SectionHeader";
+import { HistoryDivider } from "../../components/HistotyDivider";
 
 interface IThematicData {
   title: string;
   author: string;
   youtubeEmbedLink: string;
-  AssociatedResearchers: [];
+  associatedResearchers: IThematicData[];
 }
 
 export function ThematicDetails() {
@@ -33,7 +38,38 @@ export function ThematicDetails() {
           title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
           author: "Ana Carolina de Carvalho Viotti",
           youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
-          AssociatedResearchers: [],
+          associatedResearchers: [
+            {
+              title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
+              author: "Ana Carolina de Carvalho Viotti",
+              youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
+              associatedResearchers: [],
+            },
+            {
+              title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
+              author: "Ana Carolina de Carvalho Viotti",
+              youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
+              associatedResearchers: [],
+            },
+            {
+              title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
+              author: "Ana Carolina de Carvalho Viotti",
+              youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
+              associatedResearchers: [],
+            },
+            {
+              title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
+              author: "Ana Carolina de Carvalho Viotti",
+              youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
+              associatedResearchers: [],
+            },
+            {
+              title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
+              author: "Ana Carolina de Carvalho Viotti",
+              youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
+              associatedResearchers: [],
+            },
+          ],
         });
         setLoading(false);
       }, 6000);
@@ -51,8 +87,8 @@ export function ThematicDetails() {
   if (loading) {
     return (
       <ContainerLoading>
-        <p>Carregando Temática ....</p>
         <Loading />
+        <p>Carregando Temática ....</p>
       </ContainerLoading>
     );
   }
@@ -68,7 +104,7 @@ export function ThematicDetails() {
   return (
     <Container>
       <Content>
-        <Title>{`${thematicData.title}`}</Title>
+        <SectionHeader center title={`${thematicData.title}`} />
         <PresentationSection>
           <PresentationLabel>
             Confira os enfoques desta linha no vídeo da pesquisadora.
@@ -85,6 +121,38 @@ export function ThematicDetails() {
             />
           </VideoWrapper>
         </PresentationSection>
+
+        <HistoryDivider />
+
+        {!!thematicData.associatedResearchers.length && (
+          <AssociatedWrapper>
+            <SectionHeader
+              small
+              title="Pesquisas vinculadas"
+              subtitle="Acompanhe as pesquisas vinculadas a temática"
+            />
+            {thematicData.associatedResearchers.map((associated) => (
+              <AssociatedPresentationSection>
+                <AssociatedPresentationLabel>
+                  Confira os enfoques desta linha no vídeo da pesquisadora.
+                </AssociatedPresentationLabel>
+
+                <AssociatedPresentationTitle>
+                  {associated.author}
+                </AssociatedPresentationTitle>
+
+                <VideoWrapper>
+                  <iframe
+                    src={associated.youtubeEmbedLink}
+                    title={associated.author}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </VideoWrapper>
+              </AssociatedPresentationSection>
+            ))}
+          </AssociatedWrapper>
+        )}
       </Content>
     </Container>
   );

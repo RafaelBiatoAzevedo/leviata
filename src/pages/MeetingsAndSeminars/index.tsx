@@ -6,14 +6,14 @@ import { FiMic } from "react-icons/fi";
 
 const meetAndSeminarsMocks = [
   {
-    to: "/atividades/nucleo-de-pesquisa-em-costas-negras",
-    icon: <FiMic />,
+    id: 1,
+    type: "encontro",
     title: "I Seminário Ampliado",
     description: "2025",
   },
   {
-    to: "/atividades/nucleo-de-pesquisa-em-costas-negras",
-    icon: <FiVideo />,
+    id: 1,
+    type: "seminario",
     title: "I Encontro Internacional",
     description: "2024",
   },
@@ -31,8 +31,8 @@ export function MeetingsAndSeminars() {
         <Grid>
           {meetAndSeminarsMocks.map((meet) => (
             <LinkCard
-              to={meet.to}
-              icon={meet.icon}
+              to={`/atividades/encontros-e-seminarios/${meet.type}/${meet.id}`}
+              icon={meet.type === "encontro" ? <FiVideo /> : <FiMic />}
               title={meet.title}
               description={meet.description}
             />

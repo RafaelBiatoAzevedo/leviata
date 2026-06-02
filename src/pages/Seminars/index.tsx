@@ -1,11 +1,8 @@
-import { HistoryDivider } from "../../components/HistotyDivider";
 import { SectionHeader } from "../../components/SectionHeader";
-import { SocialLinks } from "../../components/SocialLinks";
 
 import {
   Container,
   Content,
-  Intro,
   Timeline,
   TimelineItem,
   TimelineDot,
@@ -32,16 +29,6 @@ export function Seminars() {
           subtitle="Nossos seminários ocorrem regularmente durante o ano letivo e alguns deles são abertos ao público externo. Acompanhe nossas notícias e redes sociais para participar."
         />
 
-        <SocialLinks />
-
-        <HistoryDivider />
-
-        <Intro>
-          Os seminários promovem encontros de discussão acadêmica, circulação de
-          pesquisas e debates relacionados aos estudos sobre Estado Moderno,
-          escravidão e instituições luso-brasileiras.
-        </Intro>
-
         <Timeline>
           {seminars.map((seminar, index) => (
             <TimelineItem key={index}>
@@ -59,6 +46,16 @@ export function Seminars() {
             </TimelineItem>
           ))}
         </Timeline>
+
+        {/* <SocialLinks /> */}
+
+        {/* <HistoryDivider /> */}
+        {/* 
+        <Intro>
+          Os seminários promovem encontros de discussão acadêmica, circulação de
+          pesquisas e debates relacionados aos estudos sobre Estado Moderno,
+          escravidão e instituições luso-brasileiras.
+        </Intro> */}
       </Content>
     </Container>
   );

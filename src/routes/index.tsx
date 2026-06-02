@@ -21,6 +21,8 @@ import { ThematicDetails } from "../pages/ThematicDetails";
 import { HistoricalJuris } from "../pages/ HistoricalJuris";
 import Painels from "../pages/Painels";
 import { MeetingsAndSeminars } from "../pages/MeetingsAndSeminars";
+import { JuriDetails } from "../pages/JuriDetails";
+import { MeetingsAndSeminarsDetails } from "../pages/MeetingAndSeminarsDetails";
 
 export function Router() {
   return (
@@ -59,8 +61,16 @@ export function Router() {
         element={<HistoricalJuris />}
       />
       <Route
+        path="/atividades/juris-historicos/juris/:id"
+        element={<JuriDetails />}
+      />
+      <Route
         path="/atividades/encontros-e-seminarios"
         element={<MeetingsAndSeminars />}
+      />
+      <Route
+        path="/atividades/encontros-e-seminarios/:type/:id"
+        element={<MeetingsAndSeminarsDetails />}
       />
 
       <Route path="/agenda" element={<Schedule />} />

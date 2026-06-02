@@ -38,40 +38,40 @@ const imagesMock = [
   },
   {
     imageUrl: image2,
-    description: "Público\nIII Júri Histórico 2025",
+    description: "III Júri Histórico 2025\nPúblico",
   },
   {
     imageUrl: image3,
-    description: "Samuel Ribeiro - Defesa\nIII Júri Histórico 2025",
+    description: "III Júri Histórico 2025\nSamuel Ribeiro - Defesa",
   },
   {
     imageUrl: image4,
-    description: "Iolanda Ribeiro - Acusação\nIII Júri Histórico 2025",
+    description: "III Júri Histórico 2025\nIolanda Ribeiro - Acusação",
   },
 
   {
     imageUrl: image5,
-    description: "Processo Criminal\nIII Júri Histórico 2025",
+    description: "III Júri Histórico 2025\nProcesso Criminal",
   },
   {
     imageUrl: image6,
-    description: "Arte preparatória\nIII Júri Histórico 2025",
+    description: "III Júri Histórico 2025\nArte preparatória",
   },
   {
     imageUrl: image7,
-    description: "Arte\nIII Júri Histórico 2025",
+    description: "III Júri Histórico 2025\nArte",
   },
   {
     imageUrl: image8,
-    description: "UNESP/Franca\nII Júri Histórico 2024",
+    description: "II Júri Histórico 2024\nUNESP/Franca",
   },
   {
     imageUrl: image9,
-    description: "UNESP/Franca\nII Júri Histórico 2024",
+    description: "II Júri Histórico 2024\nUNESP/Franca",
   },
   {
     imageUrl: image10,
-    description: "Processo criminal\nII Júri Histórico 2024",
+    description: "II Júri Histórico 2024\nProcesso criminal",
   },
   {
     imageUrl: image11,

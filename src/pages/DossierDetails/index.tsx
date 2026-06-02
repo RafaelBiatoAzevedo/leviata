@@ -55,8 +55,8 @@ export function DossierDetails() {
   if (loading) {
     return (
       <ContainerLoading>
-        <p>Carregando Dossiê ....</p>
         <Loading />
+        <p>Carregando Dossiê ....</p>
       </ContainerLoading>
     );
   }

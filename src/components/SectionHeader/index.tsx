@@ -4,16 +4,18 @@ interface SectionHeaderProps {
   title: string;
   subtitle?: string;
   center?: boolean;
+  small?: boolean;
 }
 
 export function SectionHeader({
   title,
   subtitle,
   center = false,
+  small = false,
 }: SectionHeaderProps) {
   return (
     <Container $center={center}>
-      <Title>{title}</Title>
+      <Title $small={small}>{title}</Title>
 
       <Subtitle>{subtitle}</Subtitle>
     </Container>

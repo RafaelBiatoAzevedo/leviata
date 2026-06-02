@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled(Link)`
   width: 100%;
 
   display: flex;
@@ -10,6 +11,8 @@ export const Container = styled.div`
   padding: 32px 24px;
 
   border-radius: 18px;
+
+  text-decoration: none;
 
   position: relative;
 
@@ -106,8 +109,16 @@ export const Name = styled.h3`
   font-size: 1.5rem;
 
   line-height: 1.2;
+`;
 
-  font-family: ${({ theme }) => theme.fonts.title};
+export const Category = styled.h4`
+  color: ${({ theme }) => theme.colors.primary};
+
+  font-size: 1.2rem;
+
+  text-transform: uppercase;
+
+  line-height: 1.2;
 `;
 
 export const Description = styled.p`

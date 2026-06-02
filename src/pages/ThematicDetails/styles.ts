@@ -22,12 +22,6 @@ export const ContainerLoading = styled.div`
   justify-content: center;
 `;
 
-export const Title = styled.h2`
-  font-size: 2rem;
-  text-align: center;
-  width: 900px;
-`;
-
 export const PresentationSection = styled.section`
   width: 100%;
 
@@ -90,5 +84,55 @@ export const VideoWrapper = styled.div`
     height: 100%;
 
     border: none;
+  }
+`;
+
+export const AssociatedWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 2rem;
+`;
+
+export const AssociatedPresentationSection = styled.section`
+  max-width: 30%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem;
+  gap: 1rem;
+`;
+
+export const AssociatedPresentationLabel = styled.span`
+  color: ${({ theme }) => theme.colors.accent};
+
+  font-size: 0.8rem;
+
+  letter-spacing: 2px;
+
+  text-transform: uppercase;
+
+  text-align: center;
+`;
+
+export const AssociatedPresentationTitle = styled.h2`
+  color: ${({ theme }) => theme.colors.text};
+
+  font-size: 1.2rem;
+
+  line-height: 1.2;
+
+  text-align: center;
+
+  max-width: 900px;
+
+  font-family: ${({ theme }) => theme.fonts.title};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    font-size: 2rem;
   }
 `;

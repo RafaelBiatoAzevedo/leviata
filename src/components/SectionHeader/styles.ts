@@ -15,8 +15,8 @@ export const Container = styled.div<{
   align-items: ${({ $center }) => ($center ? "center" : "flex-start")};
 `;
 
-export const Title = styled.h1`
-  font-size: 2.6rem;
+export const Title = styled.h1<{ $small?: boolean }>`
+  font-size: ${({ $small }) => ($small ? "2.2rem" : "2.6rem")};
 
   line-height: 1.1;
 

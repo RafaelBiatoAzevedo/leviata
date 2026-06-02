@@ -22,7 +22,8 @@ export const Content = styled.div`
 `;
 
 export const Title = styled.h2`
-  font-size: 2rem;
+  font-size: 2.6rem;
+  line-height: 1.1;
   text-align: center;
   width: 900px;
 `;
@@ -31,12 +32,6 @@ export const Subtitle = styled.h3`
   font-size: 1.6rem;
   text-align: center;
   color: ${({ theme }) => theme.colors.primary};
-  width: 900px;
-`;
-
-export const Paragraph = styled.p`
-  text-align: justify;
-  font-size: 1.2rem;
   width: 900px;
 `;
 
