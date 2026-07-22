@@ -1,4 +1,20 @@
-import { Outlet } from "react-router-dom";
+import { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+
+import {
+  FiMenu,
+  FiHome,
+  FiUsers,
+  FiBook,
+  FiFileText,
+  FiFolder,
+  FiDatabase,
+  FiCalendar,
+  FiVideo,
+  FiMail,
+  FiLogOut,
+} from "react-icons/fi";
+
 import {
   Container,
   Sidebar,
@@ -7,50 +23,118 @@ import {
   NavItem,
   Main,
   Header,
+  ToggleButton,
   Content,
+  UserArea,
+  UserName,
   LogoutButton,
-  User,
+  LogoWrapper,
+  LogoImage,
 } from "./styles";
 
+import leviataLogo from "../../assets/images/leviataLogo.png";
+
 export function AdminLayout() {
+  const navigate = useNavigate();
+
+  const [collapsed, setCollapsed] = useState(false);
+
+  function handleLogout() {
+    localStorage.removeItem("access_token");
+
+    navigate("/admin/login", {
+      replace: true,
+    });
+  }
+
   return (
     <Container>
-      <Sidebar>
-        <Logo>
-          <h2>Leviatã</h2>
-          <span>Painel Administrativo</span>
+      <Sidebar $collapsed={collapsed}>
+        <Logo $collapsed={collapsed}>
+          <LogoWrapper>
+            <LogoImage src={leviataLogo} alt="Leviata e o cativeiro" />
+          </LogoWrapper>
+
+          {!collapsed && (
+            <div>
+              <strong>Leviatã</strong>
+
+              <span>Admin</span>
+            </div>
+          )}
         </Logo>
 
         <Navigation>
-          <NavItem to="/admin" end>
-            Dashboard
+          <NavItem to="/admin" end title="Dashboard">
+            <FiHome />
+
+            {!collapsed && <span>Dashboard</span>}
           </NavItem>
 
-          <NavItem to="/admin/people">Pesquisadores</NavItem>
+          <NavItem to="/admin/people" title="Pesquisadores">
+            <FiUsers />
 
-          <NavItem to="/admin/news">Notícias</NavItem>
+            {!collapsed && <span>Pesquisadores</span>}
+          </NavItem>
 
-          <NavItem to="/admin/books">Livros</NavItem>
+          <NavItem to="/admin/books" title="Livros">
+            <FiBook />
 
-          <NavItem to="/admin/articles">Artigos</NavItem>
+            {!collapsed && <span>Livros</span>}
+          </NavItem>
 
-          <NavItem to="/admin/dossiers">Dossiês</NavItem>
+          <NavItem to="/admin/news" title="Notícias">
+            <FiFileText />
 
-          <NavItem to="/admin/meetings">Reuniões</NavItem>
+            {!collapsed && <span>Notícias</span>}
+          </NavItem>
 
-          <NavItem to="/admin/seminars">Seminários</NavItem>
+          <NavItem to="/admin/dossiers" title="Dossiês">
+            <FiFolder />
 
-          <NavItem to="/admin/thematics">Temáticas</NavItem>
+            {!collapsed && <span>Dossiês</span>}
+          </NavItem>
 
-          <NavItem to="/admin/newsletter">Newsletter</NavItem>
+          <NavItem to="/admin/database" title="Banco de Dados">
+            <FiDatabase />
+
+            {!collapsed && <span>Banco de Dados</span>}
+          </NavItem>
+
+          <NavItem to="/admin/meetings" title="Reuniões">
+            <FiCalendar />
+
+            {!collapsed && <span>Reuniões</span>}
+          </NavItem>
+
+          <NavItem to="/admin/seminars" title="Seminários">
+            <FiVideo />
+
+            {!collapsed && <span>Seminários</span>}
+          </NavItem>
+
+          <NavItem to="/admin/newsletter" title="Newsletter">
+            <FiMail />
+
+            {!collapsed && <span>Newsletter</span>}
+          </NavItem>
         </Navigation>
       </Sidebar>
 
       <Main>
         <Header>
-          <User>Administrador</User>
+          <ToggleButton onClick={() => setCollapsed(!collapsed)}>
+            <FiMenu />
+          </ToggleButton>
 
-          <LogoutButton>Sair</LogoutButton>
+          <UserArea>
+            <UserName>Administrador</UserName>
+
+            <LogoutButton onClick={handleLogout}>
+              <FiLogOut />
+              Sair
+            </LogoutButton>
+          </UserArea>
         </Header>
 
         <Content>

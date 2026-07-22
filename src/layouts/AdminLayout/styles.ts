@@ -1,5 +1,9 @@
-import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import { NavLink } from "react-router-dom";
+
+interface SidebarProps {
+  $collapsed: boolean;
+}
 
 export const Container = styled.div`
   display: flex;
@@ -9,61 +13,124 @@ export const Container = styled.div`
   background: ${({ theme }) => theme.colors.background};
 `;
 
-export const Sidebar = styled.aside`
-  width: 280px;
+export const Sidebar = styled.aside<SidebarProps>`
+  width: ${({ $collapsed }) => ($collapsed ? "76px" : "240px")};
 
-  display: flex;
-  flex-direction: column;
+  transition: 0.4s;
 
   background: ${({ theme }) => theme.colors.surface};
 
   border-right: 1px solid ${({ theme }) => theme.colors.border};
 
-  padding: 2rem 1.5rem;
+  display: flex;
+
+  flex-direction: column;
 `;
 
-export const Logo = styled.div`
-  margin-bottom: 3rem;
+export const Logo = styled.div<SidebarProps>`
+  height: 70px;
 
-  h2 {
-    color: ${({ theme }) => theme.colors.primary};
+  display: flex;
 
-    margin-bottom: 0.3rem;
+  align-items: center;
 
-    font-size: 1.7rem;
+  justify-content: ${({ $collapsed }) =>
+    $collapsed ? "center" : "flex-start"};
+
+  gap: 15px;
+
+  padding: ${({ $collapsed }) => ($collapsed ? "0" : "0 24px")};
+
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  strong {
+    display: block;
+
+    font-size: 18px;
   }
 
   span {
-    font-size: 0.9rem;
-
     color: ${({ theme }) => theme.colors.text};
+
+    font-size: 13px;
+  }
+`;
+
+export const LogoWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+
+  position: relative;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
+
+  filter: drop-shadow(0 0 12px ${({ theme }) => theme.colors.primary}40);
+
+  &:hover {
+    transform: scale(1.03);
+
+    filter: drop-shadow(0 0 18px ${({ theme }) => theme.colors.primary}70)
+      drop-shadow(0 0 32px ${({ theme }) => theme.colors.primary}30);
+  }
+`;
+
+export const LogoImage = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  padding: 1px;
+  border: solid ${({ theme }) => theme.colors.primary} 1px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    width: 36px;
+    height: 36px;
   }
 `;
 
 export const Navigation = styled.nav`
+  padding: 20px 10px;
+
   display: flex;
 
   flex-direction: column;
 
-  gap: 0.5rem;
+  gap: 8px;
 
   flex: 1;
 `;
 
 export const NavItem = styled(NavLink)`
+  height: 48px;
+
+  border-radius: 12px;
+
   display: flex;
 
   align-items: center;
 
-  padding: 0.9rem 1rem;
+  gap: 16px;
 
-  border-radius: 0.8rem;
+  padding: 0 16px;
 
   color: ${({ theme }) => theme.colors.text};
 
   text-decoration: none;
 
   transition: 0.2s;
+
+  svg {
+    min-width: 22px;
+
+    font-size: 22px;
+  }
+
+  span {
+    white-space: nowrap;
+  }
 
   &:hover {
     background: ${({ theme }) => theme.colors.primary}15;
@@ -74,9 +141,7 @@ export const NavItem = styled(NavLink)`
   &.active {
     background: ${({ theme }) => theme.colors.primary};
 
-    color: white;
-
-    font-weight: 600;
+    color: ${({ theme }) => theme.colors.text};
   }
 `;
 
@@ -89,7 +154,7 @@ export const Main = styled.main`
 `;
 
 export const Header = styled.header`
-  height: 72px;
+  height: 70px;
 
   display: flex;
 
@@ -97,45 +162,87 @@ export const Header = styled.header`
 
   justify-content: space-between;
 
-  padding: 0 2rem;
+  padding: 0 24px;
 
   background: ${({ theme }) => theme.colors.surface};
 
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
-export const User = styled.span`
-  font-weight: 600;
+export const ToggleButton = styled.button`
+  width: 42px;
 
-  color: ${({ theme }) => theme.colors.text};
-`;
-
-export const LogoutButton = styled.button`
-  padding: 0.7rem 1.2rem;
+  height: 42px;
 
   border: none;
 
-  border-radius: 0.7rem;
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  background: transparent;
+
+  color: ${({ theme }) => theme.colors.text};
+
+  font-size: 24px;
+
+  transition: 0.2s;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.primary}15;
+
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`;
+
+export const UserArea = styled.div`
+  display: flex;
+
+  align-items: center;
+
+  gap: 20px;
+`;
+
+export const UserName = styled.span`
+  font-weight: 600;
+`;
+
+export const LogoutButton = styled.button`
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  border: none;
 
   cursor: pointer;
 
   background: ${({ theme }) => theme.colors.primary};
 
-  color: white;
+  color: ${({ theme }) => theme.colors.text};
+
+  padding: 10px 18px;
+
+  border-radius: 10px;
 
   font-weight: 600;
 
   transition: 0.2s;
 
+  svg {
+    font-size: 18px;
+  }
+
   &:hover {
-    filter: brightness(1.05);
+    filter: brightness(0.95);
   }
 `;
 
 export const Content = styled.main`
   flex: 1;
 
-  padding: 2rem;
-
   overflow-y: auto;
+
+  padding: 32px;
 `;
