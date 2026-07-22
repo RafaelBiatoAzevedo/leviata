@@ -23,66 +23,87 @@ import Painels from "../pages/Painels";
 import { MeetingsAndSeminars } from "../pages/MeetingsAndSeminars";
 import { JuriDetails } from "../pages/JuriDetails";
 import { MeetingsAndSeminarsDetails } from "../pages/MeetingAndSeminarsDetails";
+import { PrivateRoute } from "./privateRoute";
+import { AdminLogin } from "../pages/AdminLogin";
+import { AdminDashboard } from "../pages/AdminDashboard";
+import { AdminLayout } from "../layouts/AdminLayout";
+import { MainLayout } from "../layouts/MainLayout";
 
 export function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route element={<MainLayout />}>
+        <Route path="/" element={<Home />} />
 
-      <Route path="/grupo" element={<Group />} />
-      <Route path="/grupo/pesquisadores" element={<Researchers />} />
-      <Route path="/grupo/linhas-tematicas" element={<ThematicLines />} />
-      <Route
-        path="/grupo/linhas-tematicas/tematica/:id"
-        element={<ThematicDetails />}
-      />
+        <Route path="/grupo" element={<Group />} />
+        <Route path="/grupo/pesquisadores" element={<Researchers />} />
+        <Route path="/grupo/linhas-tematicas" element={<ThematicLines />} />
+        <Route
+          path="/grupo/linhas-tematicas/tematica/:id"
+          element={<ThematicDetails />}
+        />
 
-      <Route path="/publicacoes" element={<Publications />} />
+        <Route path="/publicacoes" element={<Publications />} />
 
-      <Route path="/instrumentos" element={<Instruments />} />
-      <Route
-        path="/instrumentos/planilhas-biblio-tematicas"
-        element={<BibliographicSpreadsheets />}
-      />
-      <Route
-        path="/instrumentos/planilhas-biblio-tematicas/dossie/:id"
-        element={<DossierDetails />}
-      />
-      <Route path="/instrumentos/catalogos" element={<Catalogs />} />
-      <Route path="/instrumentos/banco-de-dados" element={<Database />} />
+        <Route path="/instrumentos" element={<Instruments />} />
+        <Route
+          path="/instrumentos/planilhas-biblio-tematicas"
+          element={<BibliographicSpreadsheets />}
+        />
+        <Route
+          path="/instrumentos/planilhas-biblio-tematicas/dossie/:id"
+          element={<DossierDetails />}
+        />
+        <Route path="/instrumentos/catalogos" element={<Catalogs />} />
+        <Route path="/instrumentos/banco-de-dados" element={<Database />} />
 
-      <Route path="/atividades" element={<Activities />} />
-      <Route
-        path="/atividades/nucleo-de-pesquisa-em-costas-negras"
-        element={<ResearchCenter />}
-      />
-      <Route
-        path="/atividades/juris-historicos"
-        element={<HistoricalJuris />}
-      />
-      <Route
-        path="/atividades/juris-historicos/juris/:id"
-        element={<JuriDetails />}
-      />
-      <Route
-        path="/atividades/encontros-e-seminarios"
-        element={<MeetingsAndSeminars />}
-      />
-      <Route
-        path="/atividades/encontros-e-seminarios/:type/:id"
-        element={<MeetingsAndSeminarsDetails />}
-      />
+        <Route path="/atividades" element={<Activities />} />
+        <Route
+          path="/atividades/nucleo-de-pesquisa-em-costas-negras"
+          element={<ResearchCenter />}
+        />
+        <Route
+          path="/atividades/juris-historicos"
+          element={<HistoricalJuris />}
+        />
+        <Route
+          path="/atividades/juris-historicos/juris/:id"
+          element={<JuriDetails />}
+        />
+        <Route
+          path="/atividades/encontros-e-seminarios"
+          element={<MeetingsAndSeminars />}
+        />
+        <Route
+          path="/atividades/encontros-e-seminarios/:type/:id"
+          element={<MeetingsAndSeminarsDetails />}
+        />
 
-      <Route path="/agenda" element={<Schedule />} />
-      <Route path="/agenda/bancas" element={<Painels />} />
-      <Route path="/agenda/seminarios" element={<Seminars />} />
+        <Route path="/agenda" element={<Schedule />} />
+        <Route path="/agenda/bancas" element={<Painels />} />
+        <Route path="/agenda/seminarios" element={<Seminars />} />
 
-      <Route path="/noticias" element={<News />} />
-      <Route path="/noticias/newsletter" element={<Newsletter />} />
+        <Route path="/noticias" element={<News />} />
+        <Route path="/noticias/newsletter" element={<Newsletter />} />
 
-      <Route path="/newsletter" element={<Newsletter />} />
+        <Route path="/newsletter" element={<Newsletter />} />
 
-      <Route path="/contato" element={<Contact />} />
+        <Route path="/contato" element={<Contact />} />
+      </Route>
+
+      <Route path="/admin/login" element={<AdminLogin />} />
+
+      <Route element={<PrivateRoute />}>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+
+          {/* <Route path="/admin/pessoas" element={<People />} /> */}
+
+          {/* <Route path="/admin/noticias" element={} /> */}
+
+          {/* <Route path="/admin/livros" element={<Books />} /> */}
+        </Route>
+      </Route>
     </Routes>
   );
 }

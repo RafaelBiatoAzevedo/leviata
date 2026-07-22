@@ -7,7 +7,7 @@ import {
   DropdownArrow,
   DropdownContent,
   FooterMenuMobile,
-  LanguageButton,
+  //LanguageButton,
   Logo,
   LogoWrapper,
   Menu,
@@ -16,8 +16,8 @@ import {
   MobileMenu,
   MobileOnly,
   SubmenuItem,
-  SwitchCircle,
-  ThemeSwitch,
+  //SwitchCircle,
+  //ThemeSwitch,
 } from "./styles";
 
 //import { useTranslation } from "react-i18next";
@@ -33,7 +33,7 @@ import { FiChevronDown, FiChevronUp, FiMenu, FiX } from "react-icons/fi";
 import { useTheme } from "styled-components";
 
 import { Link, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+//import { useTranslation } from "react-i18next";
 
 const menus = [
   {
@@ -96,12 +96,12 @@ const menus = [
   { label: "Contato", path: "/contato" },
 ];
 
-interface NavbarProps {
-  toggleTheme: () => void;
-  theme: string;
-}
+// interface NavbarProps {
+//   toggleTheme: () => void;
+//   theme: string;
+// }
 
-export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
+export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
@@ -109,7 +109,7 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
 
   const { colors } = useTheme();
 
-  const { i18n } = useTranslation();
+  //const { i18n } = useTranslation();
 
   const location = useLocation();
 
@@ -130,11 +130,11 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
     };
   }, []);
 
-  const toggleLanguage = () => {
-    const newLang = i18n.language === "pt" ? "en" : "pt";
-    i18n.changeLanguage(newLang);
-    localStorage.setItem("portfolio-language", newLang);
-  };
+  // const toggleLanguage = () => {
+  //   const newLang = i18n.language === "pt" ? "en" : "pt";
+  //   i18n.changeLanguage(newLang);
+  //   localStorage.setItem("portfolio-language", newLang);
+  // };
 
   const handleDropdown = (menu: string) => {
     setOpenDropdown((prev) => (prev === menu ? null : menu));
@@ -207,7 +207,7 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
 
       <DesktopOnly>
         <ActionsWrapper style={{ display: "none" }}>
-          <ThemeSwitch onClick={toggleTheme}>
+          {/* <ThemeSwitch onClick={toggleTheme}>
             <SwitchCircle themeMode={theme}>
               {theme === "dark" ? "🌙" : "☀️"}
             </SwitchCircle>
@@ -215,7 +215,7 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
 
           <LanguageButton onClick={toggleLanguage}>
             {i18n.language === "pt" ? "🇧🇷 PT" : "🇺🇸 EN"}
-          </LanguageButton>
+          </LanguageButton> */}
         </ActionsWrapper>
       </DesktopOnly>
 
@@ -261,7 +261,7 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
             </div>
           ))}
 
-          <ActionsWrapper>
+          {/* <ActionsWrapper>
             <ThemeSwitch onClick={toggleTheme}>
               <SwitchCircle themeMode={theme}>
                 {theme === "dark" ? "🌙" : "☀️"}
@@ -271,7 +271,7 @@ export const Navbar = ({ toggleTheme, theme }: NavbarProps) => {
             <LanguageButton onClick={toggleLanguage}>
               {i18n.language === "pt" ? "🇧🇷 PT" : "🇺🇸 EN"}
             </LanguageButton>
-          </ActionsWrapper>
+          </ActionsWrapper> */}
         </MenuWrapper>
 
         <FooterMenuMobile>

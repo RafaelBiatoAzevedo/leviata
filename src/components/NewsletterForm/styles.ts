@@ -38,12 +38,11 @@ export const Input = styled.input`
   width: 100%;
   padding: 12px 14px;
 
-  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
 
   background: rgba(0, 0, 0, 0.2);
   color: ${({ theme }) => theme.colors.text};
-
+  border: ${({ theme }) => theme.colors.primary} 1px solid;
   outline: none;
 
   transition:
@@ -93,7 +92,7 @@ export const TextArea = styled.textarea`
 
   outline: none;
 
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: ${({ theme }) => theme.colors.primary} 1px solid;
 
   background: rgba(0, 0, 0, 0.2);
 

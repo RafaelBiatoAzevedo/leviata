@@ -8,26 +8,37 @@ import {
 } from "./styles";
 
 // export const TITLES = [
-//   "Prof. Dr.",
-//   "Profa. Dra.",
+//   "Prof,",
+//   "Profa.",
+//   "Me.",
+//   "Ma.",
 //   "Dr.",
 //   "Dra.",
 //   "Prof. Me.",
 //   "Profa. Ma.",
-//   "Me.",
-//   "Ma.",
+//   "Prof. Dr.",
+//   "Profa. Dra.",
 //   "Doutorando(a)",
 //   "Mestrando(a)",
 //   "Graduando(a)",
-//   "Pesquisador(a)",
 // ];
+
+// Professor
+// Professora
+// Mestre
+// Mestra
+// Doutor
+// Doutora
+// Doutorando(a)
+// Mestrando(a)
+// Graduando(a)
 
 // const CATEGORIES: "docente" | "discente" | "egresso" | "pesquisador" | "coordenador";
 
 interface PersonCardProps {
   image: string;
-  title?: string;
   name: string;
+  title?: string;
   category?: string;
   institution?: string;
   bio?: string;
