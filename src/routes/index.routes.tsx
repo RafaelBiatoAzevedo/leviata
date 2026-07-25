@@ -23,11 +23,11 @@ import Painels from "../pages/Painels";
 import { MeetingsAndSeminars } from "../pages/MeetingsAndSeminars";
 import { JuriDetails } from "../pages/JuriDetails";
 import { MeetingsAndSeminarsDetails } from "../pages/MeetingAndSeminarsDetails";
-import { PrivateRoute } from "./privateRoute";
-import { AdminLogin } from "../pages/AdminLogin";
-import { AdminDashboard } from "../pages/AdminDashboard";
-import { AdminLayout } from "../layouts/AdminLayout";
+
 import { MainLayout } from "../layouts/MainLayout";
+import { AdminLogin } from "../admin/pages/AdminLogin";
+import { PrivateRoute } from "../admin/routes/privateRoute.routes";
+import { adminRoutes } from "../admin/routes/admin.routes";
 
 export function Router() {
   return (
@@ -93,17 +93,7 @@ export function Router() {
 
       <Route path="/admin/login" element={<AdminLogin />} />
 
-      <Route element={<PrivateRoute />}>
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="/admin" element={<AdminDashboard />} />
-
-          {/* <Route path="/admin/pessoas" element={<People />} /> */}
-
-          {/* <Route path="/admin/noticias" element={} /> */}
-
-          {/* <Route path="/admin/livros" element={<Books />} /> */}
-        </Route>
-      </Route>
+      <Route element={<PrivateRoute />}>{adminRoutes}</Route>
     </Routes>
   );
 }

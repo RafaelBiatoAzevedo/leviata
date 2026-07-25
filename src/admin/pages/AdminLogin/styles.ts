@@ -110,59 +110,6 @@ export const Input = styled.input`
   }
 `;
 
-// export const Input = styled.input`
-//   height: 52px;
-
-//   padding: 0 1rem;
-
-//   border-radius: 0.8rem;
-
-//   border: 1px solid ${({ theme }) => theme.colors.border};
-
-//   background: ${({ theme }) => theme.colors.background};
-
-//   color: ${({ theme }) => theme.colors.text};
-
-//   font-size: 1rem;
-
-//   transition: 0.2s;
-
-//   &:focus {
-//     outline: none;
-
-//     border-color: ${({ theme }) => theme.colors.primary};
-
-//     box-shadow: 0 0 0 3px rgba(89, 37, 178, 0.15);
-//   }
-// `;
-
-export const Button = styled.button`
-  height: 54px;
-
-  border: 0;
-
-  border-radius: 0.8rem;
-
-  cursor: pointer;
-
-  font-size: 1rem;
-  font-weight: 600;
-
-  color: #fff;
-
-  background: ${({ theme }) => theme.colors.primary};
-
-  transition: 0.2s;
-
-  &:hover {
-    filter: brightness(1.05);
-  }
-
-  &:active {
-    transform: scale(0.98);
-  }
-`;
-
 export const Footer = styled.p`
   margin-top: 2rem;
 

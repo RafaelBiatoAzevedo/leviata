@@ -200,11 +200,67 @@ export const UserArea = styled.div`
 
   align-items: center;
 
-  gap: 20px;
+  justify-content: space-between;
+
+  gap: 1rem;
+
+  padding: 1.25rem;
+
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+export const UserInfo = styled.div`
+  display: flex;
+
+  align-items: center;
+
+  gap: 0.75rem;
+`;
+
+export const Avatar = styled.div`
+  width: 46px;
+
+  height: 46px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  background: ${({ theme }) => theme.colors.primary};
+
+  color: #fff;
+
+  font-weight: 700;
+
+  font-size: 1rem;
+
+  flex-shrink: 0;
+`;
+
+export const UserData = styled.div`
+  display: flex;
+
+  flex-direction: column;
 `;
 
 export const UserName = styled.span`
+  font-size: 0.95rem;
+
   font-weight: 600;
+
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+export const UserRole = styled.span`
+  font-size: 0.8rem;
+
+  color: ${({ theme }) => theme.colors.text};
+
+  text-transform: capitalize;
 `;
 
 export const LogoutButton = styled.button`

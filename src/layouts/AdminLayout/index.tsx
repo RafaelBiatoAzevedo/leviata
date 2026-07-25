@@ -30,21 +30,43 @@ import {
   LogoutButton,
   LogoWrapper,
   LogoImage,
+  UserInfo,
+  Avatar,
+  UserData,
+  UserRole,
 } from "./styles";
 
 import leviataLogo from "../../assets/images/leviataLogo.png";
+import { useAuth } from "../../hooks/useAuth";
 
 export function AdminLayout() {
   const navigate = useNavigate();
 
   const [collapsed, setCollapsed] = useState(false);
 
+  const { user, signOut } = useAuth();
+
+  const initials = `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`;
+
   function handleLogout() {
-    localStorage.removeItem("access_token");
+    signOut();
 
     navigate("/admin/login", {
       replace: true,
     });
+  }
+
+  function formatRole(role: string) {
+    switch (role) {
+      case "SUPER_ADMIN":
+        return "Super Administrador";
+
+      case "ADMIN":
+        return "Administrador";
+
+      default:
+        return role;
+    }
   }
 
   return (
@@ -71,10 +93,10 @@ export function AdminLayout() {
             {!collapsed && <span>Dashboard</span>}
           </NavItem>
 
-          <NavItem to="/admin/people" title="Pesquisadores">
+          <NavItem to="/admin/pessoas" title="Pessoas">
             <FiUsers />
 
-            {!collapsed && <span>Pesquisadores</span>}
+            {!collapsed && <span>Pessoas</span>}
           </NavItem>
 
           <NavItem to="/admin/books" title="Livros">
@@ -128,7 +150,17 @@ export function AdminLayout() {
           </ToggleButton>
 
           <UserArea>
-            <UserName>Administrador</UserName>
+            <UserInfo>
+              <Avatar>{initials}</Avatar>
+
+              <UserData>
+                <UserName>
+                  {user!.firstName} {user!.lastName}
+                </UserName>
+
+                <UserRole>{formatRole(user!.role)}</UserRole>
+              </UserData>
+            </UserInfo>
 
             <LogoutButton onClick={handleLogout}>
               <FiLogOut />

@@ -9,9 +9,11 @@ import {
   Input,
   Footer,
 } from "./styles";
-import { Button } from "../../components/Button";
-import { storageKeys } from "../../constants/storageKeys";
+
 import { useNavigate } from "react-router-dom";
+import { Button } from "../../../components/Button";
+import { login } from "../../../services/auth";
+import { useAuth } from "../../../hooks/useAuth";
 
 export function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -19,7 +21,9 @@ export function AdminLogin() {
 
   const navigate = useNavigate();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const { signIn } = useAuth();
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     console.log({
@@ -27,13 +31,25 @@ export function AdminLogin() {
       password,
     });
 
-    localStorage.setItem(storageKeys.TOKEN_KEY, "ghsdsssdgshdshdhsg");
-    navigate("/admin", { replace: true });
+    const data = { email, password };
 
-    // TODO
-    // const response = await authService.login({ email, password })
-    // localStorage.setItem("access_token", response.accessToken)
-    // navigate("/admin")
+    try {
+      const response = await login(data);
+
+      signIn(response);
+
+      navigate("/admin", { replace: true });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message);
+
+        // toast.error(error.message);
+      } else {
+        console.error("Erro inesperado.");
+
+        // toast.error("Erro inesperado.");
+      }
+    }
   }
 
   return (

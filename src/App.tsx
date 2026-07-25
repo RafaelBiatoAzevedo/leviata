@@ -2,7 +2,8 @@ import { useState } from "react";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/GlobalStyle";
 import { lightTheme, darkTheme } from "./styles/themes";
-import { Router } from "./routes";
+import { Router } from "./routes/index.routes";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   const [theme, setTheme] = useState(() => {
@@ -19,11 +20,13 @@ function App() {
   });
 
   return (
-    <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
-      <GlobalStyle />
+    <AuthProvider>
+      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+        <GlobalStyle />
 
-      <Router />
-    </ThemeProvider>
+        <Router />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 
