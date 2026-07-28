@@ -1,5 +1,5 @@
 import axios from "axios";
-import { authStorage } from "./auth-storage";
+import { authStorage } from "../admin/services/auth-storage";
 import { envs } from "../config/env";
 
 export const api = axios.create({

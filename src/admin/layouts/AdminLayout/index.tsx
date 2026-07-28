@@ -36,8 +36,8 @@ import {
   UserRole,
 } from "./styles";
 
-import leviataLogo from "../../assets/images/leviataLogo.png";
-import { useAuth } from "../../hooks/useAuth";
+import leviataLogo from "../../../assets/images/leviataLogo.png";
+import { useAuth } from "../../../hooks/useAuth";
 
 export function AdminLayout() {
   const navigate = useNavigate();

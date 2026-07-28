@@ -18,6 +18,32 @@ declare module "styled-components" {
 
       accentSoft: string;
       accentGlow: string;
+
+      feedback: {
+        info: {
+          main: string;
+          light: string;
+          border: string;
+        };
+
+        success: {
+          main: string;
+          light: string;
+          border: string;
+        };
+
+        warning: {
+          main: string;
+          light: string;
+          border: string;
+        };
+
+        danger: {
+          main: string;
+          light: string;
+          border: string;
+        };
+      };
     };
 
     breakpoints: {

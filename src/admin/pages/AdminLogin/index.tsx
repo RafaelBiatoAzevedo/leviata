@@ -11,9 +11,9 @@ import {
 } from "./styles";
 
 import { useNavigate } from "react-router-dom";
-import { Button } from "../../../components/Button";
-import { login } from "../../../services/auth";
+import { login } from "../../services/auth";
 import { useAuth } from "../../../hooks/useAuth";
+import { Button } from "../../../components/Button";
 
 export function AdminLogin() {
   const [email, setEmail] = useState("");

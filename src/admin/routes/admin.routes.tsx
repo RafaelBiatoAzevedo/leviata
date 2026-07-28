@@ -1,8 +1,8 @@
 import { Route } from "react-router-dom";
-import { AdminLayout } from "../../layouts/AdminLayout";
 import { AdminDashboard } from "../pages/AdminDashboard";
 import { AdminPeople } from "../pages/AdminPeople/List";
 import { PersonForm } from "../pages/AdminPeople/Form";
+import { AdminLayout } from "../layouts/AdminLayout";
 
 export const adminRoutes = (
   <Route path="/admin" element={<AdminLayout />}>

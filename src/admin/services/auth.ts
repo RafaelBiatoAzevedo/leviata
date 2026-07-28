@@ -1,6 +1,6 @@
-import type { LoginRequestDto } from "../dto/auth/LoginRequestDto";
-import type { LoginResponseDto } from "../dto/auth/LoginResponseDto";
-import { api } from "./api";
+import type { LoginRequestDto } from "../../dto/auth/LoginRequestDto";
+import type { LoginResponseDto } from "../../dto/auth/LoginResponseDto";
+import { api } from "../../services/api";
 
 export async function login(data: LoginRequestDto): Promise<LoginResponseDto> {
   const response = await api.post<LoginResponseDto>("/auth/login", data);

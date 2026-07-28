@@ -18,6 +18,32 @@ export const lightTheme = {
 
     accentSoft: "rgba(198, 161, 91, 0.12)",
     accentGlow: "rgba(198, 161, 91, 0.28)",
+
+    feedback: {
+      info: {
+        main: "#3B82F6",
+        light: "#EFF6FF",
+        border: "#BFDBFE",
+      },
+
+      success: {
+        main: "#22C55E",
+        light: "#F0FDF4",
+        border: "#BBF7D0",
+      },
+
+      warning: {
+        main: "#F59E0B",
+        light: "#FFFBEB",
+        border: "#FDE68A",
+      },
+
+      danger: {
+        main: "#EF4444",
+        light: "#FEF2F2",
+        border: "#FECACA",
+      },
+    },
   },
 
   breakpoints: {
@@ -52,6 +78,32 @@ export const darkTheme = {
 
     accentSoft: "rgba(198, 161, 91, 0.12)",
     accentGlow: "rgba(198, 161, 91, 0.28)",
+
+    feedback: {
+      info: {
+        main: "#3B82F6",
+        light: "#EFF6FF",
+        border: "#BFDBFE",
+      },
+
+      success: {
+        main: "#22C55E",
+        light: "#F0FDF4",
+        border: "#BBF7D0",
+      },
+
+      warning: {
+        main: "#F59E0B",
+        light: "#FFFBEB",
+        border: "#FDE68A",
+      },
+
+      danger: {
+        main: "#EF4444",
+        light: "#FEF2F2",
+        border: "#FECACA",
+      },
+    },
   },
 
   breakpoints: {
