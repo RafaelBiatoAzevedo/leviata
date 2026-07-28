@@ -22,13 +22,13 @@ function App() {
 
   return (
     <AuthProvider>
-      <ToastProvider>
-        <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+      <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
+        <ToastProvider>
           <GlobalStyle />
 
           <Router />
-        </ThemeProvider>
-      </ToastProvider>
+        </ToastProvider>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

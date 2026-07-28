@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../../services/auth";
 import { useAuth } from "../../../hooks/useAuth";
 import { Button } from "../../../components/Button";
+import { useToast } from "../../../hooks/useToast";
 
 export function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -23,13 +24,10 @@ export function AdminLogin() {
 
   const { signIn } = useAuth();
 
+  const { showToast } = useToast();
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    console.log({
-      email,
-      password,
-    });
 
     const data = { email, password };
 
@@ -41,13 +39,17 @@ export function AdminLogin() {
       navigate("/admin", { replace: true });
     } catch (error) {
       if (error instanceof Error) {
-        console.error(error.message);
-
-        // toast.error(error.message);
+        showToast({
+          title: "Ops! E-mail ou senha inválidos.",
+          description: "Verifique suas credenciais",
+          type: "danger",
+        });
       } else {
-        console.error("Erro inesperado.");
-
-        // toast.error("Erro inesperado.");
+        showToast({
+          title: "Ops! Algo inesperado aconteceu",
+          description: "Tente ovamente",
+          type: "danger",
+        });
       }
     }
   }

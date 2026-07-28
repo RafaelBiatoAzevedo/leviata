@@ -22,26 +22,26 @@ export const lightTheme = {
     feedback: {
       info: {
         main: "#3B82F6",
-        light: "#EFF6FF",
-        border: "#BFDBFE",
+        light: "#DBEAFE",
+        border: "#93C5FD",
       },
 
       success: {
         main: "#22C55E",
-        light: "#F0FDF4",
-        border: "#BBF7D0",
+        light: "#DCFCE7",
+        border: "#86EFAC",
       },
 
       warning: {
         main: "#F59E0B",
-        light: "#FFFBEB",
-        border: "#FDE68A",
+        light: "#FEF3C7",
+        border: "#FCD34D",
       },
 
       danger: {
         main: "#EF4444",
-        light: "#FEF2F2",
-        border: "#FECACA",
+        light: "#FEE2E2",
+        border: "#FCA5A5",
       },
     },
   },

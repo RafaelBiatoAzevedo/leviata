@@ -113,11 +113,11 @@ export const IconContainer = styled.div<ContainerProps>`
 
   border-radius: 50%;
 
-  background: currentColor;
+  background: ${({ theme, $type }) => theme.colors.feedback[$type].main};
 
   color: white;
 
-  font-size: 1.25rem;
+  font-size: 1.4rem;
 `;
 
 export const Content = styled.div`
