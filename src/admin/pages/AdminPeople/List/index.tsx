@@ -183,7 +183,7 @@ export function AdminPeople() {
                   <Actions>
                     <AdminIconButton
                       title="Visualizar"
-                      onClick={() => navigate(`/pessoas/${person.slug}`)}
+                      onClick={() => navigate(`/admin/pessoas/${person.slug}`)}
                     >
                       <FiEye />
                     </AdminIconButton>
@@ -191,7 +191,7 @@ export function AdminPeople() {
                     <AdminIconButton
                       title="Editar"
                       onClick={() =>
-                        navigate(`/admin/pessoas/${person.id}/editar`)
+                        navigate(`/admin/pessoas/${person.slug}/editar`)
                       }
                     >
                       <FiEdit2 />

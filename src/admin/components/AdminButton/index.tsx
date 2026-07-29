@@ -1,11 +1,20 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-import { Container } from "./styles";
+import { Container, type TAdminButtonVariant } from "./styles";
 
-interface INewButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface IAdminButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?: TAdminButtonVariant;
   children: ReactNode;
 }
 
-export function AdminButton({ children, ...rest }: INewButtonProps) {
-  return <Container {...rest}>{children}</Container>;
+export function AdminButton({
+  variant = "primary",
+  children,
+  ...rest
+}: IAdminButtonProps) {
+  return (
+    <Container $variant={variant} {...rest}>
+      {children}
+    </Container>
+  );
 }

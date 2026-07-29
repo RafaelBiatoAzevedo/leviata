@@ -8,9 +8,10 @@ interface SidebarProps {
 export const Container = styled.div`
   display: flex;
 
-  min-height: 100vh;
-
   background: ${({ theme }) => theme.colors.background};
+
+  height: 100vh;
+  overflow: hidden;
 `;
 
 export const Sidebar = styled.aside<SidebarProps>`

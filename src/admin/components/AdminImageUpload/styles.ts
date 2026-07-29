@@ -81,11 +81,11 @@ export const ChangeButton = styled.button`
 
   border: none;
 
-  border-radius: 10px;
+  border-radius: 8px;
 
   background: ${({ theme }) => theme.colors.primary};
 
-  color: #fff;
+  color: ${({ theme }) => theme.colors.text};
 
   cursor: pointer;
 

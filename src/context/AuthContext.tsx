@@ -22,6 +22,8 @@ interface AuthContextData {
 
   isAuthenticated: boolean;
 
+  isLoading: boolean;
+
   signIn(data: LoginResponseDto): void;
 
   signOut(): void;
@@ -38,6 +40,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const [token, setToken] = useState<string | null>(null);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const storedToken = localStorage.getItem(storageKeys.TOKEN_KEY);
 
@@ -50,6 +54,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(JSON.parse(storedUser));
 
     api.defaults.headers.common.Authorization = `Bearer ${storedToken}`;
+
+    setLoading(false);
   }, []);
 
   const signIn = useCallback(({ accessToken, user }: LoginResponseDto) => {
@@ -84,11 +90,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       isAuthenticated: !!token,
 
+      isLoading: loading,
+
       signIn,
 
       signOut,
     }),
-    [user, token, signIn, signOut],
+    [user, token, loading, signIn, signOut],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

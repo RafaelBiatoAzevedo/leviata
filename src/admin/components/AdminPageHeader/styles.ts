@@ -51,7 +51,7 @@ export const Title = styled.h1`
 export const Subtitle = styled.p`
   margin: 0;
 
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.textSoft};
 
   font-size: 0.95rem;
 

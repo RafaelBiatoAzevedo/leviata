@@ -1,6 +1,57 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const Container = styled.button`
+export type TAdminButtonVariant =
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "danger"
+  | "success";
+
+interface IButtonProps {
+  $variant: TAdminButtonVariant;
+}
+
+const variants = {
+  primary: css`
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.text};
+    border: 1px solid ${({ theme }) => theme.colors.primary};
+
+    &:hover {
+      background: ${({ theme }) => theme.colors.accentHover};
+    }
+  `,
+
+  outline: css`
+    background: transparent;
+    color: ${({ theme }) => theme.colors.text};
+    border: 1px solid ${({ theme }) => theme.colors.border};
+
+    &:hover {
+      background: ${({ theme }) => theme.colors.surface};
+    }
+  `,
+
+  danger: css`
+    background: ${({ theme }) => theme.colors.feedback.danger.main};
+    color: #fff;
+    border: 1px solid ${({ theme }) => theme.colors.feedback.danger.main};
+  `,
+
+  success: css`
+    background: ${({ theme }) => theme.colors.feedback.success.main};
+    color: #fff;
+    border: 1px solid ${({ theme }) => theme.colors.feedback.success.main};
+  `,
+
+  secondary: css`
+    background: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.onSecondary};
+    border: 1px solid ${({ theme }) => theme.colors.secondary};
+  `,
+};
+
+export const Container = styled.button<IButtonProps>`
   height: 46px;
 
   padding: 0 1.25rem;
@@ -52,4 +103,6 @@ export const Container = styled.button`
 
     transform: none;
   }
+
+  ${({ $variant }) => variants[$variant]}
 `;
