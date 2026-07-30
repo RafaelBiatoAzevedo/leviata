@@ -19,24 +19,21 @@ import {
   Empty,
   AvatarPlaceholder,
 } from "./styles";
+import { peopleService } from "../../../../services/people";
+import { useToast } from "../../../../hooks/useToast";
+import type { PersonResponseDto } from "../../../../dto/people/people-response.dto";
 
-interface Person {
-  id: string;
-  imageUrl?: string;
-  name: string;
-  slug: string;
-  category: string;
-  institution: string;
-  displayOrder: number;
-  isActive: boolean;
-}
+//temp
+import larrissaImage from "../../../../assets/images/Larissa.webp";
 
 export function AdminPeople() {
   const navigate = useNavigate();
 
+  const { showToast } = useToast();
+
   const [loading, setLoading] = useState(true);
 
-  const [people, setPeople] = useState<Person[]>([]);
+  const [people, setPeople] = useState<PersonResponseDto[]>([]);
 
   const [search, setSearch] = useState("");
 
@@ -44,48 +41,46 @@ export function AdminPeople() {
 
   useEffect(() => {
     async function load() {
-      // TODO:
-      // const response = await peopleService.getAll();
+      try {
+        setLoading(true);
+        const response = await peopleService.getAll();
 
-      setTimeout(() => {
-        setPeople([
-          {
-            id: "1",
-            name: "Ricardo Alexandre Ferreira",
-            slug: "ricardo-alexandre-ferreira",
-            category: "DOCENTE",
-            institution: "UNESP",
-            displayOrder: 1,
-            isActive: true,
-          },
-          {
-            id: "2",
-            name: "Sofia Zambelli Menck",
-            slug: "sofia-zambelli-menck",
-            category: "DISCENTE",
-            institution: "UNESP",
-            displayOrder: 2,
-            isActive: true,
-          },
-          {
-            id: "3",
-            name: "Maria Fernanda Minutti",
-            slug: "maria-fernanda-minutti",
-            category: "EGRESSO",
-            institution: "USP",
-            displayOrder: 3,
-            isActive: false,
-          },
-        ]);
+        const mockImageData = response.data.reduce<PersonResponseDto[]>(
+          (array, person) => {
+            if (person.slug === "larissa-biato") {
+              array.push({
+                ...person,
+                imageUrl: larrissaImage,
+              });
+            } else {
+              array.push(person);
+            }
 
+            return array;
+          },
+          [],
+        );
+
+        setPeople(mockImageData || ([] as PersonResponseDto[]));
+      } catch (error) {
+        const message =
+          error instanceof Error ? error.message : "Erro desconhecido";
+
+        showToast({
+          title: "Ops! Lista não atualizada",
+          description: `Não foi possível atualizar a lista.\n${message}`,
+          type: "danger",
+        });
+      } finally {
         setLoading(false);
-      }, 800);
+      }
     }
 
     load();
-  }, []);
+  }, [showToast]);
 
   const filteredPeople = people.filter((person) => {
+    console.log(people);
     const matchesSearch =
       person.name.toLowerCase().includes(search.toLowerCase()) ||
       person.slug.toLowerCase().includes(search.toLowerCase());
@@ -169,7 +164,7 @@ export function AdminPeople() {
 
                 <td>{person.category}</td>
 
-                <td>{person.institution}</td>
+                <td>{person.institution?.acronym}</td>
 
                 <td>{person.displayOrder}</td>
 

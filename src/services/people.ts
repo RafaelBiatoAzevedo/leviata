@@ -1,25 +1,38 @@
 import type { CreatePersonDto } from "../dto/people/create-person.dto";
+import type { PersonResponseDto } from "../dto/people/people-response.dto";
 import type { UpdatePersonDto } from "../dto/people/update-person.dto";
 import { api } from "./api";
 
 export const peopleService = {
+  create(data: CreatePersonDto) {
+    return api.post("/people", data);
+  },
+
   getAll() {
-    return api.get("/people");
+    return api.get<PersonResponseDto[]>("/people");
   },
 
   getById(id: string) {
     return api.get(`/people/${id}`);
   },
 
-  create(data: CreatePersonDto) {
-    return api.post("/people", data);
+  getBySlug(slug: string) {
+    return api.get(`/people/slug/${slug}`);
   },
 
-  update(id: string, data: UpdatePersonDto) {
+  updateById(id: string, data: UpdatePersonDto) {
     return api.patch(`/people/${id}`, data);
   },
 
-  remove(id: string) {
+  removeById(id: string) {
     return api.delete(`/people/${id}`);
+  },
+
+  updateBySlug(slug: string, data: UpdatePersonDto) {
+    return api.patch(`/people/slug${slug}`, data);
+  },
+
+  removeBySlug(slug: string) {
+    return api.delete(`/people/${slug}`);
   },
 };

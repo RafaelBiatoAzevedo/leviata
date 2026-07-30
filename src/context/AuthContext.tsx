@@ -47,13 +47,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const storedUser = localStorage.getItem(storageKeys.USER_KEY);
 
-    if (!storedToken || !storedUser) return;
+    if (storedToken && storedUser) {
+      setToken(storedToken);
 
-    setToken(storedToken);
+      setUser(JSON.parse(storedUser));
 
-    setUser(JSON.parse(storedUser));
-
-    api.defaults.headers.common.Authorization = `Bearer ${storedToken}`;
+      api.defaults.headers.common.Authorization = `Bearer ${storedToken}`;
+    }
 
     setLoading(false);
   }, []);
