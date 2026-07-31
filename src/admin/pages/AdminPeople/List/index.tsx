@@ -25,11 +25,14 @@ import type { PersonResponseDto } from "../../../../dto/people/people-response.d
 
 //temp
 import larrissaImage from "../../../../assets/images/Larissa.webp";
+import { useModal } from "../../../../hooks/useModal";
 
 export function AdminPeople() {
   const navigate = useNavigate();
 
   const { showToast } = useToast();
+
+  const { showModal } = useModal();
 
   const [loading, setLoading] = useState(true);
 
@@ -80,7 +83,6 @@ export function AdminPeople() {
   }, [showToast]);
 
   const filteredPeople = people.filter((person) => {
-    console.log(people);
     const matchesSearch =
       person.name.toLowerCase().includes(search.toLowerCase()) ||
       person.slug.toLowerCase().includes(search.toLowerCase());
@@ -91,13 +93,40 @@ export function AdminPeople() {
   });
 
   function handleDelete(id: string) {
-    const confirmed = window.confirm(
-      "Deseja realmente excluir este pesquisador?",
-    );
+    showModal({
+      title: "Excluir pessoa",
 
-    if (!confirmed) return;
+      content: (
+        <div>
+          <p>Tem certeza que deseja excluir esta pessoa?</p>
 
-    console.log("Excluir:", id);
+          <p>
+            <strong>Esta ação não poderá ser desfeita.</strong>
+          </p>
+        </div>
+      ),
+
+      confirmText: "Excluir",
+
+      cancelText: "Cancelar",
+
+      confirmVariant: "danger",
+
+      onConfirm: async () => {
+        console.log("Excluir:", id);
+
+        // await peopleService.remove(id);
+
+        showToast({
+          title: "Pessoa excluída",
+          type: "success",
+        });
+      },
+
+      onCancel: () => {
+        console.log("Cancelou");
+      },
+    });
   }
 
   return (

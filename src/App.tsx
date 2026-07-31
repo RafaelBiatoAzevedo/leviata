@@ -5,6 +5,7 @@ import { lightTheme, darkTheme } from "./styles/themes";
 import { Router } from "./routes/index.routes";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./shared/Toast/ToastProvider";
+import { ModalProvider } from "./shared/Modal/ModalProvider";
 
 function App() {
   const [theme, setTheme] = useState(() => {
@@ -23,11 +24,13 @@ function App() {
   return (
     <AuthProvider>
       <ThemeProvider theme={theme === "dark" ? darkTheme : lightTheme}>
-        <ToastProvider>
-          <GlobalStyle />
+        <ModalProvider>
+          <ToastProvider>
+            <GlobalStyle />
 
-          <Router />
-        </ToastProvider>
+            <Router />
+          </ToastProvider>
+        </ModalProvider>
       </ThemeProvider>
     </AuthProvider>
   );

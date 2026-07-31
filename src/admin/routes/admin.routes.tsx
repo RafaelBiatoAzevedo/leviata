@@ -19,7 +19,7 @@ export const adminRoutes = (
 
     <Route path="pessoas" element={<AdminPeople />} />
 
-    <Route path="pessoas/ricardo-alexandre-ferreira" element={<PersonView />} />
+    <Route path="pessoas/:slug" element={<PersonView />} />
 
     <Route path="pessoas/novo" element={<PersonForm />} />
 

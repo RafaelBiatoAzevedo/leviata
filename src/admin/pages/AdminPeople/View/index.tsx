@@ -19,38 +19,33 @@ import {
   Name,
   Subtitle,
 } from "./styles";
+import { useEffect, useState } from "react";
+import { peopleService } from "../../../../services/people";
+import type { PersonResponseDto } from "../../../../dto/people/people-response.dto";
 
 export function PersonView() {
   const navigate = useNavigate();
 
   const { slug } = useParams();
 
-  // TODO: buscar da API
-  const person = {
-    id: "1",
-    name: "Ricardo Alexandre Ferreira",
-    slug: "ricardo-alexandre-ferreira",
-    category: "Docente",
-    isActive: true,
-    displayOrder: 1,
+  const [person, setPerson] = useState<PersonResponseDto | null>(null);
 
-    birthDate: "15/08/1978",
-    nationality: "Brasileiro",
+  useEffect(() => {
+    async function loadPerson() {
+      try {
+        const response = await peopleService.getBySlug(slug!);
+        setPerson(response.data);
+      } catch (error) {}
+    }
 
-    academicTitle: "Professor Doutor",
-    institution: "UNESP",
+    if (!person) {
+      loadPerson();
+    }
+  }, [person, slug]);
 
-    email: "ricardo@unesp.br",
-    lattes: "https://lattes.cnpq.br/123456",
-    orcid: "0000-0002-1234-5678",
-    linkedin: "https://linkedin.com/in/ricardo",
-    website: "https://ricardo.com",
-
-    biography:
-      "Professor do Programa de Pós-Graduação da UNESP. Atua nas áreas de História, Memória e Patrimônio.",
-
-    imageUrl: "",
-  };
+  if (!person) {
+    return <div>Carregando...</div>;
+  }
 
   return (
     <Container>
@@ -62,7 +57,7 @@ export function PersonView() {
           </AdminButton>
 
           <AdminButton
-            onClick={() => navigate(`/admin/pessoas/${person.slug}/editar`)}
+            onClick={() => navigate(`/admin/pessoas/${slug}/editar`)}
           >
             <FiEdit2 />
             Editar
@@ -78,7 +73,7 @@ export function PersonView() {
         <Name>{person.name}</Name>
 
         <Subtitle>
-          {person.academicTitle} • {person.institution}
+          {person.academicTitle?.name} • {person.institution?.acronym}
         </Subtitle>
       </PhotoWrapper>
 
@@ -112,7 +107,7 @@ export function PersonView() {
 
             <AdminDescriptionItem
               label="Nacionalidade"
-              value={person.nationality}
+              value={person.nationality?.name}
             />
           </AdminDescriptionList>
         </AdminSection>
@@ -121,11 +116,14 @@ export function PersonView() {
       <AdminFormCard>
         <AdminSection title="Dados Acadêmicos">
           <AdminDescriptionList>
-            <AdminDescriptionItem label="Título" value={person.academicTitle} />
+            <AdminDescriptionItem
+              label="Título"
+              value={person.academicTitle?.name}
+            />
 
             <AdminDescriptionItem
               label="Instituição"
-              value={person.institution}
+              value={person.institution?.name}
             />
           </AdminDescriptionList>
         </AdminSection>
@@ -136,11 +134,11 @@ export function PersonView() {
           <AdminDescriptionList>
             <AdminDescriptionItem label="Email" value={person.email} />
 
-            <AdminDescriptionItem label="Lattes" value={person.lattes} />
+            <AdminDescriptionItem label="Lattes" value={person.lattesUrl} />
 
             <AdminDescriptionItem label="ORCID" value={person.orcid} />
 
-            <AdminDescriptionItem label="LinkedIn" value={person.linkedin} />
+            <AdminDescriptionItem label="LinkedIn" value={person.linkedinUrl} />
 
             <AdminDescriptionItem label="Website" value={person.website} />
           </AdminDescriptionList>
@@ -150,7 +148,7 @@ export function PersonView() {
       <AdminFormCard>
         <AdminSection title="Biografia">
           <AdminDescriptionList columns={1}>
-            <AdminDescriptionItem label="Biografia" value={person.biography} />
+            <AdminDescriptionItem label="Biografia" value={person.bio} />
           </AdminDescriptionList>
         </AdminSection>
       </AdminFormCard>
