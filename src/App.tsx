@@ -3,7 +3,7 @@ import { ThemeProvider } from "styled-components";
 import { GlobalStyle } from "./styles/GlobalStyle";
 import { lightTheme, darkTheme } from "./styles/themes";
 import { Router } from "./routes/index.routes";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./shared/Toast/ToastProvider";
 
 function App() {

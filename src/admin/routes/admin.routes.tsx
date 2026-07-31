@@ -4,9 +4,17 @@ import { AdminPeople } from "../pages/AdminPeople/List";
 import { PersonForm } from "../pages/AdminPeople/Form";
 import { AdminLayout } from "../layouts/AdminLayout";
 import { PersonView } from "../pages/AdminPeople/View";
+import { AdminDataProvider } from "../contexts/AdminDataContext";
 
 export const adminRoutes = (
-  <Route path="/admin" element={<AdminLayout />}>
+  <Route
+    path="/admin"
+    element={
+      <AdminDataProvider>
+        <AdminLayout />
+      </AdminDataProvider>
+    }
+  >
     <Route index element={<AdminDashboard />} />
 
     <Route path="pessoas" element={<AdminPeople />} />
