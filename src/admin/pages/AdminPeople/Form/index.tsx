@@ -15,14 +15,18 @@ import { AdminImageUpload } from "../../../components/AdminImageUpload";
 
 import { Container, Form, Actions, PersonTopWrappe } from "./styles";
 
-import { personSchema } from "./schema";
-
-import type { PersonFormData } from "./schema";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
 import { AdminSection } from "../../../components/AdminSection";
+import { peopleService } from "../../../../services/people";
+import {
+  personSchema,
+  type PersonFormData,
+} from "../../../validations/person.schema";
+import { mapPersonToForm } from "../../../mappers/person.mapper";
+import { personCategoryOptions } from "../../../utils/personCategory";
 
 export function PersonForm() {
   const navigate = useNavigate();
@@ -52,10 +56,12 @@ export function PersonForm() {
     if (!isEdit) return;
 
     async function loadPerson() {
-      // TODO:
-      // const person = await peopleService.findById(id!)
-      // const person = await peopleService.findBySlug(slug!)
-      // reset(mapPersonToForm(person))
+      if (!slug) return;
+
+      const response = await peopleService.getBySlug(slug);
+      const formData = mapPersonToForm(response.data);
+
+      reset(formData);
     }
 
     loadPerson();
@@ -84,40 +90,42 @@ export function PersonForm() {
 
       <Form onSubmit={handleSubmit(onSubmit)}>
         <PersonTopWrappe>
-          <AdminFormCard>
-            <AdminSection title="Foto">
-              <AdminFormGrid columns={1}>
-                <AdminImageUpload label="Foto" />
-              </AdminFormGrid>
-            </AdminSection>
-          </AdminFormCard>
+          <AdminFormGrid columns={1}>
+            <AdminImageUpload />
+          </AdminFormGrid>
 
           <AdminFormCard>
             <AdminSection title="Dados Gerais">
               <AdminFormGrid>
-                <AdminInput label="Nome" placeholder="Nome completo" required />
+                <AdminInput
+                  label="Nome"
+                  placeholder="Nome completo"
+                  required
+                  {...register("name")}
+                />
 
-                <AdminInput label="Slug" placeholder="nome-completo" required />
+                <AdminInput
+                  label="Slug"
+                  placeholder="nome-completo"
+                  required
+                  {...register("slug")}
+                />
 
-                <AdminSelect label="Categoria" required>
-                  <option value="">Selecione</option>
+                <AdminSelect
+                  options={personCategoryOptions}
+                  label="Categoria"
+                  required
+                  {...register("category")}
+                ></AdminSelect>
 
-                  <option value="COORDENADOR">Coordenador</option>
+                <AdminInput
+                  label="Ordem"
+                  type="number"
+                  defaultValue={0}
+                  {...register("displayOrder")}
+                />
 
-                  <option value="SUB_COORDENADOR">Subcoordenador</option>
-
-                  <option value="DOCENTE">Docente</option>
-
-                  <option value="DISCENTE">Discente</option>
-
-                  <option value="PESQUISADOR">Pesquisador</option>
-
-                  <option value="EGRESSO">Egresso</option>
-                </AdminSelect>
-
-                <AdminInput label="Ordem" type="number" defaultValue={0} />
-
-                <AdminSwitch label="Ativo" checked />
+                <AdminSwitch label="Ativo" checked {...register("isActive")} />
               </AdminFormGrid>
             </AdminSection>
           </AdminFormCard>
@@ -126,9 +134,13 @@ export function PersonForm() {
         <AdminFormCard>
           <AdminSection title="Dados Pessoais">
             <AdminFormGrid>
-              <AdminDateInput label="Nascimento" />
+              <AdminDateInput label="Nascimento" {...register("birthDate")} />
 
-              <AdminInput label="Nacionalidade" placeholder="Ex.: Brasileira" />
+              <AdminInput
+                label="Nacionalidade"
+                placeholder="Ex.: Brasileira"
+                {...register("nationalityId")}
+              />
             </AdminFormGrid>
           </AdminSection>
         </AdminFormCard>
@@ -136,9 +148,17 @@ export function PersonForm() {
         <AdminFormCard>
           <AdminSection title="Dados Acadêmicos">
             <AdminFormGrid>
-              <AdminInput label="Título Acadêmico" placeholder="Ex.: Doutor" />
+              <AdminInput
+                label="Título Acadêmico"
+                placeholder="Ex.: Doutor"
+                {...register("academicTitleId")}
+              />
 
-              <AdminInput label="Instituição" placeholder="Ex.: UNESP" />
+              <AdminInput
+                label="Instituição"
+                placeholder="Ex.: UNESP"
+                {...register("institutionId")}
+              />
             </AdminFormGrid>
           </AdminSection>
         </AdminFormCard>
@@ -150,21 +170,32 @@ export function PersonForm() {
                 label="E-mail"
                 type="email"
                 placeholder="email@exemplo.com"
+                {...register("email")}
               />
 
               <AdminInput
                 label="Lattes"
                 placeholder="https://lattes.cnpq.br/..."
+                {...register("lattesUrl")}
               />
 
-              <AdminInput label="ORCID" placeholder="0000-0000-0000-0000" />
+              <AdminInput
+                label="ORCID"
+                placeholder="0000-0000-0000-0000"
+                {...register("orcid")}
+              />
 
               <AdminInput
                 label="LinkedIn"
                 placeholder="https://linkedin.com/in/..."
+                {...register("linkedinUrl")}
               />
 
-              <AdminInput label="Website" placeholder="https://..." />
+              <AdminInput
+                label="Website"
+                placeholder="https://..."
+                {...register("website")}
+              />
             </AdminFormGrid>
           </AdminSection>
         </AdminFormCard>
@@ -176,6 +207,7 @@ export function PersonForm() {
                 label="Biografia"
                 rows={10}
                 placeholder="Escreva uma breve biografia..."
+                {...register("bio")}
               />
             </AdminFormGrid>
           </AdminSection>

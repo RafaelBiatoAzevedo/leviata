@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PersonCategory } from "../../../../enums/person-category";
+import { PersonCategory } from "../enums/person-category";
 
 export const personSchema = z.object({
   slug: z.string().trim().min(1, "Informe o slug.").max(255),

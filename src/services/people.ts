@@ -13,15 +13,15 @@ export const peopleService = {
   },
 
   getById(id: string) {
-    return api.get(`/people/${id}`);
+    return api.get<PersonResponseDto>(`/people/${id}`);
   },
 
   getBySlug(slug: string) {
-    return api.get(`/people/slug/${slug}`);
+    return api.get<PersonResponseDto>(`/people/slug/${slug}`);
   },
 
   updateById(id: string, data: UpdatePersonDto) {
-    return api.patch(`/people/${id}`, data);
+    return api.patch<PersonResponseDto>(`/people/${id}`, data);
   },
 
   removeById(id: string) {
@@ -29,7 +29,7 @@ export const peopleService = {
   },
 
   updateBySlug(slug: string, data: UpdatePersonDto) {
-    return api.patch(`/people/slug${slug}`, data);
+    return api.patch<PersonResponseDto>(`/people/slug${slug}`, data);
   },
 
   removeBySlug(slug: string) {

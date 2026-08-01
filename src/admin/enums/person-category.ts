@@ -9,3 +9,12 @@ export const PersonCategory = {
 
 export type PersonCategory =
   (typeof PersonCategory)[keyof typeof PersonCategory];
+
+export const personCategoryLabels: Record<PersonCategory, string> = {
+  DOCENTE: "Docente",
+  DISCENTE: "Discente",
+  EGRESSO: "Egresso",
+  PESQUISADOR: "Pesquisador",
+  SUB_COORDENADOR: "Subcoordenador",
+  COORDENADOR: "Coordenador",
+};

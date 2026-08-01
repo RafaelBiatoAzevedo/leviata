@@ -77,3 +77,5 @@ export const Select = styled.select<SelectProps>`
       }
     `}
 `;
+
+export const Option = styled.option``;

@@ -10,34 +10,17 @@ export const Container = styled.div`
 
 export const Filters = styled.div`
   display: flex;
+  flex-direction: row;
 
   justify-content: space-between;
 
   gap: 1rem;
-
-  flex-wrap: wrap;
 `;
 
-export const CategorySelect = styled.select`
+export const SelectWrapper = styled.div`
+  position: relative;
+
   width: 240px;
-
-  height: 46px;
-
-  padding: 0 1rem;
-
-  border-radius: 12px;
-
-  border: 1px solid ${({ theme }) => theme.colors.border};
-
-  background: ${({ theme }) => theme.colors.surface};
-
-  color: ${({ theme }) => theme.colors.text};
-
-  outline: none;
-
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.primary};
-  }
 
   @media (max-width: 768px) {
     width: 100%;

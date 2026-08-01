@@ -13,19 +13,21 @@ import { AdminTable } from "../../../components/AdminTable";
 import {
   Container,
   Filters,
-  CategorySelect,
   Avatar,
   Actions,
   Empty,
   AvatarPlaceholder,
+  SelectWrapper,
 } from "./styles";
 import { peopleService } from "../../../../services/people";
 import { useToast } from "../../../../hooks/useToast";
 import type { PersonResponseDto } from "../../../../dto/people/people-response.dto";
+import { useModal } from "../../../../hooks/useModal";
 
 //temp
 import larrissaImage from "../../../../assets/images/Larissa.webp";
-import { useModal } from "../../../../hooks/useModal";
+import { AdminSelect } from "../../../components/AdminSelect";
+import { personCategoryOptions } from "../../../utils/personCategory";
 
 export function AdminPeople() {
   const navigate = useNavigate();
@@ -148,22 +150,22 @@ export function AdminPeople() {
           placeholder="Pesquisar pessoas..."
         />
 
-        <CategorySelect
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
-          ...
-        </CategorySelect>
+        <SelectWrapper>
+          <AdminSelect
+            onChange={(e) => setCategory(e.target.value)}
+            options={personCategoryOptions}
+          ></AdminSelect>
+        </SelectWrapper>
       </Filters>
 
       <AdminTable>
         <thead>
           <tr>
             <th>Foto</th>
+            <th>Título</th>
             <th>Nome</th>
-            <th>Categoria</th>
             <th>Instituição</th>
-            <th>Ordem</th>
+            <th>Categoria</th>
             <th>Status</th>
             <th>Ações</th>
           </tr>
@@ -183,6 +185,8 @@ export function AdminPeople() {
                   )}
                 </td>
 
+                <td>{person.academicTitle?.name}</td>
+
                 <td>
                   <strong>{person.name}</strong>
 
@@ -191,11 +195,9 @@ export function AdminPeople() {
                   <small>{person.slug}</small>
                 </td>
 
-                <td>{person.category}</td>
-
                 <td>{person.institution?.acronym}</td>
 
-                <td>{person.displayOrder}</td>
+                <td>{person.category}</td>
 
                 <td>
                   <AdminBadge variant={person.isActive ? "success" : "danger"}>

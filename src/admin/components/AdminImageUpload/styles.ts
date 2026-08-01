@@ -5,7 +5,7 @@ export const Container = styled.div`
 
   flex-direction: column;
 
-  align-items: flex-start;
+  align-items: center;
 
   gap: 1rem;
 `;
@@ -15,9 +15,9 @@ export const HiddenInput = styled.input`
 `;
 
 export const Preview = styled.div`
-  width: 180px;
+  width: 250px;
 
-  height: 180px;
+  height: 250px;
 
   border-radius: 16px;
 

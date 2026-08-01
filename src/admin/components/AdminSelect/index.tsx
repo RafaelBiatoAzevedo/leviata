@@ -1,15 +1,25 @@
-import type { SelectHTMLAttributes, ReactNode } from "react";
+import type { SelectHTMLAttributes } from "react";
 
 import { AdminField } from "../AdminField";
 
-import { Select } from "./styles";
+import { Option, Select } from "./styles";
 
-interface AdminSelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+export interface SelectOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+
+interface AdminSelectProps extends Omit<
+  SelectHTMLAttributes<HTMLSelectElement>,
+  "children"
+> {
   label?: string;
   description?: string;
   error?: string;
   required?: boolean;
-  children: ReactNode;
+
+  options: SelectOption[];
 }
 
 export function AdminSelect({
@@ -18,7 +28,7 @@ export function AdminSelect({
   error,
   required = false,
   id,
-  children,
+  options,
   ...rest
 }: AdminSelectProps) {
   const selectId = id ?? `select-${label?.toLowerCase().replace(/\s+/g, "-")}`;
@@ -32,7 +42,15 @@ export function AdminSelect({
       htmlFor={selectId}
     >
       <Select id={selectId} $hasError={!!error} {...rest}>
-        {children}
+        {options.map((option) => (
+          <Option
+            key={option.value}
+            value={option.value}
+            disabled={option.disabled}
+          >
+            {option.label}
+          </Option>
+        ))}
       </Select>
     </AdminField>
   );

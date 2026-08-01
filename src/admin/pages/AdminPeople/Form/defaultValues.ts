@@ -1,5 +1,5 @@
-import { PersonCategory } from "../../../../enums/person-category";
-import type { PersonFormData } from "./schema";
+import { PersonCategory } from "../../../enums/person-category";
+import type { PersonFormData } from "../../../validations/person.schema";
 
 export const personDefaultValues: PersonFormData = {
   slug: "",
