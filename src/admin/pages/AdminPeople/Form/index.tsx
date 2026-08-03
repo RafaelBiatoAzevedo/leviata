@@ -27,11 +27,15 @@ import {
 } from "../../../validations/person.schema";
 import { mapPersonToForm } from "../../../mappers/person.mapper";
 import { personCategoryOptions } from "../../../utils/personCategory";
+import { useToast } from "../../../../hooks/useToast";
+import { personDefaultValues } from "./defaultValues";
 
 export function PersonForm() {
   const navigate = useNavigate();
 
   const { slug } = useParams();
+
+  const { showToast } = useToast();
 
   const isEdit = Boolean(slug);
 
@@ -45,11 +49,7 @@ export function PersonForm() {
   } = useForm<PersonFormData>({
     resolver: zodResolver(personSchema),
 
-    defaultValues: {
-      isActive: true,
-
-      displayOrder: 0,
-    },
+    defaultValues: personDefaultValues,
   });
 
   useEffect(() => {
@@ -70,14 +70,32 @@ export function PersonForm() {
   async function onSubmit(data: PersonFormData) {
     try {
       if (isEdit) {
-        // await peopleService.update(id!, data);
+        await peopleService.updateBySlug(slug!, data);
+
+        showToast({
+          title: "Pessoa atualizada",
+          description: "Os dados foram atualizados com sucesso.",
+          type: "success",
+        });
       } else {
-        // await peopleService.create(data);
+        await peopleService.create(data);
+
+        showToast({
+          title: "Pessoa criada",
+          description: "A pessoa foi cadastrada com sucesso.",
+          type: "success",
+        });
       }
 
       navigate("/admin/pessoas");
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      showToast({
+        title: isEdit ? "Erro ao atualizar pessoa" : "Erro ao criar pessoa",
+        description:
+          error.response?.data?.message ??
+          "Não foi possível salvar os dados. Tente novamente.",
+        type: "danger",
+      });
     }
   }
 

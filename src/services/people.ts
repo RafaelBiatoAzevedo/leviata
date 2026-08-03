@@ -29,7 +29,7 @@ export const peopleService = {
   },
 
   updateBySlug(slug: string, data: UpdatePersonDto) {
-    return api.patch<PersonResponseDto>(`/people/slug${slug}`, data);
+    return api.patch<PersonResponseDto>(`/people/slug/${slug}`, data);
   },
 
   removeBySlug(slug: string) {

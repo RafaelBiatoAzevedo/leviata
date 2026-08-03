@@ -1,17 +1,45 @@
 import axios from "axios";
-import { authStorage } from "../admin/services/auth-storage";
 import { envs } from "../config/env";
+import { storageKeys } from "../constants/storageKeys";
 
 export const api = axios.create({
   baseURL: envs.API_BASE_URL,
 });
 
-api.interceptors.request.use((config) => {
-  const token = authStorage.getToken();
+api.interceptors.response.use(
+  (response) => response,
 
-  if (token) {
-    config.headers.set("Authorization", `Bearer ${token}`);
-  }
+  async (error) => {
+    const originalRequest = error.config;
 
-  return config;
-});
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const refreshToken = localStorage.getItem(
+          storageKeys.REFRESH_TOKEN_KEY,
+        );
+
+        const response = await api.post("/auth/refresh", {
+          refreshToken,
+        });
+
+        const { accessToken } = response.data;
+
+        localStorage.setItem(storageKeys.TOKEN_KEY, accessToken);
+
+        api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+
+        return api(originalRequest);
+      } catch {
+        localStorage.clear();
+
+        window.location.href = "/admin/login";
+      }
+    }
+
+    return Promise.reject(error);
+  },
+);

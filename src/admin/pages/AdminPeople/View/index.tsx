@@ -22,11 +22,14 @@ import {
 import { useEffect, useState } from "react";
 import { peopleService } from "../../../../services/people";
 import type { PersonResponseDto } from "../../../../dto/people/people-response.dto";
+import { useToast } from "../../../../hooks/useToast";
 
 export function PersonView() {
   const navigate = useNavigate();
 
   const { slug } = useParams();
+
+  const { showToast } = useToast();
 
   const [person, setPerson] = useState<PersonResponseDto | null>(null);
 
@@ -35,13 +38,19 @@ export function PersonView() {
       try {
         const response = await peopleService.getBySlug(slug!);
         setPerson(response.data);
-      } catch (error) {}
+      } catch (error) {
+        showToast({
+          title: "Ops! Não foi possível carregar a pessoa",
+          description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
+          type: "danger",
+        });
+      }
     }
 
     if (!person) {
       loadPerson();
     }
-  }, [person, slug]);
+  }, [person, showToast, slug]);
 
   if (!person) {
     return <div>Carregando...</div>;
