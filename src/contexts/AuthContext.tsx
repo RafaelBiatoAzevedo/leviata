@@ -13,8 +13,9 @@ import { storageKeys } from "../constants/storageKeys";
 import type {
   LoginResponseDto,
   LoginUserResponseDto,
-} from "../dto/auth/LoginResponseDto";
+} from "../admin/dto/auth/LoginResponseDto";
 import { logout } from "../admin/services/auth";
+import { authStorage } from "../admin/services/auth-storage";
 
 interface AuthContextData {
   user: LoginUserResponseDto | null;
@@ -46,9 +47,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem(storageKeys.TOKEN_KEY);
+    const storedToken = authStorage.getToken();
 
-    const storedUser = localStorage.getItem(storageKeys.USER_KEY);
+    const storedUser = authStorage.getUser();
 
     if (storedToken && storedUser) {
       setToken(storedToken);
@@ -62,7 +63,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   const refreshSession = useCallback(async () => {
-    const refreshToken = localStorage.getItem(storageKeys.REFRESH_TOKEN_KEY);
+    const refreshToken = authStorage.getRefreshToken();
 
     if (!refreshToken) {
       throw new Error("Refresh token not found");
@@ -74,7 +75,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     const { accessToken } = response.data;
 
-    localStorage.setItem(storageKeys.TOKEN_KEY, accessToken);
+    authStorage.setToken(accessToken);
 
     api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
@@ -83,11 +84,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const signIn = useCallback(
     ({ accessToken, refreshToken, user }: LoginResponseDto) => {
-      localStorage.setItem(storageKeys.TOKEN_KEY, accessToken);
+      authStorage.setToken(accessToken);
 
-      localStorage.setItem(storageKeys.REFRESH_TOKEN_KEY, refreshToken);
+      authStorage.setRefreshToken(refreshToken);
 
-      localStorage.setItem(storageKeys.USER_KEY, JSON.stringify(user));
+      authStorage.setUser(user);
 
       api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
@@ -99,11 +100,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 
   const signOut = useCallback(() => {
-    localStorage.removeItem(storageKeys.TOKEN_KEY);
+    authStorage.removeToken();
 
-    localStorage.removeItem(storageKeys.REFRESH_TOKEN_KEY);
+    authStorage.removeRefreshToken();
 
-    localStorage.removeItem(storageKeys.USER_KEY);
+    authStorage.removeUser();
 
     logout();
 

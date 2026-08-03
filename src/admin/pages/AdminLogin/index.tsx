@@ -12,7 +12,7 @@ import {
 
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/auth";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { Button } from "../../../components/Button";
 import { useToast } from "../../../hooks/useToast";
 

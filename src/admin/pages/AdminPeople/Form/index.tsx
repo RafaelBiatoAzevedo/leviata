@@ -20,7 +20,7 @@ import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
 import { AdminSection } from "../../../components/AdminSection";
-import { peopleService } from "../../../../services/people";
+import { peopleService } from "../../../services/people";
 import {
   personSchema,
   type PersonFormData,

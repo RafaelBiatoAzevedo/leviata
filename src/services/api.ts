@@ -1,6 +1,7 @@
 import axios from "axios";
 import { envs } from "../config/env";
 import { storageKeys } from "../constants/storageKeys";
+import { authStorage } from "../admin/services/auth-storage";
 
 export const api = axios.create({
   baseURL: envs.API_BASE_URL,
@@ -16,9 +17,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem(
-          storageKeys.REFRESH_TOKEN_KEY,
-        );
+        const refreshToken = authStorage.getRefreshToken();
 
         const response = await api.post("/auth/refresh", {
           refreshToken,
@@ -26,7 +25,7 @@ api.interceptors.response.use(
 
         const { accessToken } = response.data;
 
-        localStorage.setItem(storageKeys.TOKEN_KEY, accessToken);
+        authStorage.setToken(accessToken);
 
         api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 

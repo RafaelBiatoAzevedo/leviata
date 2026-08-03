@@ -20,7 +20,7 @@ import {
   Subtitle,
 } from "./styles";
 import { useEffect, useState } from "react";
-import { peopleService } from "../../../../services/people";
+import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../../dto/people/people-response.dto";
 import { useToast } from "../../../../hooks/useToast";
 

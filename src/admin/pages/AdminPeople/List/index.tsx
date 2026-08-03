@@ -19,7 +19,7 @@ import {
   AvatarPlaceholder,
   SelectWrapper,
 } from "./styles";
-import { peopleService } from "../../../../services/people";
+import { peopleService } from "../../../services/people";
 import { useToast } from "../../../../hooks/useToast";
 import type { PersonResponseDto } from "../../../../dto/people/people-response.dto";
 import { useModal } from "../../../../hooks/useModal";

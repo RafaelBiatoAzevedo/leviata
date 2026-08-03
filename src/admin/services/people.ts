@@ -1,7 +1,7 @@
 import type { CreatePersonDto } from "../dto/people/create-person.dto";
 import type { PersonResponseDto } from "../dto/people/people-response.dto";
 import type { UpdatePersonDto } from "../dto/people/update-person.dto";
-import { api } from "./api";
+import { api } from "../../services/api";
 
 export const peopleService = {
   create(data: CreatePersonDto) {
