@@ -13,7 +13,11 @@ import {
   FiVideo,
   FiMail,
   FiLogOut,
+  FiCornerUpLeft,
+  FiChevronLeft,
 } from "react-icons/fi";
+
+import { LuArrowLeftFromLine } from "react-icons/lu";
 
 import {
   Container,
@@ -34,10 +38,12 @@ import {
   Avatar,
   UserData,
   UserRole,
+  BackWebSiteWrapper,
 } from "./styles";
 
 import leviataLogo from "../../../assets/images/leviataLogo.png";
 import { useAuth } from "../../hooks/useAuth";
+import { AdminButton } from "../../components/AdminButton";
 
 export function AdminLayout() {
   const navigate = useNavigate();
@@ -141,6 +147,14 @@ export function AdminLayout() {
             {!collapsed && <span>Newsletter</span>}
           </NavItem>
         </Navigation>
+
+        <BackWebSiteWrapper>
+          <AdminButton variant="outline" onClick={() => navigate("/")}>
+            <LuArrowLeftFromLine size={"1.2rem"} />
+
+            {!collapsed && <span>Voltar ao site</span>}
+          </AdminButton>
+        </BackWebSiteWrapper>
       </Sidebar>
 
       <Main>
@@ -164,7 +178,7 @@ export function AdminLayout() {
 
             <LogoutButton onClick={handleLogout}>
               <FiLogOut />
-              Sair
+              Logout
             </LogoutButton>
           </UserArea>
         </Header>

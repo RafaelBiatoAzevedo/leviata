@@ -9,7 +9,7 @@ import {
   FooterMenuMobile,
   //LanguageButton,
   Logo,
-  LogoWrapper,
+  LogoButtonWrapper,
   Menu,
   MenuItem,
   MenuWrapper,
@@ -32,7 +32,7 @@ import { FiChevronDown, FiChevronUp, FiMenu, FiX } from "react-icons/fi";
 
 import { useTheme } from "styled-components";
 
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 //import { useTranslation } from "react-i18next";
 
 const menus = [
@@ -113,6 +113,12 @@ export const Navbar = () => {
 
   const location = useLocation();
 
+  const navigate = useNavigate();
+
+  const clickCount = useRef(0);
+
+  const timer = useRef<number | null>(null);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -130,6 +136,34 @@ export const Navbar = () => {
     };
   }, []);
 
+  function handleLogoClick() {
+    clickCount.current++;
+
+    if (clickCount.current === 1) {
+      navigate("/");
+    }
+
+    if (clickCount.current === 3) {
+      if (timer.current) {
+        window.clearTimeout(timer.current);
+      }
+
+      clickCount.current = 0;
+
+      navigate("/admin");
+
+      return;
+    }
+
+    if (timer.current) {
+      window.clearTimeout(timer.current);
+    }
+
+    timer.current = window.setTimeout(() => {
+      clickCount.current = 0;
+    }, 600);
+  }
+
   // const toggleLanguage = () => {
   //   const newLang = i18n.language === "pt" ? "en" : "pt";
   //   i18n.changeLanguage(newLang);
@@ -142,9 +176,9 @@ export const Navbar = () => {
 
   return (
     <Container>
-      <LogoWrapper to={"/"}>
+      <LogoButtonWrapper as="button" type="button" onClick={handleLogoClick}>
         <Logo src={leviataLogo} alt="Leviata e o cativeiro" />
-      </LogoWrapper>
+      </LogoButtonWrapper>
 
       <DesktopOnly>
         <Menu>

@@ -53,7 +53,9 @@ export const Slider = styled.span`
 
   border-radius: 999px;
 
-  background: ${({ theme }) => theme.colors.border};
+  background: gray;
+
+  /* background: ${({ theme }) => theme.colors.border}; */
 
   transition: 0.2s;
 

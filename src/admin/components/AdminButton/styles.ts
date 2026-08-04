@@ -80,6 +80,10 @@ export const Container = styled.button<IButtonProps>`
 
   transition: 0.2s ease;
 
+  span {
+    white-space: nowrap;
+  }
+
   svg {
     font-size: 1.15rem;
 

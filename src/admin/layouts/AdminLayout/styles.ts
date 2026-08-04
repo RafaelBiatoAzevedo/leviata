@@ -303,3 +303,10 @@ export const Content = styled.main`
 
   padding: 32px;
 `;
+
+export const BackWebSiteWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+`;

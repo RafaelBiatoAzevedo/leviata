@@ -29,15 +29,25 @@ import { mapPersonToForm } from "../../../mappers/person.mapper";
 import { personCategoryOptions } from "../../../utils/personCategory";
 import { useToast } from "../../../../hooks/useToast";
 import { personDefaultValues } from "./defaultValues";
+import { useAdminData } from "../../../hooks/useAdminData";
+import { toSelectOptions } from "../../../utils/helperSelectOptions";
 
 export function PersonForm() {
   const navigate = useNavigate();
 
-  const { slug } = useParams();
-
   const { showToast } = useToast();
 
+  const { slug } = useParams();
+
   const isEdit = Boolean(slug);
+
+  const { countries, institutions, academicTitles } = useAdminData();
+
+  const countryOptions = toSelectOptions(countries);
+
+  const institutionOptions = toSelectOptions(institutions);
+
+  const academicTitleOptions = toSelectOptions(academicTitles);
 
   const {
     register,
@@ -143,7 +153,7 @@ export function PersonForm() {
                   {...register("displayOrder")}
                 />
 
-                <AdminSwitch label="Ativo" checked {...register("isActive")} />
+                <AdminSwitch label="Ativo" {...register("isActive")} />
               </AdminFormGrid>
             </AdminSection>
           </AdminFormCard>
@@ -154,9 +164,9 @@ export function PersonForm() {
             <AdminFormGrid>
               <AdminDateInput label="Nascimento" {...register("birthDate")} />
 
-              <AdminInput
+              <AdminSelect
                 label="Nacionalidade"
-                placeholder="Ex.: Brasileira"
+                options={countryOptions}
                 {...register("nationalityId")}
               />
             </AdminFormGrid>
@@ -166,15 +176,15 @@ export function PersonForm() {
         <AdminFormCard>
           <AdminSection title="Dados Acadêmicos">
             <AdminFormGrid>
-              <AdminInput
+              <AdminSelect
                 label="Título Acadêmico"
-                placeholder="Ex.: Doutor"
+                options={academicTitleOptions}
                 {...register("academicTitleId")}
               />
 
-              <AdminInput
+              <AdminSelect
                 label="Instituição"
-                placeholder="Ex.: UNESP"
+                options={institutionOptions}
                 {...register("institutionId")}
               />
             </AdminFormGrid>

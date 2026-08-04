@@ -32,7 +32,7 @@ export const Container = styled.nav`
   }
 `;
 
-export const LogoWrapper = styled(Link)`
+export const LogoButtonWrapper = styled.button`
   display: flex;
   justify-content: center;
 

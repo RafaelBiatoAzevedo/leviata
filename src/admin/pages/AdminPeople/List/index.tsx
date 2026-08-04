@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FiEdit2, FiEye, FiPlus, FiTrash2, FiUser } from "react-icons/fi";
@@ -84,6 +84,11 @@ export function AdminPeople() {
     load();
   }, [showToast]);
 
+  const personCategoriesFilterOptions = [
+    { value: "", label: "Todas" },
+    ...personCategoryOptions,
+  ];
+
   const filteredPeople = people.filter((person) => {
     const matchesSearch =
       person.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -153,7 +158,7 @@ export function AdminPeople() {
         <SelectWrapper>
           <AdminSelect
             onChange={(e) => setCategory(e.target.value)}
-            options={personCategoryOptions}
+            options={personCategoriesFilterOptions}
           ></AdminSelect>
         </SelectWrapper>
       </Filters>
