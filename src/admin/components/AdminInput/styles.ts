@@ -26,7 +26,7 @@ export const Input = styled.input<InputProps>`
   outline: none;
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.colors.textSoft};
   }
 
   &:focus {

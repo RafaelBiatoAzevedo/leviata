@@ -1,7 +1,6 @@
-import type { PersonCategory } from "../../admin/enums/person-category";
+import type { PersonCategory } from "../../enums/person-category";
 
 export interface CreatePersonDto {
-  slug: string;
   name: string;
   category: PersonCategory;
 

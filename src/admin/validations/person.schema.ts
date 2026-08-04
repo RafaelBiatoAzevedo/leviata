@@ -2,8 +2,6 @@ import { z } from "zod";
 import { PersonCategory } from "../enums/person-category";
 
 export const personSchema = z.object({
-  slug: z.string().trim().min(1, "Informe o slug.").max(255),
-
   name: z.string().trim().min(1, "Informe o nome.").max(255),
 
   category: z.nativeEnum(PersonCategory, {
@@ -30,9 +28,9 @@ export const personSchema = z.object({
 
   email: z
     .string()
-    .email("Informe um e-mail válido.")
-    .optional()
-    .or(z.literal("")),
+    .trim()
+    .min(1, "O e-mail é obrigatório.")
+    .email("Informe um e-mail válido."),
 
   lattesUrl: z
     .string()
@@ -54,11 +52,11 @@ export const personSchema = z.object({
 
   honorificTitle: z.string().optional(),
 
-  nationalityId: z.string().optional(),
+  nationalityId: z.string().min(1, "Selecione uma nacionalidade."),
 
-  academicTitleId: z.string().optional(),
+  academicTitleId: z.string().min(1, "Selecione um título acadêmico."),
 
-  institutionId: z.string().optional(),
+  institutionId: z.string().min(1, "Selecione uma instituição."),
 });
 
 export type PersonFormData = z.infer<typeof personSchema>;

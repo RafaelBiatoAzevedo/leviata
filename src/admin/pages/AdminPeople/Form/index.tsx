@@ -53,8 +53,8 @@ export function PersonForm() {
     register,
     handleSubmit,
     reset,
-    watch,
-    setValue,
+    // watch,
+    // setValue,
     formState: { errors, isSubmitting },
   } = useForm<PersonFormData>({
     resolver: zodResolver(personSchema),
@@ -98,12 +98,14 @@ export function PersonForm() {
       }
 
       navigate("/admin/pessoas");
-    } catch (error: any) {
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Erro desconhecido";
+
       showToast({
         title: isEdit ? "Erro ao atualizar pessoa" : "Erro ao criar pessoa",
         description:
-          error.response?.data?.message ??
-          "Não foi possível salvar os dados. Tente novamente.",
+          message ?? "Não foi possível salvar os dados. Tente novamente.",
         type: "danger",
       });
     }
@@ -129,20 +131,21 @@ export function PersonForm() {
                   label="Nome"
                   placeholder="Nome completo"
                   required
+                  error={errors.name?.message}
                   {...register("name")}
                 />
 
                 <AdminInput
-                  label="Slug"
-                  placeholder="nome-completo"
-                  required
-                  {...register("slug")}
+                  label="Slug (Gerado automaticamente)"
+                  value={slug ?? ""}
+                  disabled
                 />
 
                 <AdminSelect
                   options={personCategoryOptions}
                   label="Categoria"
                   required
+                  error={errors.category?.message}
                   {...register("category")}
                 ></AdminSelect>
 
@@ -167,6 +170,8 @@ export function PersonForm() {
               <AdminSelect
                 label="Nacionalidade"
                 options={countryOptions}
+                error={errors.nationalityId?.message}
+                required
                 {...register("nationalityId")}
               />
             </AdminFormGrid>
@@ -179,18 +184,22 @@ export function PersonForm() {
               <AdminSelect
                 label="Título Acadêmico"
                 options={academicTitleOptions}
+                required
+                error={errors.academicTitleId?.message}
                 {...register("academicTitleId")}
               />
 
               <AdminInput
                 label="Título honorífico"
-                placeholder="Professor, Prof."
+                placeholder="ex: Professor, Prof."
                 {...register("honorificTitle")}
               />
 
               <AdminSelect
                 label="Instituição"
                 options={institutionOptions}
+                error={errors.institutionId?.message}
+                required
                 {...register("institutionId")}
               />
             </AdminFormGrid>
@@ -203,7 +212,9 @@ export function PersonForm() {
               <AdminInput
                 label="E-mail"
                 type="email"
+                required
                 placeholder="email@exemplo.com"
+                error={errors.email?.message}
                 {...register("email")}
               />
 

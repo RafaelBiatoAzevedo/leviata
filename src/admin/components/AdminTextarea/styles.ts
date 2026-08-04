@@ -30,7 +30,7 @@ export const Textarea = styled.textarea<TextareaProps>`
   transition: all 0.2s ease;
 
   &::placeholder {
-    color: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.colors.textSoft};
   }
 
   &:focus {

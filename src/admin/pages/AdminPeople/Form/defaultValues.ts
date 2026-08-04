@@ -2,11 +2,9 @@ import { PersonCategory } from "../../../enums/person-category";
 import type { PersonFormData } from "../../../validations/person.schema";
 
 export const personDefaultValues: PersonFormData = {
-  slug: "",
-
   name: "",
 
-  category: PersonCategory.DISCENTE,
+  category: PersonCategory.PESQUISADOR,
 
   isActive: true,
 

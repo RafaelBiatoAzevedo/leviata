@@ -31,7 +31,7 @@ export const Title = styled.h2`
 
   letter-spacing: 0.08em;
 
-  color: ${({ theme }) => theme.colors.textSoft};
+  color: ${({ theme }) => theme.colors.primary};
 `;
 
 export const Content = styled.div`
