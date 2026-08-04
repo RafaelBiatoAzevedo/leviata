@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FiEdit2, FiEye, FiPlus, FiTrash2, FiUser } from "react-icons/fi";
@@ -21,13 +21,13 @@ import {
 } from "./styles";
 import { peopleService } from "../../../services/people";
 import { useToast } from "../../../../hooks/useToast";
-import type { PersonResponseDto } from "../../../../dto/people/people-response.dto";
 import { useModal } from "../../../../hooks/useModal";
 
 //temp
 import larrissaImage from "../../../../assets/images/Larissa.webp";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { personCategoryOptions } from "../../../utils/personCategory";
+import type { PersonResponseDto } from "../../../dto/people/people-response.dto";
 
 export function AdminPeople() {
   const navigate = useNavigate();
@@ -44,45 +44,47 @@ export function AdminPeople() {
 
   const [category, setCategory] = useState("");
 
-  useEffect(() => {
-    async function load() {
-      try {
-        setLoading(true);
-        const response = await peopleService.getAll();
+  const load = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await peopleService.getAll();
 
-        const mockImageData = response.data.reduce<PersonResponseDto[]>(
-          (array, person) => {
-            if (person.slug === "larissa-biato") {
-              array.push({
-                ...person,
-                imageUrl: larrissaImage,
-              });
-            } else {
-              array.push(person);
-            }
+      const mockImageData = response.data.reduce<PersonResponseDto[]>(
+        (array, person) => {
+          if (person.slug === "larissa-biato") {
+            array.push({
+              ...person,
+              imageUrl: larrissaImage,
+            });
+          } else {
+            array.push(person);
+          }
 
-            return array;
-          },
-          [],
-        );
+          return array;
+        },
+        [],
+      );
 
-        setPeople(mockImageData || ([] as PersonResponseDto[]));
-      } catch (error) {
-        const message =
-          error instanceof Error ? error.message : "Erro desconhecido";
+      setPeople(mockImageData || ([] as PersonResponseDto[]));
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Erro desconhecido";
 
-        showToast({
-          title: "Ops! Lista não atualizada",
-          description: `Não foi possível atualizar a lista.\n${message}`,
-          type: "danger",
-        });
-      } finally {
-        setLoading(false);
-      }
+      showToast({
+        title: "Ops! Lista não atualizada",
+        description: `Não foi possível atualizar a lista.\n${message}`,
+        type: "danger",
+      });
+    } finally {
+      setLoading(false);
     }
-
-    load();
   }, [showToast]);
+
+  useEffect(() => {
+    (async () => {
+      await load();
+    })();
+  }, [load]);
 
   const personCategoriesFilterOptions = [
     { value: "", label: "Todas" },
@@ -99,14 +101,16 @@ export function AdminPeople() {
     return matchesSearch && matchesCategory;
   });
 
-  function handleDelete(id: string) {
+  function handleDelete(user: PersonResponseDto) {
     showModal({
       title: "Excluir pessoa",
 
       content: (
-        <div>
-          <p>Tem certeza que deseja excluir esta pessoa?</p>
-
+        <div style={{ padding: "2rem 0rem" }}>
+          <p>
+            Tem certeza que deseja excluir <b>{user.name} ?</b>
+          </p>
+          <br />
           <p>
             <strong>Esta ação não poderá ser desfeita.</strong>
           </p>
@@ -120,14 +124,15 @@ export function AdminPeople() {
       confirmVariant: "danger",
 
       onConfirm: async () => {
-        console.log("Excluir:", id);
-
-        // await peopleService.remove(id);
+        await peopleService.removeBySlug(user.slug);
 
         showToast({
           title: "Pessoa excluída",
+          description: `${user.name.toUpperCase()}`,
           type: "success",
         });
+
+        await load();
       },
 
       onCancel: () => {
@@ -230,7 +235,7 @@ export function AdminPeople() {
 
                     <AdminIconButton
                       title="Excluir"
-                      onClick={() => handleDelete(person.id)}
+                      onClick={() => handleDelete(person)}
                     >
                       <FiTrash2 />
                     </AdminIconButton>

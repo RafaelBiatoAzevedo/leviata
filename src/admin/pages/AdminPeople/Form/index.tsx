@@ -182,6 +182,12 @@ export function PersonForm() {
                 {...register("academicTitleId")}
               />
 
+              <AdminInput
+                label="Título honorífico"
+                placeholder="Professor, Prof."
+                {...register("honorificTitle")}
+              />
+
               <AdminSelect
                 label="Instituição"
                 options={institutionOptions}

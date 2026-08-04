@@ -33,6 +33,6 @@ export const peopleService = {
   },
 
   removeBySlug(slug: string) {
-    return api.delete(`/people/${slug}`);
+    return api.delete(`/people/slug/${slug}`);
   },
 };
