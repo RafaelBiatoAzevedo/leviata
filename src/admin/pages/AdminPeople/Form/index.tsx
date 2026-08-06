@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +31,7 @@ import { useToast } from "../../../../hooks/useToast";
 import { personDefaultValues } from "./defaultValues";
 import { useAdminData } from "../../../hooks/useAdminData";
 import { toSelectOptions } from "../../../utils/helperSelectOptions";
+import { mapPersonToCreateDto } from "../../../mappers/personToCreate.mapper";
 
 export function PersonForm() {
   const navigate = useNavigate();
@@ -40,6 +41,9 @@ export function PersonForm() {
   const { slug } = useParams();
 
   const isEdit = Boolean(slug);
+
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   const { countries, institutions, academicTitles } = useAdminData();
 
@@ -54,7 +58,7 @@ export function PersonForm() {
     handleSubmit,
     reset,
     // watch,
-    // setValue,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<PersonFormData>({
     resolver: zodResolver(personSchema),
@@ -70,6 +74,10 @@ export function PersonForm() {
 
       const response = await peopleService.getBySlug(slug);
       const formData = mapPersonToForm(response.data);
+
+      if (response.data.imageUrl) {
+        setImagePreview(response.data.imageUrl);
+      }
 
       reset(formData);
     }
@@ -88,7 +96,7 @@ export function PersonForm() {
           type: "success",
         });
       } else {
-        await peopleService.create(data);
+        await peopleService.create(mapPersonToCreateDto(data), imageFile!);
 
         showToast({
           title: "Pessoa criada",
@@ -111,6 +119,24 @@ export function PersonForm() {
     }
   }
 
+  async function handleUploadImage(file: File | null) {
+    if (!file) return;
+
+    if (isEdit) {
+      const response = await peopleService.updateImage(slug!, file);
+
+      setImagePreview(response.data.url);
+
+      setValue("imageUrl", response.data.url);
+
+      return;
+    }
+
+    setImageFile(file);
+
+    setImagePreview(URL.createObjectURL(file));
+  }
+
   return (
     <Container>
       <AdminPageHeader
@@ -121,7 +147,10 @@ export function PersonForm() {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <PersonTopWrappe>
           <AdminFormGrid columns={1}>
-            <AdminImageUpload />
+            <AdminImageUpload
+              imageUrl={imagePreview}
+              onChange={handleUploadImage}
+            />
           </AdminFormGrid>
 
           <AdminFormCard>

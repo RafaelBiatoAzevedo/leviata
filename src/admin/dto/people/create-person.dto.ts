@@ -7,7 +7,6 @@ export interface CreatePersonDto {
   isActive?: boolean;
   displayOrder?: number;
 
-  imageUrl?: string;
   birthDate?: string;
 
   bio?: string;

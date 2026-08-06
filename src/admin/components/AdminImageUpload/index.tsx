@@ -18,7 +18,7 @@ interface AdminImageUploadProps {
   error?: string;
   imageUrl?: string;
   accept?: string;
-  onChange?: (file: File | null) => void;
+  onChange?: (file: File | null) => Promise<void>;
 }
 
 export function AdminImageUpload({

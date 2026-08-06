@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FiEdit2, FiEye, FiPlus, FiTrash2, FiUser } from "react-icons/fi";
@@ -23,8 +23,6 @@ import { peopleService } from "../../../services/people";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
 
-//temp
-import larrissaImage from "../../../../assets/images/Larissa.webp";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { personCategoryOptions } from "../../../utils/personCategory";
 import type { PersonResponseDto } from "../../../dto/people/people-response.dto";
@@ -49,23 +47,7 @@ export function AdminPeople() {
       setLoading(true);
       const response = await peopleService.getAll();
 
-      const mockImageData = response.data.reduce<PersonResponseDto[]>(
-        (array, person) => {
-          if (person.slug === "larissa-biato") {
-            array.push({
-              ...person,
-              imageUrl: larrissaImage,
-            });
-          } else {
-            array.push(person);
-          }
-
-          return array;
-        },
-        [],
-      );
-
-      setPeople(mockImageData || ([] as PersonResponseDto[]));
+      setPeople(response.data);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
@@ -247,7 +229,7 @@ export function AdminPeople() {
       </AdminTable>
 
       {!loading && filteredPeople.length === 0 && (
-        <Empty>Nenhum pesquisador encontrado.</Empty>
+        <Empty>Nenhuma pessoa encontrada.</Empty>
       )}
     </Container>
   );

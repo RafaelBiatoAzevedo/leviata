@@ -2,10 +2,39 @@ import type { CreatePersonDto } from "../dto/people/create-person.dto";
 import type { PersonResponseDto } from "../dto/people/people-response.dto";
 import type { UpdatePersonDto } from "../dto/people/update-person.dto";
 import { api } from "../../services/api";
+import type { ImagePersonResponseDto } from "../dto/people/image-person-response.dto";
 
 export const peopleService = {
-  create(data: CreatePersonDto) {
-    return api.post("/people", data);
+  create(data: CreatePersonDto, image?: File) {
+    const formData = new FormData();
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (value === undefined || value === null) return;
+
+      if (typeof value === "boolean") {
+        formData.append(key, String(value));
+        return;
+      }
+
+      if (typeof value === "number") {
+        formData.append(key, String(value));
+        return;
+      }
+
+      formData.append(key, value);
+    });
+
+    if (image) {
+      formData.append("image", image);
+    }
+
+    console.log([...formData.entries()]);
+
+    return api.post<PersonResponseDto>("/people", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   },
 
   getAll() {
@@ -33,6 +62,26 @@ export const peopleService = {
   },
 
   removeBySlug(slug: string) {
+    return api.delete(`/people/slug/${slug}`);
+  },
+
+  updateImage(slug: string, image: File) {
+    const formData = new FormData();
+
+    formData.append("image", image);
+
+    return api.patch<ImagePersonResponseDto>(
+      `/people/slug/${slug}/image`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+  },
+
+  removeImage(slug: string) {
     return api.delete(`/people/slug/${slug}`);
   },
 };
