@@ -1,5 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { FiCamera, FiImage } from "react-icons/fi";
+import Cropper, { Area } from "react-easy-crop";
+
+import { getCroppedImg } from "@/utils/cropImage";
 
 import { AdminField } from "../AdminField";
 
@@ -30,6 +33,36 @@ export function AdminImageUpload({
   onChange,
 }: AdminImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [image, setImage] = useState("");
+
+  const [crop, setCrop] = useState({
+    x: 0,
+    y: 0,
+  });
+
+  const [zoom, setZoom] = useState(1);
+
+  const [cropAreaPixels, setCropAreaPixels] = useState<Area>();
+
+  function handleSelect(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    setImage(URL.createObjectURL(file));
+  }
+
+  function handleCropComplete(_: Area, croppedAreaPixels: Area) {
+    setCropAreaPixels(croppedAreaPixels);
+  }
+
+  async function handleConfirm() {
+    if (!cropAreaPixels) return;
+
+    const file = await getCroppedImg(image, cropAreaPixels);
+
+    await onChange(file);
+  }
 
   function handleOpen() {
     inputRef.current?.click();
