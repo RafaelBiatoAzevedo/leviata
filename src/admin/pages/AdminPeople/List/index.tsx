@@ -25,7 +25,7 @@ import { useModal } from "../../../../hooks/useModal";
 
 import { AdminSelect } from "../../../components/AdminSelect";
 import { personCategoryOptions } from "../../../utils/personCategory";
-import type { PersonResponseDto } from "../../../dto/people/people-response.dto";
+import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
 
 export function AdminPeople() {
   const navigate = useNavigate();

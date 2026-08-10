@@ -1,4 +1,4 @@
-import type { PersonCategory } from "../../enums/person-category";
+import type { PersonCategory } from "../../enums/PersonCategory";
 
 export interface CreatePersonDto {
   name: string;

@@ -105,7 +105,7 @@ export function AdminLayout() {
             {!collapsed && <span>Pessoas</span>}
           </NavItem>
 
-          <NavItem to="/admin/books" title="Livros">
+          <NavItem to="/admin/livros" title="Livros">
             <FiBook />
 
             {!collapsed && <span>Livros</span>}

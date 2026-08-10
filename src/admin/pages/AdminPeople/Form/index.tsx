@@ -129,6 +129,12 @@ export function PersonForm() {
 
       setValue("imageUrl", response.data.url);
 
+      showToast({
+        title: "Imagem atualizada com sucesso",
+        description: "A imagem da pessoa foi atualizada.",
+        type: "success",
+      });
+
       return;
     }
 

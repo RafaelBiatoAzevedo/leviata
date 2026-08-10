@@ -1,4 +1,4 @@
-import type { PersonCategory } from "../../enums/person-category";
+import type { PersonCategory } from "../../enums/PersonCategory";
 
 export interface InstitutionResponseDto {
   id: string;

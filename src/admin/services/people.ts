@@ -1,8 +1,8 @@
-import type { CreatePersonDto } from "../dto/people/create-person.dto";
-import type { PersonResponseDto } from "../dto/people/people-response.dto";
-import type { UpdatePersonDto } from "../dto/people/update-person.dto";
+import type { CreatePersonDto } from "../dto/people/CreatePersonRequestDto";
+import type { PersonResponseDto } from "../dto/people/PersonResponseDto";
+import type { UpdatePersonDto } from "../dto/people/UpdatePersonRequestDto";
 import { api } from "../../services/api";
-import type { ImagePersonResponseDto } from "../dto/people/image-person-response.dto";
+import type { ImagePersonResponseDto } from "../dto/people/ImagePersonResponseDto";
 
 export const peopleService = {
   create(data: CreatePersonDto, image?: File) {
@@ -27,8 +27,6 @@ export const peopleService = {
     if (image) {
       formData.append("image", image);
     }
-
-    console.log([...formData.entries()]);
 
     return api.post<PersonResponseDto>("/people", formData, {
       headers: {

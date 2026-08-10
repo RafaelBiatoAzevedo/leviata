@@ -1,4 +1,4 @@
-import { PersonCategory, personCategoryLabels } from "../enums/person-category";
+import { PersonCategory, personCategoryLabels } from "../enums/PersonCategory";
 
 export const personCategoryOptions = [
   ...(Object.values(PersonCategory) as PersonCategory[]).map((category) => ({

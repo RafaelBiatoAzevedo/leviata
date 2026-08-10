@@ -1,10 +1,16 @@
 import { Route } from "react-router-dom";
+import { AdminDataProvider } from "../contexts/AdminDataContext";
+import { AdminLayout } from "../layouts/AdminLayout";
+
 import { AdminDashboard } from "../pages/AdminDashboard";
+
 import { AdminPeople } from "../pages/AdminPeople/List";
 import { PersonForm } from "../pages/AdminPeople/Form";
-import { AdminLayout } from "../layouts/AdminLayout";
 import { PersonView } from "../pages/AdminPeople/View";
-import { AdminDataProvider } from "../contexts/AdminDataContext";
+
+import { AdminBooks } from "../pages/AdminBooks/List";
+import { BookView } from "../pages/AdminBooks/View";
+import { BookForm } from "../pages/AdminBooks/Form";
 
 export const adminRoutes = (
   <Route
@@ -17,6 +23,7 @@ export const adminRoutes = (
   >
     <Route index element={<AdminDashboard />} />
 
+    {/* Pessoas */}
     <Route path="pessoas" element={<AdminPeople />} />
 
     <Route path="pessoas/:slug" element={<PersonView />} />
@@ -24,5 +31,14 @@ export const adminRoutes = (
     <Route path="pessoas/novo" element={<PersonForm />} />
 
     <Route path="pessoas/:slug/editar" element={<PersonForm />} />
+
+    {/* Books */}
+    <Route path="livros" element={<AdminBooks />} />
+
+    <Route path="livros/:slug" element={<BookView />} />
+
+    <Route path="livros/novo" element={<BookForm />} />
+
+    <Route path="livros/:slug/editar" element={<BookForm />} />
   </Route>
 );

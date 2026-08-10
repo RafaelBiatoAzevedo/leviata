@@ -1,4 +1,4 @@
-import { PersonCategory } from "../../../enums/person-category";
+import { PersonCategory } from "../../../enums/PersonCategory";
 import type { PersonFormData } from "../../../validations/person.schema";
 
 export const personDefaultValues: PersonFormData = {

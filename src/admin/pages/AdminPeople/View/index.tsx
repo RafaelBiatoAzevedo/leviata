@@ -21,8 +21,8 @@ import {
 } from "./styles";
 import { useEffect, useState } from "react";
 import { peopleService } from "../../../services/people";
-import type { PersonResponseDto } from "../../../../dto/people/people-response.dto";
 import { useToast } from "../../../../hooks/useToast";
+import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
 
 export function PersonView() {
   const navigate = useNavigate();
