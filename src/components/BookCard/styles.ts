@@ -30,7 +30,7 @@ export const Container = styled(Link)`
     border-color: ${({ theme }) => theme.colors.accent};
 
     box-shadow:
-      0 20px 40px rgba(0, 0, 0, 0.45),
+      0 20px 25px rgba(0, 0, 0, 0.45),
       0 0 25px ${({ theme }) => theme.colors.accentGlow};
   }
 
@@ -100,7 +100,7 @@ export const Title = styled.h3`
 `;
 
 export const Author = styled.span`
-  color: ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.textSoft};
 
   font-size: 0.8rem;
 
@@ -108,9 +108,11 @@ export const Author = styled.span`
 `;
 
 export const Year = styled.span`
-  color: rgba(255, 255, 255, 0.55);
+  color: ${({ theme }) => theme.colors.primary};
 
   font-size: 1rem;
 
   letter-spacing: 1px;
+
+  font-weight: bold;
 `;

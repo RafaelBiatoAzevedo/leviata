@@ -3,7 +3,6 @@ import styled from "styled-components";
 
 export const Container = styled(Link)`
   width: 100%;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -18,9 +17,9 @@ export const Container = styled(Link)`
 
   overflow: hidden;
 
-  background: ${({ theme }) => theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.surface};
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid ${({ theme }) => theme.colors.border};
 
   transition:
     transform 0.35s ease,
@@ -63,7 +62,7 @@ export const Container = styled(Link)`
 
 export const ProfileImage = styled.div`
   width: 150px;
-  height: 150px;
+  min-height: 150px;
 
   border-radius: 50%;
 
@@ -91,6 +90,7 @@ export const ProfileImage = styled.div`
 
 export const Content = styled.div`
   display: flex;
+  height: 100%;
   flex-direction: column;
   align-items: center;
 
@@ -104,7 +104,7 @@ export const Content = styled.div`
 `;
 
 export const Name = styled.h3`
-  color: #ffffff;
+  color: ${({ theme }) => theme.colors.text};
 
   font-size: 1.5rem;
 
@@ -119,14 +119,21 @@ export const Category = styled.h4`
   text-transform: uppercase;
 
   line-height: 1.2;
+
+  &:last-child {
+    margin-top: auto;
+  }
 `;
 
 export const Description = styled.p`
   color: ${({ theme }) => theme.colors.textSoft};
+  text-align: justify;
 
   line-height: 1.8;
 
   font-size: 0.95rem;
 
   max-width: 320px;
+
+  flex: 1;
 `;

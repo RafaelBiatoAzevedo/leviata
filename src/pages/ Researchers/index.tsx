@@ -1,83 +1,56 @@
+import { useCallback, useEffect, useState } from "react";
 import { HistoryDivider } from "../../components/HistotyDivider";
 import { PersonCard } from "../../components/PersonCard";
 import { SectionHeader } from "../../components/SectionHeader";
 import { Container, Content, Grid } from "./styles";
-
-import larrissaImage from "../../assets/images/Larissa.webp";
-import ricardoImage from "../../assets/images/Ricardo.webp";
-import ana from "../../assets/images/ana-paula-avelar.webp";
-import antonio from "../../assets/images/ALMEIDA-MENDES.webp";
-import erik from "../../assets/images/Erik.webp";
-
-const researchers = [
-  {
-    image: ricardoImage,
-    name: "Ricardo Alexandre Ferreira",
-    title: "Prof. Dr.",
-    category: "Coordenador",
-    institution: "UNESP/Franca",
-    bio: "Pesquisador e professor dedicado aos estudos históricos, memória social e construção documental.",
-    link: "http://buscatextual.cnpq.br/buscatextual/visualizacv.do?metodo=apresentar&id=K4706356D7",
-  },
-  {
-    image: "/images/pessoas/maria.jpg",
-    name: "Dra. Maria Silva",
-    bio: "Especialista em história contemporânea e estudos culturais.",
-  },
-  {
-    image: larrissaImage,
-    name: "Larissa Biato de Azevedo",
-    title: "Dra.",
-    institution: "UNESP/Franca",
-    bio: "Atua em pesquisa sobre arquivos históricos e preservação documental.",
-    link: "http://buscatextual.cnpq.br/buscatextual/visualizacv.do?metodo=apresentar&id=K4330475T3",
-  },
-  {
-    image: "/images/pessoas/ricardo.jpg",
-    name: "Prof. Dr. Ricardo Alexandre Ferreira",
-    bio: "Pesquisador e professor dedicado aos estudos históricos, memória social e construção documental.",
-  },
-  {
-    image: "/images/pessoas/maria.jpg",
-    name: "Dra. Maria Silva",
-    bio: "Especialista em história contemporânea e estudos culturais.",
-  },
-  {
-    image: "/images/pessoas/joao.jpg",
-    name: "Dr. João Pereira",
-    bio: "Atua em pesquisa sobre arquivos históricos e preservação documental.",
-  },
-  {
-    image: "/images/pessoas/ricardo.jpg",
-    name: "Prof. Dr. Ricardo Alexandre Ferreira",
-    bio: "Pesquisador e professor dedicado aos estudos históricos, memória social e construção documental.",
-  },
-  {
-    image: "/images/pessoas/maria.jpg",
-    name: "Dra. Maria Silva",
-    bio: "Especialista em história contemporânea e estudos culturais.",
-  },
-];
-
-const internatinalResearchers = [
-  {
-    image: ana,
-    name: "Ana Paula Menino Avelar",
-    institution: "Universidade aberta - UAb (Portugal)",
-  },
-  {
-    image: antonio,
-    name: "Antõnio de Almeida Mendes",
-    institution: "Université de nantes (França)",
-  },
-  {
-    image: erik,
-    name: "Erik Lars Myrup",
-    institution: "University of Kentucky (EUA)",
-  },
-];
+import type { PersonResponseDto } from "../../admin/dto/people/PersonResponseDto";
+import { peopleService } from "../../admin/services/people";
 
 export function Researchers() {
+  const [loading, setLoading] = useState(false);
+  const [nationalsResearchers, setNationalsResearchers] = useState(
+    [] as PersonResponseDto[],
+  );
+  const [internatinalsResearchers, setInternatinalsResearchers] = useState(
+    [] as PersonResponseDto[],
+  );
+
+  function filterPeople(people: PersonResponseDto[]) {
+    const nationalsPeople = people.filter(
+      (person) => person.nationality?.code === "BR",
+    );
+
+    const internationalsPeople = people.filter(
+      (person) => person.nationality?.code !== "BR",
+    );
+
+    return { nationalsPeople, internationalsPeople };
+  }
+
+  const load = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await peopleService.getAll();
+
+      const { internationalsPeople, nationalsPeople } = filterPeople(
+        response.data,
+      );
+
+      setNationalsResearchers(nationalsPeople);
+      setInternatinalsResearchers(internationalsPeople);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      await load();
+    })();
+  }, [load]);
+
   return (
     <Container>
       <Content>
@@ -87,11 +60,13 @@ export function Researchers() {
             construção do acervo histórico e acadêmico."
         />
 
-        <Grid>
-          {researchers.map((person, index) => (
-            <PersonCard key={index} {...person} />
-          ))}
-        </Grid>
+        {!loading && (
+          <Grid>
+            {nationalsResearchers.map((person, index) => (
+              <PersonCard key={index} {...person} />
+            ))}
+          </Grid>
+        )}
 
         <HistoryDivider />
 
@@ -102,11 +77,13 @@ export function Researchers() {
             históricos e acadêmicos."
         />
 
-        <Grid>
-          {internatinalResearchers.map((person, index) => (
-            <PersonCard key={index} {...person} />
-          ))}
-        </Grid>
+        {!loading && (
+          <Grid>
+            {internatinalsResearchers.map((person, index) => (
+              <PersonCard key={index} {...person} />
+            ))}
+          </Grid>
+        )}
       </Content>
     </Container>
   );

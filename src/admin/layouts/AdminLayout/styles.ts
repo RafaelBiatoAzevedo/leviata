@@ -21,11 +21,17 @@ export const Sidebar = styled.aside<SidebarProps>`
 
   background: ${({ theme }) => theme.colors.surface};
 
-  border-right: 1px solid ${({ theme }) => theme.colors.border};
+  border-right: 2px solid ${({ theme }) => theme.colors.border};
 
   display: flex;
 
   flex-direction: column;
+
+  box-shadow: 4px 0 8px rgba(0, 0, 0, 0.08);
+
+  position: relative;
+
+  z-index: 10;
 `;
 
 export const Logo = styled.div<SidebarProps>`
@@ -168,6 +174,12 @@ export const Header = styled.header`
   background: ${({ theme }) => theme.colors.surface};
 
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+
+  position: relative;
+
+  z-index: 10;
 `;
 
 export const ToggleButton = styled.button`

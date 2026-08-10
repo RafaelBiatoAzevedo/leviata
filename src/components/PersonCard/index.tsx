@@ -1,3 +1,6 @@
+import type { AcademicTitleResponseDto } from "../../admin/dto/AcademicTitleResponseDto";
+import type { InstitutionResponseDto } from "../../admin/dto/InstitutionResponseDto";
+import type { PersonCategory } from "../../admin/enums/PersonCategory";
 import {
   Container,
   ProfileImage,
@@ -7,66 +10,40 @@ import {
   Category,
 } from "./styles";
 
-// export const TITLES = [
-//   "Prof,",
-//   "Profa.",
-//   "Me.",
-//   "Ma.",
-//   "Dr.",
-//   "Dra.",
-//   "Prof. Me.",
-//   "Profa. Ma.",
-//   "Prof. Dr.",
-//   "Profa. Dra.",
-//   "Doutorando(a)",
-//   "Mestrando(a)",
-//   "Graduando(a)",
-// ];
-
-// Professor
-// Professora
-// Mestre
-// Mestra
-// Doutor
-// Doutora
-// Doutorando(a)
-// Mestrando(a)
-// Graduando(a)
-
-// const CATEGORIES: "docente" | "discente" | "egresso" | "pesquisador" | "coordenador";
-
 interface PersonCardProps {
-  image: string;
+  imageUrl?: string;
   name: string;
-  title?: string;
-  category?: string;
-  institution?: string;
+  academicTitle?: AcademicTitleResponseDto;
+  category: PersonCategory;
+  institution?: InstitutionResponseDto;
   bio?: string;
-  link?: string;
+  lattesUrl?: string;
 }
 
 export function PersonCard({
-  image,
+  imageUrl,
   name,
-  title,
+  academicTitle,
   institution,
   bio,
   category,
-  link,
+  lattesUrl,
 }: PersonCardProps) {
   return (
-    <Container to={link ? link : ""} target="_blank">
-      <ProfileImage>
-        <img src={image} alt={name} />
-      </ProfileImage>
+    <Container to={lattesUrl ? lattesUrl : ""} target="_blank">
+      {!!imageUrl && (
+        <ProfileImage>
+          <img src={imageUrl} alt={name} />
+        </ProfileImage>
+      )}
 
       <Content>
-        <Name>{`${title ? title : ""} ${name}`}</Name>
-        {!!category && <Category>{category}</Category>}
+        <Name>{`${academicTitle! ? academicTitle?.abbreviation : ""} ${name}`}</Name>
+        <Category>{category}</Category>
 
         {!!bio && <Description>{bio}</Description>}
 
-        {!!institution && <Category>{institution}</Category>}
+        {!!institution?.acronym && <Category>{institution.acronym}</Category>}
       </Content>
     </Container>
   );

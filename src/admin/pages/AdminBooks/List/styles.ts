@@ -13,7 +13,7 @@ export const Cover = styled.img`
 
   height: 42px;
 
-  border-radius: 4px;
+  border-radius: 2px;
 
   object-fit: cover;
 `;
@@ -23,7 +23,7 @@ export const CoverPlaceholder = styled.div`
 
   height: 42px;
 
-  border-radius: 4px;
+  border-radius: 2px;
 
   display: flex;
 

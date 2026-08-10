@@ -15,17 +15,17 @@ export interface BookResponseDto {
 
   subtitle?: string;
 
-  coverUrl?: string;
+  coverUrl: string;
 
   description?: string;
 
   isbn?: string;
 
-  year?: number;
+  year: number;
 
   publisher?: string;
 
-  externalUrl?: string;
+  externalUrl: string;
 
   authors: BookAuthorResponseDto[];
 

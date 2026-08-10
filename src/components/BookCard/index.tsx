@@ -1,24 +1,32 @@
 import { Container, Cover, Content, Title, Author, Year } from "./styles";
 
 interface BookCardProps {
-  to: string;
-  cover: string;
+  externalUrl: string;
+  coverUrl: string;
   title: string;
-  author: string;
+  authors: { name: string }[];
   year: string | number;
 }
 
-export function BookCard({ to, cover, title, author, year }: BookCardProps) {
+export function BookCard({
+  externalUrl,
+  coverUrl,
+  title,
+  authors,
+  year,
+}: BookCardProps) {
   return (
-    <Container to={to} target="_blank">
+    <Container to={externalUrl} target="_blank">
       <Cover>
-        <img src={cover} alt={title} />
+        <img src={coverUrl} alt={title} />
       </Cover>
 
       <Content>
         <Title>{title}</Title>
 
-        <Author>{author}</Author>
+        {authors.map((author, index) => (
+          <Author key={index}>{author.name}</Author>
+        ))}
 
         <Year>{year}</Year>
       </Content>

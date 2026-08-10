@@ -1,26 +1,7 @@
 import type { PersonCategory } from "../../enums/PersonCategory";
-
-export interface InstitutionResponseDto {
-  id: string;
-
-  name: string;
-
-  acronym: string;
-}
-
-export interface AcademicTitleResponseDto {
-  id: string;
-
-  name: string;
-}
-
-export interface CountryResponseDto {
-  id: string;
-
-  name: string;
-
-  acronym: string;
-}
+import type { AcademicTitleResponseDto } from "../AcademicTitleResponseDto";
+import type { CountryResponseDto } from "../CountryResponseDto";
+import type { InstitutionResponseDto } from "../InstitutionResponseDto";
 
 export interface PersonResponseDto {
   id: string;

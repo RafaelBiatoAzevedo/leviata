@@ -26,6 +26,9 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { NewsCard } from "../../components/NewsCard";
 import { HistoryDivider } from "../../components/HistotyDivider";
 import { SectionHeader } from "../../components/SectionHeader";
+import { useCallback, useEffect, useState } from "react";
+import type { BookResponseDto } from "../../admin/dto/books/BookResponseDto";
+import { booksService } from "../../admin/services/books";
 
 const booksMocks = [
   {
@@ -175,6 +178,26 @@ const thematicLinesMock = [
 ];
 
 export function Home() {
+  const [books, setBooks] = useState<BookResponseDto[]>(
+    [] as BookResponseDto[],
+  );
+
+  const load = useCallback(async () => {
+    try {
+      const response = await booksService.getAll();
+
+      setBooks(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      await load();
+    })();
+  }, [load]);
+
   return (
     <Container>
       <ImageHero src={leviataHero}></ImageHero>
@@ -224,7 +247,7 @@ export function Home() {
             }}
             style={{ alignItems: "stretch" }}
           >
-            {booksMocks.map((book, index) => (
+            {books.map((book, index) => (
               <SwiperSlide
                 key={index}
                 style={{
