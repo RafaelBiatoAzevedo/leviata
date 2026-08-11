@@ -26,6 +26,8 @@ interface ModalProps {
 
   closeOnBackdrop: boolean;
 
+  confirmDisabled?: boolean;
+
   onClose(): void;
 
   onCancel(): void;
@@ -42,6 +44,7 @@ export function Modal({
   confirmVariant,
   hideFooter,
   closeOnBackdrop,
+  confirmDisabled = false,
   onClose,
   onCancel,
   onConfirm,
@@ -70,7 +73,11 @@ export function Modal({
           <Footer>
             <CancelButton onClick={onCancel}>{cancelText}</CancelButton>
 
-            <ConfirmButton variant={confirmVariant} onClick={onConfirm}>
+            <ConfirmButton
+              variant={confirmVariant}
+              onClick={onConfirm}
+              disabled={confirmDisabled}
+            >
               {confirmText}
             </ConfirmButton>
           </Footer>

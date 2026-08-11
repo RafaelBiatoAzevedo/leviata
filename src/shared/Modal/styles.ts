@@ -200,4 +200,14 @@ export const ConfirmButton = styled.button<ConfirmButtonProps>`
   &:hover {
     opacity: 0.9;
   }
+
+  &:disabled {
+    background: ${({ theme }) => theme.colors.textSoft};
+
+    color: ${({ theme }) => theme.colors.text};
+
+    cursor: not-allowed;
+
+    opacity: 0.7;
+  }
 `;

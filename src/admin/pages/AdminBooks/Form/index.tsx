@@ -15,7 +15,7 @@ import {
 import { bookDefaultValues } from "./defaultValues";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import { booksService } from "../../../services/books";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
@@ -31,16 +31,18 @@ import { mapBookToCreateDto } from "../../../mappers/bookToCreate.mapper";
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
+import { useModal } from "../../../../hooks/useModal";
+import { AdminSelect } from "../../../components/AdminSelect";
 
 export function BookForm() {
   const navigate = useNavigate();
   const { showToast } = useToast();
+  const { showModal, updateModal } = useModal();
 
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState("");
 
-  const [isAuthorModalOpen, setIsAuthorModalOpen] = useState(false);
-  const [selectedAuthorId, setSelectedAuthorId] = useState("");
+  const selectedAuthorIdRef = useRef("");
 
   const [people, setPeople] = useState<PersonResponseDto[]>(
     [] as PersonResponseDto[],
@@ -103,6 +105,58 @@ export function BookForm() {
 
   const authors = watch("authors");
 
+  function handleModal() {
+    showModal({
+      title: "Adicionar autor",
+
+      content: (
+        <div style={{ padding: "2rem 0rem" }}>
+          <p>Selecione um autor</p>
+
+          <br />
+
+          <AdminSelect
+            options={[
+              {
+                value: "",
+                label: "Autores",
+              },
+              ...people
+                .filter((person) => !authors.includes(person.id))
+                .map((person) => ({
+                  value: person.id,
+                  label: person.name,
+                })),
+            ]}
+            onChange={(event) => {
+              selectedAuthorIdRef.current = event.target.value;
+
+              updateModal({
+                confirmDisabled: !event.target.value,
+              });
+            }}
+          />
+        </div>
+      ),
+
+      confirmText: "Adicionar",
+
+      cancelText: "Cancelar",
+
+      confirmVariant: "success",
+
+      confirmDisabled: !selectedAuthorIdRef.current,
+
+      onConfirm: () => {
+        handleAddAuthor(selectedAuthorIdRef.current);
+      },
+
+      onCancel: () => {
+        selectedAuthorIdRef.current = "";
+      },
+    });
+  }
+
   function handleAddAuthor(personId: string) {
     if (authors.includes(personId)) return;
 
@@ -110,6 +164,8 @@ export function BookForm() {
       shouldValidate: true,
       shouldDirty: true,
     });
+
+    selectedAuthorIdRef.current = "";
   }
 
   function handleRemoveAuthor(personId: string) {
@@ -273,11 +329,7 @@ export function BookForm() {
           <AdminSection
             title="Autores"
             action={
-              <AdminButton
-                size="medium"
-                type="button"
-                onClick={() => setIsAuthorModalOpen(true)}
-              >
+              <AdminButton size="medium" type="button" onClick={handleModal}>
                 <FiPlus />
               </AdminButton>
             }

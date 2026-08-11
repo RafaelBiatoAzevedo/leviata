@@ -38,12 +38,24 @@ export function ModalProvider({ children }: Props) {
     setModal(null);
   }, [modal]);
 
+  const updateModal = useCallback((updates: Partial<ModalOptions>) => {
+    setModal((current) => {
+      if (!current) return current;
+
+      return {
+        ...current,
+        ...updates,
+      };
+    });
+  }, []);
+
   const value = useMemo(
     () => ({
       showModal,
       closeModal,
+      updateModal,
     }),
-    [showModal, closeModal],
+    [showModal, closeModal, updateModal],
   );
 
   return (
@@ -61,6 +73,7 @@ export function ModalProvider({ children }: Props) {
           onClose={closeModal}
           onCancel={closeModal}
           onConfirm={handleConfirm}
+          confirmDisabled={modal.confirmDisabled}
         >
           {modal.content}
         </Modal>
