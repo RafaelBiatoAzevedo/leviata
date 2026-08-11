@@ -63,13 +63,13 @@ export const booksService = {
     return api.delete(`/books/slug/${slug}`);
   },
 
-  updateImage(slug: string, image: File) {
+  updateCover(slug: string, cover: File) {
     const formData = new FormData();
 
-    formData.append("image", image);
+    formData.append("cover", cover);
 
     return api.patch<CoverBookResponseDto>(
-      `/books/slug/${slug}/image`,
+      `/books/slug/${slug}/cover`,
       formData,
       {
         headers: {
@@ -79,7 +79,7 @@ export const booksService = {
     );
   },
 
-  removeImage(slug: string) {
-    return api.delete(`/books/slug/${slug}`);
+  removeCover(slug: string) {
+    return api.delete(`/books/slug/${slug}/cover`);
   },
 };

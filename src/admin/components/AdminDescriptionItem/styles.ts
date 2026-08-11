@@ -29,7 +29,7 @@ export const Value = styled.div`
 
   align-items: center;
 
-  padding: 0 1rem;
+  padding: 0.7rem 1rem;
 
   border: 1px solid ${({ theme }) => theme.colors.border};
 

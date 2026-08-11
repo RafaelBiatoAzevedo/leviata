@@ -109,7 +109,7 @@ export function AdminBooks() {
     <Container>
       <AdminPageHeader
         title="Livros"
-        subtitle="Gerencie os livros cadastrados no portal."
+        subtitle="Gerencie os livros cadastrados."
       >
         <AdminButton onClick={() => navigate("/admin/livros/novo")}>
           <FiPlus />

@@ -23,7 +23,7 @@ export interface BookResponseDto {
 
   year: number;
 
-  publisher?: string;
+  publisher: string;
 
   externalUrl: string;
 

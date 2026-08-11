@@ -2,6 +2,12 @@ import { z } from "zod";
 import { PersonCategory } from "../enums/PersonCategory";
 
 export const personSchema = z.object({
+  imageUrl: z
+    .string()
+    .url("Informe uma URL válida.")
+    .optional()
+    .or(z.literal("")),
+
   name: z.string().trim().min(1, "Informe o nome.").max(255),
 
   category: z.nativeEnum(PersonCategory, {
@@ -13,12 +19,6 @@ export const personSchema = z.object({
   displayOrder: z.coerce
     .number()
     .min(0, "A ordem deve ser maior ou igual a zero."),
-
-  imageUrl: z
-    .string()
-    .url("Informe uma URL válida.")
-    .optional()
-    .or(z.literal("")),
 
   birthDate: z.string().optional(),
 

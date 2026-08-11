@@ -127,7 +127,7 @@ export function AdminPeople() {
     <Container>
       <AdminPageHeader
         title="Pessoas"
-        subtitle="Gerencie as pessoas cadastradas no portal."
+        subtitle="Gerencie as pessoas cadastradas."
       >
         <AdminButton onClick={() => navigate("/admin/pessoas/novo")}>
           <FiPlus />

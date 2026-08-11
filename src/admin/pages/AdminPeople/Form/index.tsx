@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { FiArrowLeft, FiSave } from "react-icons/fi";
+import { FiArrowLeft, FiSave, FiUser } from "react-icons/fi";
 
 import { AdminInput } from "../../../components/AdminInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
@@ -154,6 +154,9 @@ export function PersonForm() {
         <PersonTopWrappe>
           <AdminFormGrid columns={1}>
             <AdminImageUpload
+              icon={<FiUser size={42} />}
+              label="Foto"
+              variant="square"
               imageUrl={imagePreview}
               onChange={handleUploadImage}
             />
@@ -284,7 +287,6 @@ export function PersonForm() {
           <AdminSection title="Biografia">
             <AdminFormGrid columns={1}>
               <AdminTextarea
-                label="Biografia"
                 rows={10}
                 placeholder="Escreva uma breve biografia..."
                 {...register("bio")}

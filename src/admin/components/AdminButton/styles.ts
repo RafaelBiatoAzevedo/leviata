@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components";
 
+export type TAdminButtonSize = "small" | "medium" | "large";
+
 export type TAdminButtonVariant =
   | "primary"
   | "secondary"
@@ -9,6 +11,7 @@ export type TAdminButtonVariant =
 
 interface IButtonProps {
   $variant: TAdminButtonVariant;
+  $size: TAdminButtonSize;
 }
 
 const variants = {
@@ -52,9 +55,15 @@ const variants = {
 };
 
 export const Container = styled.button<IButtonProps>`
-  height: 46px;
+  height: ${({ $size }) =>
+    $size === "large" ? "46px" : $size === "medium" ? "38px" : "30px"};
 
-  padding: 0 1.25rem;
+  padding: ${({ $size }) =>
+    $size === "large"
+      ? "0 1.25rem"
+      : $size === "medium"
+        ? "0 0.8rem"
+        : "0 0.5rem"};
 
   display: flex;
 
@@ -66,7 +75,8 @@ export const Container = styled.button<IButtonProps>`
 
   border: none;
 
-  border-radius: 0.75rem;
+  border-radius: ${({ $size }) =>
+    $size === "large" ? "0.75rem" : $size === "medium" ? "0.6rem" : "0.4rem"};
 
   cursor: pointer;
 

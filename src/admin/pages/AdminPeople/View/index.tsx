@@ -19,7 +19,7 @@ import {
   Name,
   Subtitle,
 } from "./styles";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { peopleService } from "../../../services/people";
 import { useToast } from "../../../../hooks/useToast";
 import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
@@ -33,24 +33,26 @@ export function PersonView() {
 
   const [person, setPerson] = useState<PersonResponseDto | null>(null);
 
-  useEffect(() => {
-    async function loadPerson() {
-      try {
-        const response = await peopleService.getBySlug(slug!);
-        setPerson(response.data);
-      } catch (error) {
-        showToast({
-          title: "Ops! Não foi possível carregar a pessoa",
-          description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
-          type: "danger",
-        });
-      }
+  const loadPerson = useCallback(async () => {
+    try {
+      const response = await peopleService.getBySlug(slug!);
+      setPerson(response.data);
+    } catch (error) {
+      showToast({
+        title: "Ops! Não foi possível carregar a pessoa",
+        description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
+        type: "danger",
+      });
     }
+  }, [showToast, slug]);
 
+  useEffect(() => {
     if (!person) {
-      loadPerson();
+      (async () => {
+        await loadPerson();
+      })();
     }
-  }, [person, showToast, slug]);
+  }, [person, loadPerson]);
 
   if (!person) {
     return <div>Carregando...</div>;
@@ -157,7 +159,7 @@ export function PersonView() {
       <AdminFormCard>
         <AdminSection title="Biografia">
           <AdminDescriptionList columns={1}>
-            <AdminDescriptionItem label="Biografia" value={person.bio} />
+            <AdminDescriptionItem value={person.bio} />
           </AdminDescriptionList>
         </AdminSection>
       </AdminFormCard>

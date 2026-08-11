@@ -80,6 +80,6 @@ export const peopleService = {
   },
 
   removeImage(slug: string) {
-    return api.delete(`/people/slug/${slug}`);
+    return api.delete(`/people/slug/${slug}/image`);
   },
 };

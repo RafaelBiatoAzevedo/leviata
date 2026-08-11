@@ -1,3 +1,4 @@
+import type { ChangeEvent, ReactNode } from "react";
 import { useRef } from "react";
 import { FiCamera, FiImage } from "react-icons/fi";
 
@@ -12,21 +13,27 @@ import {
   ChangeButton,
 } from "./styles";
 
+type ImageVariant = "portrait" | "landscape" | "square";
+
 interface AdminImageUploadProps {
   label?: string;
   description?: string;
   error?: string;
   imageUrl?: string;
   accept?: string;
+  variant?: ImageVariant;
+  icon?: ReactNode;
   onChange?: (file: File | null) => Promise<void>;
 }
 
 export function AdminImageUpload({
-  label,
+  label = "Image",
   description,
   error,
   imageUrl,
   accept = "image/*",
+  variant = "square",
+  icon,
   onChange,
 }: AdminImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -35,14 +42,16 @@ export function AdminImageUpload({
     inputRef.current?.click();
   }
 
-  function handleFile(event: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFile(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0] ?? null;
 
-    onChange?.(file);
+    await onChange?.(file);
+
+    event.target.value = "";
   }
 
   return (
-    <AdminField label={label} description={description} error={error}>
+    <AdminField description={description} error={error}>
       <Container>
         <HiddenInput
           ref={inputRef}
@@ -51,21 +60,22 @@ export function AdminImageUpload({
           onChange={handleFile}
         />
 
-        <Preview onClick={handleOpen}>
+        <Preview $variant={variant} onClick={handleOpen}>
           {imageUrl ? (
-            <PreviewImage src={imageUrl} alt="Preview" />
+            <PreviewImage src={imageUrl} alt={label} />
           ) : (
             <Placeholder>
-              <FiImage size={42} />
+              {icon ?? <FiImage size={42} />}
 
-              <span>Selecionar imagem</span>
+              <span>{`Selecionar ${label}`}</span>
             </Placeholder>
           )}
         </Preview>
 
         <ChangeButton type="button" onClick={handleOpen}>
           <FiCamera />
-          Alterar imagem
+
+          {imageUrl ? `Alterar ${label}` : `Selecionar ${label}`}
         </ChangeButton>
       </Container>
     </AdminField>
