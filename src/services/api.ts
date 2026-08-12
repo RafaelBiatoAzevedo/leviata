@@ -34,7 +34,9 @@ api.interceptors.response.use(
       } catch {
         localStorage.clear();
 
-        window.location.href = "/admin/login";
+        if (window.location.pathname.startsWith("/admin")) {
+          window.location.href = "/admin/login";
+        }
       }
     }
 
