@@ -107,6 +107,18 @@ export function BookView() {
           <AdminDescriptionItem label="Descrição" value={book.description} />
         </AdminSection>
       </AdminFormCard>
+      <AdminFormCard>
+        <AdminSection
+          title={`${book.authors.length > 1 ? "Autores" : "Autor"}`}
+        >
+          {book.authors.map((author, index) => (
+            <AdminDescriptionItem
+              key={index}
+              value={`${author.academicTitle.abbreviation} ${author.name} - ${author.institution.acronym}`}
+            />
+          ))}
+        </AdminSection>
+      </AdminFormCard>
     </Container>
   );
 }

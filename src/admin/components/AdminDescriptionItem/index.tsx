@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { Container, Label, Value, EmptyValue } from "./styles";
 
 interface AdminDescriptionItemProps {
-  label: string;
+  label?: string;
 
   value?: ReactNode;
 
@@ -19,7 +19,7 @@ export function AdminDescriptionItem({
 
   return (
     <Container>
-      <Label>{label}</Label>
+      {!!label && <Label>{label}</Label>}
 
       {hasValue ? <Value>{value}</Value> : <EmptyValue>{emptyText}</EmptyValue>}
     </Container>

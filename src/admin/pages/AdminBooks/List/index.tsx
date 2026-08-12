@@ -6,6 +6,7 @@ import {
   Container,
   Cover,
   CoverPlaceholder,
+  DescriptionCell,
   Empty,
   Filters,
 } from "./styles";
@@ -18,6 +19,7 @@ import type { BookResponseDto } from "../../../dto/books/BookResponseDto";
 import { booksService } from "../../../services/books";
 import { AdminTable } from "../../../components/AdminTable";
 import { AdminIconButton } from "../../../components/AdminIconButton";
+import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
 
 export function AdminBooks() {
   const [search, setSearch] = useState("");
@@ -63,17 +65,7 @@ export function AdminBooks() {
     showModal({
       title: "Excluir livro",
 
-      content: (
-        <div style={{ padding: "2rem 0rem" }}>
-          <p>
-            Tem certeza que deseja excluir <b>{book.title} ?</b>
-          </p>
-          <br />
-          <p>
-            <strong>Esta ação não poderá ser desfeita.</strong>
-          </p>
-        </div>
-      ),
+      content: <AdminDeleteContent title={book.title} />,
 
       confirmText: "Excluir",
 
@@ -159,16 +151,13 @@ export function AdminBooks() {
                   <small>{book.slug}</small>
                 </td>
 
-                <td>{book.description}</td>
+                <td>
+                  <DescriptionCell>{book.description}</DescriptionCell>
+                </td>
+
                 <td>{book.year}</td>
 
                 <td>{book.publisher}</td>
-
-                {/* <td>
-                  <AdminBadge variant={book.isActive ? "success" : "danger"}>
-                    {book.isActive ? "Ativo" : "Inativo"}
-                  </AdminBadge>
-                </td> */}
 
                 <td>
                   <Actions>

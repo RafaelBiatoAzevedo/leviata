@@ -1,9 +1,16 @@
+import type { AcademicTitleResponseDto } from "../AcademicTitleResponseDto";
+import type { InstitutionResponseDto } from "../InstitutionResponseDto";
+
 export interface BookAuthorResponseDto {
   id: string;
 
   slug: string;
 
   name: string;
+
+  institution: InstitutionResponseDto;
+
+  academicTitle: AcademicTitleResponseDto;
 }
 
 export interface BookResponseDto {

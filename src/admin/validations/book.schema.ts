@@ -15,9 +15,14 @@ export const bookSchema = z.object({
 
   isbn: z.string().trim().max(20).optional(),
 
-  year: z.number().int().min(0),
+  year: z
+    .number({
+      message: "Informe o ano. Ex: 2020",
+    })
+    .int("Informe um ano válido.")
+    .min(1, "Informe um ano válido."),
 
-  publisher: z.string().trim().max(255),
+  publisher: z.string().trim().min(1, "Informe a editora.").max(255),
 
   externalUrl: z.string().url("Informe uma URL válida.").or(z.literal("")),
 

@@ -26,6 +26,7 @@ import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { personCategoryOptions } from "../../../utils/personCategory";
 import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
+import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
 
 export function AdminPeople() {
   const navigate = useNavigate();
@@ -83,21 +84,11 @@ export function AdminPeople() {
     return matchesSearch && matchesCategory;
   });
 
-  function handleDelete(user: PersonResponseDto) {
+  function handleDelete(person: PersonResponseDto) {
     showModal({
       title: "Excluir pessoa",
 
-      content: (
-        <div style={{ padding: "2rem 0rem" }}>
-          <p>
-            Tem certeza que deseja excluir <b>{user.name} ?</b>
-          </p>
-          <br />
-          <p>
-            <strong>Esta ação não poderá ser desfeita.</strong>
-          </p>
-        </div>
-      ),
+      content: <AdminDeleteContent title={person.name} />,
 
       confirmText: "Excluir",
 
@@ -106,11 +97,11 @@ export function AdminPeople() {
       confirmVariant: "danger",
 
       onConfirm: async () => {
-        await peopleService.removeBySlug(user.slug);
+        await peopleService.removeBySlug(person.slug);
 
         showToast({
           title: "Pessoa excluída",
-          description: `${user.name.toUpperCase()}`,
+          description: `${person.name.toUpperCase()}`,
           type: "success",
         });
 

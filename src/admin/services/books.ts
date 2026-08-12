@@ -11,6 +11,11 @@ export const booksService = {
     Object.entries(data).forEach(([key, value]) => {
       if (value === undefined || value === null) return;
 
+      if (Array.isArray(value)) {
+        formData.append(key, JSON.stringify(value));
+        return;
+      }
+
       if (typeof value === "boolean") {
         formData.append(key, String(value));
         return;
@@ -25,7 +30,7 @@ export const booksService = {
     });
 
     if (cover) {
-      formData.append("image", cover);
+      formData.append("cover", cover);
     }
 
     return api.post<BookResponseDto>("/books", formData, {

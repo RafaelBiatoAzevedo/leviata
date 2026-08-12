@@ -66,3 +66,17 @@ export const Empty = styled.div`
 
   border-radius: 12px;
 `;
+
+export const DescriptionCell = styled.div`
+  max-width: 60rem;
+
+  line-height: 1.4;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+
+  overflow: hidden;
+
+  overflow-wrap: break-word;
+`;

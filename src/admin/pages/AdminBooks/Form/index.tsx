@@ -14,7 +14,7 @@ import {
 } from "../../../validations/book.schema";
 import { bookDefaultValues } from "./defaultValues";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import { booksService } from "../../../services/books";
@@ -33,6 +33,7 @@ import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
+import { AdminError } from "../../../components/AdminError";
 
 export function BookForm() {
   const navigate = useNavigate();
@@ -59,15 +60,20 @@ export function BookForm() {
   // });
 
   const {
+    control,
     register,
     handleSubmit,
     reset,
     setValue,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<BookFormData>({
     resolver: zodResolver(bookSchema),
     defaultValues: bookDefaultValues,
+  });
+
+  const authors = useWatch({
+    control,
+    name: "authors",
   });
 
   const loadBook = useCallback(async () => {
@@ -84,12 +90,10 @@ export function BookForm() {
   }, [reset, slug]);
 
   const loadPeople = useCallback(async () => {
-    if (!slug) return;
-
     const response = await peopleService.getAll();
 
     setPeople(response.data);
-  }, [slug]);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -102,8 +106,6 @@ export function BookForm() {
       await loadBook();
     })();
   }, [isEdit, loadBook, loadPeople]);
-
-  const authors = watch("authors");
 
   function handleModal() {
     showModal({
@@ -354,6 +356,10 @@ export function BookForm() {
                 );
               })}
             </AuthorList>
+
+            {errors.authors && (
+              <AdminError>{errors.authors.message}</AdminError>
+            )}
           </AdminSection>
         </AdminFormCard>
 
