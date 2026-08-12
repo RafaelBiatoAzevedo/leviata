@@ -111,16 +111,10 @@ export function AdminLayout() {
             {!collapsed && <span>Livros</span>}
           </NavItem>
 
-          <NavItem to="/admin/news" title="Notícias">
-            <FiFileText />
-
-            {!collapsed && <span>Notícias</span>}
-          </NavItem>
-
-          <NavItem to="/admin/dossiers" title="Dossiês">
+          <NavItem to="/admin/dossiers" title="Artigos / Dossiês">
             <FiFolder />
 
-            {!collapsed && <span>Dossiês</span>}
+            {!collapsed && <span>Artigos / Dossiês</span>}
           </NavItem>
 
           <NavItem to="/admin/database" title="Banco de Dados">
@@ -139,6 +133,12 @@ export function AdminLayout() {
             <FiVideo />
 
             {!collapsed && <span>Seminários</span>}
+          </NavItem>
+
+          <NavItem to="/admin/news" title="Notícias">
+            <FiFileText />
+
+            {!collapsed && <span>Notícias</span>}
           </NavItem>
 
           <NavItem to="/admin/newsletter" title="Newsletter">

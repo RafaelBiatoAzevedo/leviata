@@ -94,7 +94,7 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
 
-  gap: 16px;
+  gap: 1.2rem;
 
   text-align: center;
 
@@ -114,7 +114,7 @@ export const Name = styled.h3`
 export const Category = styled.h4`
   color: ${({ theme }) => theme.colors.primary};
 
-  font-size: 1.2rem;
+  font-size: 1rem;
 
   text-transform: uppercase;
 
