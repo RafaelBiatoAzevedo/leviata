@@ -13,8 +13,6 @@ import {
   FiVideo,
   FiMail,
   FiLogOut,
-  FiCornerUpLeft,
-  FiChevronLeft,
 } from "react-icons/fi";
 
 import { LuArrowLeftFromLine } from "react-icons/lu";
