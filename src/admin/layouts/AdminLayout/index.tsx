@@ -6,7 +6,6 @@ import {
   FiHome,
   FiUsers,
   FiBook,
-  FiFileText,
   FiFolder,
   FiDatabase,
   FiCalendar,
@@ -15,6 +14,7 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 
+import { BiNews } from "react-icons/bi";
 import { LuArrowLeftFromLine } from "react-icons/lu";
 
 import {
@@ -109,7 +109,7 @@ export function AdminLayout() {
             {!collapsed && <span>Livros</span>}
           </NavItem>
 
-          <NavItem to="/admin/dossiers" title="Artigos / Dossiês">
+          <NavItem to="/admin/artigos" title="Artigos / Dossiês">
             <FiFolder />
 
             {!collapsed && <span>Artigos / Dossiês</span>}
@@ -134,8 +134,7 @@ export function AdminLayout() {
           </NavItem>
 
           <NavItem to="/admin/news" title="Notícias">
-            <FiFileText />
-
+            <BiNews />
             {!collapsed && <span>Notícias</span>}
           </NavItem>
 

@@ -1,17 +1,6 @@
-import type { AcademicTitleResponseDto } from "../AcademicTitleResponseDto";
-import type { InstitutionResponseDto } from "../InstitutionResponseDto";
+import type { PersonResponseDto } from "../people/PersonResponseDto";
 
-export interface BookAuthorResponseDto {
-  id: string;
-
-  slug: string;
-
-  name: string;
-
-  institution: InstitutionResponseDto;
-
-  academicTitle: AcademicTitleResponseDto;
-}
+export type Author = Partial<PersonResponseDto>;
 
 export interface BookResponseDto {
   id: string;
@@ -34,7 +23,7 @@ export interface BookResponseDto {
 
   externalUrl: string;
 
-  authors: BookAuthorResponseDto[];
+  authors: Author[];
 
   createdAt: string;
   updatedAt: string;

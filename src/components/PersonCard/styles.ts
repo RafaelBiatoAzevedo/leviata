@@ -136,4 +136,14 @@ export const Description = styled.p`
   max-width: 320px;
 
   flex: 1;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 8;
+
+  overflow: hidden;
+
+  overflow-wrap: break-word;
+
+  white-space: pre-line;
 `;

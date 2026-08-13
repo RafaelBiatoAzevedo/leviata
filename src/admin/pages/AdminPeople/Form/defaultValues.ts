@@ -8,7 +8,7 @@ export const personDefaultValues: PersonFormData = {
 
   isActive: true,
 
-  displayOrder: 0,
+  displayOrder: 4,
 
   imageUrl: "",
 
