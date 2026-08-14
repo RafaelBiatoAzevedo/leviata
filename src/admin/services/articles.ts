@@ -28,7 +28,7 @@ export const articlesService = {
       formData.append("image", image);
     }
 
-    return api.post<ImageUploadResponseDto>("/article", formData, {
+    return api.post<ImageUploadResponseDto>("/articles", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -36,31 +36,31 @@ export const articlesService = {
   },
 
   getAll() {
-    return api.get<ArticleResponseDto[]>("/article");
+    return api.get<ArticleResponseDto[]>("/articles");
   },
 
   getById(id: string) {
-    return api.get<ArticleResponseDto>(`/article/${id}`);
+    return api.get<ArticleResponseDto>(`/articles/${id}`);
   },
 
   getBySlug(slug: string) {
-    return api.get<ArticleResponseDto>(`/article/slug/${slug}`);
+    return api.get<ArticleResponseDto>(`/articles/slug/${slug}`);
   },
 
   updateById(id: string, data: UpdateArticleDto) {
-    return api.patch<ArticleResponseDto>(`/article/${id}`, data);
+    return api.patch<ArticleResponseDto>(`/articles/${id}`, data);
   },
 
   removeById(id: string) {
-    return api.delete(`/article/${id}`);
+    return api.delete(`/articles/${id}`);
   },
 
   updateBySlug(slug: string, data: UpdateArticleDto) {
-    return api.patch<ArticleResponseDto>(`/article/slug/${slug}`, data);
+    return api.patch<ArticleResponseDto>(`/articles/slug/${slug}`, data);
   },
 
   removeBySlug(slug: string) {
-    return api.delete(`/article/slug/${slug}`);
+    return api.delete(`/articles/slug/${slug}`);
   },
 
   updateImage(slug: string, image: File) {
@@ -69,7 +69,7 @@ export const articlesService = {
     formData.append("image", image);
 
     return api.patch<ImageUploadResponseDto>(
-      `/article/slug/${slug}/image`,
+      `/articles/slug/${slug}/image`,
       formData,
       {
         headers: {
@@ -80,6 +80,6 @@ export const articlesService = {
   },
 
   removeImage(slug: string) {
-    return api.delete(`/article/slug/${slug}/image`);
+    return api.delete(`/articles/slug/${slug}/image`);
   },
 };

@@ -8,7 +8,7 @@ export interface ArticleResponseDto {
   id: string;
   slug: string;
   title: string;
-  cover: string | null;
+  coverUrl: string | null;
   type: TArticleType;
   journal: string | null;
   volume: string | null;

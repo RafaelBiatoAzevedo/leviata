@@ -53,6 +53,12 @@ export function AdminBooks() {
     }
   }, [showToast]);
 
+  useEffect(() => {
+    (async () => {
+      await load();
+    })();
+  }, [load]);
+
   const filteredBooks = books.filter((book) => {
     const matchesSearch =
       book.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -90,12 +96,6 @@ export function AdminBooks() {
       },
     });
   }
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
 
   return (
     <Container>
