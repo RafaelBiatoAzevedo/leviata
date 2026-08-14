@@ -20,6 +20,7 @@ import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
+import { articleTypeLabels } from "../../../utils/articleTypes";
 
 export function ArticleView() {
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ export function ArticleView() {
 
               <AdminDescriptionItem
                 label="Tipo"
-                value={article.type === "ARTICLE" ? "Artigo" : "Dossiê"}
+                value={articleTypeLabels[article.type]}
               />
 
               <AdminDescriptionItem label="Volume" value={article.volume} />

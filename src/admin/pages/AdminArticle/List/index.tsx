@@ -18,7 +18,10 @@ import { useCallback, useEffect, useState } from "react";
 import type { ArticleResponseDto } from "../../../dto/articles/ArticleResponseDto";
 import { articlesService } from "../../../services/articles";
 import { AdminSelect } from "../../../components/AdminSelect";
-import { articleTypesOptions } from "../../../utils/articleTypes";
+import {
+  articleTypeLabels,
+  articleTypesOptions,
+} from "../../../utils/articleTypes";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
 import { AdminIconButton } from "../../../components/AdminIconButton";
 import { AdminTable } from "../../../components/AdminTable";
@@ -142,7 +145,7 @@ export function AdminArticles() {
           <tr>
             <th>Capa</th>
             <th>Tipo</th>
-            <th>Nome</th>
+            <th>Título</th>
             <th>Volume</th>
             <th>Ano</th>
             <th>Publicação</th>
@@ -164,7 +167,7 @@ export function AdminArticles() {
                   )}
                 </td>
 
-                <td>{article.type}</td>
+                <td>{articleTypeLabels[article.type]}</td>
 
                 <td>
                   <strong>{article.title}</strong>

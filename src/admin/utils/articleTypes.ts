@@ -8,3 +8,8 @@ export const articleTypesOptions = [
     label: type === "ARTICLE" ? "Artigo" : "Dossiê",
   })),
 ];
+
+export const articleTypeLabels: Record<TArticleType, string> = {
+  ARTICLE: "Artigo",
+  DOSSIER: "Dossiê",
+};

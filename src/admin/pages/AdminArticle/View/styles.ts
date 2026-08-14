@@ -44,6 +44,8 @@ export const Title = styled.h1`
 export const CoverWrapper = styled(Link)`
   display: flex;
 
+  flex: 0.4;
+
   flex-direction: column;
 
   align-items: center;
@@ -70,7 +72,7 @@ export const Cover = styled.img`
 
   border-radius: 4px;
 
-  object-fit: cover;
+  object-fit: contain;
 
   border: 2px solid ${({ theme }) => theme.colors.primary};
 `;

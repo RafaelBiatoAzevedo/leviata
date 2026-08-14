@@ -9,13 +9,13 @@ export const Container = styled.div`
 `;
 
 export const Cover = styled.img`
-  width: 30px;
+  width: 42px;
 
   height: 42px;
 
   border-radius: 2px;
 
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 export const CoverPlaceholder = styled.div`
