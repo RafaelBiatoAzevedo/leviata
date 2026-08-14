@@ -2,7 +2,7 @@ import type { CreatePersonDto } from "../dto/people/CreatePersonRequestDto";
 import type { PersonResponseDto } from "../dto/people/PersonResponseDto";
 import type { UpdatePersonDto } from "../dto/people/UpdatePersonRequestDto";
 import { api } from "../../services/api";
-import type { ImagePersonResponseDto } from "../dto/people/ImagePersonResponseDto";
+import type { ImageUploadResponseDto } from "../dto/ImageUploadResponseDto";
 
 export const peopleService = {
   create(data: CreatePersonDto, image?: File) {
@@ -68,7 +68,7 @@ export const peopleService = {
 
     formData.append("image", image);
 
-    return api.patch<ImagePersonResponseDto>(
+    return api.patch<ImageUploadResponseDto>(
       `/people/slug/${slug}/image`,
       formData,
       {

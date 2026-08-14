@@ -184,7 +184,7 @@ export function AdminArticles() {
                   <Actions>
                     <AdminIconButton
                       title="Visualizar"
-                      onClick={() => navigate(`/admin/livros/${article.slug}`)}
+                      onClick={() => navigate(`/admin/artigos/${article.slug}`)}
                     >
                       <FiEye />
                     </AdminIconButton>
@@ -192,7 +192,7 @@ export function AdminArticles() {
                     <AdminIconButton
                       title="Editar"
                       onClick={() =>
-                        navigate(`/admin/livros/${article.slug}/editar`)
+                        navigate(`/admin/artigos/${article.slug}/editar`)
                       }
                     >
                       <FiEdit2 />

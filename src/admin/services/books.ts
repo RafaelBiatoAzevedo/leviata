@@ -1,8 +1,8 @@
 import { api } from "../../services/api";
 import type { BookResponseDto } from "../dto/books/BookResponseDto";
-import type { CoverBookResponseDto } from "../dto/books/CoverBookResponseDto";
 import type { CreateBookRequestDto } from "../dto/books/CreateBookRequestDto";
 import type { UpdateBookRequestDto } from "../dto/books/UpdateBookRequestDto";
+import type { ImageUploadResponseDto } from "../dto/ImageUploadResponseDto";
 
 export const booksService = {
   create(data: CreateBookRequestDto, cover?: File) {
@@ -73,7 +73,7 @@ export const booksService = {
 
     formData.append("cover", cover);
 
-    return api.patch<CoverBookResponseDto>(
+    return api.patch<ImageUploadResponseDto>(
       `/books/slug/${slug}/cover`,
       formData,
       {

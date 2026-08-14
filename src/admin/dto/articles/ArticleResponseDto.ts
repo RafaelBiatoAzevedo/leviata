@@ -6,17 +6,30 @@ export type Author = Partial<PersonResponseDto>;
 
 export interface ArticleResponseDto {
   id: string;
+
   slug: string;
+
   title: string;
-  coverUrl: string | null;
+
+  coverUrl: string;
+
   type: TArticleType;
-  journal: string | null;
-  volume: string | null;
-  year: number | null;
-  doi: string | null;
-  summary: string | null;
-  externalUrl: string | null;
+
+  journal: string;
+
+  volume: string;
+
+  year: number;
+
+  doi?: string;
+
+  summary?: string;
+
+  externalUrl: string;
+
   authors: Author[];
+
   createdAt: string;
+
   updatedAt: string;
 }
