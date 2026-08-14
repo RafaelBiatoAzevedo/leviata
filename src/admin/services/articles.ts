@@ -5,11 +5,16 @@ import type { UpdateArticleDto } from "../dto/articles/UpdateArticleRequestDto";
 import type { ImageUploadResponseDto } from "../dto/ImageUploadResponseDto";
 
 export const articlesService = {
-  create(data: CreateArticleRequestDto, image?: File) {
+  create(data: CreateArticleRequestDto, cover?: File) {
     const formData = new FormData();
 
     Object.entries(data).forEach(([key, value]) => {
       if (value === undefined || value === null) return;
+
+      if (Array.isArray(value)) {
+        formData.append(key, JSON.stringify(value));
+        return;
+      }
 
       if (typeof value === "boolean") {
         formData.append(key, String(value));
@@ -24,8 +29,8 @@ export const articlesService = {
       formData.append(key, value);
     });
 
-    if (image) {
-      formData.append("image", image);
+    if (cover) {
+      formData.append("cover", cover);
     }
 
     return api.post<ImageUploadResponseDto>("/articles", formData, {
@@ -63,13 +68,13 @@ export const articlesService = {
     return api.delete(`/articles/slug/${slug}`);
   },
 
-  updateImage(slug: string, image: File) {
+  updateCover(slug: string, cover: File) {
     const formData = new FormData();
 
-    formData.append("image", image);
+    formData.append("cover", cover);
 
     return api.patch<ImageUploadResponseDto>(
-      `/articles/slug/${slug}/image`,
+      `/articles/slug/${slug}/cover`,
       formData,
       {
         headers: {
@@ -80,6 +85,6 @@ export const articlesService = {
   },
 
   removeImage(slug: string) {
-    return api.delete(`/articles/slug/${slug}/image`);
+    return api.delete(`/articles/slug/${slug}/cover`);
   },
 };

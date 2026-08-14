@@ -2,6 +2,12 @@ import { z } from "zod";
 import type { TArticleType } from "../types/TArticleType";
 
 export const articleSchema = z.object({
+  coverUrl: z
+    .string()
+    .url("Informe uma URL válida.")
+    .optional()
+    .or(z.literal("")),
+
   title: z
     .string()
     .min(1, "Informe o título.")

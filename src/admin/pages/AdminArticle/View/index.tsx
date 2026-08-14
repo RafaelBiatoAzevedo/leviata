@@ -72,7 +72,7 @@ export function ArticleView() {
           </AdminButton>
         </HeaderActions>
 
-        <Title>Livro</Title>
+        <Title>{article.type === "ARTICLE" ? "Artigo" : "Dossiê"}</Title>
       </Header>
 
       <ContentWrapper>
@@ -91,12 +91,18 @@ export function ArticleView() {
 
               <AdminDescriptionItem label="Slug" value={article.slug} />
 
+              <AdminDescriptionItem
+                label="Tipo"
+                value={article.type === "ARTICLE" ? "Artigo" : "Dossiê"}
+              />
+
               <AdminDescriptionItem label="Volume" value={article.volume} />
 
-              <AdminDescriptionItem label="Doi" value={article.doi} />
               <AdminDescriptionItem label="Ano" value={article.year} />
 
               <AdminDescriptionItem label="Editora" value={article.journal} />
+
+              <AdminDescriptionItem label="Doi" value={article.doi} />
 
               <AdminDescriptionItem label="Link" value={article.externalUrl} />
             </AdminDescriptionList>

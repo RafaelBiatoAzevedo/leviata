@@ -7,6 +7,8 @@ interface InputProps {
 export const Input = styled.input<InputProps>`
   width: 100%;
 
+  height: 46px;
+
   padding: 10px 12px;
 
   border: 1px solid

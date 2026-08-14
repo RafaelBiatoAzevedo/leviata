@@ -187,7 +187,7 @@ export function BookForm() {
         await booksService.updateBySlug(slug!, data);
 
         showToast({
-          title: "Pessoa atualizada",
+          title: "Livro atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });

@@ -10,6 +10,6 @@ export function mapBookToForm(book: BookResponseDto): BookFormData {
     year: book.year,
     publisher: book.publisher,
     externalUrl: book.externalUrl,
-    authors: book.authors.map((author) => author.id),
+    authors: book.authors.map((author) => author.id!),
   };
 }

@@ -5,6 +5,6 @@ export const articleTypes: TArticleType[] = ["ARTICLE", "DOSSIER"];
 export const articleTypesOptions = [
   ...articleTypes.map((type) => ({
     value: type,
-    label: type === "ARTICLE" ? "Artigos" : "Dossiês",
+    label: type === "ARTICLE" ? "Artigo" : "Dossiê",
   })),
 ];
