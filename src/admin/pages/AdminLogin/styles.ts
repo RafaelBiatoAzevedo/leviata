@@ -10,13 +10,28 @@ export const Container = styled.main`
   padding: 2rem;
 
   background: ${({ theme }) => theme.colors.background};
+
+  &::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background-image: url("/src/assets/images/leviataHero.webp");
+    background-size: cover;
+    background-position: center;
+
+    opacity: 0.7;
+
+    z-index: 0;
+  }
 `;
 
 export const Card = styled.div`
   width: 100%;
   max-width: 460px;
 
-  background: ${({ theme }) => theme.colors.surface};
+  background: ${({ theme }) => theme.colors.background};
 
   border-radius: 1.5rem;
 
@@ -29,6 +44,8 @@ export const Card = styled.div`
   box-shadow:
     0 0 0 4px ${({ theme }) => theme.colors.accentGlow},
     0 0 25px rgba(0, 0, 0, 0.25);
+
+  z-index: 1;
 `;
 
 export const Title = styled.h1`

@@ -2,7 +2,7 @@ export const lightTheme = {
   colors: {
     background: "#FFFFFF",
     backgroundCard: "#000000",
-    surface: "#9CA3AF20",
+    surface: "#E5E7EB",
     primary: "#C6A15B",
     secondary: "#111827",
 
