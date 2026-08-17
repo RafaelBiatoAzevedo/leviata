@@ -1,8 +1,8 @@
-import type { PersonCategory } from "../../enums/PersonCategory";
+import type { TPersonCategory } from "../../enums/PersonCategory";
 
 export interface CreatePersonDto {
   name: string;
-  category: PersonCategory;
+  category: TPersonCategory;
 
   isActive?: boolean;
   displayOrder?: number;

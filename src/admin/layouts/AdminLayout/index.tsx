@@ -115,27 +115,27 @@ export function AdminLayout() {
             {!collapsed && <span>Artigos / Dossiês</span>}
           </NavItem>
 
-          <NavItem to="/admin/database" title="Banco de Dados">
+          <NavItem to="/admin/noticias" title="Notícias">
+            <BiNews />
+            {!collapsed && <span>Notícias</span>}
+          </NavItem>
+
+          <NavItem to="/admin/banco-de-dados" title="Banco de Dados">
             <FiDatabase />
 
             {!collapsed && <span>Banco de Dados</span>}
           </NavItem>
 
-          <NavItem to="/admin/meetings" title="Reuniões">
+          <NavItem to="/admin/reunioes" title="Reuniões">
             <FiCalendar />
 
             {!collapsed && <span>Reuniões</span>}
           </NavItem>
 
-          <NavItem to="/admin/seminars" title="Seminários">
+          <NavItem to="/admin/seminarios" title="Seminários">
             <FiVideo />
 
             {!collapsed && <span>Seminários</span>}
-          </NavItem>
-
-          <NavItem to="/admin/news" title="Notícias">
-            <BiNews />
-            {!collapsed && <span>Notícias</span>}
           </NavItem>
 
           <NavItem to="/admin/newsletter" title="Newsletter">

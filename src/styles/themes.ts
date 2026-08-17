@@ -2,14 +2,14 @@ export const lightTheme = {
   colors: {
     background: "#FFFFFF",
     backgroundCard: "#000000",
-    surface: "#E5E7EB",
+    surface: "#F1F3F5",
     primary: "#C6A15B",
     secondary: "#111827",
 
     onSecondary: "#E5E7EB",
 
     text: "#000000",
-    textSoft: "#9CA3AF",
+    textSoft: "#8B929D",
 
     border: "#C6A15B",
 

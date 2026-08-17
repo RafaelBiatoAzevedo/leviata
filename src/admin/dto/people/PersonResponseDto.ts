@@ -1,4 +1,4 @@
-import type { PersonCategory } from "../../enums/PersonCategory";
+import type { TPersonCategory } from "../../enums/PersonCategory";
 import type { AcademicTitleResponseDto } from "../AcademicTitleResponseDto";
 import type { CountryResponseDto } from "../CountryResponseDto";
 import type { InstitutionResponseDto } from "../InstitutionResponseDto";
@@ -10,7 +10,7 @@ export interface PersonResponseDto {
 
   name: string;
 
-  category: PersonCategory;
+  category: TPersonCategory;
 
   isActive: boolean;
 

@@ -1,6 +1,6 @@
 import type { AcademicTitleResponseDto } from "../../admin/dto/AcademicTitleResponseDto";
 import type { InstitutionResponseDto } from "../../admin/dto/InstitutionResponseDto";
-import type { PersonCategory } from "../../admin/enums/PersonCategory";
+import type { TPersonCategory } from "../../admin/enums/PersonCategory";
 import {
   Container,
   ProfileImage,
@@ -14,7 +14,7 @@ interface PersonCardProps {
   imageUrl?: string;
   name: string;
   academicTitle?: AcademicTitleResponseDto;
-  category: PersonCategory;
+  category: TPersonCategory;
   institution?: InstitutionResponseDto;
   bio?: string;
   lattesUrl?: string;

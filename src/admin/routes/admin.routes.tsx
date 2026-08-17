@@ -14,6 +14,9 @@ import { BookForm } from "../pages/AdminBooks/Form";
 import { AdminArticles } from "../pages/AdminArticle/List";
 import { ArticleView } from "../pages/AdminArticle/View";
 import { ArticleForm } from "../pages/AdminArticle/Form";
+import { AdminNews } from "../pages/AdminNews/List";
+import { NewsView } from "../pages/AdminNews/View";
+import { NewsForm } from "../pages/AdminNews/Form";
 
 export const adminRoutes = (
   <Route
@@ -52,5 +55,14 @@ export const adminRoutes = (
     <Route path="artigos/novo" element={<ArticleForm />} />
 
     <Route path="artigos/:slug/editar" element={<ArticleForm />} />
+
+    {/* News */}
+    <Route path="noticias" element={<AdminNews />} />
+
+    <Route path="noticias/:slug" element={<NewsView />} />
+
+    <Route path="noticias/novo" element={<NewsForm />} />
+
+    <Route path="noticias/:slug/editar" element={<NewsForm />} />
   </Route>
 );

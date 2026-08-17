@@ -36,7 +36,7 @@ export function BookView() {
       setBook(response.data);
     } catch (error) {
       showToast({
-        title: "Ops! Não foi possível carregar a pessoa",
+        title: "Ops! Não foi possível carregar o livro",
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });

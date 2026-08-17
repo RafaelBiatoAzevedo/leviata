@@ -7,10 +7,10 @@ export const PersonCategory = {
   COORDENADOR: "COORDENADOR",
 } as const;
 
-export type PersonCategory =
+export type TPersonCategory =
   (typeof PersonCategory)[keyof typeof PersonCategory];
 
-export const personCategoryLabels: Record<PersonCategory, string> = {
+export const personCategoryLabels: Record<TPersonCategory, string> = {
   DOCENTE: "Docente",
   DISCENTE: "Discente",
   EGRESSO: "Egresso",

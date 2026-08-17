@@ -44,8 +44,6 @@ export const Title = styled.h1`
 export const CoverWrapper = styled(Link)`
   display: flex;
 
-  flex: 0.4;
-
   flex-direction: column;
 
   align-items: center;
@@ -66,19 +64,20 @@ export const CoverWrapper = styled(Link)`
 `;
 
 export const Cover = styled.img`
-  width: 320px;
+  width: 220px;
 
   height: 320px;
 
   border-radius: 4px;
 
-  object-fit: contain;
+  object-fit: cover;
 
   border: 2px solid ${({ theme }) => theme.colors.primary};
 `;
 
-export const ArticleTitle = styled.h2`
+export const NewsTitle = styled.h2`
   margin: 0;
+  text-align: center;
 
   font-size: 1.4rem;
 

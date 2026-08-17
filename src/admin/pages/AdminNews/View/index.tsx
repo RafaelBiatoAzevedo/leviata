@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
-import type { ArticleResponseDto } from "../../../dto/articles/ArticleResponseDto";
+import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
+import { AdminButton } from "../../../components/AdminButton";
 import {
-  ArticleTitle,
+  NewsTitle,
   Container,
   ContentWrapper,
   Cover,
@@ -11,33 +11,34 @@ import {
   Subtitle,
   Title,
 } from "./styles";
-import { articlesService } from "../../../services/articles";
 import { useNavigate, useParams } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
-import { AdminButton } from "../../../components/AdminButton";
-import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
-import { articleTypeLabels } from "../../../utils/articleTypes";
+import type { NewsResponseDto } from "../../../dto/news/NewsResponseDto";
+import { newsService } from "../../../services/news";
+import { newsCategoryLabels } from "../../../enums/NewsCategory";
+import { formatDate } from "../../../utils/formatDate";
 
-export function ArticleView() {
+export function NewsView() {
   const navigate = useNavigate();
 
   const { showToast } = useToast();
 
   const { slug } = useParams();
 
-  const [article, setArticle] = useState<ArticleResponseDto | null>(null);
+  const [news, setNews] = useState<NewsResponseDto | null>(null);
 
-  const load = useCallback(async () => {
+  const loadNews = useCallback(async () => {
     try {
-      const response = await articlesService.getBySlug(slug!);
-      setArticle(response.data);
+      const response = await newsService.getBySlug(slug!);
+      setNews(response.data);
     } catch (error) {
       showToast({
-        title: "Ops! Não foi possível carregar a artigo ou dossiê",
+        title: "Ops! Não foi possível carregar a notícia",
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });
@@ -45,14 +46,14 @@ export function ArticleView() {
   }, [showToast, slug]);
 
   useEffect(() => {
-    if (!article) {
+    if (!news) {
       (async () => {
-        await load();
+        await loadNews();
       })();
     }
-  }, [article, load]);
+  }, [news, loadNews]);
 
-  if (!article) {
+  if (!news) {
     return <div>Carregando...</div>;
   }
 
@@ -66,67 +67,69 @@ export function ArticleView() {
           </AdminButton>
 
           <AdminButton
-            onClick={() => navigate(`/admin/artigos/${slug}/editar`)}
+            onClick={() => navigate(`/admin/noticias/${slug}/editar`)}
           >
             <FiEdit2 />
             Editar
           </AdminButton>
         </HeaderActions>
 
-        <Title>{article.type === "ARTICLE" ? "Artigo" : "Dossiê"}</Title>
+        <Title>Notícia</Title>
       </Header>
 
       <ContentWrapper>
-        <CoverWrapper to={article.externalUrl} target={"_blank"}>
-          <Cover src={article.coverUrl} />
+        <CoverWrapper to={news.externalUrl} target={"_blank"}>
+          {!!news.coverUrl && <Cover src={news.coverUrl} />}
 
-          <ArticleTitle>{article.title}</ArticleTitle>
+          <NewsTitle>{news.title}</NewsTitle>
 
-          <Subtitle>{article.year}</Subtitle>
+          <Subtitle>{formatDate(news.date)}</Subtitle>
         </CoverWrapper>
 
         <AdminFormCard>
           <AdminSection title="Dados Gerais">
             <AdminDescriptionList>
-              <AdminDescriptionItem label="Título" value={article.title} />
+              <AdminDescriptionItem label="Título" value={news.title} />
 
-              <AdminDescriptionItem label="Slug" value={article.slug} />
+              <AdminDescriptionItem label="Slug" value={news.slug} />
 
               <AdminDescriptionItem
-                label="Tipo"
-                value={articleTypeLabels[article.type]}
+                label="Categoria"
+                value={newsCategoryLabels[news.category]}
               />
 
-              <AdminDescriptionItem label="Volume" value={article.volume} />
+              <AdminDescriptionItem
+                label="Externa"
+                value={news.isInternal ? "Sim" : "Não"}
+              />
 
-              <AdminDescriptionItem label="Ano" value={article.year} />
+              <AdminDescriptionItem
+                label="Relacionada"
+                value={news.relatedId}
+              />
 
-              <AdminDescriptionItem label="Editora" value={article.journal} />
-
-              <AdminDescriptionItem label="Doi" value={article.doi} />
-
-              <AdminDescriptionItem label="Link" value={article.externalUrl} />
+              <AdminDescriptionItem label="Link" value={news.externalUrl} />
             </AdminDescriptionList>
           </AdminSection>
         </AdminFormCard>
       </ContentWrapper>
       <AdminFormCard>
         <AdminSection title="Descrição">
-          <AdminDescriptionItem label="Descrição" value={article.summary} />
+          <AdminDescriptionItem label="Descrição" value={news.description} />
         </AdminSection>
       </AdminFormCard>
-      <AdminFormCard>
+      {/* <AdminFormCard>
         <AdminSection
-          title={`${article.authors.length > 1 ? "Autores" : "Autor"}`}
+          title={`${news.authors.length > 1 ? "Autores" : "Autor"}`}
         >
-          {article.authors.map((author, index) => (
+          {news.authors.map((author, index) => (
             <AdminDescriptionItem
               key={index}
               value={`${author.academicTitle!.abbreviation} ${author.name} - ${author.institution!.acronym}`}
             />
           ))}
         </AdminSection>
-      </AdminFormCard>
+      </AdminFormCard> */}
     </Container>
   );
 }
