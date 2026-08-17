@@ -13,7 +13,7 @@ export const Container = styled.nav`
   justify-content: space-between;
 
   padding: 0 8%;
-  background: ${({ theme }) => theme.colors.background};
+  background: ${({ theme }) => theme.colors.surface};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   transition: all 0.3s ease;
 
