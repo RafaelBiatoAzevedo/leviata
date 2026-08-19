@@ -23,6 +23,7 @@ import { useCallback, useEffect, useState } from "react";
 import { peopleService } from "../../../services/people";
 import { useToast } from "../../../../hooks/useToast";
 import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
+import { AdminLoading } from "../../../components/AdminLoading";
 
 export function PersonView() {
   const navigate = useNavigate();
@@ -55,7 +56,7 @@ export function PersonView() {
   }, [person, loadPerson]);
 
   if (!person) {
-    return <div>Carregando...</div>;
+    return <AdminLoading text="Carregando pessoa..." />;
   }
 
   return (

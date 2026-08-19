@@ -16,7 +16,7 @@ export const Form = styled.form`
   gap: 2rem;
 `;
 
-export const BookTopWrapper = styled.div`
+export const NewsTopWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 2rem;

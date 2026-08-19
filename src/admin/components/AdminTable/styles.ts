@@ -5,7 +5,7 @@ export const Container = styled.div`
 
   overflow-x: auto;
 
-  border-radius: 16px;
+  border-radius: 0.8rem;
 
   background: ${({ theme }) => theme.colors.surface};
 

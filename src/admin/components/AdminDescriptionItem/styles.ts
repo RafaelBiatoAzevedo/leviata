@@ -33,7 +33,7 @@ export const Value = styled.div`
 
   border: 1px solid ${({ theme }) => theme.colors.border};
 
-  border-radius: 12px;
+  border-radius: 0.6rem;
 
   background: ${({ theme }) => theme.colors.surface};
 

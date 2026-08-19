@@ -11,8 +11,8 @@ export type TNewsRelatedType =
   (typeof NewsRelatedType)[keyof typeof NewsRelatedType];
 
 export const newsRelatedTypeLabels: Record<TNewsRelatedType, string> = {
-  BOARD: "Diretoria",
-  JURY: "Banca",
+  BOARD: "Banca",
+  JURY: "Juri",
   MEETING: "Reunião",
   PUBLICATION: "Publicação",
   RESEARCH_INSTRUMENT: "Instrumento de pesquisa",

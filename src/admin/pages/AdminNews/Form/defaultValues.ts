@@ -1,12 +1,12 @@
-import type { BookFormData } from "../../../validations/book.schema";
+import type { NewsFormData } from "../../../validations/news.schema";
 
-export const bookDefaultValues: BookFormData = {
+export const newsDefaultValues: NewsFormData = {
   title: "",
-  subtitle: "",
   description: "",
-  isbn: "",
-  year: 0,
-  publisher: "",
+  date: "",
+  category: "RESEARCH",
+  isInternal: false,
   externalUrl: "",
-  authors: [],
+  relatedType: null,
+  relatedId: null,
 };

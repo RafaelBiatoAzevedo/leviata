@@ -20,6 +20,7 @@ import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
+import { AdminLoading } from "../../../components/AdminLoading";
 
 export function BookView() {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ export function BookView() {
   }, [book, loadBook]);
 
   if (!book) {
-    return <div>Carregando...</div>;
+    return <AdminLoading text="Carregando livro..." />;
   }
 
   return (

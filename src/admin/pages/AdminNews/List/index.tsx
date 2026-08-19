@@ -26,6 +26,7 @@ import { formatDate } from "../../../utils/formatDate";
 import { newsCategoryOptions } from "../../../utils/newsCategory";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { newsCategoryLabels } from "../../../enums/NewsCategory";
+import { AdminBadge } from "../../../components/AdminBadge";
 
 export function AdminNews() {
   const [search, setSearch] = useState("");
@@ -118,7 +119,7 @@ export function AdminNews() {
         title="Notícias"
         subtitle="Gerencie as notícias cadastradas."
       >
-        <AdminButton onClick={() => navigate("/admin/notícias/novo")}>
+        <AdminButton onClick={() => navigate("/admin/noticias/novo")}>
           <FiPlus />
           Nova notícia
         </AdminButton>
@@ -147,7 +148,7 @@ export function AdminNews() {
             <th>Descrição</th>
             <th>Data</th>
             <th>Categoria</th>
-            <th>Externa</th>
+            <th>Interna</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -182,7 +183,11 @@ export function AdminNews() {
 
                 <td>{newsCategoryLabels[news.category]}</td>
 
-                <td>{news.isInternal ? "Sim" : "Não"}</td>
+                <td>
+                  <AdminBadge variant={news.isInternal ? "success" : "danger"}>
+                    {news.isInternal ? "Sim" : "Não"}
+                  </AdminBadge>
+                </td>
 
                 <td>
                   <Actions>

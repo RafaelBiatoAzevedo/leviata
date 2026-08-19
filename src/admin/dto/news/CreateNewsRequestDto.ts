@@ -7,7 +7,7 @@ export interface CreateNewsRequestDto {
   date: string;
   category: TNewsCategory;
   isInternal?: boolean;
-  externalUrl?: string;
-  relatedType?: TNewsRelatedType;
-  relatedId?: string;
+  externalUrl?: string | null;
+  relatedType?: TNewsRelatedType | null;
+  relatedId?: string | null;
 }

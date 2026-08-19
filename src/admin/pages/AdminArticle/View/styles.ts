@@ -80,6 +80,8 @@ export const Cover = styled.img`
 export const ArticleTitle = styled.h2`
   margin: 0;
 
+  text-align: center;
+
   font-size: 1.4rem;
 
   font-weight: 700;

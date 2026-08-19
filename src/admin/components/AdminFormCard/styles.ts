@@ -9,7 +9,7 @@ export const Container = styled.div`
 
   padding: 2rem;
 
-  border-radius: 16px;
+  border-radius: 0.8rem;
 
   border: 1px solid ${({ theme }) => theme.colors.border};
 

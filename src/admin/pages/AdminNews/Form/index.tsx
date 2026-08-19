@@ -2,85 +2,67 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
   Actions,
-  AuthorItem,
-  AuthorList,
-  BookTopWrapper,
+  // AuthorItem,
+  // AuthorList,
+  NewsTopWrapper,
   Container,
   Form,
 } from "./styles";
 import {
-  bookSchema,
-  type BookFormData,
-} from "../../../validations/book.schema";
-import { bookDefaultValues } from "./defaultValues";
+  newsSchema,
+  type NewsFormData,
+} from "../../../validations/news.schema";
+import { newsDefaultValues } from "./defaultValues";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
-import { booksService } from "../../../services/books";
+import { newsService } from "../../../services/news";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
 import { AdminImageUpload } from "../../../components/AdminImageUpload";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
-import { AdminYearInput } from "../../../components/AdminYearInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
-import { FiArrowLeft, FiBook, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
-import { mapBookToForm } from "../../../mappers/book.mapper";
-import { mapBookToCreateDto } from "../../../mappers/bookToCreate.mapper";
-import { peopleService } from "../../../services/people";
-import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
+import { FiArrowLeft, FiSave } from "react-icons/fi";
+import { mapNewsToForm } from "../../../mappers/news.mapper";
 import { AdminButton } from "../../../components/AdminButton";
-import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
-import { AdminError } from "../../../components/AdminError";
+import { mapNewsToCreateDto } from "../../../mappers/newsToCreate.mapper";
+import { BiNews } from "react-icons/bi";
+import { newsCategoryOptions } from "../../../utils/newsCategory";
+import { AdminDateInput } from "../../../components/AdminDateInput";
+import { AdminSwitch } from "../../../components/AdminSwitch";
+import { newsRelatedTypeOptions } from "../../../utils/newsRelatedType";
 
 export function NewsForm() {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const { showModal, updateModal } = useModal();
+  //const { showModal, updateModal } = useModal();
 
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState("");
-
-  const selectedAuthorIdRef = useRef("");
-
-  const [people, setPeople] = useState<PersonResponseDto[]>(
-    [] as PersonResponseDto[],
-  );
 
   const { slug } = useParams();
 
   const isEdit = Boolean(slug);
 
-  // showToast({
-  //   title: "Capa atualizada com sucesso",
-  //   description: "A capa do livro foi atualizada.",
-  //   type: "success",
-  // });
-
   const {
-    control,
     register,
     handleSubmit,
     reset,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<BookFormData>({
-    resolver: zodResolver(bookSchema),
-    defaultValues: bookDefaultValues,
+  } = useForm<NewsFormData>({
+    resolver: zodResolver(newsSchema),
+    defaultValues: newsDefaultValues,
   });
 
-  const authors = useWatch({
-    control,
-    name: "authors",
-  });
-
-  const loadBook = useCallback(async () => {
+  const loadNews = useCallback(async () => {
     if (!slug) return;
 
-    const response = await booksService.getBySlug(slug);
-    const formData = mapBookToForm(response.data);
+    const response = await newsService.getBySlug(slug);
+    const formData = mapNewsToForm(response.data);
 
     if (response.data.coverUrl) {
       setCoverPreview(response.data.coverUrl);
@@ -89,125 +71,49 @@ export function NewsForm() {
     reset(formData);
   }, [reset, slug]);
 
-  const loadPeople = useCallback(async () => {
-    const response = await peopleService.getAll();
-
-    setPeople(response.data);
+  const loadEventRelated = useCallback(async () => {
+    //load events, jury, meeting ....
   }, []);
 
   useEffect(() => {
     (async () => {
-      await loadPeople();
+      await loadEventRelated();
     })();
 
     if (!isEdit) return;
 
     (async () => {
-      await loadBook();
+      await loadNews();
     })();
-  }, [isEdit, loadBook, loadPeople]);
+  }, [isEdit, loadNews, loadEventRelated]);
 
-  function handleModal() {
-    showModal({
-      title: "Adicionar autor",
-
-      content: (
-        <div style={{ padding: "2rem 0rem" }}>
-          <p>Selecione um autor</p>
-
-          <br />
-
-          <AdminSelect
-            options={[
-              {
-                value: "",
-                label: "Autores",
-              },
-              ...people
-                .filter((person) => !authors.includes(person.id))
-                .map((person) => ({
-                  value: person.id,
-                  label: person.name,
-                })),
-            ]}
-            onChange={(event) => {
-              selectedAuthorIdRef.current = event.target.value;
-
-              updateModal({
-                confirmDisabled: !event.target.value,
-              });
-            }}
-          />
-        </div>
-      ),
-
-      confirmText: "Adicionar",
-
-      cancelText: "Cancelar",
-
-      confirmVariant: "success",
-
-      confirmDisabled: !selectedAuthorIdRef.current,
-
-      onConfirm: () => {
-        handleAddAuthor(selectedAuthorIdRef.current);
-      },
-
-      onCancel: () => {
-        selectedAuthorIdRef.current = "";
-      },
-    });
-  }
-
-  function handleAddAuthor(personId: string) {
-    if (authors.includes(personId)) return;
-
-    setValue("authors", [...authors, personId], {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
-
-    selectedAuthorIdRef.current = "";
-  }
-
-  function handleRemoveAuthor(personId: string) {
-    setValue(
-      "authors",
-      authors.filter((id) => id !== personId),
-      {
-        shouldValidate: true,
-        shouldDirty: true,
-      },
-    );
-  }
-
-  async function onSubmit(data: BookFormData) {
+  async function onSubmit(data: NewsFormData) {
     try {
       if (isEdit) {
-        await booksService.updateBySlug(slug!, data);
+        await newsService.updateBySlug(slug!, data);
 
         showToast({
-          title: "Livro atualizado",
+          title: "Notícia atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await booksService.create(mapBookToCreateDto(data), coverFile!);
+        await newsService.create(mapNewsToCreateDto(data), coverFile!);
 
         showToast({
-          title: "Livro criado",
-          description: "O livro foi cadastrado com sucesso.",
+          title: "Notícia criada",
+          description: "O notícia foi cadastrada com sucesso.",
           type: "success",
         });
       }
 
-      navigate("/admin/livros");
+      navigate("/admin/noticias");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
 
       showToast({
-        title: isEdit ? "Erro ao atualizar livro" : "Erro ao criar livro",
+        title: isEdit ? "Erro ao atualizar notícia" : "Erro ao criar notícia",
         description:
           message ?? "Não foi possível salvar os dados. Tente novamente.",
         type: "danger",
@@ -219,7 +125,7 @@ export function NewsForm() {
     if (!file) return;
 
     if (isEdit) {
-      const response = await booksService.updateCover(slug!, file);
+      const response = await newsService.updateCover(slug!, file);
 
       setCoverPreview(response.data.url);
 
@@ -227,7 +133,7 @@ export function NewsForm() {
 
       showToast({
         title: "Capa atualizada com sucesso",
-        description: "A Capa do livro foi atualizada.",
+        description: "A Capa do notícia foi atualizada.",
         type: "success",
       });
 
@@ -242,17 +148,17 @@ export function NewsForm() {
   return (
     <Container>
       <AdminPageHeader
-        title={isEdit ? "Editar livro" : "Novo livro"}
-        subtitle="Cadastre ou atualize os dados do livro."
+        title={isEdit ? "Editar notícia" : "Nova notícia"}
+        subtitle="Cadastre ou atualize os dados da notícia."
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BookTopWrapper>
+        <NewsTopWrapper>
           <AdminFormGrid columns={1}>
             <AdminImageUpload
-              icon={<FiBook size={42} />}
+              icon={<BiNews size={42} />}
               label="Capa"
-              variant="portrait"
+              variant="square"
               imageUrl={coverPreview}
               onChange={handleUploadCover}
             />
@@ -263,7 +169,7 @@ export function NewsForm() {
               <AdminFormGrid>
                 <AdminInput
                   label="Título"
-                  placeholder="Título do livro"
+                  placeholder="Título do notícia"
                   required
                   error={errors.title?.message}
                   {...register("title")}
@@ -275,91 +181,65 @@ export function NewsForm() {
                   disabled
                 />
 
-                <AdminInput
-                  label="Subtítulo"
-                  placeholder="Subtítulo do livro"
-                  error={errors.subtitle?.message}
-                  {...register("subtitle")}
-                />
-
-                <AdminInput
-                  label="Isbn"
-                  type="number"
-                  placeholder="Número isbn"
-                  error={errors.isbn?.message}
-                  {...register("isbn")}
-                />
-
-                <AdminYearInput
-                  label="Ano de publicação"
-                  placeholder="2025"
+                <AdminDateInput
+                  label="Data da publicação"
+                  placeholder="02/10/2025"
                   required
-                  {...register("year", { valueAsNumber: true })}
-                  error={errors.year?.message}
+                  {...register("date")}
+                  error={errors.date?.message}
                 />
 
-                <AdminInput
-                  label="Editora"
-                  placeholder="Nome da editora"
+                <AdminSelect
+                  label="Categoria"
+                  options={newsCategoryOptions}
                   required
-                  error={errors.publisher?.message}
-                  {...register("publisher")}
-                />
-
-                <AdminInput
-                  label="Link"
-                  placeholder="Url do livro"
-                  required
-                  error={errors.externalUrl?.message}
-                  {...register("externalUrl")}
-                />
+                  error={errors.category?.message}
+                  {...register("category")}
+                ></AdminSelect>
               </AdminFormGrid>
             </AdminSection>
           </AdminFormCard>
-        </BookTopWrapper>
+        </NewsTopWrapper>
 
         <AdminFormCard>
-          <AdminSection title="Descrição">
+          <AdminSection title="Relacionamento">
+            <AdminSwitch label="Interna" required {...register("isInternal")} />
+
+            <AdminFormGrid>
+              <AdminSelect
+                label="Categoria"
+                options={newsRelatedTypeOptions}
+                required
+                error={errors.relatedType?.message}
+                {...register("relatedType")}
+              ></AdminSelect>
+
+              <AdminSelect
+                label="Relacionada com"
+                required
+                error={errors.relatedId?.message}
+                {...register("relatedId")}
+                options={newsRelatedTypeOptions}
+              ></AdminSelect>
+            </AdminFormGrid>
+
+            <AdminInput
+              label="Link"
+              placeholder="Url do notícia"
+              required
+              error={errors.externalUrl?.message}
+              {...register("externalUrl")}
+            />
+          </AdminSection>
+        </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection title="Resumo">
             <AdminTextarea
               placeholder="Escreva uma breve descrição..."
               error={errors.description?.message}
               {...register("description")}
             ></AdminTextarea>
-          </AdminSection>
-        </AdminFormCard>
-        <AdminFormCard>
-          <AdminSection
-            title="Autores"
-            action={
-              <AdminButton size="medium" type="button" onClick={handleModal}>
-                <FiPlus />
-              </AdminButton>
-            }
-          >
-            <AuthorList>
-              {authors.map((authorId) => {
-                const author = people.find((person) => person.id === authorId);
-
-                if (!author) return null;
-
-                return (
-                  <AuthorItem key={author.id}>
-                    <span>{`${author.academicTitle?.abbreviation} ${author.name} - ${author.institution?.acronym} `}</span>
-
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveAuthor(author.id)}
-                    >
-                      <FiTrash2 />
-                    </button>
-                  </AuthorItem>
-                );
-              })}
-            </AuthorList>
-
-            {errors.authors && (
-              <AdminError>{errors.authors.message}</AdminError>
-            )}
           </AdminSection>
         </AdminFormCard>
 

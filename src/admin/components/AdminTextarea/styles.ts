@@ -11,7 +11,7 @@ export const Textarea = styled.textarea<TextareaProps>`
 
   padding: 0.9rem 1rem;
 
-  border-radius: 12px;
+  border-radius: 0.6rem;
 
   border: 1px solid ${({ theme }) => theme.colors.border};
 

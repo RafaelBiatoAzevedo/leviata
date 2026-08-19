@@ -21,6 +21,7 @@ import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
 import { articleTypeLabels } from "../../../utils/articleTypes";
+import { AdminLoading } from "../../../components/AdminLoading";
 
 export function ArticleView() {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ export function ArticleView() {
   }, [article, load]);
 
   if (!article) {
-    return <div>Carregando...</div>;
+    return <AdminLoading text="Carregando artigo..." />;
   }
 
   return (

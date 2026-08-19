@@ -14,7 +14,7 @@ export const Input = styled.input<InputProps>`
   border: 1px solid
     ${({ theme, $hasError }) => ($hasError ? "#ef4444" : theme.colors.border)};
 
-  border-radius: 8px;
+  border-radius: 0.6rem;
 
   background: ${({ theme }) => theme.colors.surface};
 

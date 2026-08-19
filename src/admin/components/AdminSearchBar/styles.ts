@@ -15,7 +15,7 @@ export const Container = styled.div`
 
   padding: 0 1rem;
 
-  border-radius: 12px;
+  border-radius: 0.6rem;
 
   border: 1px solid ${({ theme }) => theme.colors.border};
 

@@ -64,13 +64,13 @@ export const CoverWrapper = styled(Link)`
 `;
 
 export const Cover = styled.img`
-  width: 220px;
+  width: 320px;
 
   height: 320px;
 
   border-radius: 4px;
 
-  object-fit: cover;
+  object-fit: contain;
 
   border: 2px solid ${({ theme }) => theme.colors.primary};
 `;

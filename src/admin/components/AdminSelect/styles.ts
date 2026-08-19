@@ -11,7 +11,7 @@ export const Select = styled.select<SelectProps>`
 
   padding: 0 1rem;
 
-  border-radius: 12px;
+  border-radius: 0.6rem;
 
   border: 1px solid ${({ theme }) => theme.colors.border};
 

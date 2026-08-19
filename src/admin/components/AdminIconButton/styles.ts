@@ -70,7 +70,7 @@ export const Container = styled.button<IContainerProps>`
 
   border: none;
 
-  border-radius: 10px;
+  border-radius: 0.6rem;
 
   cursor: pointer;
 

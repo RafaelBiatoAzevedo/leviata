@@ -22,6 +22,9 @@ import type { NewsResponseDto } from "../../../dto/news/NewsResponseDto";
 import { newsService } from "../../../services/news";
 import { newsCategoryLabels } from "../../../enums/NewsCategory";
 import { formatDate } from "../../../utils/formatDate";
+import { newsRelatedTypeLabels } from "../../../enums/NewsRelatedType";
+import { AdminLoading } from "../../../components/AdminLoading";
+import { AdminBadge } from "../../../components/AdminBadge";
 
 export function NewsView() {
   const navigate = useNavigate();
@@ -31,10 +34,16 @@ export function NewsView() {
   const { slug } = useParams();
 
   const [news, setNews] = useState<NewsResponseDto | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const loadNews = useCallback(async () => {
     try {
+      setLoading(true);
+      setError(false);
+
       const response = await newsService.getBySlug(slug!);
+
       setNews(response.data);
     } catch (error) {
       showToast({
@@ -42,19 +51,26 @@ export function NewsView() {
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });
+      setError(true);
+    } finally {
+      setLoading(false);
     }
   }, [showToast, slug]);
 
   useEffect(() => {
-    if (!news) {
+    if (loading) {
       (async () => {
         await loadNews();
       })();
     }
-  }, [news, loadNews]);
+  }, [loadNews, loading]);
 
   if (!news) {
-    return <div>Carregando...</div>;
+    return <AdminLoading text="Carregando notícia..." />;
+  }
+
+  if (error || !news) {
+    return <div>Não foi possível carregar a notícia.</div>;
   }
 
   return (
@@ -78,7 +94,7 @@ export function NewsView() {
       </Header>
 
       <ContentWrapper>
-        <CoverWrapper to={news.externalUrl} target={"_blank"}>
+        <CoverWrapper to={news.externalUrl!} target={"_blank"}>
           {!!news.coverUrl && <Cover src={news.coverUrl} />}
 
           <NewsTitle>{news.title}</NewsTitle>
@@ -94,25 +110,46 @@ export function NewsView() {
               <AdminDescriptionItem label="Slug" value={news.slug} />
 
               <AdminDescriptionItem
+                label="Data"
+                value={formatDate(news.date)}
+              />
+
+              <AdminDescriptionItem
                 label="Categoria"
                 value={newsCategoryLabels[news.category]}
               />
-
-              <AdminDescriptionItem
-                label="Externa"
-                value={news.isInternal ? "Sim" : "Não"}
-              />
-
-              <AdminDescriptionItem
-                label="Relacionada"
-                value={news.relatedId}
-              />
-
-              <AdminDescriptionItem label="Link" value={news.externalUrl} />
             </AdminDescriptionList>
           </AdminSection>
         </AdminFormCard>
       </ContentWrapper>
+      <AdminFormCard>
+        <AdminSection title="Relacionamento">
+          <AdminDescriptionList>
+            <AdminDescriptionItem
+              label="Interna"
+              value={
+                <AdminBadge variant={news.isInternal ? "success" : "danger"}>
+                  {news.isInternal ? "Sim" : "Não"}
+                </AdminBadge>
+              }
+            />
+
+            <AdminDescriptionItem label="Link" value={news.externalUrl} />
+
+            <AdminDescriptionItem
+              label="Tipo Relacionamento"
+              value={
+                news.relatedType ? newsRelatedTypeLabels[news.relatedType] : "-"
+              }
+            />
+
+            <AdminDescriptionItem
+              label="Relacionada com"
+              value={news.relatedId ? news.relatedId : "-"}
+            />
+          </AdminDescriptionList>
+        </AdminSection>
+      </AdminFormCard>
       <AdminFormCard>
         <AdminSection title="Descrição">
           <AdminDescriptionItem label="Descrição" value={news.description} />
