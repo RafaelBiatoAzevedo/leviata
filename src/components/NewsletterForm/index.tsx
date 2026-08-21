@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { Container, Form, Input, MainInputWrapper, TextArea } from "./styles";
-import { Button } from "../Button";
+import { Container, Form, MainInputWrapper } from "./styles";
+import { AdminInput } from "../../admin/components/AdminInput";
+import { AdminTextarea } from "../../admin/components/AdminTextarea";
+import { AdminButton } from "../../admin/components/AdminButton";
 
 interface INewsletterFormProps {
   type: "single" | "middle" | "complete";
@@ -27,12 +29,15 @@ export function NewsletterForm({
 
   return (
     <Container size={size}>
-      <h3>Assine nossa newsletter</h3>
+      <h3>Receba nossas novidades</h3>
+      {/* <p>
+        Conteúdos, pesquisas e novidades do grupo diretamente no seu e-mail.
+      </p> */}
 
       <Form onSubmit={handleSubmit}>
         <MainInputWrapper>
           {(type === "middle" || type === "complete") && (
-            <Input
+            <AdminInput
               type="text"
               placeholder="Seu nome"
               value={name}
@@ -40,23 +45,27 @@ export function NewsletterForm({
             />
           )}
           {(type === "middle" || type === "complete") && (
-            <Input
+            <AdminInput
               type="text"
               placeholder="Seu sobrenome"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
           )}
-          <Input
+          <AdminInput
             type="email"
             placeholder="Seu melhor e-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          {type === "complete" && <TextArea placeholder="Sua mensagem..." />}
+          {type === "complete" && (
+            <AdminTextarea placeholder="Sua mensagem..." />
+          )}
         </MainInputWrapper>
-        <Button title="Assinar" type="submit" />
+        <AdminButton size="large" type="submit">
+          Quero receber
+        </AdminButton>
       </Form>
     </Container>
   );

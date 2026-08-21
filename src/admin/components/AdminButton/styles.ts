@@ -56,7 +56,7 @@ const variants = {
 
 export const Container = styled.button<IButtonProps>`
   height: ${({ $size }) =>
-    $size === "large" ? "46px" : $size === "medium" ? "38px" : "30px"};
+    $size === "large" ? "44px" : $size === "medium" ? "38px" : "30px"};
 
   padding: ${({ $size }) =>
     $size === "large"
@@ -76,7 +76,7 @@ export const Container = styled.button<IButtonProps>`
   border: none;
 
   border-radius: ${({ $size }) =>
-    $size === "large" ? "0.75rem" : $size === "medium" ? "0.6rem" : "0.4rem"};
+    $size === "large" ? "0.6rem" : $size === "medium" ? "0.5rem" : "0.4rem"};
 
   cursor: pointer;
 

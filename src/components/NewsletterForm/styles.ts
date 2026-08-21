@@ -12,8 +12,8 @@ export const Container = styled.div<IContainerProps>`
   color: ${({ theme }) => theme.colors.text};
 
   h3 {
-    margin-left: 14px;
-    margin-bottom: 0.2rem;
+    margin-left: 4px;
+    margin-bottom: 0.3rem;
     font-family: ${({ theme }) => theme.fonts.title};
     font-size: 18px;
   }
