@@ -66,6 +66,8 @@ export const Subtitle = styled.p`
 
   font-size: 0.95rem;
 
+  font-weight: 800;
+
   letter-spacing: 0.04em;
 `;
 
@@ -87,43 +89,6 @@ export const InputGroup = styled.div`
     font-weight: 400;
 
     color: ${({ theme }) => theme.colors.text};
-  }
-`;
-
-export const Input = styled.input`
-  width: 100%;
-  padding: 12px 14px;
-
-  border-radius: 20px;
-
-  background: rgba(0, 0, 0, 0.2);
-  color: ${({ theme }) => theme.colors.text};
-  border: ${({ theme }) => theme.colors.primary} 1px solid;
-  outline: none;
-
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.3s ease;
-
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.accent};
-
-    box-shadow:
-      0 0 0 4px ${({ theme }) => theme.colors.accentGlow},
-      0 0 25px rgba(0, 0, 0, 0.25);
-
-    transform: translateY(-2px);
-  }
-
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.colors.border};
-
-    border-radius: 10px;
   }
 `;
 

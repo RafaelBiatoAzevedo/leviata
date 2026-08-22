@@ -99,7 +99,7 @@ export const Title = styled.h3`
   font-family: ${({ theme }) => theme.fonts.title};
 `;
 
-export const Author = styled.span`
+export const AuthorName = styled.span`
   color: ${({ theme }) => theme.colors.textSoft};
 
   font-size: 0.8rem;

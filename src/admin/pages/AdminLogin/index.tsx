@@ -6,15 +6,15 @@ import {
   Subtitle,
   Form,
   InputGroup,
-  Input,
   Footer,
 } from "./styles";
 
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/auth";
 import { useAuth } from "../../hooks/useAuth";
-import { Button } from "../../../components/Button";
 import { useToast } from "../../../hooks/useToast";
+import { AdminButton } from "../../components/AdminButton";
+import { AdminInput } from "../../components/AdminInput";
 
 export function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -63,9 +63,8 @@ export function AdminLogin() {
 
         <Form onSubmit={handleSubmit}>
           <InputGroup>
-            <label>E-mail</label>
-
-            <Input
+            <AdminInput
+              label="E-mail"
               type="email"
               placeholder="Digite seu e-mail"
               value={email}
@@ -74,9 +73,8 @@ export function AdminLogin() {
           </InputGroup>
 
           <InputGroup>
-            <label>Senha</label>
-
-            <Input
+            <AdminInput
+              label="Senha"
               type="password"
               placeholder="Digite sua senha"
               value={password}
@@ -84,7 +82,9 @@ export function AdminLogin() {
             />
           </InputGroup>
 
-          <Button type="submit" title="Entrar" />
+          <AdminButton size="large" type="submit">
+            Entrar
+          </AdminButton>
         </Form>
 
         <Footer>

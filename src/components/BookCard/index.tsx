@@ -1,11 +1,12 @@
-import { Container, Cover, Content, Title, Author, Year } from "./styles";
+import type { Author } from "../../admin/dtos/books/BookResponseDto";
+import { Container, Cover, Content, Title, AuthorName, Year } from "./styles";
 
 interface BookCardProps {
   externalUrl: string;
   coverUrl: string;
   title: string;
-  authors: { name: string }[];
-  year: string | number;
+  authors: Author[];
+  year: number;
 }
 
 export function BookCard({
@@ -25,7 +26,7 @@ export function BookCard({
         <Title>{title}</Title>
 
         {authors.map((author, index) => (
-          <Author key={index}>{author.name}</Author>
+          <AuthorName key={index}>{author.name}</AuthorName>
         ))}
 
         <Year>{year}</Year>

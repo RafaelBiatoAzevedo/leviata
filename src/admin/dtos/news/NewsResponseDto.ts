@@ -18,7 +18,7 @@ export interface NewsResponseDto {
 
   isInternal: boolean;
 
-  externalUrl: string | null;
+  externalUrl: string;
 
   relatedType: TNewsRelatedType | null;
 

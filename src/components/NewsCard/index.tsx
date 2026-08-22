@@ -1,3 +1,4 @@
+import { formatDateLong } from "../../admin/utils/formatDate";
 import {
   Container,
   Cover,
@@ -8,28 +9,32 @@ import {
 } from "./styles";
 
 interface NewsCardProps {
-  to: string;
-  image: string;
+  externalUrl: string;
+  coverUrl?: string | null;
   date: string;
   title: string;
   description: string;
 }
 
 export function NewsCard({
-  to,
-  image,
+  externalUrl,
+  coverUrl,
   date,
   title,
   description,
 }: NewsCardProps) {
   return (
-    <Container to={to}>
-      <Cover>
-        <img src={image} alt={title} />
-      </Cover>
+    <Container to={externalUrl}>
+      {coverUrl ? (
+        <Cover>
+          <img src={coverUrl} alt={title} />
+        </Cover>
+      ) : (
+        <></>
+      )}
 
       <Content>
-        <DateText>{date}</DateText>
+        <DateText>{formatDateLong(date)}</DateText>
 
         <Title>{title}</Title>
 
