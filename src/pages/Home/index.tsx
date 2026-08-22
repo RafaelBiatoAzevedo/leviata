@@ -7,11 +7,6 @@ import {
 } from "./styles";
 import leviataHero from "../../assets/images/leviataHero.webp";
 
-import bookLary from "../../assets/images/bookLary.webp";
-import bookGabriel from "../../assets/images/bookGabriel.webp";
-import bookMaria from "../../assets/images/bookMaria.webp";
-import bookMarilia from "../../assets/images/bookMarilia.webp";
-
 import { Button } from "../../components/Button";
 import { ThematicLinkCard } from "../../components/ThematicLinkCard";
 import { BookCard } from "../../components/BookCard";
