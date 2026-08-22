@@ -1,4 +1,4 @@
-import type { TPersonCategory } from "../../enums/PersonCategory";
+import type { TPersonCategory } from "../../types/TPersonCategory";
 
 export interface CreatePersonDto {
   name: string;

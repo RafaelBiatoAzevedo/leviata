@@ -25,7 +25,7 @@ import { BiNews } from "react-icons/bi";
 import { formatDate } from "../../../utils/formatDate";
 import { newsCategoryOptions } from "../../../utils/newsCategory";
 import { AdminSelect } from "../../../components/AdminSelect";
-import { newsCategoryLabels } from "../../../enums/NewsCategory";
+import { newsCategoryLabels } from "../../../types/TNewsCategory";
 import { AdminBadge } from "../../../components/AdminBadge";
 
 export function AdminNews() {

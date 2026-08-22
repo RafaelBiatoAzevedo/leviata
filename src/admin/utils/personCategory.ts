@@ -2,7 +2,7 @@ import {
   PersonCategory,
   personCategoryLabels,
   type TPersonCategory,
-} from "../enums/PersonCategory";
+} from "../types/TPersonCategory";
 
 export const personCategoryOptions = [
   ...(Object.values(PersonCategory) as TPersonCategory[]).map((category) => ({

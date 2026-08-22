@@ -1,5 +1,5 @@
-import type { TNewsCategory } from "../../enums/NewsCategory";
-import type { TNewsRelatedType } from "../../enums/NewsRelatedType";
+import type { TNewsCategory } from "../../types/TNewsCategory";
+import type { TNewsRelatedType } from "../../types/TNewsRelatedType";
 
 export interface NewsResponseDto {
   id: string;

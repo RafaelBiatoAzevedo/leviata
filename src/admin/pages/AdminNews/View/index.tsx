@@ -20,9 +20,9 @@ import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
 import type { NewsResponseDto } from "../../../dtos/news/NewsResponseDto";
 import { newsService } from "../../../services/news";
-import { newsCategoryLabels } from "../../../enums/NewsCategory";
+import { newsCategoryLabels } from "../../../types/TNewsCategory";
 import { formatDate } from "../../../utils/formatDate";
-import { newsRelatedTypeLabels } from "../../../enums/NewsRelatedType";
+import { newsRelatedTypeLabels } from "../../../types/TNewsRelatedType";
 import { AdminLoading } from "../../../components/AdminLoading";
 import { AdminBadge } from "../../../components/AdminBadge";
 

@@ -1,6 +1,6 @@
 import type { AcademicTitleResponseDto } from "../../admin/dtos/AcademicTitleResponseDto";
 import type { InstitutionResponseDto } from "../../admin/dtos/InstitutionResponseDto";
-import type { TPersonCategory } from "../../admin/enums/PersonCategory";
+import type { TPersonCategory } from "../../admin/types/TPersonCategory";
 import {
   Container,
   ProfileImage,

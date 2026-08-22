@@ -1,4 +1,4 @@
-import type { TPersonCategory } from "../../enums/PersonCategory";
+import type { TPersonCategory } from "../../types/TPersonCategory";
 import type { AcademicTitleResponseDto } from "../AcademicTitleResponseDto";
 import type { CountryResponseDto } from "../CountryResponseDto";
 import type { InstitutionResponseDto } from "../InstitutionResponseDto";

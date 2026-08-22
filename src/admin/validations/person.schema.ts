@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PersonCategory } from "../enums/PersonCategory";
+import { PersonCategory } from "../types/TPersonCategory";
 
 export const personSchema = z.object({
   imageUrl: z

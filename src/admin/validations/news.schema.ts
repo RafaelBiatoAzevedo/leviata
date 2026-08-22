@@ -3,8 +3,8 @@ import { z } from "zod";
 import {
   NewsRelatedType,
   type TNewsRelatedType,
-} from "../enums/NewsRelatedType";
-import { NewsCategory, type TNewsCategory } from "../enums/NewsCategory";
+} from "../types/TNewsRelatedType";
+import { NewsCategory, type TNewsCategory } from "../types/TNewsCategory";
 
 export const newsSchema = z.object({
   coverUrl: z

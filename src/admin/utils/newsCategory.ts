@@ -2,7 +2,7 @@ import {
   NewsCategory,
   newsCategoryLabels,
   type TNewsCategory,
-} from "../enums/NewsCategory";
+} from "../types/TNewsCategory";
 
 export const newsCategoryOptions = [
   ...(Object.values(NewsCategory) as TNewsCategory[]).map((category) => ({
