@@ -1,5 +1,5 @@
-import type { LoginRequestDto } from "../dto/auth/LoginRequestDto";
-import type { LoginResponseDto } from "../dto/auth/LoginResponseDto";
+import type { LoginRequestDto } from "../dtos/auth/LoginRequestDto";
+import type { LoginResponseDto } from "../dtos/auth/LoginResponseDto";
 import { api } from "../../services/api";
 
 export async function login(data: LoginRequestDto): Promise<LoginResponseDto> {

@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
 import { useCallback, useEffect, useState } from "react";
-import type { ArticleResponseDto } from "../../../dto/articles/ArticleResponseDto";
+import type { ArticleResponseDto } from "../../../dtos/articles/ArticleResponseDto";
 import { articlesService } from "../../../services/articles";
 import { AdminSelect } from "../../../components/AdminSelect";
 import {

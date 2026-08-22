@@ -1,4 +1,4 @@
-import type { BookResponseDto } from "../dto/books/BookResponseDto";
+import type { BookResponseDto } from "../dtos/books/BookResponseDto";
 import type { BookFormData } from "../validations/book.schema";
 
 export function mapBookToForm(book: BookResponseDto): BookFormData {

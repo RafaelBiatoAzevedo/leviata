@@ -24,7 +24,7 @@ export interface PersonResponseDto {
 
   orcid?: string;
 
-  email?: string;
+  email: string;
 
   lattesUrl?: string;
 
@@ -34,11 +34,11 @@ export interface PersonResponseDto {
 
   honorificTitle?: string;
 
-  nationality?: CountryResponseDto;
+  nationality: CountryResponseDto;
 
-  academicTitle?: AcademicTitleResponseDto;
+  academicTitle: AcademicTitleResponseDto;
 
-  institution?: InstitutionResponseDto;
+  institution: InstitutionResponseDto;
 
   createdAt: string;
 

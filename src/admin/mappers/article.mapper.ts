@@ -1,4 +1,4 @@
-import type { ArticleResponseDto } from "../dto/articles/ArticleResponseDto";
+import type { ArticleResponseDto } from "../dtos/articles/ArticleResponseDto";
 import type { ArticleFormData } from "../validations/article.schema";
 
 export function mapArticleToForm(book: ArticleResponseDto): ArticleFormData {

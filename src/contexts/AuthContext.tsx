@@ -12,7 +12,7 @@ import { api } from "../services/api";
 import type {
   LoginResponseDto,
   LoginUserResponseDto,
-} from "../admin/dto/auth/LoginResponseDto";
+} from "../admin/dtos/auth/LoginResponseDto";
 import { logout } from "../admin/services/auth";
 import { authStorage } from "../admin/services/auth-storage";
 

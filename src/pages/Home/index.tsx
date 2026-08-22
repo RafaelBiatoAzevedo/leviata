@@ -27,7 +27,7 @@ import { NewsCard } from "../../components/NewsCard";
 import { HistoryDivider } from "../../components/HistotyDivider";
 import { SectionHeader } from "../../components/SectionHeader";
 import { useCallback, useEffect, useState } from "react";
-import type { BookResponseDto } from "../../admin/dto/books/BookResponseDto";
+import type { BookResponseDto } from "../../admin/dtos/books/BookResponseDto";
 import { booksService } from "../../admin/services/books";
 
 const booksMocks = [

@@ -1,5 +1,5 @@
-import type { AcademicTitleResponseDto } from "../../admin/dto/AcademicTitleResponseDto";
-import type { InstitutionResponseDto } from "../../admin/dto/InstitutionResponseDto";
+import type { AcademicTitleResponseDto } from "../../admin/dtos/AcademicTitleResponseDto";
+import type { InstitutionResponseDto } from "../../admin/dtos/InstitutionResponseDto";
 import type { TPersonCategory } from "../../admin/enums/PersonCategory";
 import {
   Container,

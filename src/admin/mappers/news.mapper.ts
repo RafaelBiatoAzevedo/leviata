@@ -1,4 +1,4 @@
-import type { NewsResponseDto } from "../dto/news/NewsResponseDto";
+import type { NewsResponseDto } from "../dtos/news/NewsResponseDto";
 import type { NewsFormData } from "../validations/news.schema";
 
 export function mapNewsToForm(news: NewsResponseDto): NewsFormData {

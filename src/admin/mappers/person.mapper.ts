@@ -1,4 +1,4 @@
-import type { PersonResponseDto } from "../dto/people/PersonResponseDto";
+import type { PersonResponseDto } from "../dtos/people/PersonResponseDto";
 import type { PersonFormData } from "../validations/person.schema";
 
 export function mapPersonToForm(person: PersonResponseDto): PersonFormData {

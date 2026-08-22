@@ -1,8 +1,8 @@
 import { api } from "../../services/api";
-import type { ArticleResponseDto } from "../dto/articles/ArticleResponseDto";
-import type { CreateArticleRequestDto } from "../dto/articles/CreateArticleRequestDto";
-import type { UpdateArticleDto } from "../dto/articles/UpdateArticleRequestDto";
-import type { ImageUploadResponseDto } from "../dto/ImageUploadResponseDto";
+import type { ArticleResponseDto } from "../dtos/articles/ArticleResponseDto";
+import type { CreateArticleRequestDto } from "../dtos/articles/CreateArticleRequestDto";
+import type { UpdateArticleDto } from "../dtos/articles/UpdateArticleRequestDto";
+import type { ImageUploadResponseDto } from "../dtos/ImageUploadResponseDto";
 
 export const articlesService = {
   create(data: CreateArticleRequestDto, cover?: File) {

@@ -15,7 +15,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
-import type { BookResponseDto } from "../../../dto/books/BookResponseDto";
+import type { BookResponseDto } from "../../../dtos/books/BookResponseDto";
 import { booksService } from "../../../services/books";
 import { AdminTable } from "../../../components/AdminTable";
 import { AdminIconButton } from "../../../components/AdminIconButton";

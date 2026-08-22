@@ -25,7 +25,7 @@ import { useModal } from "../../../../hooks/useModal";
 
 import { AdminSelect } from "../../../components/AdminSelect";
 import { personCategoryOptions } from "../../../utils/personCategory";
-import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
+import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
 
 export function AdminPeople() {

@@ -29,7 +29,7 @@ import { FiArrowLeft, FiBook, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
 import { mapBookToForm } from "../../../mappers/book.mapper";
 import { mapBookToCreateDto } from "../../../mappers/bookToCreate.mapper";
 import { peopleService } from "../../../services/people";
-import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
+import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";

@@ -38,7 +38,7 @@ import { AdminYearInput } from "../../../components/AdminYearInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminError } from "../../../components/AdminError";
-import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
+import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { peopleService } from "../../../services/people";
 import { articleTypesOptions } from "../../../utils/articleTypes";
 

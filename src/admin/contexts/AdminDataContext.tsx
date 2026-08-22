@@ -10,9 +10,9 @@ import { countryService } from "../services/country";
 import { institutionService } from "../services/institution";
 import { academicTitleService } from "../services/academicTitle";
 
-import type { CountryResponseDto } from "../dto/CountryResponseDto";
-import type { InstitutionResponseDto } from "../dto/InstitutionResponseDto";
-import type { AcademicTitleResponseDto } from "../dto/AcademicTitleResponseDto";
+import type { CountryResponseDto } from "../dtos/CountryResponseDto";
+import type { InstitutionResponseDto } from "../dtos/InstitutionResponseDto";
+import type { AcademicTitleResponseDto } from "../dtos/AcademicTitleResponseDto";
 
 interface AdminDataContextData {
   countries: CountryResponseDto[];

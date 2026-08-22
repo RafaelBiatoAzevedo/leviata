@@ -1,11 +1,11 @@
 import { api } from "../../services/api";
-import type { BookResponseDto } from "../dtos/books/BookResponseDto";
-import type { CreateBookRequestDto } from "../dtos/books/CreateBookRequestDto";
-import type { UpdateBookRequestDto } from "../dtos/books/UpdateBookRequestDto";
 import type { ImageUploadResponseDto } from "../dtos/ImageUploadResponseDto";
+import type { CreateMeetingRequestDto } from "../dtos/meetings/CreateMeetingRequestDto";
+import type { MeetingResponseDto } from "../dtos/meetings/MeetingResponseDto";
+import type { UpdateMeetingRequestDto } from "../dtos/meetings/UpdateMeetingRequestDto";
 
-export const booksService = {
-  create(data: CreateBookRequestDto, cover?: File) {
+export const meetingsService = {
+  create(data: CreateMeetingRequestDto, cover?: File) {
     const formData = new FormData();
 
     Object.entries(data).forEach(([key, value]) => {
@@ -33,7 +33,7 @@ export const booksService = {
       formData.append("cover", cover);
     }
 
-    return api.post<BookResponseDto>("/books", formData, {
+    return api.post<MeetingResponseDto>("/meetings", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -41,31 +41,31 @@ export const booksService = {
   },
 
   getAll() {
-    return api.get<BookResponseDto[]>("/books");
+    return api.get<MeetingResponseDto[]>("/meetings");
   },
 
   getById(id: string) {
-    return api.get<BookResponseDto>(`/books/${id}`);
+    return api.get<MeetingResponseDto>(`/meetings/${id}`);
   },
 
   getBySlug(slug: string) {
-    return api.get<BookResponseDto>(`/books/slug/${slug}`);
+    return api.get<MeetingResponseDto>(`/meetings/slug/${slug}`);
   },
 
-  updateById(id: string, data: UpdateBookRequestDto) {
-    return api.patch<BookResponseDto>(`/books/${id}`, data);
+  updateById(id: string, data: UpdateMeetingRequestDto) {
+    return api.patch<MeetingResponseDto>(`/meetings/${id}`, data);
   },
 
   removeById(id: string) {
-    return api.delete(`/books/${id}`);
+    return api.delete(`/meetings/${id}`);
   },
 
-  updateBySlug(slug: string, data: UpdateBookRequestDto) {
-    return api.patch<BookResponseDto>(`/books/slug/${slug}`, data);
+  updateBySlug(slug: string, data: UpdateMeetingRequestDto) {
+    return api.patch<MeetingResponseDto>(`/meetings/slug/${slug}`, data);
   },
 
   removeBySlug(slug: string) {
-    return api.delete(`/books/slug/${slug}`);
+    return api.delete(`/meetings/slug/${slug}`);
   },
 
   updateCover(slug: string, cover: File) {
@@ -74,7 +74,7 @@ export const booksService = {
     formData.append("cover", cover);
 
     return api.patch<ImageUploadResponseDto>(
-      `/books/slug/${slug}/cover`,
+      `/meetings/slug/${slug}/cover`,
       formData,
       {
         headers: {
@@ -85,6 +85,6 @@ export const booksService = {
   },
 
   removeCover(slug: string) {
-    return api.delete(`/books/slug/${slug}/cover`);
+    return api.delete(`/meetings/slug/${slug}/cover`);
   },
 };

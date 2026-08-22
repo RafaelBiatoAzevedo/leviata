@@ -1,5 +1,5 @@
 import { storageKeys } from "../../constants/storageKeys";
-import type { LoginUserResponseDto } from "../dto/auth/LoginResponseDto";
+import type { LoginUserResponseDto } from "../dtos/auth/LoginResponseDto";
 
 export const authStorage = {
   getToken() {

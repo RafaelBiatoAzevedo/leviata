@@ -3,7 +3,7 @@ import { HistoryDivider } from "../../components/HistotyDivider";
 import { PersonCard } from "../../components/PersonCard";
 import { SectionHeader } from "../../components/SectionHeader";
 import { Container, Content, Grid } from "./styles";
-import type { PersonResponseDto } from "../../admin/dto/people/PersonResponseDto";
+import type { PersonResponseDto } from "../../admin/dtos/people/PersonResponseDto";
 import { peopleService } from "../../admin/services/people";
 
 export function Researchers() {

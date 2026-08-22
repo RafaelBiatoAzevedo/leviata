@@ -15,7 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
 import { booksService } from "../../../services/books";
 import { useToast } from "../../../../hooks/useToast";
-import type { BookResponseDto } from "../../../dto/books/BookResponseDto";
+import type { BookResponseDto } from "../../../dtos/books/BookResponseDto";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";

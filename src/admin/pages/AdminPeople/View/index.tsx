@@ -22,7 +22,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { peopleService } from "../../../services/people";
 import { useToast } from "../../../../hooks/useToast";
-import type { PersonResponseDto } from "../../../dto/people/PersonResponseDto";
+import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminLoading } from "../../../components/AdminLoading";
 
 export function PersonView() {

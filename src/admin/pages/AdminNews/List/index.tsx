@@ -20,7 +20,7 @@ import { newsService } from "../../../services/news";
 import { AdminTable } from "../../../components/AdminTable";
 import { AdminIconButton } from "../../../components/AdminIconButton";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
-import type { NewsResponseDto } from "../../../dto/news/NewsResponseDto";
+import type { NewsResponseDto } from "../../../dtos/news/NewsResponseDto";
 import { BiNews } from "react-icons/bi";
 import { formatDate } from "../../../utils/formatDate";
 import { newsCategoryOptions } from "../../../utils/newsCategory";

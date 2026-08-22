@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { ArticleResponseDto } from "../../../dto/articles/ArticleResponseDto";
+import type { ArticleResponseDto } from "../../../dtos/articles/ArticleResponseDto";
 import {
   ArticleTitle,
   Container,

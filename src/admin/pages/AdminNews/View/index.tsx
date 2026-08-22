@@ -18,7 +18,7 @@ import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
-import type { NewsResponseDto } from "../../../dto/news/NewsResponseDto";
+import type { NewsResponseDto } from "../../../dtos/news/NewsResponseDto";
 import { newsService } from "../../../services/news";
 import { newsCategoryLabels } from "../../../enums/NewsCategory";
 import { formatDate } from "../../../utils/formatDate";

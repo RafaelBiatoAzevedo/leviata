@@ -1,8 +1,8 @@
-import type { CreatePersonDto } from "../dto/people/CreatePersonRequestDto";
-import type { PersonResponseDto } from "../dto/people/PersonResponseDto";
-import type { UpdatePersonDto } from "../dto/people/UpdatePersonRequestDto";
+import type { CreatePersonDto } from "../dtos/people/CreatePersonRequestDto";
+import type { PersonResponseDto } from "../dtos/people/PersonResponseDto";
+import type { UpdatePersonDto } from "../dtos/people/UpdatePersonRequestDto";
 import { api } from "../../services/api";
-import type { ImageUploadResponseDto } from "../dto/ImageUploadResponseDto";
+import type { ImageUploadResponseDto } from "../dtos/ImageUploadResponseDto";
 
 export const peopleService = {
   create(data: CreatePersonDto, image?: File) {

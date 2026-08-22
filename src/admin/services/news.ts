@@ -1,9 +1,9 @@
 import { api } from "../../services/api";
 
-import type { ImageUploadResponseDto } from "../dto/ImageUploadResponseDto";
-import type { CreateNewsRequestDto } from "../dto/news/CreateNewsRequestDto";
-import type { NewsResponseDto } from "../dto/news/NewsResponseDto";
-import type { UpdateNewsRequestDto } from "../dto/news/UpdateNewsRequestDto";
+import type { ImageUploadResponseDto } from "../dtos/ImageUploadResponseDto";
+import type { CreateNewsRequestDto } from "../dtos/news/CreateNewsRequestDto";
+import type { NewsResponseDto } from "../dtos/news/NewsResponseDto";
+import type { UpdateNewsRequestDto } from "../dtos/news/UpdateNewsRequestDto";
 
 export const newsService = {
   create(data: CreateNewsRequestDto, cover?: File) {
