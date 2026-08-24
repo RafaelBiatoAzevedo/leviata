@@ -203,7 +203,7 @@ export function NewsForm() {
 
         <AdminFormCard>
           <AdminSection title="Relacionamento">
-            <AdminSwitch label="Interna" required {...register("isInternal")} />
+            <AdminSwitch label="Interna" {...register("isInternal")} />
 
             <AdminFormGrid>
               <AdminSelect

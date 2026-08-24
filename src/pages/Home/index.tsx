@@ -7,7 +7,7 @@ import {
 } from "./styles";
 import leviataHero from "../../assets/images/leviataHero.webp";
 
-import { Button } from "../../components/Button";
+import { ButtonLink } from "../../components/ButtonLink";
 import { ThematicLinkCard } from "../../components/ThematicLinkCard";
 import { BookCard } from "../../components/BookCard";
 
@@ -78,7 +78,7 @@ export function Home() {
           diversas instituições luso-brasileiras – Inquisição, família, polícia,
           Imprensa – e a escravidão de africanos e descendentes.
         </h1>
-        <Button to="/grupo/" title="Saiba mais"></Button>
+        <ButtonLink to="/grupo/" title="Saiba mais"></ButtonLink>
         <HistoryDivider />
         <SectionHeader
           center
@@ -130,7 +130,7 @@ export function Home() {
             ))}
           </Swiper>
         </Carousel>
-        <Button to="/publicacoes" title="Ver mais"></Button>
+        <ButtonLink to="/publicacoes" title="Ver mais"></ButtonLink>
         <HistoryDivider />
         <SectionHeader
           center

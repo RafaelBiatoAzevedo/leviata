@@ -6,6 +6,7 @@ export function formatDate(
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
+    timeZone: "UTC",
     ...options,
   }).format(new Date(date));
 }
@@ -15,6 +16,7 @@ export function formatDateLong(date: string | Date): string {
     day: "2-digit",
     month: "long",
     year: "numeric",
+    timeZone: "UTC",
   }).format(new Date(date));
 
   return formatted.replace(

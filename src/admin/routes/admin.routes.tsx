@@ -17,6 +17,12 @@ import { ArticleForm } from "../pages/AdminArticle/Form";
 import { AdminNews } from "../pages/AdminNews/List";
 import { NewsView } from "../pages/AdminNews/View";
 import { NewsForm } from "../pages/AdminNews/Form";
+import { AdminMeetings } from "../pages/AdminMeeting/List";
+import { MeetingView } from "../pages/AdminMeeting/View";
+import { MeetingForm } from "../pages/AdminMeeting/Form";
+import { AdminBoards } from "../pages/AdminBoard/List";
+import { BoardView } from "../pages/AdminBoard/View";
+import { BoardForm } from "../pages/AdminBoard/Form";
 
 export const adminRoutes = (
   <Route
@@ -64,5 +70,23 @@ export const adminRoutes = (
     <Route path="noticias/novo" element={<NewsForm />} />
 
     <Route path="noticias/:slug/editar" element={<NewsForm />} />
+
+    {/* Meetings */}
+    <Route path="reunioes" element={<AdminMeetings />} />
+
+    <Route path="reunioes/:slug" element={<MeetingView />} />
+
+    <Route path="reunioes/novo" element={<MeetingForm />} />
+
+    <Route path="reunioes/:slug/editar" element={<MeetingForm />} />
+
+    {/* Boards */}
+    <Route path="bancas" element={<AdminBoards />} />
+
+    <Route path="bancas/:slug" element={<BoardView />} />
+
+    <Route path="bancas/novo" element={<BoardForm />} />
+
+    <Route path="bancas/:slug/editar" element={<BoardForm />} />
   </Route>
 );

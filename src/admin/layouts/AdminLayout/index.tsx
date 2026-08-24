@@ -12,6 +12,7 @@ import {
   FiVideo,
   FiMail,
   FiLogOut,
+  FiAward,
 } from "react-icons/fi";
 
 import { BiNews } from "react-icons/bi";
@@ -120,24 +121,29 @@ export function AdminLayout() {
             {!collapsed && <span>Notícias</span>}
           </NavItem>
 
+          <NavItem to="/admin/reunioes" title="Reuniões">
+            <FiVideo />
+
+            {!collapsed && <span>Reuniões</span>}
+          </NavItem>
+
+          <NavItem to="/admin/bancas" title="Bancas">
+            <FiAward />
+
+            {!collapsed && <span>Bancas</span>}
+          </NavItem>
+
           <NavItem to="/admin/banco-de-dados" title="Banco de Dados">
             <FiDatabase />
 
             {!collapsed && <span>Banco de Dados</span>}
           </NavItem>
 
-          <NavItem to="/admin/reunioes" title="Reuniões">
+          <NavItem to="/admin/agenda" title="Agenda">
             <FiCalendar />
 
-            {!collapsed && <span>Reuniões</span>}
+            {!collapsed && <span>Agenda</span>}
           </NavItem>
-
-          <NavItem to="/admin/seminarios" title="Seminários">
-            <FiVideo />
-
-            {!collapsed && <span>Seminários</span>}
-          </NavItem>
-
           <NavItem to="/admin/newsletter" title="Newsletter">
             <FiMail />
 

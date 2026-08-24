@@ -73,7 +73,7 @@ export const PreviewImage = styled.img`
 
   height: 100%;
 
-  object-fit: cover;
+  object-fit: contain;
 
   display: block;
 `;

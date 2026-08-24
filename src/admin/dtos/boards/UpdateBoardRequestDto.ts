@@ -1,3 +1,3 @@
-import type { CreateMeetingRequestDto } from "../meetings/CreateMeetingRequestDto";
+import type { CreateBoardRequestDto } from "./CreateBoardRequestDto";
 
-export type UpdateMeetingRequestDto = Partial<CreateMeetingRequestDto>;
+export type UpdateBoardRequestDto = Partial<CreateBoardRequestDto>;

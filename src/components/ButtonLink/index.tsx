@@ -2,7 +2,7 @@ import type { FC } from "react";
 
 import { Container, LinkContainer } from "./styles";
 
-export interface IButtonProps {
+export interface IButtonLinkProps {
   title: string;
 
   type?: "button" | "submit" | "reset";
@@ -12,7 +12,7 @@ export interface IButtonProps {
   onClick?: () => void;
 }
 
-export const Button: FC<IButtonProps> = ({
+export const ButtonLink: FC<IButtonLinkProps> = ({
   title,
   type = "button",
   to,

@@ -9,13 +9,13 @@ export const Container = styled.div`
 `;
 
 export const Cover = styled.img`
-  width: 42px;
+  width: 30px;
 
   height: 42px;
 
   border-radius: 2px;
 
-  object-fit: contain;
+  object-fit: cover;
 `;
 
 export const CoverPlaceholder = styled.div`
@@ -67,18 +67,8 @@ export const Empty = styled.div`
   border-radius: 12px;
 `;
 
-export const SelectWrapper = styled.div`
-  position: relative;
-
-  width: 240px;
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
-`;
-
 export const DescriptionCell = styled.div`
-  max-width: 50rem;
+  max-width: 60rem;
 
   line-height: 1.4;
 
