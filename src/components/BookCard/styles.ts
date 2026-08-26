@@ -13,9 +13,9 @@ export const Container = styled(Link)`
 
   text-decoration: none;
 
-  background: ${({ theme }) => theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.surface};
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 2px solid ${({ theme }) => theme.colors.border};
 
   position: relative;
 
@@ -90,7 +90,7 @@ export const Content = styled.div`
 `;
 
 export const Title = styled.h3`
-  color: white;
+  color: ${({ theme }) => theme.colors.text};
 
   font-size: 1.2rem;
 

@@ -12,9 +12,9 @@ export const Container = styled.a`
 
   text-decoration: none;
 
-  background: ${({ theme }) => theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.surface};
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 2px solid ${({ theme }) => theme.colors.border};
 
   position: relative;
 
@@ -89,9 +89,12 @@ export const Content = styled.div`
 `;
 
 export const DateText = styled.span`
-  color: ${({ theme }) => theme.colors.accent};
+  align-self: flex-end;
+  color: ${({ theme }) => theme.colors.primary};
 
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+
+  font-weight: 800;
 
   letter-spacing: 1px;
 
@@ -99,9 +102,9 @@ export const DateText = styled.span`
 `;
 
 export const Title = styled.h3`
-  color: white;
+  font-size: 1.2rem;
 
-  font-size: 1.5rem;
+  color: ${({ theme }) => theme.colors.text};
 
   line-height: 1.3;
 
@@ -114,4 +117,12 @@ export const Description = styled.p`
   line-height: 1.8;
 
   font-size: 0.95rem;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+
+  overflow: hidden;
+
+  overflow-wrap: break-word;
 `;

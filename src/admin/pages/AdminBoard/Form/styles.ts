@@ -26,7 +26,7 @@ export const BookTopWrapper = styled.div`
   }
 `;
 
-export const AuthorList = styled.div`
+export const MemberList = styled.div`
   display: flex;
 
   flex-direction: column;

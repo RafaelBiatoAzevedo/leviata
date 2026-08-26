@@ -19,7 +19,7 @@ export const Container = styled(Link)`
 
   background: ${({ theme }) => theme.colors.surface};
 
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 2px solid ${({ theme }) => theme.colors.border};
 
   transition:
     transform 0.35s ease,

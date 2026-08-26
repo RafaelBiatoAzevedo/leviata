@@ -1,7 +1,7 @@
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import {
-  BookTitle,
+  MeetingTitle,
   Container,
   ContentWrapper,
   Cover,
@@ -13,9 +13,9 @@ import {
 } from "./styles";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
-import { booksService } from "../../../services/books";
+import { meetingsService } from "../../../services/meetings";
 import { useToast } from "../../../../hooks/useToast";
-import type { BookResponseDto } from "../../../dtos/books/BookResponseDto";
+import type { MeetingResponseDto } from "../../../dtos/meetings/MeetingResponseDto";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
@@ -29,12 +29,12 @@ export function MeetingView() {
 
   const { slug } = useParams();
 
-  const [book, setBook] = useState<BookResponseDto | null>(null);
+  const [meeting, setMeeting] = useState<MeetingResponseDto | null>(null);
 
-  const loadBook = useCallback(async () => {
+  const loadMeeting = useCallback(async () => {
     try {
-      const response = await booksService.getBySlug(slug!);
-      setBook(response.data);
+      const response = await meetingsService.getBySlug(slug!);
+      setMeeting(response.data);
     } catch (error) {
       showToast({
         title: "Ops! Não foi possível carregar o livro",
@@ -45,14 +45,14 @@ export function MeetingView() {
   }, [showToast, slug]);
 
   useEffect(() => {
-    if (!book) {
+    if (!meeting) {
       (async () => {
-        await loadBook();
+        await loadMeeting();
       })();
     }
-  }, [book, loadBook]);
+  }, [meeting, loadMeeting]);
 
-  if (!book) {
+  if (!meeting) {
     return <AdminLoading text="Carregando livro..." />;
   }
 
@@ -75,44 +75,47 @@ export function MeetingView() {
       </Header>
 
       <ContentWrapper>
-        <CoverWrapper to={book.externalUrl} target={"_blank"}>
-          <Cover src={book.coverUrl} />
+        <CoverWrapper to={meeting.registrationUrl} target={"_blank"}>
+          <Cover src={meeting.coverUrl} />
 
-          <BookTitle>{book.title}</BookTitle>
+          <MeetingTitle>{meeting.title}</MeetingTitle>
 
-          <Subtitle>{book.year}</Subtitle>
+          <Subtitle>{meeting.year}</Subtitle>
         </CoverWrapper>
 
         <AdminFormCard>
           <AdminSection title="Dados Gerais">
             <AdminDescriptionList>
-              <AdminDescriptionItem label="Título" value={book.title} />
+              <AdminDescriptionItem label="Título" value={meeting.title} />
 
-              <AdminDescriptionItem label="Slug" value={book.slug} />
+              <AdminDescriptionItem label="Slug" value={meeting.slug} />
 
-              <AdminDescriptionItem label="Subtítulo" value={book.subtitle} />
+              <AdminDescriptionItem
+                label="Subtítulo"
+                value={meeting.subtitle}
+              />
 
-              <AdminDescriptionItem label="Isbn" value={book.isbn} />
+              <AdminDescriptionItem label="Isbn" value={meeting.isbn} />
 
-              <AdminDescriptionItem label="Ano" value={book.year} />
+              <AdminDescriptionItem label="Ano" value={meeting.year} />
 
-              <AdminDescriptionItem label="Editora" value={book.publisher} />
+              <AdminDescriptionItem label="Editora" value={meeting.publisher} />
 
-              <AdminDescriptionItem label="Link" value={book.externalUrl} />
+              <AdminDescriptionItem label="Link" value={meeting.externalUrl} />
             </AdminDescriptionList>
           </AdminSection>
         </AdminFormCard>
       </ContentWrapper>
       <AdminFormCard>
         <AdminSection title="Descrição">
-          <AdminDescriptionItem label="Descrição" value={book.description} />
+          <AdminDescriptionItem label="Descrição" value={meeting.description} />
         </AdminSection>
       </AdminFormCard>
       <AdminFormCard>
         <AdminSection
-          title={`${book.authors.length > 1 ? "Autores" : "Autor"}`}
+          title={`${meeting.authors.length > 1 ? "Autores" : "Autor"}`}
         >
-          {book.authors.map((author, index) => (
+          {meeting.authors.map((author, index) => (
             <AdminDescriptionItem
               key={index}
               value={`${author.academicTitle!.abbreviation} ${author.name} - ${author.institution!.acronym}`}

@@ -1,12 +1,10 @@
-import type { BookFormData } from "../../../validations/book.schema";
+import type { BoardFormData } from "../../../validations/board,schema";
 
-export const bookDefaultValues: BookFormData = {
+export const boardDefaultValues: BoardFormData = {
   title: "",
-  subtitle: "",
-  description: "",
-  isbn: "",
-  year: 0,
-  publisher: "",
-  externalUrl: "",
-  authors: [],
+  candidateId: "",
+  advisorId: "",
+  members: [],
+  date: "",
+  meetingUrl: "",
 };

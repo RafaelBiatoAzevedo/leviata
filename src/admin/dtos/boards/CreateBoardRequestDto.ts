@@ -1,3 +1,5 @@
+import type { ImageResponseDto } from "../ImageResponseDto";
+
 export interface CreateBoardRequestDto {
   title: string;
 
@@ -7,7 +9,9 @@ export interface CreateBoardRequestDto {
 
   members: string[];
 
+  images?: ImageResponseDto[];
+
   date: string;
 
-  externalUrl: string;
+  meetingUrl?: string;
 }

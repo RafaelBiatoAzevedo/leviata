@@ -1,49 +1,37 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
-import {
-  Actions,
-  AuthorItem,
-  AuthorList,
-  BookTopWrapper,
-  Container,
-  Form,
-} from "./styles";
-import {
-  bookSchema,
-  type BookFormData,
-} from "../../../validations/book.schema";
-import { bookDefaultValues } from "./defaultValues";
+import { Actions, AuthorItem, MemberList, Container, Form } from "./styles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
-import { booksService } from "../../../services/books";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
-import { AdminImageUpload } from "../../../components/AdminImageUpload";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
-import { AdminYearInput } from "../../../components/AdminYearInput";
-import { AdminTextarea } from "../../../components/AdminTextarea";
-import { FiArrowLeft, FiBook, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
-import { mapBookToForm } from "../../../mappers/book.mapper";
-import { mapBookToCreateDto } from "../../../mappers/bookToCreate.mapper";
+import { FiArrowLeft, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminError } from "../../../components/AdminError";
+import {
+  boardSchema,
+  type BoardFormData,
+} from "../../../validations/board,schema";
+import { boardsService } from "../../../services/boards";
+import { mapBoardToCreateDto } from "../../../mappers/boardToCreate.mapper";
+import { mapBoardToForm } from "../../../mappers/board.mapper";
+import { boardDefaultValues } from "./defaultValues";
+import { AdminDateInput } from "../../../components/AdminDateInput";
 
 export function BoardForm() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { showModal, updateModal } = useModal();
 
-  const [coverFile, setCoverFile] = useState<File | null>(null);
-  const [coverPreview, setCoverPreview] = useState("");
-
-  const selectedAuthorIdRef = useRef("");
+  const selectedMemberIdRef = useRef("");
 
   const [people, setPeople] = useState<PersonResponseDto[]>(
     [] as PersonResponseDto[],
@@ -53,12 +41,6 @@ export function BoardForm() {
 
   const isEdit = Boolean(slug);
 
-  // showToast({
-  //   title: "Capa atualizada com sucesso",
-  //   description: "A capa do livro foi atualizada.",
-  //   type: "success",
-  // });
-
   const {
     control,
     register,
@@ -66,25 +48,31 @@ export function BoardForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<BookFormData>({
-    resolver: zodResolver(bookSchema),
-    defaultValues: bookDefaultValues,
+  } = useForm<BoardFormData>({
+    resolver: zodResolver(boardSchema),
+    defaultValues: boardDefaultValues,
   });
 
-  const authors = useWatch({
+  const members = useWatch({
     control,
-    name: "authors",
+    name: "members",
   });
 
-  const loadBook = useCallback(async () => {
+  const candidateId = useWatch({
+    control,
+    name: "candidateId",
+  });
+
+  const advisorId = useWatch({
+    control,
+    name: "advisorId",
+  });
+
+  const loadBoard = useCallback(async () => {
     if (!slug) return;
 
-    const response = await booksService.getBySlug(slug);
-    const formData = mapBookToForm(response.data);
-
-    if (response.data.coverUrl) {
-      setCoverPreview(response.data.coverUrl);
-    }
+    const response = await boardsService.getBySlug(slug);
+    const formData = mapBoardToForm(response.data);
 
     reset(formData);
   }, [reset, slug]);
@@ -103,17 +91,17 @@ export function BoardForm() {
     if (!isEdit) return;
 
     (async () => {
-      await loadBook();
+      await loadBoard();
     })();
-  }, [isEdit, loadBook, loadPeople]);
+  }, [isEdit, loadBoard, loadPeople]);
 
   function handleModal() {
     showModal({
-      title: "Adicionar autor",
+      title: "Adicionar membro",
 
       content: (
         <div style={{ padding: "2rem 0rem" }}>
-          <p>Selecione um autor</p>
+          <p>Selecione um membro</p>
 
           <br />
 
@@ -121,17 +109,22 @@ export function BoardForm() {
             options={[
               {
                 value: "",
-                label: "Autores",
+                label: "Membros",
               },
               ...people
-                .filter((person) => !authors.includes(person.id))
+                .filter(
+                  (person) =>
+                    !members.includes(person.id) &&
+                    person.id !== advisorId &&
+                    person.id !== candidateId,
+                )
                 .map((person) => ({
                   value: person.id,
                   label: person.name,
                 })),
             ]}
             onChange={(event) => {
-              selectedAuthorIdRef.current = event.target.value;
+              selectedMemberIdRef.current = event.target.value;
 
               updateModal({
                 confirmDisabled: !event.target.value,
@@ -147,33 +140,33 @@ export function BoardForm() {
 
       confirmVariant: "success",
 
-      confirmDisabled: !selectedAuthorIdRef.current,
+      confirmDisabled: !selectedMemberIdRef.current,
 
       onConfirm: () => {
-        handleAddAuthor(selectedAuthorIdRef.current);
+        handleAddAuthor(selectedMemberIdRef.current);
       },
 
       onCancel: () => {
-        selectedAuthorIdRef.current = "";
+        selectedMemberIdRef.current = "";
       },
     });
   }
 
   function handleAddAuthor(personId: string) {
-    if (authors.includes(personId)) return;
+    if (members.includes(personId)) return;
 
-    setValue("authors", [...authors, personId], {
+    setValue("members", [...members, personId], {
       shouldValidate: true,
       shouldDirty: true,
     });
 
-    selectedAuthorIdRef.current = "";
+    selectedMemberIdRef.current = "";
   }
 
   function handleRemoveAuthor(personId: string) {
     setValue(
-      "authors",
-      authors.filter((id) => id !== personId),
+      "members",
+      members.filter((id) => id !== personId),
       {
         shouldValidate: true,
         shouldDirty: true,
@@ -181,33 +174,63 @@ export function BoardForm() {
     );
   }
 
-  async function onSubmit(data: BookFormData) {
+  const optionsAdvisor = [
+    {
+      value: "",
+      label: "Selecione um orientador",
+    },
+    ...people
+      .filter(
+        (person) => !members.includes(person.id) && person.id !== candidateId,
+      )
+      .map((person) => ({
+        value: person.id,
+        label: person.name,
+      })),
+  ];
+
+  const optionsCandidate = [
+    {
+      value: "",
+      label: "Selecione um candidato",
+    },
+    ...people
+      .filter(
+        (person) => !members.includes(person.id) && person.id !== advisorId,
+      )
+      .map((person) => ({
+        value: person.id,
+        label: person.name,
+      })),
+  ];
+
+  async function onSubmit(data: BoardFormData) {
     try {
       if (isEdit) {
-        await booksService.updateBySlug(slug!, data);
+        await boardsService.updateBySlug(slug!, data);
 
         showToast({
-          title: "Livro atualizado",
+          title: "Banca atualizada",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await booksService.create(mapBookToCreateDto(data), coverFile!);
+        await boardsService.create(mapBoardToCreateDto(data));
 
         showToast({
-          title: "Livro criado",
-          description: "O livro foi cadastrado com sucesso.",
+          title: "Banca criada",
+          description: "A banca foi cadastrada com sucesso.",
           type: "success",
         });
       }
 
-      navigate("/admin/livros");
+      navigate("/admin/bancas");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
 
       showToast({
-        title: isEdit ? "Erro ao atualizar livro" : "Erro ao criar livro",
+        title: isEdit ? "Erro ao atualizar banca" : "Erro ao criar banca",
         description:
           message ?? "Não foi possível salvar os dados. Tente novamente.",
         type: "danger",
@@ -215,151 +238,110 @@ export function BoardForm() {
     }
   }
 
-  async function handleUploadCover(file: File | null) {
-    if (!file) return;
-
-    if (isEdit) {
-      const response = await booksService.updateCover(slug!, file);
-
-      setCoverPreview(response.data.url);
-
-      setValue("coverUrl", response.data.url);
-
-      showToast({
-        title: "Capa atualizada com sucesso",
-        description: "A Capa do livro foi atualizada.",
-        type: "success",
-      });
-
-      return;
-    }
-
-    setCoverFile(file);
-
-    setCoverPreview(URL.createObjectURL(file));
-  }
-
   return (
     <Container>
       <AdminPageHeader
-        title={isEdit ? "Editar livro" : "Novo livro"}
-        subtitle="Cadastre ou atualize os dados do livro."
+        title={isEdit ? "Editar banca" : "Nova banca"}
+        subtitle="Cadastre ou atualize os dados da banca."
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BookTopWrapper>
-          <AdminFormGrid columns={1}>
-            <AdminImageUpload
-              icon={<FiBook size={42} />}
-              label="Capa"
-              variant="portrait"
-              imageUrl={coverPreview}
-              onChange={handleUploadCover}
-            />
-          </AdminFormGrid>
-
-          <AdminFormCard>
-            <AdminSection title="Dados Gerais">
-              <AdminFormGrid>
-                <AdminInput
-                  label="Título"
-                  placeholder="Título do livro"
-                  required
-                  error={errors.title?.message}
-                  {...register("title")}
-                />
-
-                <AdminInput
-                  label="Slug (Gerado automaticamente)"
-                  value={slug ?? ""}
-                  disabled
-                />
-
-                <AdminInput
-                  label="Subtítulo"
-                  placeholder="Subtítulo do livro"
-                  error={errors.subtitle?.message}
-                  {...register("subtitle")}
-                />
-
-                <AdminInput
-                  label="Isbn"
-                  type="number"
-                  placeholder="Número isbn"
-                  error={errors.isbn?.message}
-                  {...register("isbn")}
-                />
-
-                <AdminYearInput
-                  label="Ano de publicação"
-                  placeholder="2025"
-                  required
-                  {...register("year", { valueAsNumber: true })}
-                  error={errors.year?.message}
-                />
-
-                <AdminInput
-                  label="Editora"
-                  placeholder="Nome da editora"
-                  required
-                  error={errors.publisher?.message}
-                  {...register("publisher")}
-                />
-
-                <AdminInput
-                  label="Link"
-                  placeholder="Url do livro"
-                  required
-                  error={errors.externalUrl?.message}
-                  {...register("externalUrl")}
-                />
-              </AdminFormGrid>
-            </AdminSection>
-          </AdminFormCard>
-        </BookTopWrapper>
-
         <AdminFormCard>
-          <AdminSection title="Descrição">
-            <AdminTextarea
-              placeholder="Escreva uma breve descrição..."
-              error={errors.description?.message}
-              {...register("description")}
-            ></AdminTextarea>
+          <AdminSection title="Dados Gerais">
+            <AdminFormGrid>
+              <AdminInput
+                label="Título"
+                placeholder="Título da banca"
+                required
+                error={errors.title?.message}
+                {...register("title")}
+              />
+
+              <AdminInput
+                label="Slug (Gerado automaticamente)"
+                value={slug ?? ""}
+                disabled
+              />
+
+              <AdminDateInput
+                label="Data"
+                placeholder="10/02/2025"
+                required
+                {...register("date")}
+                error={errors.date?.message}
+              />
+
+              <AdminInput
+                label="Link da banca"
+                placeholder="Url da banca"
+                required
+                error={errors.meetingUrl?.message}
+                {...register("meetingUrl")}
+              />
+            </AdminFormGrid>
           </AdminSection>
         </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection title="Participantes principais">
+            <AdminFormGrid>
+              <AdminSelect
+                label="Candidato"
+                required
+                error={errors.candidateId?.message}
+                {...register("candidateId")}
+                options={optionsCandidate}
+              ></AdminSelect>
+              <AdminSelect
+                label="Orientador"
+                required
+                error={errors.advisorId?.message}
+                {...register("advisorId")}
+                options={optionsAdvisor}
+              ></AdminSelect>
+            </AdminFormGrid>
+          </AdminSection>
+        </AdminFormCard>
+
         <AdminFormCard>
           <AdminSection
-            title="Autores"
+            title="Membros da banca"
             action={
               <AdminButton size="medium" type="button" onClick={handleModal}>
                 <FiPlus />
               </AdminButton>
             }
           >
-            <AuthorList>
-              {authors.map((authorId) => {
-                const author = people.find((person) => person.id === authorId);
+            <MemberList>
+              {members.map((memberId) => {
+                const member = people.find((person) => person.id === memberId);
 
-                if (!author) return null;
+                if (!member) return null;
 
                 return (
-                  <AuthorItem key={author.id}>
-                    <span>{`${author.academicTitle?.abbreviation} ${author.name} - ${author.institution?.acronym} `}</span>
+                  <AuthorItem key={member.id}>
+                    <span>{`${member.academicTitle?.abbreviation} ${member.name} - ${member.institution?.acronym} `}</span>
 
                     <button
                       type="button"
-                      onClick={() => handleRemoveAuthor(author.id)}
+                      onClick={() => handleRemoveAuthor(member.id)}
                     >
                       <FiTrash2 />
                     </button>
                   </AuthorItem>
                 );
               })}
-            </AuthorList>
+            </MemberList>
 
-            {errors.authors && (
-              <AdminError>{errors.authors.message}</AdminError>
+            {errors.members && (
+              <AdminError>{errors.members.message}</AdminError>
             )}
+          </AdminSection>
+        </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection title="Fotos">
+            <></>
           </AdminSection>
         </AdminFormCard>
 

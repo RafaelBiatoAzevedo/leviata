@@ -75,7 +75,7 @@ export const Cover = styled.img`
   border: 2px solid ${({ theme }) => theme.colors.primary};
 `;
 
-export const BookTitle = styled.h2`
+export const MeetingTitle = styled.h2`
   margin: 0;
 
   font-size: 1.4rem;

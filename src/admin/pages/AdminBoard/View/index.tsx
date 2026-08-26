@@ -28,7 +28,7 @@ export function BoardView() {
       setBoard(response.data);
     } catch (error) {
       showToast({
-        title: "Ops! Não foi possível carregar o banca",
+        title: "Ops! Não foi possível carregar a banca",
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });
@@ -73,6 +73,27 @@ export function BoardView() {
             <AdminDescriptionItem label="Slug" value={board.slug} />
 
             <AdminDescriptionItem label="Data" value={formatDate(board.date)} />
+
+            <AdminDescriptionItem
+              label="Link da banca"
+              value={board.meetingUrl}
+            />
+          </AdminDescriptionList>
+        </AdminSection>
+      </AdminFormCard>
+
+      <AdminFormCard>
+        <AdminSection title="Participantes principais">
+          <AdminDescriptionList>
+            <AdminDescriptionItem
+              label="Candidato"
+              value={`${board.candidate.academicTitle.abbreviation} ${board.candidate.name} - ${board.candidate.institution.acronym}`}
+            />
+
+            <AdminDescriptionItem
+              label="Orientador"
+              value={`${board.advisor.academicTitle.abbreviation} ${board.advisor.name} - ${board.advisor.institution.acronym}`}
+            />
           </AdminDescriptionList>
         </AdminSection>
       </AdminFormCard>
@@ -87,6 +108,12 @@ export function BoardView() {
               value={`${member.academicTitle!.abbreviation} ${member.name} - ${member.institution!.acronym}`}
             />
           ))}
+        </AdminSection>
+      </AdminFormCard>
+
+      <AdminFormCard>
+        <AdminSection title="Fotos">
+          <></>
         </AdminSection>
       </AdminFormCard>
     </Container>
