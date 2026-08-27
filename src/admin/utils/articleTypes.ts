@@ -1,15 +1,12 @@
-import type { TArticleType } from "../types/TArticleType";
+import {
+  ArticleType,
+  articleTypeLabels,
+  type TArticleType,
+} from "../types/TArticleType";
 
-export const articleTypes: TArticleType[] = ["ARTICLE", "DOSSIER"];
-
-export const articleTypesOptions = [
-  ...articleTypes.map((type) => ({
-    value: type,
-    label: type === "ARTICLE" ? "Artigo" : "Dossiê",
+export const articlesTypeOptions = [
+  ...(Object.values(ArticleType) as TArticleType[]).map((category) => ({
+    value: category,
+    label: articleTypeLabels[category],
   })),
 ];
-
-export const articleTypeLabels: Record<TArticleType, string> = {
-  ARTICLE: "Artigo",
-  DOSSIER: "Dossiê",
-};

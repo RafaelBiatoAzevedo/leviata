@@ -8,7 +8,7 @@ import {
   CoverWrapper,
   Header,
   HeaderActions,
-  Subtitle,
+  // Subtitle,
   Title,
 } from "./styles";
 import { useNavigate, useParams } from "react-router-dom";
@@ -21,6 +21,8 @@ import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
 import { AdminLoading } from "../../../components/AdminLoading";
+import { formatDate } from "../../../utils/formatDate";
+import { meetingTypeLabels } from "../../../types/TMeetingType";
 
 export function MeetingView() {
   const navigate = useNavigate();
@@ -37,7 +39,7 @@ export function MeetingView() {
       setMeeting(response.data);
     } catch (error) {
       showToast({
-        title: "Ops! Não foi possível carregar o livro",
+        title: "Ops! Não foi possível carregar o encontro",
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });
@@ -53,7 +55,7 @@ export function MeetingView() {
   }, [meeting, loadMeeting]);
 
   if (!meeting) {
-    return <AdminLoading text="Carregando livro..." />;
+    return <AdminLoading text="Carregando encontro..." />;
   }
 
   return (
@@ -65,22 +67,22 @@ export function MeetingView() {
             Voltar
           </AdminButton>
 
-          <AdminButton onClick={() => navigate(`/admin/livros/${slug}/editar`)}>
+          <AdminButton
+            onClick={() => navigate(`/admin/reunioes/${slug}/editar`)}
+          >
             <FiEdit2 />
             Editar
           </AdminButton>
         </HeaderActions>
 
-        <Title>Livro</Title>
+        <Title>Encontro</Title>
       </Header>
 
       <ContentWrapper>
-        <CoverWrapper to={meeting.registrationUrl} target={"_blank"}>
-          <Cover src={meeting.coverUrl} />
+        <CoverWrapper to={meeting.registrationUrl!} target={"_blank"}>
+          {!!meeting.coverUrl && <Cover src={meeting.coverUrl} />}
 
           <MeetingTitle>{meeting.title}</MeetingTitle>
-
-          <Subtitle>{meeting.year}</Subtitle>
         </CoverWrapper>
 
         <AdminFormCard>
@@ -91,21 +93,35 @@ export function MeetingView() {
               <AdminDescriptionItem label="Slug" value={meeting.slug} />
 
               <AdminDescriptionItem
-                label="Subtítulo"
-                value={meeting.subtitle}
+                label="Data"
+                value={formatDate(meeting.date)}
               />
 
-              <AdminDescriptionItem label="Isbn" value={meeting.isbn} />
-
-              <AdminDescriptionItem label="Ano" value={meeting.year} />
-
-              <AdminDescriptionItem label="Editora" value={meeting.publisher} />
-
-              <AdminDescriptionItem label="Link" value={meeting.externalUrl} />
+              <AdminDescriptionItem
+                label="Tipo"
+                value={meetingTypeLabels[meeting.type]}
+              />
             </AdminDescriptionList>
+            <AdminDescriptionItem label="Local" value={meeting.location} />
           </AdminSection>
         </AdminFormCard>
       </ContentWrapper>
+
+      <AdminFormCard>
+        <AdminSection title="Links">
+          <AdminDescriptionList>
+            <AdminDescriptionItem
+              label="Link do conteúdo"
+              value={meeting.registrationUrl}
+            />
+            <AdminDescriptionItem
+              label="Link da transmissão"
+              value={meeting.meetingUrl}
+            />
+          </AdminDescriptionList>
+        </AdminSection>
+      </AdminFormCard>
+
       <AdminFormCard>
         <AdminSection title="Descrição">
           <AdminDescriptionItem label="Descrição" value={meeting.description} />
@@ -113,9 +129,9 @@ export function MeetingView() {
       </AdminFormCard>
       <AdminFormCard>
         <AdminSection
-          title={`${meeting.authors.length > 1 ? "Autores" : "Autor"}`}
+          title={`${meeting.speakers.length > 1 ? "Participantes" : "Participante"}`}
         >
-          {meeting.authors.map((author, index) => (
+          {meeting.speakers.map((author, index) => (
             <AdminDescriptionItem
               key={index}
               value={`${author.academicTitle!.abbreviation} ${author.name} - ${author.institution!.acronym}`}

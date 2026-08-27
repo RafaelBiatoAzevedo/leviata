@@ -15,5 +15,5 @@ export interface CreateMeetingRequestDto {
 
   meetingUrl?: string;
 
-  speakersIds: string[];
+  speakers: string[];
 }

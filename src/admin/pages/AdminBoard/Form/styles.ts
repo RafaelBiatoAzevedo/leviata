@@ -36,7 +36,7 @@ export const MemberList = styled.div`
   margin-top: 16px;
 `;
 
-export const AuthorItem = styled.div`
+export const MemberItem = styled.div`
   display: flex;
 
   align-items: center;

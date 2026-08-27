@@ -16,7 +16,7 @@ export const Form = styled.form`
   gap: 2rem;
 `;
 
-export const BookTopWrapper = styled.div`
+export const MeetingTopWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 2rem;
@@ -26,7 +26,7 @@ export const BookTopWrapper = styled.div`
   }
 `;
 
-export const AuthorList = styled.div`
+export const SpeakerList = styled.div`
   display: flex;
 
   flex-direction: column;

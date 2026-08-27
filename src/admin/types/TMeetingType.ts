@@ -7,5 +7,5 @@ export type TMeetingType = (typeof MeetingType)[keyof typeof MeetingType];
 
 export const meetingTypeLabels: Record<TMeetingType, string> = {
   SEMINAR: "Seminário",
-  MEETING: "Reunião",
+  MEETING: "Encontro",
 };

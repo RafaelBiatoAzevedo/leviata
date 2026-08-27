@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
-import { Actions, AuthorItem, MemberList, Container, Form } from "./styles";
+import { Actions, MemberItem, MemberList, Container, Form } from "./styles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -97,19 +97,17 @@ export function BoardForm() {
 
   function handleModal() {
     showModal({
-      title: "Adicionar membro",
+      title: "Adicionar integrante",
 
       content: (
         <div style={{ padding: "2rem 0rem" }}>
-          <p>Selecione um membro</p>
-
           <br />
 
           <AdminSelect
             options={[
               {
                 value: "",
-                label: "Membros",
+                label: "Selecione um integrante",
               },
               ...people
                 .filter(
@@ -123,6 +121,8 @@ export function BoardForm() {
                   label: person.name,
                 })),
             ]}
+            label="Integrantes"
+            required
             onChange={(event) => {
               selectedMemberIdRef.current = event.target.value;
 
@@ -143,7 +143,7 @@ export function BoardForm() {
       confirmDisabled: !selectedMemberIdRef.current,
 
       onConfirm: () => {
-        handleAddAuthor(selectedMemberIdRef.current);
+        handleAddMember(selectedMemberIdRef.current);
       },
 
       onCancel: () => {
@@ -152,7 +152,7 @@ export function BoardForm() {
     });
   }
 
-  function handleAddAuthor(personId: string) {
+  function handleAddMember(personId: string) {
     if (members.includes(personId)) return;
 
     setValue("members", [...members, personId], {
@@ -163,7 +163,7 @@ export function BoardForm() {
     selectedMemberIdRef.current = "";
   }
 
-  function handleRemoveAuthor(personId: string) {
+  function handleRemoveMember(personId: string) {
     setValue(
       "members",
       members.filter((id) => id !== personId),
@@ -305,7 +305,7 @@ export function BoardForm() {
 
         <AdminFormCard>
           <AdminSection
-            title="Membros da banca"
+            title="Integrantes da banca"
             action={
               <AdminButton size="medium" type="button" onClick={handleModal}>
                 <FiPlus />
@@ -319,16 +319,16 @@ export function BoardForm() {
                 if (!member) return null;
 
                 return (
-                  <AuthorItem key={member.id}>
+                  <MemberItem key={member.id}>
                     <span>{`${member.academicTitle?.abbreviation} ${member.name} - ${member.institution?.acronym} `}</span>
 
                     <button
                       type="button"
-                      onClick={() => handleRemoveAuthor(member.id)}
+                      onClick={() => handleRemoveMember(member.id)}
                     >
                       <FiTrash2 />
                     </button>
-                  </AuthorItem>
+                  </MemberItem>
                 );
               })}
             </MemberList>

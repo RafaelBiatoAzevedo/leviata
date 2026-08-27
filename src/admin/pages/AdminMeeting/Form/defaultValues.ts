@@ -1,12 +1,12 @@
-import type { BookFormData } from "../../../validations/book.schema";
+import { MeetingType } from "../../../types/TMeetingType";
 
-export const bookDefaultValues: BookFormData = {
+export const meetingDefaultValues = {
   title: "",
-  subtitle: "",
+  type: MeetingType.MEETING,
   description: "",
-  isbn: "",
-  year: 0,
-  publisher: "",
-  externalUrl: "",
-  authors: [],
+  date: "",
+  location: "",
+  registrationUrl: "",
+  meetingUrl: "",
+  speakers: [],
 };

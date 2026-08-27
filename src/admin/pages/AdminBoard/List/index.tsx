@@ -113,10 +113,11 @@ export function AdminBoards() {
       <AdminTable>
         <thead>
           <tr>
-            <th>Data</th>
             <th>Título</th>
+            <th>Data</th>
             <th>Candidato</th>
             <th>Orientador</th>
+            <th>N° Participantes</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -125,8 +126,6 @@ export function AdminBoards() {
           {!loading &&
             filteredBoards.map((board) => (
               <tr key={board.id}>
-                <td>{formatDate(board.date)}</td>
-
                 <td>
                   <strong>{board.title}</strong>
 
@@ -134,10 +133,13 @@ export function AdminBoards() {
 
                   <small>{board.slug}</small>
                 </td>
+                <td>{formatDate(board.date)}</td>
 
                 <td>{board.candidate.name}</td>
 
                 <td>{board.advisor.name}</td>
+
+                <td>{board.members.length}</td>
 
                 <td>
                   <Actions>

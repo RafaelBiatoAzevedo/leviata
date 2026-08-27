@@ -20,8 +20,8 @@ import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
-import { articleTypeLabels } from "../../../utils/articleTypes";
 import { AdminLoading } from "../../../components/AdminLoading";
+import { articleTypeLabels } from "../../../types/TArticleType";
 
 export function ArticleView() {
   const navigate = useNavigate();

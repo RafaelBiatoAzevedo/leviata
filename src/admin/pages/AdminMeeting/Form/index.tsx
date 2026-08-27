@@ -3,37 +3,39 @@ import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
   Actions,
   AuthorItem,
-  AuthorList,
-  BookTopWrapper,
+  SpeakerList,
+  MeetingTopWrapper,
   Container,
   Form,
 } from "./styles";
-import {
-  bookSchema,
-  type BookFormData,
-} from "../../../validations/book.schema";
-import { bookDefaultValues } from "./defaultValues";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
-import { booksService } from "../../../services/books";
+import { meetingsService } from "../../../services/meetings";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
 import { AdminImageUpload } from "../../../components/AdminImageUpload";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
-import { AdminYearInput } from "../../../components/AdminYearInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
-import { FiArrowLeft, FiBook, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
-import { mapBookToForm } from "../../../mappers/book.mapper";
-import { mapBookToCreateDto } from "../../../mappers/bookToCreate.mapper";
+import { FiArrowLeft, FiPlus, FiSave, FiTrash2, FiVideo } from "react-icons/fi";
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminError } from "../../../components/AdminError";
+import {
+  meetingSchema,
+  type MeetingFormData,
+} from "../../../validations/meeting.schem";
+import { meetingDefaultValues } from "./defaultValues";
+import { mapMeetingToForm } from "../../../mappers/meeting.mapper";
+import { mapMeetingToCreateDto } from "../../../mappers/meetingToCreate.mapper";
+import { meetingTypeOptions } from "../../../utils/meetingTypes";
+import { AdminDateInput } from "../../../components/AdminDateInput";
 
 export function MeetingForm() {
   const navigate = useNavigate();
@@ -43,7 +45,7 @@ export function MeetingForm() {
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState("");
 
-  const selectedAuthorIdRef = useRef("");
+  const selectedSpeakerIdRef = useRef("");
 
   const [people, setPeople] = useState<PersonResponseDto[]>(
     [] as PersonResponseDto[],
@@ -53,12 +55,6 @@ export function MeetingForm() {
 
   const isEdit = Boolean(slug);
 
-  // showToast({
-  //   title: "Capa atualizada com sucesso",
-  //   description: "A capa do livro foi atualizada.",
-  //   type: "success",
-  // });
-
   const {
     control,
     register,
@@ -66,21 +62,21 @@ export function MeetingForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<BookFormData>({
-    resolver: zodResolver(bookSchema),
-    defaultValues: bookDefaultValues,
+  } = useForm<MeetingFormData>({
+    resolver: zodResolver(meetingSchema),
+    defaultValues: meetingDefaultValues,
   });
 
-  const authors = useWatch({
+  const speakers = useWatch({
     control,
-    name: "authors",
+    name: "speakers",
   });
 
-  const loadBook = useCallback(async () => {
+  const loadMeeting = useCallback(async () => {
     if (!slug) return;
 
-    const response = await booksService.getBySlug(slug);
-    const formData = mapBookToForm(response.data);
+    const response = await meetingsService.getBySlug(slug);
+    const formData = mapMeetingToForm(response.data);
 
     if (response.data.coverUrl) {
       setCoverPreview(response.data.coverUrl);
@@ -103,17 +99,17 @@ export function MeetingForm() {
     if (!isEdit) return;
 
     (async () => {
-      await loadBook();
+      await loadMeeting();
     })();
-  }, [isEdit, loadBook, loadPeople]);
+  }, [isEdit, loadMeeting, loadPeople]);
 
   function handleModal() {
     showModal({
-      title: "Adicionar autor",
+      title: "Adicionar participante",
 
       content: (
         <div style={{ padding: "2rem 0rem" }}>
-          <p>Selecione um autor</p>
+          <p>Selecione um </p>
 
           <br />
 
@@ -121,17 +117,17 @@ export function MeetingForm() {
             options={[
               {
                 value: "",
-                label: "Autores",
+                label: "Participentes",
               },
               ...people
-                .filter((person) => !authors.includes(person.id))
+                .filter((person) => !speakers.includes(person.id))
                 .map((person) => ({
                   value: person.id,
                   label: person.name,
                 })),
             ]}
             onChange={(event) => {
-              selectedAuthorIdRef.current = event.target.value;
+              selectedSpeakerIdRef.current = event.target.value;
 
               updateModal({
                 confirmDisabled: !event.target.value,
@@ -147,33 +143,33 @@ export function MeetingForm() {
 
       confirmVariant: "success",
 
-      confirmDisabled: !selectedAuthorIdRef.current,
+      confirmDisabled: !selectedSpeakerIdRef.current,
 
       onConfirm: () => {
-        handleAddAuthor(selectedAuthorIdRef.current);
+        handleAddSpeaker(selectedSpeakerIdRef.current);
       },
 
       onCancel: () => {
-        selectedAuthorIdRef.current = "";
+        selectedSpeakerIdRef.current = "";
       },
     });
   }
 
-  function handleAddAuthor(personId: string) {
-    if (authors.includes(personId)) return;
+  function handleAddSpeaker(personId: string) {
+    if (speakers.includes(personId)) return;
 
-    setValue("authors", [...authors, personId], {
+    setValue("speakers", [...speakers, personId], {
       shouldValidate: true,
       shouldDirty: true,
     });
 
-    selectedAuthorIdRef.current = "";
+    selectedSpeakerIdRef.current = "";
   }
 
-  function handleRemoveAuthor(personId: string) {
+  function handleRemoveSpeaker(personId: string) {
     setValue(
-      "authors",
-      authors.filter((id) => id !== personId),
+      "speakers",
+      speakers.filter((id) => id !== personId),
       {
         shouldValidate: true,
         shouldDirty: true,
@@ -181,33 +177,33 @@ export function MeetingForm() {
     );
   }
 
-  async function onSubmit(data: BookFormData) {
+  async function onSubmit(data: MeetingFormData) {
     try {
       if (isEdit) {
-        await booksService.updateBySlug(slug!, data);
+        await meetingsService.updateBySlug(slug!, data);
 
         showToast({
-          title: "Livro atualizado",
+          title: "Encontro atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await booksService.create(mapBookToCreateDto(data), coverFile!);
+        await meetingsService.create(mapMeetingToCreateDto(data), coverFile!);
 
         showToast({
-          title: "Livro criado",
-          description: "O livro foi cadastrado com sucesso.",
+          title: "Encontro criado",
+          description: "O encontro foi cadastrado com sucesso.",
           type: "success",
         });
       }
 
-      navigate("/admin/livros");
+      navigate("/admin/encontros");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
 
       showToast({
-        title: isEdit ? "Erro ao atualizar livro" : "Erro ao criar livro",
+        title: isEdit ? "Erro ao atualizar encontro" : "Erro ao criar encontro",
         description:
           message ?? "Não foi possível salvar os dados. Tente novamente.",
         type: "danger",
@@ -219,7 +215,7 @@ export function MeetingForm() {
     if (!file) return;
 
     if (isEdit) {
-      const response = await booksService.updateCover(slug!, file);
+      const response = await meetingsService.updateCover(slug!, file);
 
       setCoverPreview(response.data.url);
 
@@ -227,7 +223,7 @@ export function MeetingForm() {
 
       showToast({
         title: "Capa atualizada com sucesso",
-        description: "A Capa do livro foi atualizada.",
+        description: "A Capa do encontro foi atualizada.",
         type: "success",
       });
 
@@ -242,17 +238,17 @@ export function MeetingForm() {
   return (
     <Container>
       <AdminPageHeader
-        title={isEdit ? "Editar livro" : "Novo livro"}
-        subtitle="Cadastre ou atualize os dados do livro."
+        title={isEdit ? "Editar encontro" : "Novo encontro"}
+        subtitle="Cadastre ou atualize os dados do encontro."
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BookTopWrapper>
+        <MeetingTopWrapper>
           <AdminFormGrid columns={1}>
             <AdminImageUpload
-              icon={<FiBook size={42} />}
+              icon={<FiVideo size={42} />}
               label="Capa"
-              variant="portrait"
+              variant="square"
               imageUrl={coverPreview}
               onChange={handleUploadCover}
             />
@@ -263,7 +259,7 @@ export function MeetingForm() {
               <AdminFormGrid>
                 <AdminInput
                   label="Título"
-                  placeholder="Título do livro"
+                  placeholder="Título do encontro"
                   required
                   error={errors.title?.message}
                   {...register("title")}
@@ -275,90 +271,92 @@ export function MeetingForm() {
                   disabled
                 />
 
-                <AdminInput
-                  label="Subtítulo"
-                  placeholder="Subtítulo do livro"
-                  error={errors.subtitle?.message}
-                  {...register("subtitle")}
-                />
-
-                <AdminInput
-                  label="Isbn"
-                  type="number"
-                  placeholder="Número isbn"
-                  error={errors.isbn?.message}
-                  {...register("isbn")}
-                />
-
-                <AdminYearInput
-                  label="Ano de publicação"
-                  placeholder="2025"
+                <AdminDateInput
+                  label="Data da publicação"
+                  placeholder="02/10/2025"
                   required
-                  {...register("year", { valueAsNumber: true })}
-                  error={errors.year?.message}
+                  {...register("date")}
+                  error={errors.date?.message}
                 />
 
-                <AdminInput
-                  label="Editora"
-                  placeholder="Nome da editora"
+                <AdminSelect
+                  options={meetingTypeOptions}
+                  label="Tipo"
                   required
-                  error={errors.publisher?.message}
-                  {...register("publisher")}
-                />
-
-                <AdminInput
-                  label="Link"
-                  placeholder="Url do livro"
-                  required
-                  error={errors.externalUrl?.message}
-                  {...register("externalUrl")}
-                />
+                  error={errors.type?.message}
+                  {...register("type")}
+                ></AdminSelect>
               </AdminFormGrid>
+              <AdminInput
+                label="Local"
+                error={errors.location?.message}
+                {...register("location")}
+              />
             </AdminSection>
           </AdminFormCard>
-        </BookTopWrapper>
+        </MeetingTopWrapper>
+
+        <AdminFormCard>
+          <AdminSection title="Links">
+            <AdminFormGrid>
+              <AdminInput
+                label="Link do conteúdo"
+                error={errors.registrationUrl?.message}
+                {...register("registrationUrl")}
+              />
+              <AdminInput
+                label="Link da transmissão"
+                error={errors.meetingUrl?.message}
+                {...register("meetingUrl")}
+              />
+            </AdminFormGrid>
+          </AdminSection>
+        </AdminFormCard>
 
         <AdminFormCard>
           <AdminSection title="Descrição">
             <AdminTextarea
-              placeholder="Escreva uma breve descrição..."
+              placeholder="Escreva uma descrição..."
               error={errors.description?.message}
               {...register("description")}
             ></AdminTextarea>
           </AdminSection>
         </AdminFormCard>
+
         <AdminFormCard>
           <AdminSection
-            title="Autores"
+            title="Participantes"
             action={
               <AdminButton size="medium" type="button" onClick={handleModal}>
                 <FiPlus />
               </AdminButton>
             }
           >
-            <AuthorList>
-              {authors.map((authorId) => {
-                const author = people.find((person) => person.id === authorId);
+            <SpeakerList>
+              {speakers.map((speakerId) => {
+                const speaker = people.find(
+                  (person) => person.id === speakerId,
+                );
 
-                if (!author) return null;
+                if (!speaker) return null;
 
                 return (
-                  <AuthorItem key={author.id}>
-                    <span>{`${author.academicTitle?.abbreviation} ${author.name} - ${author.institution?.acronym} `}</span>
+                  <AuthorItem key={speaker.id}>
+                    <span>{`${speaker.academicTitle?.abbreviation} ${speaker.name} - ${speaker.institution?.acronym} `}</span>
 
                     <button
                       type="button"
-                      onClick={() => handleRemoveAuthor(author.id)}
+                      onClick={() => handleRemoveSpeaker(speaker.id)}
                     >
                       <FiTrash2 />
                     </button>
                   </AuthorItem>
                 );
               })}
-            </AuthorList>
+            </SpeakerList>
 
-            {errors.authors && (
-              <AdminError>{errors.authors.message}</AdminError>
+            {errors.speakers && (
+              <AdminError>{errors.speakers.message}</AdminError>
             )}
           </AdminSection>
         </AdminFormCard>

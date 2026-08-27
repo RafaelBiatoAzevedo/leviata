@@ -121,10 +121,10 @@ export function AdminLayout() {
             {!collapsed && <span>Notícias</span>}
           </NavItem>
 
-          <NavItem to="/admin/reunioes" title="Reuniões">
+          <NavItem to="/admin/encontros" title="Encontros">
             <FiVideo />
 
-            {!collapsed && <span>Reuniões</span>}
+            {!collapsed && <span>Encontros</span>}
           </NavItem>
 
           <NavItem to="/admin/bancas" title="Bancas">

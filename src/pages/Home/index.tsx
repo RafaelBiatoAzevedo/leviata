@@ -107,7 +107,7 @@ export function Home() {
           <Swiper
             modules={[Autoplay, Pagination, Navigation]}
             slidesPerView={"auto"}
-            spaceBetween={50}
+            spaceBetween={30}
             loop
             navigation
             pagination={{

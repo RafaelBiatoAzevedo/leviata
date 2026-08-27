@@ -121,7 +121,7 @@ export function AdminBooks() {
         <thead>
           <tr>
             <th>Capa</th>
-            <th>Nome</th>
+            <th>Título</th>
             <th>Descrição</th>
             <th>Ano</th>
             <th>Publicação</th>

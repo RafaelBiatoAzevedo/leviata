@@ -72,13 +72,13 @@ export const adminRoutes = (
     <Route path="noticias/:slug/editar" element={<NewsForm />} />
 
     {/* Meetings */}
-    <Route path="reunioes" element={<AdminMeetings />} />
+    <Route path="encontros" element={<AdminMeetings />} />
 
-    <Route path="reunioes/:slug" element={<MeetingView />} />
+    <Route path="encontros/:slug" element={<MeetingView />} />
 
-    <Route path="reunioes/novo" element={<MeetingForm />} />
+    <Route path="encontros/novo" element={<MeetingForm />} />
 
-    <Route path="reunioes/:slug/editar" element={<MeetingForm />} />
+    <Route path="encontros/:slug/editar" element={<MeetingForm />} />
 
     {/* Boards */}
     <Route path="bancas" element={<AdminBoards />} />

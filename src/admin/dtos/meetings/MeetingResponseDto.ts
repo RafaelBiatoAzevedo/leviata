@@ -2,6 +2,8 @@ import type { TMeetingType } from "../../types/TMeetingType";
 import type { ImageResponseDto } from "../ImageResponseDto";
 import type { PersonResponseDto } from "../people/PersonResponseDto";
 
+export type Speaker = Partial<PersonResponseDto>;
+
 export interface MeetingResponseDto {
   id: string;
 
@@ -23,7 +25,7 @@ export interface MeetingResponseDto {
 
   meetingUrl: string | null;
 
-  speakers: PersonResponseDto[];
+  speakers: Speaker[];
 
   images: ImageResponseDto[];
 

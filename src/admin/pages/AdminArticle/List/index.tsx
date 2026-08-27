@@ -18,13 +18,11 @@ import { useCallback, useEffect, useState } from "react";
 import type { ArticleResponseDto } from "../../../dtos/articles/ArticleResponseDto";
 import { articlesService } from "../../../services/articles";
 import { AdminSelect } from "../../../components/AdminSelect";
-import {
-  articleTypeLabels,
-  articleTypesOptions,
-} from "../../../utils/articleTypes";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
 import { AdminIconButton } from "../../../components/AdminIconButton";
 import { AdminTable } from "../../../components/AdminTable";
+import { articlesTypeOptions } from "../../../utils/articleTypes";
+import { articleTypeLabels } from "../../../types/TArticleType";
 
 export function AdminArticles() {
   const navigate = useNavigate();
@@ -43,7 +41,7 @@ export function AdminArticles() {
   const articleTypesFilterOptions = [
     { value: "", label: "Todos" },
 
-    ...articleTypesOptions,
+    ...articlesTypeOptions,
   ];
 
   const load = useCallback(async () => {
@@ -144,8 +142,8 @@ export function AdminArticles() {
         <thead>
           <tr>
             <th>Capa</th>
-            <th>Tipo</th>
             <th>Título</th>
+            <th>Tipo</th>
             <th>Volume</th>
             <th>Ano</th>
             <th>Publicação</th>
@@ -167,8 +165,6 @@ export function AdminArticles() {
                   )}
                 </td>
 
-                <td>{articleTypeLabels[article.type]}</td>
-
                 <td>
                   <strong>{article.title}</strong>
 
@@ -176,6 +172,8 @@ export function AdminArticles() {
 
                   <small>{article.slug}</small>
                 </td>
+
+                <td>{articleTypeLabels[article.type]}</td>
 
                 <td>{article.volume}</td>
 

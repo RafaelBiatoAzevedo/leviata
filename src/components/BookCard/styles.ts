@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const Container = styled(Link)`
   display: flex;
   flex-direction: column;
-  width: 260px;
+  width: 290px;
   height: 100%;
 
   overflow: hidden;
@@ -62,7 +62,7 @@ export const Container = styled(Link)`
 
 export const Cover = styled.div`
   width: 100%;
-  height: 380px;
+  height: 400px;
 
   overflow: hidden;
 
@@ -87,6 +87,7 @@ export const Content = styled.div`
   padding: 16px;
 
   z-index: 2;
+  flex: 1;
 `;
 
 export const Title = styled.h3`
@@ -112,7 +113,11 @@ export const Year = styled.span`
 
   font-size: 1rem;
 
+  align-self: center;
+
   letter-spacing: 1px;
+
+  margin-bottom: 0.5rem;
 
   font-weight: bold;
 `;

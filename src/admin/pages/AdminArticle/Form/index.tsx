@@ -40,7 +40,7 @@ import { AdminButton } from "../../../components/AdminButton";
 import { AdminError } from "../../../components/AdminError";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { peopleService } from "../../../services/people";
-import { articleTypesOptions } from "../../../utils/articleTypes";
+import { articlesTypeOptions } from "../../../utils/articleTypes";
 
 export function ArticleForm() {
   const navigate = useNavigate();
@@ -278,7 +278,7 @@ export function ArticleForm() {
 
                 <AdminSelect
                   label="Tipo"
-                  options={articleTypesOptions}
+                  options={articlesTypeOptions}
                   error={errors.type?.message}
                   required
                   {...register("type")}

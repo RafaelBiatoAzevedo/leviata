@@ -28,9 +28,8 @@ export function BookCard({
         {authors.map((author, index) => (
           <AuthorName key={index}>{author.name}</AuthorName>
         ))}
-
-        <Year>{year}</Year>
       </Content>
+      <Year>{year}</Year>
     </Container>
   );
 }

@@ -20,6 +20,8 @@ import { meetingsService } from "../../../services/meetings";
 import { AdminTable } from "../../../components/AdminTable";
 import { AdminIconButton } from "../../../components/AdminIconButton";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
+import { formatDate } from "../../../utils/formatDate";
+import { meetingTypeLabels } from "../../../types/TMeetingType";
 
 export function AdminMeetings() {
   const [search, setSearch] = useState("");
@@ -69,7 +71,7 @@ export function AdminMeetings() {
 
   function handleDelete(meeting: MeetingResponseDto) {
     showModal({
-      title: "Excluir reunião",
+      title: "Excluir encontro",
 
       content: <AdminDeleteContent title={meeting.title} />,
 
@@ -83,7 +85,7 @@ export function AdminMeetings() {
         await meetingsService.removeBySlug(meeting.slug);
 
         showToast({
-          title: "Reunião excluída",
+          title: "Encontro excluída",
           description: `${meeting.title.toUpperCase()}`,
           type: "success",
         });
@@ -100,12 +102,12 @@ export function AdminMeetings() {
   return (
     <Container>
       <AdminPageHeader
-        title="Reuniões"
-        subtitle="Gerencie os reuniões cadastrados."
+        title="Encontros"
+        subtitle="Gerencie ps encontros cadastrados."
       >
-        <AdminButton onClick={() => navigate("/admin/reuniões/novo")}>
+        <AdminButton onClick={() => navigate("/admin/encontros/novo")}>
           <FiPlus />
-          Nova Reunião
+          Novo Encontro
         </AdminButton>
       </AdminPageHeader>
 
@@ -113,7 +115,7 @@ export function AdminMeetings() {
         <AdminSearchBar
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pesquisar reuniões..."
+          placeholder="Pesquisar encontros..."
         />
       </Filters>
 
@@ -121,10 +123,10 @@ export function AdminMeetings() {
         <thead>
           <tr>
             <th>Capa</th>
-            <th>Nome</th>
+            <th>Título</th>
             <th>Descrição</th>
-            <th>Ano</th>
-            <th>Publicação</th>
+            <th>Data</th>
+            <th>Tipo</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -155,16 +157,16 @@ export function AdminMeetings() {
                   <DescriptionCell>{meeting.description}</DescriptionCell>
                 </td>
 
-                <td>{meeting.date}</td>
+                <td>{formatDate(meeting.date)}</td>
 
-                <td>{meeting.location}</td>
+                <td>{meetingTypeLabels[meeting.type]}</td>
 
                 <td>
                   <Actions>
                     <AdminIconButton
                       title="Visualizar"
                       onClick={() =>
-                        navigate(`/admin/reuniões/${meeting.slug}`)
+                        navigate(`/admin/encontros/${meeting.slug}`)
                       }
                     >
                       <FiEye />
@@ -173,7 +175,7 @@ export function AdminMeetings() {
                     <AdminIconButton
                       title="Editar"
                       onClick={() =>
-                        navigate(`/admin/reuniões/${meeting.slug}/editar`)
+                        navigate(`/admin/encontros/${meeting.slug}/editar`)
                       }
                     >
                       <FiEdit2 />
