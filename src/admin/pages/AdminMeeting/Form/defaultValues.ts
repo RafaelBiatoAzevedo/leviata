@@ -7,6 +7,7 @@ export const meetingDefaultValues = {
   date: "",
   location: "",
   registrationUrl: "",
+  recordingUrl: "",
   meetingUrl: "",
   speakers: [],
 };

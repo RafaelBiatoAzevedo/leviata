@@ -298,18 +298,21 @@ export function MeetingForm() {
 
         <AdminFormCard>
           <AdminSection title="Links">
-            <AdminFormGrid>
-              <AdminInput
-                label="Link do conteúdo"
-                error={errors.registrationUrl?.message}
-                {...register("registrationUrl")}
-              />
-              <AdminInput
-                label="Link da transmissão"
-                error={errors.meetingUrl?.message}
-                {...register("meetingUrl")}
-              />
-            </AdminFormGrid>
+            <AdminInput
+              label="Link de inscrições"
+              error={errors.registrationUrl?.message}
+              {...register("registrationUrl")}
+            />
+            <AdminInput
+              label="Link do conteúdo"
+              error={errors.recordingUrl?.message}
+              {...register("recordingUrl")}
+            />
+            <AdminInput
+              label="Link da transmissão"
+              error={errors.meetingUrl?.message}
+              {...register("meetingUrl")}
+            />
           </AdminSection>
         </AdminFormCard>
 

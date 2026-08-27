@@ -25,6 +25,12 @@ export const meetingSchema = z.object({
     .optional()
     .or(z.literal("")),
 
+  recordingUrl: z
+    .string()
+    .url("Informe uma URL válida.")
+    .optional()
+    .or(z.literal("")),
+
   meetingUrl: z
     .string()
     .url("Informe uma URL válida.")
