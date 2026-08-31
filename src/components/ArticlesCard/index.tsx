@@ -16,7 +16,7 @@ interface IArticleCardProps {
   journal: string;
   volume: string;
   year: string;
-  cover: string;
+  coverUrl: string;
   to: string;
 }
 
@@ -26,20 +26,20 @@ export function ArticleCard({
   journal,
   volume,
   year,
-  cover,
+  coverUrl,
   to,
 }: IArticleCardProps) {
   return (
     <Container to={to} target="_blank">
       <Cover>
-        <img src={cover} alt={title} />
+        <img src={coverUrl} alt={title} />
       </Cover>
 
       <Content>
         <Journal>
           {journal}
 
-          <span>{volume}</span>
+          {!!volume && <span>vol. {volume}</span>}
         </Journal>
 
         <Title>{title}</Title>

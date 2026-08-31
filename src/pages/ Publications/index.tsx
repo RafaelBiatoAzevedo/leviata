@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
@@ -8,14 +8,6 @@ import "swiper/css/pagination";
 
 import { SectionHeader } from "../../components/SectionHeader";
 import { BookCard } from "../../components/BookCard";
-
-import bookLary from "../../assets/images/bookLary.webp";
-import bookGabriel from "../../assets/images/bookGabriel.webp";
-import bookMaria from "../../assets/images/bookMaria.webp";
-import bookMarilia from "../../assets/images/bookMarilia.webp";
-
-import dossieContruction from "../../assets/images/dossieConstrucao.webp";
-import dossieEscravidao from "../../assets/images/dossieEscravidao.webp";
 
 import {
   Container,
@@ -34,240 +26,11 @@ import {
   Subtitle,
 } from "./styles";
 import { ArticleCard } from "../../components/ArticlesCard";
-
-const booksMocks = [
-  {
-    author: "Gabriel Ferreira Gurian",
-    title: "Do conflito e do convívio",
-    to: "https://livraria.cepe.com.br/do-conflito-e-do-convivio",
-    year: 2026,
-    cover: bookGabriel,
-  },
-  {
-    author: "Larissa Biato de Azevedo",
-    title: "Policiar no tempo da escravidão",
-    to: "https://edufscar.com.br/policiar-no-tempo-da-escravidao-502000057",
-    year: 2025,
-    cover: bookLary,
-  },
-  {
-    author: "Maria Isabela da Silva Gomes",
-    title: "Dicionário Histórias entrelaçadas de mulheres afrodiaspóricas",
-    to: "https://www.editoramale.com.br/product-page/dicion%C3%A1rio-biogr%C3%A1fico-hist%C3%B3rias-entrela%C3%A7adas-de-mulheres-afrodiasp%C3%B3ricas-vol-2",
-    year: 2025,
-    cover: bookMaria,
-  },
-  {
-    author: "Marília Tofanetto Alves",
-    title: "Concubinato: a bastardia tingida pela cor",
-    to: "https://www.amazon.com.br/dp/8546229406",
-    year: 2025,
-    cover: bookMarilia,
-  },
-  {
-    author: "Gabriel Ferreira Gurian",
-    title: "Do conflito e do convívio",
-    to: "https://livraria.cepe.com.br/do-conflito-e-do-convivio",
-    year: 2026,
-    cover: bookGabriel,
-  },
-  {
-    author: "Larissa Biato de Azevedo",
-    title: "Policiar no tempo da escravidão",
-    to: "https://edufscar.com.br/policiar-no-tempo-da-escravidao-502000057",
-    year: 2025,
-    cover: bookLary,
-  },
-  {
-    author: "Maria Isabela da Silva Gomes",
-    title: "Dicionário Histórias entrelaçadas de mulheres afrodiaspóricas",
-    to: "https://www.editoramale.com.br/product-page/dicion%C3%A1rio-biogr%C3%A1fico-hist%C3%B3rias-entrela%C3%A7adas-de-mulheres-afrodiasp%C3%B3ricas-vol-2",
-    year: 2025,
-    cover: bookMaria,
-  },
-  {
-    author: "Marília Tofanetto Alves",
-    title: "Concubinato: a bastardia tingida pela cor",
-    to: "https://www.amazon.com.br/dp/8546229406",
-    year: 2025,
-    cover: bookMarilia,
-  },
-];
-
-const articlesMock = [
-  {
-    title:
-      "No rastro da criança escrava: os percursos do historiador Manolo Garcia Florentino",
-    author: "Mariana de Oliveira Lima",
-    journal: "Revista Epígrafe",
-    volume: "v. 14",
-    year: "2025",
-    cover: "/images/articles/epigrafe.jpg",
-    to: "#",
-  },
-
-  {
-    title:
-      "‘Toda a vigilância policial’: O contrabando de africanos no expediente das primeiras autoridades policiais do Império brasileiro (1827-1841)",
-    author: "Larissa Biato de Azevedo",
-    journal: "Revista Varia Historia",
-    volume: "v. 41",
-    year: "2025",
-    cover: "/images/articles/varia-historia.jpg",
-    to: "#",
-  },
-
-  {
-    title: "As Luzes em perspectiva: o caso português",
-    author: "Marília Tofanetto Alves e Maria Fernanda Minutti Teixeira",
-    journal: "Revista Albuquerque",
-    volume: "v. 17",
-    year: "2025",
-    cover: "/images/articles/albuquerque.jpg",
-    to: "#",
-  },
-
-  {
-    title:
-      "Perdigão Malheiro e os dilemas do binômio razão e escravidão na história do Estado luso-brasileiro",
-    author: "Ricardo Alexandre Ferreira",
-    journal: "Revista Almanack",
-    volume: "v. 37",
-    year: "2024",
-    cover: "/images/articles/almanack.jpg",
-    to: "#",
-  },
-
-  {
-    title: "Morremos todos: atitudes diante da morte (São Paulo, século XVII)",
-    author: "Marília Tofanetto Alves",
-    journal: "Revista AEDOS",
-    volume: "v. 16",
-    year: "2024",
-    cover: "/images/articles/aedos.jpg",
-    to: "#",
-  },
-
-  {
-    title:
-      "A cor que suscita inquietação: os primeiros jornais de imprensa negra no Brasil Oitocentista",
-    author: "Maria Isabela da Silva Gomes",
-    journal: "Revista Faces da História",
-    volume: "v. 11",
-    year: "2024",
-    cover: "/images/articles/faces-da-historia.jpg",
-    to: "#",
-  },
-
-  {
-    title: "Se amem eficazmente: as recomendações para o casamento perfeito",
-    author: "Marília Tofanetto Alves",
-    journal: "Revista Mosaico",
-    volume: "v. 16",
-    year: "2023",
-    cover: "/images/articles/mosaico.jpg",
-    to: "#",
-  },
-
-  {
-    title:
-      "Cristianismo, política e condenação da escravidão: os quakers do Delaware Valley durante o século XVIII",
-    author: "Sofia Zambelli Menck",
-    journal: "Revista Homos",
-    volume: "v. 4",
-    year: "2023",
-    cover: "/images/articles/homos.jpg",
-    to: "#",
-  },
-
-  {
-    title:
-      "Periodismo cultural y profesionalización del escritor: un análisis del capítulo La forja del escritor profesional (1900-1930), de Jorge B. Rivera",
-    author: "Maria Isabela da Silva Gomes",
-    journal: "Revista Ciencia Nueva",
-    volume: "v. 7",
-    year: "2023",
-    cover: "/images/articles/ciencia-nueva.jpg",
-    to: "#",
-  },
-
-  {
-    title:
-      "Perigos internos: espiões paraguaios e insurreições numa investigação da Polícia paulista (1865)",
-    author: "Larissa Biato de Azevedo",
-    journal: "Revista Saeculum",
-    volume: "v. 27",
-    year: "2022",
-    cover: "/images/articles/saeculum.jpg",
-    to: "#",
-  },
-
-  {
-    title:
-      "Segurança individual e escravidão nos relatos policiais (Brasil, 1840-1880)",
-    author: "Larissa Biato de Azevedo",
-    journal: "Revista Trashumante",
-    volume: "v. 19",
-    year: "2022",
-    cover: "/images/articles/trashumante.jpg",
-    to: "#",
-  },
-
-  {
-    title:
-      "O homem de côr: o problema da cidadania entre a escravidão e a liberdade no Brasil da primeira metade do século XIX",
-    author: "Maria Isabela da Silva Gomes",
-    journal: "Revista Ensaios de História",
-    volume: "v. 22",
-    year: "2021",
-    cover: "/images/articles/ensaios.jpg",
-    to: "#",
-  },
-
-  {
-    title: "A ‘destruição’ de um quilombo na Serra do Cubatão (1827-1828)",
-    author: "Larissa Biato de Azevedo",
-    journal: "Revista Afro-Ásia",
-    volume: "v. 64",
-    year: "2021",
-    cover: "/images/articles/afro-asia.jpg",
-    to: "#",
-  },
-
-  {
-    title:
-      "Polissemias da desigualdade no Livro V das Ordenações Filipinas: o escravo integrado",
-    author: "Ricardo Alexandre Ferreira",
-    journal: "Revista História (São Paulo)",
-    volume: "v. 34",
-    year: "2015",
-    cover: "/images/articles/historia-sp.jpg",
-    to: "#",
-  },
-];
-
-const dossiersMock = [
-  {
-    title:
-      "Dossiê “Construções do Estado Moderno: administração, direito e justiça entre os séculos XVII e XIX”",
-    author: "Ricardo Alexandre Ferreira e Larissa Biato de Azevedo",
-    journal: "Revista Ensaios de História",
-    volume: "v. 26",
-    year: "2026",
-    cover: dossieContruction,
-    to: "https://periodicos.franca.unesp.br/index.php/ensaiosdehistoria/issue/view/218",
-  },
-  {
-    title:
-      "Dossiê “Escravidão moderna e Instituições Luso-brasileiras entre os séculos XVII e XIX”",
-    author: "Ricardo Alexandre Ferreira e Larissa Biato de Azevedo",
-    journal: "Revista Ágora",
-    volume: "v. 35",
-    year: "2024",
-    cover: dossieEscravidao,
-    to: "https://periodicos.ufes.br/agora/issue/view/1632",
-  },
-];
+import type { BookResponseDto } from "../../admin/dtos/books/BookResponseDto";
+import { booksService } from "../../admin/services/books";
+import type { ArticleResponseDto } from "../../admin/dtos/articles/ArticleResponseDto";
+import { articlesService } from "../../admin/services/articles";
+import { ArticleType } from "../../admin/types/TArticleType";
 
 export const presentedWorksMock = [
   {
@@ -374,6 +137,44 @@ type TabType = "books" | "articles" | "presentations" | "dossiers";
 
 export function Publications() {
   const [activeTab, setActiveTab] = useState<TabType>("books");
+  const [books, setBooks] = useState<BookResponseDto[]>(
+    [] as BookResponseDto[],
+  );
+
+  const [articles, setArticles] = useState<ArticleResponseDto[]>(
+    [] as ArticleResponseDto[],
+  );
+
+  const [dossiers, setDossiers] = useState<ArticleResponseDto[]>(
+    [] as ArticleResponseDto[],
+  );
+
+  const load = useCallback(async () => {
+    try {
+      const responseBooks = await booksService.getAll();
+      const responseArticles = await articlesService.getAll();
+
+      setBooks(responseBooks.data);
+      setArticles(
+        responseArticles.data.filter(
+          (article) => article.type === ArticleType.ARTICLE,
+        ),
+      );
+      setDossiers(
+        responseArticles.data.filter(
+          (article) => article.type === ArticleType.DOSSIER,
+        ),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      await load();
+    })();
+  }, [load]);
 
   return (
     <Container>
@@ -426,7 +227,7 @@ export function Publications() {
               }}
               style={{ alignItems: "stretch" }}
             >
-              {booksMocks.map((book, index) => (
+              {books.map((book, index) => (
                 <SwiperSlide
                   key={index}
                   style={{
@@ -454,7 +255,7 @@ export function Publications() {
               pagination={{ clickable: true }}
               style={{ alignItems: "stretch" }}
             >
-              {articlesMock.map((article, index) => (
+              {articles.map((article, index) => (
                 <SwiperSlide
                   key={index}
                   style={{
@@ -508,7 +309,7 @@ export function Publications() {
               pagination={{ clickable: true }}
               style={{ alignItems: "stretch" }}
             >
-              {dossiersMock.map((dossier, index) => (
+              {dossiers.map((dossier, index) => (
                 <SwiperSlide
                   key={index}
                   style={{

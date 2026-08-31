@@ -20,9 +20,9 @@ export const Container = styled(Link)`
 
   position: relative;
 
-  background: ${({ theme }) => theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.surface};
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid ${({ theme }) => theme.colors.border};
 
   transition:
     transform 0.35s ease,
@@ -71,13 +71,13 @@ export const IconWrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  border-radius: 16px;
+  border-radius: 0.6rem;
 
   font-size: 1.6rem;
 
-  color: ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.text};
 
-  background: ${({ theme }) => theme.colors.backgroundCard};
+  background: ${({ theme }) => theme.colors.primary};
 
   border: 1px solid rgba(255, 255, 255, 0.06);
 
@@ -92,7 +92,7 @@ export const Content = styled.div`
 `;
 
 export const Title = styled.h3`
-  color: ${({ theme }) => theme.colors.onSecondary};
+  color: ${({ theme }) => theme.colors.text};
 
   font-size: 1.15rem;
 
@@ -112,7 +112,8 @@ export const Period = styled.span`
 
   color: ${({ theme }) => theme.colors.textSoft};
 
-  font-size: 0.82rem;
+  font-size: 0.9rem;
+  font-weight: 800;
 
   letter-spacing: 1px;
 `;

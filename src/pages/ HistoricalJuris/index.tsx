@@ -89,7 +89,7 @@ const juris = [
   { id: 3, title: "I Júri Histórico", date: "2018" },
 ];
 
-export function HistoricalJuris() {
+export function HistoricalJuries() {
   return (
     <Container>
       <Content>

@@ -9,13 +9,13 @@ export const Container = styled(Link)`
 
   overflow: hidden;
 
-  border-radius: 10px;
+  border-radius: 0.8rem;
 
   text-decoration: none;
 
   background: ${({ theme }) => theme.colors.surface};
 
-  border: 2px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.border};
 
   position: relative;
 

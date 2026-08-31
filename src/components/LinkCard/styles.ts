@@ -10,15 +10,15 @@ export const Container = styled(Link)`
 
   padding: 36px 30px;
 
-  border-radius: 18px;
+  border-radius: 0.8rem;
 
   position: relative;
 
   overflow: hidden;
 
-  background: ${({ theme }) => theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.surface};
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid ${({ theme }) => theme.colors.border};
 
   transition:
     transform 0.35s ease,
@@ -56,28 +56,26 @@ export const Container = styled(Link)`
 `;
 
 export const IconWrapper = styled.div`
-  width: 68px;
-  height: 68px;
+  width: 50px;
+  height: 50px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 16px;
+  border-radius: 0.8rem;
 
-  font-size: 1.8rem;
+  font-size: 1.4rem;
 
-  color: ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.text};
 
-  background: ${({ theme }) => theme.colors.backgroundCard};
-
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: ${({ theme }) => theme.colors.primary};
 
   box-shadow: 0 0 20px ${({ theme }) => theme.colors.accentGlow};
 `;
 
 export const CardTitle = styled.h3`
-  color: ${({ theme }) => theme.colors.onSecondary};
+  color: ${({ theme }) => theme.colors.text};
 
   font-size: 1.5rem;
 
@@ -92,4 +90,12 @@ export const CardDescription = styled.p`
   line-height: 1.8;
 
   font-size: 1rem;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+
+  overflow: hidden;
+
+  overflow-wrap: break-word;
 `;

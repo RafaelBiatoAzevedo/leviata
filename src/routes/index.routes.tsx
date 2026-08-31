@@ -18,7 +18,6 @@ import { Catalogs } from "../pages/ Catalogs";
 import { Database } from "../pages/Database";
 import { DossierDetails } from "../pages/DossierDetails";
 import { ThematicDetails } from "../pages/ThematicDetails";
-import { HistoricalJuris } from "../pages/ HistoricalJuris";
 import Painels from "../pages/Painels";
 import { MeetingsAndSeminars } from "../pages/MeetingsAndSeminars";
 import { JuriDetails } from "../pages/JuriDetails";
@@ -28,6 +27,7 @@ import { MainLayout } from "../layouts/MainLayout";
 import { AdminLogin } from "../admin/pages/AdminLogin";
 import { PrivateRoute } from "../admin/routes/privateRoute.routes";
 import { adminRoutes } from "../admin/routes/admin.routes";
+import { HistoricalJuries } from "../pages/ HistoricalJuris";
 
 export function Router() {
   return (
@@ -64,7 +64,7 @@ export function Router() {
         />
         <Route
           path="/atividades/juris-historicos"
-          element={<HistoricalJuris />}
+          element={<HistoricalJuries />}
         />
         <Route
           path="/atividades/juris-historicos/juris/:id"
