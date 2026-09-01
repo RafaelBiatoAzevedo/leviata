@@ -16,7 +16,7 @@ import {
 } from "react-icons/fi";
 
 import { BiNews } from "react-icons/bi";
-import { LuArrowLeftFromLine } from "react-icons/lu";
+import { TbDoorEnter } from "react-icons/tb";
 
 import {
   Container,
@@ -43,6 +43,7 @@ import {
 import leviataLogo from "../../../assets/images/leviataLogo.png";
 import { useAuth } from "../../hooks/useAuth";
 import { AdminButton } from "../../components/AdminButton";
+import { GiInjustice } from "react-icons/gi";
 
 export function AdminLayout() {
   const navigate = useNavigate();
@@ -133,6 +134,12 @@ export function AdminLayout() {
             {!collapsed && <span>Bancas</span>}
           </NavItem>
 
+          <NavItem to="/admin/juris" title="Juris">
+            <GiInjustice />
+
+            {!collapsed && <span>Juris</span>}
+          </NavItem>
+
           <NavItem to="/admin/banco-de-dados" title="Banco de Dados">
             <FiDatabase />
 
@@ -152,8 +159,12 @@ export function AdminLayout() {
         </Navigation>
 
         <BackWebSiteWrapper>
-          <AdminButton variant="outline" onClick={() => navigate("/")}>
-            <LuArrowLeftFromLine size={"1.2rem"} />
+          <AdminButton
+            size="small"
+            variant="outline"
+            onClick={() => navigate("/")}
+          >
+            <TbDoorEnter size={"1.2rem"} />
 
             {!collapsed && <span>Voltar ao site</span>}
           </AdminButton>

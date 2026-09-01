@@ -23,6 +23,9 @@ import { MeetingForm } from "../pages/AdminMeeting/Form";
 import { AdminBoards } from "../pages/AdminBoard/List";
 import { BoardView } from "../pages/AdminBoard/View";
 import { BoardForm } from "../pages/AdminBoard/Form";
+import { AdminJuries } from "../pages/AdminJury/List";
+import { JuryView } from "../pages/AdminJury/View";
+import { JuryForm } from "../pages/AdminJury/Form";
 
 export const adminRoutes = (
   <Route
@@ -88,5 +91,14 @@ export const adminRoutes = (
     <Route path="bancas/novo" element={<BoardForm />} />
 
     <Route path="bancas/:slug/editar" element={<BoardForm />} />
+
+    {/* Juries */}
+    <Route path="juris" element={<AdminJuries />} />
+
+    <Route path="juris/:slug" element={<JuryView />} />
+
+    <Route path="juris/novo" element={<JuryForm />} />
+
+    <Route path="juris/:slug/editar" element={<JuryForm />} />
   </Route>
 );

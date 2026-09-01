@@ -1,14 +1,16 @@
-import { FiUsers, FiBookOpen, FiMic } from "react-icons/fi";
+import { FiMic } from "react-icons/fi";
+import { TbFolderSearch } from "react-icons/tb";
 
 import { SectionHeader } from "../../components/SectionHeader";
 
 import { Container, Content, Grid } from "./styles";
 import { LinkCard } from "../../components/LinkCard";
+import { GiInjustice } from "react-icons/gi";
 
 const activities = [
   {
     to: "/atividades/nucleo-de-pesquisa-em-costas-negras",
-    icon: <FiUsers />,
+    icon: <TbFolderSearch />,
     title: "Núcleo de pesquisa “Em costas negras”",
     description:
       "Espaço dedicado ao desenvolvimento de pesquisas, debates e investigações relacionadas à escravidão, experiências africanas e diásporas no mundo luso-brasileiro.",
@@ -16,7 +18,7 @@ const activities = [
 
   {
     to: "/atividades/juris-historicos",
-    icon: <FiBookOpen />,
+    icon: <GiInjustice />,
     title: "Júris Históricos",
     description:
       "Atividades voltadas à análise crítica, avaliação acadêmica e discussão de pesquisas, dissertações e produções historiográficas.",

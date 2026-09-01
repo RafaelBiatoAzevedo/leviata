@@ -63,7 +63,7 @@ export const IconWrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  border-radius: 0.8rem;
+  border-radius: 0.6rem;
 
   font-size: 1.4rem;
 
