@@ -2,38 +2,50 @@ import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
   Actions,
-  AuthorItem,
-  AuthorList,
-  BookTopWrapper,
+  MemberItem,
+  MemberList,
+  JuryTopWrapper,
   Container,
   Form,
 } from "./styles";
 import {
-  bookSchema,
-  type BookFormData,
-} from "../../../validations/book.schema";
-import { bookDefaultValues } from "./defaultValues";
+  jurySchema,
+  type JuryFormData,
+} from "../../../validations/jury.schema";
+import { juryDefaultValues } from "./defaultValues";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
-import { booksService } from "../../../services/books";
+import { juriesService } from "../../../services/juries";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
 import { AdminImageUpload } from "../../../components/AdminImageUpload";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
-import { AdminYearInput } from "../../../components/AdminYearInput";
-import { AdminTextarea } from "../../../components/AdminTextarea";
-import { FiArrowLeft, FiBook, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
-import { mapBookToForm } from "../../../mappers/book.mapper";
-import { mapBookToCreateDto } from "../../../mappers/bookToCreate.mapper";
+import { FiArrowLeft, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
+
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminError } from "../../../components/AdminError";
+import { GiInjustice } from "react-icons/gi";
+import { mapJuryToForm } from "../../../mappers/jury.mapper";
+import { mapJuryToCreateDto } from "../../../mappers/juryToCreate.mapper";
+import { AdminDateInput } from "../../../components/AdminDateInput";
+import { AdminTextarea } from "../../../components/AdminTextarea";
+
+type TJuryRole = "judges" | "jurors" | "prosecutors" | "defenders" | "bailiffs";
+
+interface AddPersonModalConfig {
+  title: string;
+  label: string;
+  selectedIds: string[];
+  selectedIdRef: React.MutableRefObject<string>;
+  onAdd: (personId: string) => void;
+}
 
 export function JuryForm() {
   const navigate = useNavigate();
@@ -43,7 +55,11 @@ export function JuryForm() {
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState("");
 
-  const selectedAuthorIdRef = useRef("");
+  const selectedJudgeIdRef = useRef("");
+  const selectedJurorIdRef = useRef("");
+  const selectedProsecutorIdRef = useRef("");
+  const selectedDefenderIdRef = useRef("");
+  const selectedBailiffIdRef = useRef("");
 
   const [people, setPeople] = useState<PersonResponseDto[]>(
     [] as PersonResponseDto[],
@@ -53,12 +69,6 @@ export function JuryForm() {
 
   const isEdit = Boolean(slug);
 
-  // showToast({
-  //   title: "Capa atualizada com sucesso",
-  //   description: "A capa do livro foi atualizada.",
-  //   type: "success",
-  // });
-
   const {
     control,
     register,
@@ -66,21 +76,49 @@ export function JuryForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<BookFormData>({
-    resolver: zodResolver(bookSchema),
-    defaultValues: bookDefaultValues,
+  } = useForm<JuryFormData>({
+    resolver: zodResolver(jurySchema),
+    defaultValues: juryDefaultValues,
   });
 
-  const authors = useWatch({
+  const judges = useWatch({
     control,
-    name: "authors",
+    name: "judges",
   });
 
-  const loadBook = useCallback(async () => {
+  const jurors = useWatch({
+    control,
+    name: "jurors",
+  });
+
+  const prosecutors = useWatch({
+    control,
+    name: "prosecutors",
+  });
+
+  const defenders = useWatch({
+    control,
+    name: "defenders",
+  });
+
+  const bailiffs = useWatch({
+    control,
+    name: "bailiffs",
+  });
+
+  const juryMembers: Record<TJuryRole, string[]> = {
+    judges,
+    jurors,
+    prosecutors,
+    defenders,
+    bailiffs,
+  };
+
+  const loadJury = useCallback(async () => {
     if (!slug) return;
 
-    const response = await booksService.getBySlug(slug);
-    const formData = mapBookToForm(response.data);
+    const response = await juriesService.getBySlug(slug);
+    const formData = mapJuryToForm(response.data);
 
     if (response.data.coverUrl) {
       setCoverPreview(response.data.coverUrl);
@@ -103,17 +141,25 @@ export function JuryForm() {
     if (!isEdit) return;
 
     (async () => {
-      await loadBook();
+      await loadJury();
     })();
-  }, [isEdit, loadBook, loadPeople]);
+  }, [isEdit, loadJury, loadPeople]);
 
-  function handleModal() {
+  function handleAddPersonModal({
+    title,
+    label,
+    selectedIds,
+    selectedIdRef,
+    onAdd,
+  }: AddPersonModalConfig) {
+    selectedIdRef.current = "";
+
     showModal({
-      title: "Adicionar autor",
+      title,
 
       content: (
         <div style={{ padding: "2rem 0rem" }}>
-          <p>Selecione um autor</p>
+          <p>{label}</p>
 
           <br />
 
@@ -121,17 +167,18 @@ export function JuryForm() {
             options={[
               {
                 value: "",
-                label: "Autores",
+                label: "Selecione um",
               },
+
               ...people
-                .filter((person) => !authors.includes(person.id))
+                .filter((person) => !selectedIds.includes(person.id))
                 .map((person) => ({
                   value: person.id,
                   label: person.name,
                 })),
             ]}
             onChange={(event) => {
-              selectedAuthorIdRef.current = event.target.value;
+              selectedIdRef.current = event.target.value;
 
               updateModal({
                 confirmDisabled: !event.target.value,
@@ -142,38 +189,40 @@ export function JuryForm() {
       ),
 
       confirmText: "Adicionar",
-
       cancelText: "Cancelar",
-
       confirmVariant: "success",
 
-      confirmDisabled: !selectedAuthorIdRef.current,
+      confirmDisabled: !selectedIdRef.current,
 
       onConfirm: () => {
-        handleAddAuthor(selectedAuthorIdRef.current);
+        if (!selectedIdRef.current) return;
+
+        onAdd(selectedIdRef.current);
       },
 
       onCancel: () => {
-        selectedAuthorIdRef.current = "";
+        selectedIdRef.current = "";
       },
     });
   }
 
-  function handleAddAuthor(personId: string) {
-    if (authors.includes(personId)) return;
+  function handleAddMember(field: TJuryRole, personId: string) {
+    const currentIds = juryMembers[field];
 
-    setValue("authors", [...authors, personId], {
+    if (currentIds.includes(personId)) return;
+
+    setValue(field, [...currentIds, personId], {
       shouldValidate: true,
       shouldDirty: true,
     });
-
-    selectedAuthorIdRef.current = "";
   }
 
-  function handleRemoveAuthor(personId: string) {
+  function handleRemoveMember(field: TJuryRole, personId: string) {
+    const currentIds = juryMembers[field];
+
     setValue(
-      "authors",
-      authors.filter((id) => id !== personId),
+      field,
+      currentIds.filter((id) => id !== personId),
       {
         shouldValidate: true,
         shouldDirty: true,
@@ -181,33 +230,33 @@ export function JuryForm() {
     );
   }
 
-  async function onSubmit(data: BookFormData) {
+  async function onSubmit(data: JuryFormData) {
     try {
       if (isEdit) {
-        await booksService.updateBySlug(slug!, data);
+        await juriesService.updateBySlug(slug!, data);
 
         showToast({
-          title: "Livro atualizado",
+          title: "Júri atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await booksService.create(mapBookToCreateDto(data), coverFile!);
+        await juriesService.create(mapJuryToCreateDto(data), coverFile!);
 
         showToast({
-          title: "Livro criado",
-          description: "O livro foi cadastrado com sucesso.",
+          title: "Júri criado",
+          description: "O júri foi cadastrado com sucesso.",
           type: "success",
         });
       }
 
-      navigate("/admin/livros");
+      navigate("/admin/juris");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
 
       showToast({
-        title: isEdit ? "Erro ao atualizar livro" : "Erro ao criar livro",
+        title: isEdit ? "Erro ao atualizar júri" : "Erro ao criar júri",
         description:
           message ?? "Não foi possível salvar os dados. Tente novamente.",
         type: "danger",
@@ -219,7 +268,7 @@ export function JuryForm() {
     if (!file) return;
 
     if (isEdit) {
-      const response = await booksService.updateCover(slug!, file);
+      const response = await juriesService.updateCover(slug!, file);
 
       setCoverPreview(response.data.url);
 
@@ -227,7 +276,7 @@ export function JuryForm() {
 
       showToast({
         title: "Capa atualizada com sucesso",
-        description: "A Capa do livro foi atualizada.",
+        description: "A Capa do júri foi atualizada.",
         type: "success",
       });
 
@@ -242,17 +291,17 @@ export function JuryForm() {
   return (
     <Container>
       <AdminPageHeader
-        title={isEdit ? "Editar livro" : "Novo livro"}
-        subtitle="Cadastre ou atualize os dados do livro."
+        title={isEdit ? "Editar júri" : "Novo júri"}
+        subtitle="Cadastre ou atualize os dados do júri."
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BookTopWrapper>
+        <JuryTopWrapper>
           <AdminFormGrid columns={1}>
             <AdminImageUpload
-              icon={<FiBook size={42} />}
+              icon={<GiInjustice size={42} />}
               label="Capa"
-              variant="portrait"
+              variant="square"
               imageUrl={coverPreview}
               onChange={handleUploadCover}
             />
@@ -263,7 +312,7 @@ export function JuryForm() {
               <AdminFormGrid>
                 <AdminInput
                   label="Título"
-                  placeholder="Título do livro"
+                  placeholder="Título do júri"
                   required
                   error={errors.title?.message}
                   {...register("title")}
@@ -275,90 +324,311 @@ export function JuryForm() {
                   disabled
                 />
 
-                <AdminInput
-                  label="Subtítulo"
-                  placeholder="Subtítulo do livro"
-                  error={errors.subtitle?.message}
-                  {...register("subtitle")}
-                />
-
-                <AdminInput
-                  label="Isbn"
-                  type="number"
-                  placeholder="Número isbn"
-                  error={errors.isbn?.message}
-                  {...register("isbn")}
-                />
-
-                <AdminYearInput
-                  label="Ano de publicação"
-                  placeholder="2025"
+                <AdminDateInput
+                  label="Data"
+                  placeholder="10/02/2025"
                   required
-                  {...register("year", { valueAsNumber: true })}
-                  error={errors.year?.message}
-                />
-
-                <AdminInput
-                  label="Editora"
-                  placeholder="Nome da editora"
-                  required
-                  error={errors.publisher?.message}
-                  {...register("publisher")}
-                />
-
-                <AdminInput
-                  label="Link"
-                  placeholder="Url do livro"
-                  required
-                  error={errors.externalUrl?.message}
-                  {...register("externalUrl")}
+                  {...register("date")}
+                  error={errors.date?.message}
                 />
               </AdminFormGrid>
+              <AdminInput
+                label="Local"
+                error={errors.location?.message}
+                {...register("location")}
+              />
             </AdminSection>
           </AdminFormCard>
-        </BookTopWrapper>
+        </JuryTopWrapper>
 
         <AdminFormCard>
           <AdminSection title="Descrição">
             <AdminTextarea
-              placeholder="Escreva uma breve descrição..."
+              placeholder="Escreva uma descrição..."
               error={errors.description?.message}
               {...register("description")}
             ></AdminTextarea>
           </AdminSection>
         </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection title="Links">
+            <AdminInput
+              label="Link da inscrição"
+              placeholder="ex: https://eventos.unicamp.br/inscricao"
+              error={errors.registrationUrl?.message}
+              {...register("registrationUrl")}
+            />
+            <AdminInput
+              label="Link da transmissão"
+              placeholder=" ex: https://meet.google.com/abc-defg-hij"
+              error={errors.meetingUrl?.message}
+              {...register("meetingUrl")}
+            />
+
+            <AdminInput
+              label="Link da gravação"
+              placeholder="ex: https://www.youtube.com/watch?v=abc123"
+              error={errors.recordingUrl?.message}
+              {...register("recordingUrl")}
+            />
+
+            <AdminInput
+              label="Link do documento"
+              placeholder="ex: https://eventos.unicamp.br/documento222"
+              error={errors.documentUrl?.message}
+              {...register("documentUrl")}
+            />
+          </AdminSection>
+        </AdminFormCard>
+
         <AdminFormCard>
           <AdminSection
-            title="Autores"
+            title="Juízes"
             action={
-              <AdminButton size="medium" type="button" onClick={handleModal}>
+              <AdminButton
+                size="medium"
+                type="button"
+                onClick={() =>
+                  handleAddPersonModal({
+                    title: "Adicionar juiz",
+                    label: "Juízes",
+                    selectedIds: judges,
+                    selectedIdRef: selectedJudgeIdRef,
+                    onAdd: (personId: string) =>
+                      handleAddMember("judges", personId),
+                  })
+                }
+              >
                 <FiPlus />
               </AdminButton>
             }
           >
-            <AuthorList>
-              {authors.map((authorId) => {
-                const author = people.find((person) => person.id === authorId);
+            <MemberList>
+              {judges.map((judgeId) => {
+                const judge = people.find((person) => person.id === judgeId);
 
-                if (!author) return null;
+                if (!judge) return null;
 
                 return (
-                  <AuthorItem key={author.id}>
-                    <span>{`${author.academicTitle?.abbreviation} ${author.name} - ${author.institution?.acronym} `}</span>
+                  <MemberItem key={judge.id}>
+                    <span>{`${judge.academicTitle?.abbreviation} ${judge.name} - ${judge.institution?.acronym} `}</span>
 
                     <button
                       type="button"
-                      onClick={() => handleRemoveAuthor(author.id)}
+                      onClick={() => handleRemoveMember("judges", judge.id)}
                     >
                       <FiTrash2 />
                     </button>
-                  </AuthorItem>
+                  </MemberItem>
                 );
               })}
-            </AuthorList>
+            </MemberList>
 
-            {errors.authors && (
-              <AdminError>{errors.authors.message}</AdminError>
+            {errors.judges && <AdminError>{errors.judges.message}</AdminError>}
+          </AdminSection>
+        </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection
+            title="Jurados"
+            action={
+              <AdminButton
+                size="medium"
+                type="button"
+                onClick={() =>
+                  handleAddPersonModal({
+                    title: "Adicionar jurado",
+                    label: "Jurados",
+                    selectedIds: jurors,
+                    selectedIdRef: selectedJurorIdRef,
+                    onAdd: (personId: string) =>
+                      handleAddMember("jurors", personId),
+                  })
+                }
+              >
+                <FiPlus />
+              </AdminButton>
+            }
+          >
+            <MemberList>
+              {jurors.map((jurorId) => {
+                const juror = people.find((person) => person.id === jurorId);
+
+                if (!juror) return null;
+
+                return (
+                  <MemberItem key={juror.id}>
+                    <span>{`${juror.academicTitle?.abbreviation} ${juror.name} - ${juror.institution?.acronym} `}</span>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveMember("jurors", juror.id)}
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </MemberItem>
+                );
+              })}
+            </MemberList>
+
+            {errors.jurors && <AdminError>{errors.jurors.message}</AdminError>}
+          </AdminSection>
+        </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection
+            title="Promotores"
+            action={
+              <AdminButton
+                size="medium"
+                type="button"
+                onClick={() =>
+                  handleAddPersonModal({
+                    title: "Adicionar promotor",
+                    label: "Promotores",
+                    selectedIds: prosecutors,
+                    selectedIdRef: selectedProsecutorIdRef,
+                    onAdd: (personId: string) =>
+                      handleAddMember("prosecutors", personId),
+                  })
+                }
+              >
+                <FiPlus />
+              </AdminButton>
+            }
+          >
+            <MemberList>
+              {prosecutors.map((prosecutorId) => {
+                const prosecutor = people.find(
+                  (person) => person.id === prosecutorId,
+                );
+
+                if (!prosecutor) return null;
+
+                return (
+                  <MemberItem key={prosecutor.id}>
+                    <span>{`${prosecutor.academicTitle?.abbreviation} ${prosecutor.name} - ${prosecutor.institution?.acronym} `}</span>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleRemoveMember("prosecutors", prosecutor.id)
+                      }
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </MemberItem>
+                );
+              })}
+            </MemberList>
+
+            {errors.prosecutors && (
+              <AdminError>{errors.prosecutors.message}</AdminError>
+            )}
+          </AdminSection>
+        </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection
+            title="Defensores"
+            action={
+              <AdminButton
+                size="medium"
+                type="button"
+                onClick={() =>
+                  handleAddPersonModal({
+                    title: "Adicionar defensor",
+                    label: "Defensores",
+                    selectedIds: defenders,
+                    selectedIdRef: selectedDefenderIdRef,
+                    onAdd: (personId: string) =>
+                      handleAddMember("defenders", personId),
+                  })
+                }
+              >
+                <FiPlus />
+              </AdminButton>
+            }
+          >
+            <MemberList>
+              {defenders.map((defenderId) => {
+                const defender = people.find(
+                  (person) => person.id === defenderId,
+                );
+
+                if (!defender) return null;
+
+                return (
+                  <MemberItem key={defender.id}>
+                    <span>{`${defender.academicTitle?.abbreviation} ${defender.name} - ${defender.institution?.acronym} `}</span>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleRemoveMember("defenders", defender.id)
+                      }
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </MemberItem>
+                );
+              })}
+            </MemberList>
+
+            {errors.defenders && (
+              <AdminError>{errors.defenders.message}</AdminError>
+            )}
+          </AdminSection>
+        </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection
+            title="oficial de justiça"
+            action={
+              <AdminButton
+                size="medium"
+                type="button"
+                onClick={() =>
+                  handleAddPersonModal({
+                    title: "Adicionar Oficial de justiça",
+                    label: "Oficiais de justiça",
+                    selectedIds: bailiffs,
+                    selectedIdRef: selectedBailiffIdRef,
+                    onAdd: (personId: string) =>
+                      handleAddMember("bailiffs", personId),
+                  })
+                }
+              >
+                <FiPlus />
+              </AdminButton>
+            }
+          >
+            <MemberList>
+              {bailiffs.map((bailiffId) => {
+                const bailiff = people.find(
+                  (person) => person.id === bailiffId,
+                );
+
+                if (!bailiff) return null;
+
+                return (
+                  <MemberItem key={bailiff.id}>
+                    <span>{`${bailiff.academicTitle?.abbreviation} ${bailiff.name} - ${bailiff.institution?.acronym} `}</span>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveMember("bailiffs", bailiff.id)}
+                    >
+                      <FiTrash2 />
+                    </button>
+                  </MemberItem>
+                );
+              })}
+            </MemberList>
+
+            {errors.bailiffs && (
+              <AdminError>{errors.bailiffs.message}</AdminError>
             )}
           </AdminSection>
         </AdminFormCard>

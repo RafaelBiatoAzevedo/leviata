@@ -65,6 +65,8 @@ export const Photo = styled.img`
 export const Name = styled.h2`
   margin: 0;
 
+  text-align: center;
+
   font-size: 1.8rem;
 
   font-weight: 700;

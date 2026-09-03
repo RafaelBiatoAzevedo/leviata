@@ -1,7 +1,7 @@
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import {
-  BookTitle,
+  JuryTitle,
   Container,
   ContentWrapper,
   Cover,
@@ -13,14 +13,15 @@ import {
 } from "./styles";
 import { useNavigate, useParams } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
-import { booksService } from "../../../services/books";
+import { juriesService } from "../../../services/juries";
 import { useToast } from "../../../../hooks/useToast";
-import type { BookResponseDto } from "../../../dtos/books/BookResponseDto";
+import type { JuryResponseDto } from "../../../dtos/juries/JuryResponseDto";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
 import { AdminLoading } from "../../../components/AdminLoading";
+import { formatDate } from "../../../utils/formatDate";
 
 export function JuryView() {
   const navigate = useNavigate();
@@ -29,15 +30,15 @@ export function JuryView() {
 
   const { slug } = useParams();
 
-  const [book, setBook] = useState<BookResponseDto | null>(null);
+  const [jury, setJury] = useState<JuryResponseDto | null>(null);
 
-  const loadBook = useCallback(async () => {
+  const loadJury = useCallback(async () => {
     try {
-      const response = await booksService.getBySlug(slug!);
-      setBook(response.data);
+      const response = await juriesService.getBySlug(slug!);
+      setJury(response.data);
     } catch (error) {
       showToast({
-        title: "Ops! Não foi possível carregar o livro",
+        title: "Ops! Não foi possível carregar o júri",
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });
@@ -45,15 +46,15 @@ export function JuryView() {
   }, [showToast, slug]);
 
   useEffect(() => {
-    if (!book) {
+    if (!jury) {
       (async () => {
-        await loadBook();
+        await loadJury();
       })();
     }
-  }, [book, loadBook]);
+  }, [jury, loadJury]);
 
-  if (!book) {
-    return <AdminLoading text="Carregando livro..." />;
+  if (!jury) {
+    return <AdminLoading text="Carregando júri..." />;
   }
 
   return (
@@ -65,57 +66,129 @@ export function JuryView() {
             Voltar
           </AdminButton>
 
-          <AdminButton onClick={() => navigate(`/admin/livros/${slug}/editar`)}>
+          <AdminButton onClick={() => navigate(`/admin/juris/${slug}/editar`)}>
             <FiEdit2 />
             Editar
           </AdminButton>
         </HeaderActions>
 
-        <Title>Livro</Title>
+        <Title>Júri</Title>
       </Header>
 
       <ContentWrapper>
-        <CoverWrapper to={book.externalUrl} target={"_blank"}>
-          <Cover src={book.coverUrl} />
+        <CoverWrapper to={jury.recordingUrl!} target={"_blank"}>
+          <Cover src={jury.coverUrl!} />
 
-          <BookTitle>{book.title}</BookTitle>
+          <JuryTitle>{jury.title}</JuryTitle>
 
-          <Subtitle>{book.year}</Subtitle>
+          <Subtitle>{formatDate(jury.date)}</Subtitle>
         </CoverWrapper>
 
         <AdminFormCard>
           <AdminSection title="Dados Gerais">
             <AdminDescriptionList>
-              <AdminDescriptionItem label="Título" value={book.title} />
+              <AdminDescriptionItem label="Título" value={jury.title} />
 
-              <AdminDescriptionItem label="Slug" value={book.slug} />
+              <AdminDescriptionItem label="Slug" value={jury.slug} />
 
-              <AdminDescriptionItem label="Subtítulo" value={book.subtitle} />
-
-              <AdminDescriptionItem label="Isbn" value={book.isbn} />
-
-              <AdminDescriptionItem label="Ano" value={book.year} />
-
-              <AdminDescriptionItem label="Editora" value={book.publisher} />
-
-              <AdminDescriptionItem label="Link" value={book.externalUrl} />
+              <AdminDescriptionItem
+                label="Data"
+                value={formatDate(jury.date)}
+              />
             </AdminDescriptionList>
+            <AdminDescriptionItem label="Local" value={jury.location} />
           </AdminSection>
         </AdminFormCard>
       </ContentWrapper>
+
       <AdminFormCard>
         <AdminSection title="Descrição">
-          <AdminDescriptionItem label="Descrição" value={book.description} />
+          <AdminDescriptionItem label="Descrição" value={jury.description} />
         </AdminSection>
       </AdminFormCard>
+
       <AdminFormCard>
-        <AdminSection
-          title={`${book.authors.length > 1 ? "Autores" : "Autor"}`}
-        >
-          {book.authors.map((author, index) => (
+        <AdminSection title="Links">
+          <AdminDescriptionItem
+            label="Link da inscrição"
+            value={jury.registrationUrl}
+          />
+
+          <AdminDescriptionItem
+            label="Link da transmissão"
+            value={jury.meetingUrl}
+          />
+
+          <AdminDescriptionItem
+            label="Link da gravação"
+            value={jury.recordingUrl}
+          />
+
+          <AdminDescriptionItem
+            label="Link do documento"
+            value={jury.documentUrl}
+          />
+        </AdminSection>
+      </AdminFormCard>
+
+      <AdminFormCard>
+        <AdminSection title={`${jury.judges.length > 1 ? "Juízes" : "Juiz"}`}>
+          {jury.judges.map((judge, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${author.academicTitle!.abbreviation} ${author.name} - ${author.institution!.acronym}`}
+              value={`${judge.academicTitle!.abbreviation} ${judge.name} - ${judge.institution!.acronym}`}
+            />
+          ))}
+        </AdminSection>
+      </AdminFormCard>
+
+      <AdminFormCard>
+        <AdminSection
+          title={`${jury.jurors.length > 1 ? "Jurados" : "Jurado"}`}
+        >
+          {jury.jurors.map((juror, index) => (
+            <AdminDescriptionItem
+              key={index}
+              value={`${juror.academicTitle!.abbreviation} ${juror.name} - ${juror.institution!.acronym}`}
+            />
+          ))}
+        </AdminSection>
+      </AdminFormCard>
+
+      <AdminFormCard>
+        <AdminSection
+          title={`${jury.prosecutors.length > 1 ? "Promotores" : "Promotor"}`}
+        >
+          {jury.prosecutors.map((prosecutor, index) => (
+            <AdminDescriptionItem
+              key={index}
+              value={`${prosecutor.academicTitle!.abbreviation} ${prosecutor.name} - ${prosecutor.institution!.acronym}`}
+            />
+          ))}
+        </AdminSection>
+      </AdminFormCard>
+
+      <AdminFormCard>
+        <AdminSection
+          title={`${jury.defenders.length > 1 ? "Defensores" : "Defensor"}`}
+        >
+          {jury.defenders.map((defender, index) => (
+            <AdminDescriptionItem
+              key={index}
+              value={`${defender.academicTitle!.abbreviation} ${defender.name} - ${defender.institution!.acronym}`}
+            />
+          ))}
+        </AdminSection>
+      </AdminFormCard>
+
+      <AdminFormCard>
+        <AdminSection
+          title={`${jury.bailiffs.length > 1 ? "Oficiais de justiça" : "Ofical de justiça"}`}
+        >
+          {jury.bailiffs.map((bailiff, index) => (
+            <AdminDescriptionItem
+              key={index}
+              value={`${bailiff.academicTitle!.abbreviation} ${bailiff.name} - ${bailiff.institution!.acronym}`}
             />
           ))}
         </AdminSection>

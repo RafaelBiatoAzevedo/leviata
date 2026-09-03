@@ -77,6 +77,7 @@ export const Cover = styled.img`
 
 export const NewsTitle = styled.h2`
   margin: 0;
+
   text-align: center;
 
   font-size: 1.4rem;

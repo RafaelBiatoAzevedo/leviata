@@ -9,7 +9,7 @@ export const Container = styled.div`
 `;
 
 export const Cover = styled.img`
-  width: 30px;
+  width: 42px;
 
   height: 42px;
 
@@ -19,7 +19,7 @@ export const Cover = styled.img`
 `;
 
 export const CoverPlaceholder = styled.div`
-  width: 30px;
+  width: 42px;
 
   height: 42px;
 
@@ -30,8 +30,6 @@ export const CoverPlaceholder = styled.div`
   align-items: center;
 
   justify-content: center;
-
-  background: ${({ theme }) => theme.colors.background};
 
   color: ${({ theme }) => theme.colors.text};
 

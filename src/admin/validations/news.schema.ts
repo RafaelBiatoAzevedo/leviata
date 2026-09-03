@@ -31,11 +31,7 @@ export const newsSchema = z.object({
 
   isInternal: z.boolean(),
 
-  externalUrl: z
-    .string()
-    .url("Informe uma URL válida.")
-    .optional()
-    .or(z.literal("")),
+  externalUrl: z.string().url("Informe uma URL válida.").or(z.literal("")),
 
   relatedType: z
     .enum(

@@ -19,7 +19,7 @@ export const Cover = styled.img`
 `;
 
 export const CoverPlaceholder = styled.div`
-  width: 30px;
+  width: 42px;
 
   height: 42px;
 

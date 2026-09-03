@@ -66,7 +66,7 @@ export const CoverWrapper = styled(Link)`
 export const Cover = styled.img`
   width: 220px;
 
-  height: 320px;
+  height: 220px;
 
   border-radius: 4px;
 
@@ -75,8 +75,10 @@ export const Cover = styled.img`
   border: 2px solid ${({ theme }) => theme.colors.primary};
 `;
 
-export const BookTitle = styled.h2`
+export const JuryTitle = styled.h2`
   margin: 0;
+
+  text-align: center;
 
   font-size: 1.4rem;
 

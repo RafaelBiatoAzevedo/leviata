@@ -1,12 +1,16 @@
-import type { BookFormData } from "../../../validations/book.schema";
+import type { JuryFormData } from "../../../validations/jury.schema";
 
-export const bookDefaultValues: BookFormData = {
+export const juryDefaultValues: JuryFormData = {
   title: "",
-  subtitle: "",
-  description: "",
-  isbn: "",
-  year: 0,
-  publisher: "",
-  externalUrl: "",
-  authors: [],
+  date: "",
+
+  judges: [],
+  jurors: [],
+  prosecutors: [],
+  defenders: [],
+  bailiffs: [],
+
+  registrationUrl: "",
+  recordingUrl: "",
+  meetingUrl: "",
 };

@@ -16,7 +16,7 @@ export const Form = styled.form`
   gap: 2rem;
 `;
 
-export const BookTopWrapper = styled.div`
+export const JuryTopWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 2rem;
@@ -26,7 +26,7 @@ export const BookTopWrapper = styled.div`
   }
 `;
 
-export const AuthorList = styled.div`
+export const MemberList = styled.div`
   display: flex;
 
   flex-direction: column;
@@ -36,7 +36,7 @@ export const AuthorList = styled.div`
   margin-top: 16px;
 `;
 
-export const AuthorItem = styled.div`
+export const MemberItem = styled.div`
   display: flex;
 
   align-items: center;

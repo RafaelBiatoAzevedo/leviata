@@ -65,7 +65,7 @@ const menus = [
     children: [
       { label: "Atividades", path: "/atividades" },
       {
-        label: 'Nucleo de Pesquisa "Em costas negras"',
+        label: "Pesquisas",
         path: "/atividades/nucleo-de-pesquisa-em-costas-negras",
       },
       { label: "Júris Históricos", path: "/atividades/juris-historicos" },

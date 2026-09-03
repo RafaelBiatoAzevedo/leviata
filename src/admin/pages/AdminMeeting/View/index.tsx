@@ -68,7 +68,7 @@ export function MeetingView() {
           </AdminButton>
 
           <AdminButton
-            onClick={() => navigate(`/admin/reunioes/${slug}/editar`)}
+            onClick={() => navigate(`/admin/encontros/${slug}/editar`)}
           >
             <FiEdit2 />
             Editar
@@ -127,6 +127,7 @@ export function MeetingView() {
           <AdminDescriptionItem label="Descrição" value={meeting.description} />
         </AdminSection>
       </AdminFormCard>
+
       <AdminFormCard>
         <AdminSection
           title={`${meeting.speakers.length > 1 ? "Participantes" : "Participante"}`}

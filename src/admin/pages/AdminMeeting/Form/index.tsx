@@ -287,6 +287,7 @@ export function MeetingForm() {
                   {...register("type")}
                 ></AdminSelect>
               </AdminFormGrid>
+
               <AdminInput
                 label="Local"
                 error={errors.location?.message}
@@ -300,16 +301,19 @@ export function MeetingForm() {
           <AdminSection title="Links">
             <AdminInput
               label="Link de inscrições"
+              placeholder="ex: https://eventos.unicamp.br/inscricao"
               error={errors.registrationUrl?.message}
               {...register("registrationUrl")}
             />
             <AdminInput
               label="Link do conteúdo"
+              placeholder=" ex: https://meet.google.com/abc-defg-hij"
               error={errors.recordingUrl?.message}
               {...register("recordingUrl")}
             />
             <AdminInput
               label="Link da transmissão"
+              placeholder="ex: https://www.youtube.com/watch?v=abc123"
               error={errors.meetingUrl?.message}
               {...register("meetingUrl")}
             />

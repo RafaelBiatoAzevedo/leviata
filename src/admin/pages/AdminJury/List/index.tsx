@@ -1,4 +1,4 @@
-import { FiBook, FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
@@ -6,7 +6,6 @@ import {
   Container,
   Cover,
   CoverPlaceholder,
-  DescriptionCell,
   Empty,
   Filters,
 } from "./styles";
@@ -15,11 +14,13 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
-import type { BookResponseDto } from "../../../dtos/books/BookResponseDto";
-import { booksService } from "../../../services/books";
 import { AdminTable } from "../../../components/AdminTable";
 import { AdminIconButton } from "../../../components/AdminIconButton";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
+import type { JuryResponseDto } from "../../../dtos/juries/JuryResponseDto";
+import { GiInjustice } from "react-icons/gi";
+import { juriesService } from "../../../services/juries";
+import { formatDate } from "../../../utils/formatDate";
 
 export function AdminJuries() {
   const [search, setSearch] = useState("");
@@ -31,14 +32,14 @@ export function AdminJuries() {
 
   const [loading, setLoading] = useState(true);
 
-  const [books, setBooks] = useState<BookResponseDto[]>([]);
+  const [juries, setJuries] = useState<JuryResponseDto[]>([]);
 
   const load = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await booksService.getAll();
+      const response = await juriesService.getAll();
 
-      setBooks(response.data);
+      setJuries(response.data);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
@@ -59,19 +60,19 @@ export function AdminJuries() {
     })();
   }, [load]);
 
-  const filteredBooks = books.filter((book) => {
+  const filteredJuries = juries.filter((jury) => {
     const matchesSearch =
-      book.title.toLowerCase().includes(search.toLowerCase()) ||
-      book.slug.toLowerCase().includes(search.toLowerCase());
+      jury.title.toLowerCase().includes(search.toLowerCase()) ||
+      jury.slug.toLowerCase().includes(search.toLowerCase());
 
     return matchesSearch;
   });
 
-  function handleDelete(book: BookResponseDto) {
+  function handleDelete(jury: JuryResponseDto) {
     showModal({
-      title: "Excluir livro",
+      title: "Excluir júri",
 
-      content: <AdminDeleteContent title={book.title} />,
+      content: <AdminDeleteContent title={jury.title} />,
 
       confirmText: "Excluir",
 
@@ -80,11 +81,11 @@ export function AdminJuries() {
       confirmVariant: "danger",
 
       onConfirm: async () => {
-        await booksService.removeBySlug(book.slug);
+        await juriesService.removeBySlug(jury.slug);
 
         showToast({
-          title: "Livro excluído",
-          description: `${book.title.toUpperCase()}`,
+          title: "Júri excluído",
+          description: `${jury.title.toUpperCase()}`,
           type: "success",
         });
 
@@ -97,15 +98,28 @@ export function AdminJuries() {
     });
   }
 
+  const calculateMembers = (juri: JuryResponseDto) => {
+    const totalJudges = juri.judges.length;
+    const totalJurors = juri.jurors.length;
+    const totalDefenders = juri.defenders.length;
+    const totalProsecutors = juri.prosecutors.length;
+    const totalBailiffs = juri.bailiffs.length;
+
+    return (
+      totalJudges +
+      totalJurors +
+      totalDefenders +
+      totalProsecutors +
+      totalBailiffs
+    );
+  };
+
   return (
     <Container>
-      <AdminPageHeader
-        title="Livros"
-        subtitle="Gerencie os livros cadastrados."
-      >
-        <AdminButton onClick={() => navigate("/admin/livros/novo")}>
+      <AdminPageHeader title="Júris" subtitle="Gerencie os júris cadastrados.">
+        <AdminButton onClick={() => navigate("/admin/juris/novo")}>
           <FiPlus />
-          Novo Livro
+          Novo Júri
         </AdminButton>
       </AdminPageHeader>
 
@@ -113,7 +127,7 @@ export function AdminJuries() {
         <AdminSearchBar
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pesquisar livros..."
+          placeholder="Pesquisar júris..."
         />
       </Filters>
 
@@ -122,48 +136,43 @@ export function AdminJuries() {
           <tr>
             <th>Capa</th>
             <th>Título</th>
-            <th>Descrição</th>
-            <th>Ano</th>
-            <th>Publicação</th>
+            <th>Data</th>
+            <th>N° Participantes</th>
             <th>Ações</th>
           </tr>
         </thead>
 
         <tbody>
           {!loading &&
-            filteredBooks.map((book) => (
-              <tr key={book.id}>
+            filteredJuries.map((jury) => (
+              <tr key={jury.id}>
                 <td>
-                  {book.coverUrl ? (
-                    <Cover src={book.coverUrl} alt={book.title} />
+                  {jury.coverUrl ? (
+                    <Cover src={jury.coverUrl} alt={jury.title} />
                   ) : (
                     <CoverPlaceholder>
-                      <FiBook />
+                      <GiInjustice />
                     </CoverPlaceholder>
                   )}
                 </td>
 
                 <td>
-                  <strong>{book.title}</strong>
+                  <strong>{jury.title}</strong>
 
                   <br />
 
-                  <small>{book.slug}</small>
+                  <small>{jury.slug}</small>
                 </td>
 
-                <td>
-                  <DescriptionCell>{book.description}</DescriptionCell>
-                </td>
+                <td>{formatDate(jury.date)}</td>
 
-                <td>{book.year}</td>
-
-                <td>{book.publisher}</td>
+                <td>{calculateMembers(jury)}</td>
 
                 <td>
                   <Actions>
                     <AdminIconButton
                       title="Visualizar"
-                      onClick={() => navigate(`/admin/livros/${book.slug}`)}
+                      onClick={() => navigate(`/admin/juris/${jury.slug}`)}
                     >
                       <FiEye />
                     </AdminIconButton>
@@ -171,7 +180,7 @@ export function AdminJuries() {
                     <AdminIconButton
                       title="Editar"
                       onClick={() =>
-                        navigate(`/admin/livros/${book.slug}/editar`)
+                        navigate(`/admin/juris/${jury.slug}/editar`)
                       }
                     >
                       <FiEdit2 />
@@ -179,7 +188,7 @@ export function AdminJuries() {
 
                     <AdminIconButton
                       title="Excluir"
-                      onClick={() => handleDelete(book)}
+                      onClick={() => handleDelete(jury)}
                     >
                       <FiTrash2 />
                     </AdminIconButton>
@@ -190,8 +199,8 @@ export function AdminJuries() {
         </tbody>
       </AdminTable>
 
-      {!loading && filteredBooks.length === 0 && (
-        <Empty>Nenhum livro encontrado.</Empty>
+      {!loading && filteredJuries.length === 0 && (
+        <Empty>Nenhum júri encontrado.</Empty>
       )}
     </Container>
   );

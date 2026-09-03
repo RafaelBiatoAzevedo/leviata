@@ -14,7 +14,10 @@ export const Container = styled.nav`
 
   padding: 0 8%;
   background: ${({ theme }) => theme.colors.surface};
-  border-bottom: 2px solid ${({ theme }) => theme.colors.border};
+
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
 
   z-index: 1000;
