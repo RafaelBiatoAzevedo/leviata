@@ -11,21 +11,21 @@ import { PersonView } from "../pages/AdminPeople/View";
 import { AdminBooks } from "../pages/AdminBooks/List";
 import { BookView } from "../pages/AdminBooks/View";
 import { BookForm } from "../pages/AdminBooks/Form";
-import { AdminArticles } from "../pages/AdminArticle/List";
-import { ArticleView } from "../pages/AdminArticle/View";
-import { ArticleForm } from "../pages/AdminArticle/Form";
+import { AdminArticles } from "../pages/AdminArticles/List";
+import { ArticleView } from "../pages/AdminArticles/View";
+import { ArticleForm } from "../pages/AdminArticles/Form";
 import { AdminNews } from "../pages/AdminNews/List";
 import { NewsView } from "../pages/AdminNews/View";
 import { NewsForm } from "../pages/AdminNews/Form";
-import { AdminMeetings } from "../pages/AdminMeeting/List";
-import { MeetingView } from "../pages/AdminMeeting/View";
-import { MeetingForm } from "../pages/AdminMeeting/Form";
-import { AdminBoards } from "../pages/AdminBoard/List";
-import { BoardView } from "../pages/AdminBoard/View";
-import { BoardForm } from "../pages/AdminBoard/Form";
-import { AdminJuries } from "../pages/AdminJury/List";
-import { JuryView } from "../pages/AdminJury/View";
-import { JuryForm } from "../pages/AdminJury/Form";
+import { AdminMeetings } from "../pages/AdminMeetings/List";
+import { MeetingView } from "../pages/AdminMeetings/View";
+import { MeetingForm } from "../pages/AdminMeetings/Form";
+import { AdminBoards } from "../pages/AdminBoards/List";
+import { BoardView } from "../pages/AdminBoards/View";
+import { BoardForm } from "../pages/AdminBoards/Form";
+import { AdminJuries } from "../pages/AdminJuries/List";
+import { JuryView } from "../pages/AdminJuries/View";
+import { JuryForm } from "../pages/AdminJuries/Form";
 
 export const adminRoutes = (
   <Route
