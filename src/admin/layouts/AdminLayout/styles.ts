@@ -113,7 +113,7 @@ export const Navigation = styled.nav`
 export const NavItem = styled(NavLink)`
   height: 48px;
 
-  border-radius: 12px;
+  border-radius: 0.6rem;
 
   display: flex;
 

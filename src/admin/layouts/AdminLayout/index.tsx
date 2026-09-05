@@ -15,6 +15,8 @@ import {
   FiAward,
 } from "react-icons/fi";
 
+import { MdOutlinePresentToAll } from "react-icons/md";
+
 import { BiNews } from "react-icons/bi";
 import { TbDoorEnter } from "react-icons/tb";
 
@@ -138,6 +140,15 @@ export function AdminLayout() {
             <GiInjustice />
 
             {!collapsed && <span>Juris</span>}
+          </NavItem>
+
+          <NavItem
+            to="/admin/apresentacoes-trabalhos"
+            title="Apresentações de Trabalhos"
+          >
+            <MdOutlinePresentToAll />
+
+            {!collapsed && <span>Apres. de Trabalhos</span>}
           </NavItem>
 
           <NavItem to="/admin/banco-de-dados" title="Banco de Dados">
