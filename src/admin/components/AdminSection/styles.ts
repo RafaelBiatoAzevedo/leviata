@@ -25,6 +25,8 @@ export const Title = styled.h2`
 
   font-size: 0.95rem;
 
+  font-weight: 800;
+
   text-transform: uppercase;
 
   letter-spacing: 0.08em;

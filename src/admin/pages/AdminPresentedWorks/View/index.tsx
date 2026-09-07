@@ -83,8 +83,8 @@ export function PresentedWorkView() {
             />
 
             <AdminDescriptionItem
-              label="Link da banca"
-              value={presentedWork.meetingUrl}
+              label="Relacionada com encontro"
+              value={presentedWork.meetingId}
             />
           </AdminDescriptionList>
 
@@ -130,7 +130,7 @@ export function PresentedWorkView() {
       </AdminFormCard>
 
       <AdminFormCard>
-        <AdminSection title="Fotos">
+        <AdminSection title="Imagens">
           <></>
         </AdminSection>
       </AdminFormCard>
