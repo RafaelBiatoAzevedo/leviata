@@ -29,6 +29,9 @@ import { JuryForm } from "../pages/AdminJuries/Form";
 import { AdminPresentedWorks } from "../pages/AdminPresentedWorks/List";
 import { PresentedWorkView } from "../pages/AdminPresentedWorks/View";
 import { PresentedWorkForm } from "../pages/AdminPresentedWorks/Form";
+import { AdminThematics } from "../pages/AdminThematics/List";
+import { ThematicView } from "../pages/AdminThematics/View";
+import { ThematicForm } from "../pages/AdminThematics/Form";
 
 export const adminRoutes = (
   <Route
@@ -121,5 +124,14 @@ export const adminRoutes = (
       path="apresentacoes-trabalhos/:slug/editar"
       element={<PresentedWorkForm />}
     />
+
+    {/* Thematics */}
+    <Route path="tematicas" element={<AdminThematics />} />
+
+    <Route path="tematicas/:slug" element={<ThematicView />} />
+
+    <Route path="tematicas/novo" element={<ThematicForm />} />
+
+    <Route path="tematicas/:slug/editar" element={<ThematicForm />} />
   </Route>
 );

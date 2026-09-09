@@ -24,6 +24,7 @@ import {
   TimeLineAuthor,
   TimeLineEvent,
   Subtitle,
+  TimelineSubTitle,
 } from "./styles";
 import { ArticleCard } from "../../components/ArticlesCard";
 import type { BookResponseDto } from "../../admin/dtos/books/BookResponseDto";
@@ -31,107 +32,9 @@ import { booksService } from "../../admin/services/books";
 import type { ArticleResponseDto } from "../../admin/dtos/articles/ArticleResponseDto";
 import { articlesService } from "../../admin/services/articles";
 import { ArticleType } from "../../admin/types/TArticleType";
-
-export const presentedWorksMock = [
-  {
-    author: "Marília Tofanetto Alves",
-
-    title:
-      "Concubinato, família, e tensões domésticas e conjugais na São Paulo setecentista",
-
-    event:
-      "Companheiras ou Propriedade: Concubinato e Escravidão no Mundo Luso-Atlântico",
-
-    year: "2025",
-  },
-  {
-    author: "Gabriel do Nascimento Barbosa",
-
-    title:
-      "Da escravidão ao pós-abolição em Franca-SP: a trajetória de Manoel Vallim (1860-1921)",
-
-    event:
-      "I Encontro Internacional do Grupo de Pesquisa “Leviatã e o Cativeiro”: Escravidão, Direito e instituições luso-brasileiras",
-
-    year: "2024",
-  },
-  {
-    author: "Larissa Biato de Azevedo",
-
-    title:
-      "O contrabando de africanos no expediente das primeiras autoridades policiais do Império brasileiro (1827-1841)",
-
-    event:
-      "II Encontro Internacional de Novos Pesquisadores em História da Polícia e do Crime",
-
-    year: "2024",
-  },
-  {
-    author: "Maria Fernanda Minutti Teixeira",
-
-    title:
-      "O papel dos relatos de viagem e de pensamentos iluministas no debate antiescravista europeu",
-
-    event:
-      "I Encontro Internacional do Grupo de Pesquisa “Leviatã e o Cativeiro”: Escravidão, Direito e instituições luso-brasileiras",
-
-    year: "2024",
-  },
-  {
-    author: "Mariana de Oliveira Lima",
-
-    title:
-      "O caminho e o papel da criança escrava no tráfico interno no século XIX (1809-1834)",
-
-    event:
-      "I Encontro Internacional do Grupo de Pesquisa “Leviatã e o Cativeiro”: Escravidão, Direito e instituições luso-brasileiras",
-
-    year: "2024",
-  },
-  {
-    author: "Ricardo Alexandre Ferreira",
-
-    title: "Pensamiento jurídico sobre la esclavitud (siglos XVII y XVIII)",
-
-    event:
-      "XX Congreso de la Asociación de Historiadores Latinoamericanista Europeos (AHILA): Entre América y Mediterráneo. Actores, ideas, circulaciones en los mundos ibéricos",
-
-    year: "2024",
-  },
-  {
-    author: "Sofia Zambelli Menck",
-
-    title:
-      "Os ‘Quakers’ e a condenação da escravidão no Rio de Janeiro (1840-1850)",
-
-    event:
-      "I Encontro Internacional do Grupo de Pesquisa “Leviatã e o Cativeiro”: Escravidão, Direito e instituições luso-brasileiras",
-
-    year: "2024",
-  },
-  {
-    author: "Talyssa de Souza Soares",
-
-    title:
-      "Entre a cruz e os grilhões: Duas perspectivas católicas sobre a escravidão de africanos no Brasil colonial",
-
-    event:
-      "I Encontro Internacional do Grupo de Pesquisa “Leviatã e o Cativeiro”: Escravidão, Direito e instituições luso-brasileiras",
-
-    year: "2024",
-  },
-  {
-    author: "Maria Isabela da Silva Gomes",
-
-    title:
-      "A reafirmação da cidadania de negros e mestiços livres na primeira metade do século XIX em O Homem De Côr (1833)",
-
-    event:
-      "XIII Encontro Estadual da ANPUH-GO: História, Crise Ambiental e Vulnerabilidades Sociais",
-
-    year: "2022",
-  },
-];
+import type { PresentedWorkResponseDto } from "../../admin/dtos/presentedWorks/PresentedWorkResponseDto";
+import { presentedWorksService } from "../../admin/services/presentedWorks";
+import { formatDate } from "../../admin/utils/formatDate";
 
 type TabType = "books" | "articles" | "presentations" | "dossiers";
 
@@ -149,12 +52,19 @@ export function Publications() {
     [] as ArticleResponseDto[],
   );
 
+  const [presentedWorks, setPresentedWorks] = useState<
+    PresentedWorkResponseDto[]
+  >([] as PresentedWorkResponseDto[]);
+
   const load = useCallback(async () => {
     try {
       const responseBooks = await booksService.getAll();
       const responseArticles = await articlesService.getAll();
+      const responsePresentedWorks = await presentedWorksService.getAll();
 
       setBooks(responseBooks.data);
+      setPresentedWorks(responsePresentedWorks.data);
+
       setArticles(
         responseArticles.data.filter(
           (article) => article.type === ArticleType.ARTICLE,
@@ -279,18 +189,23 @@ export function Publications() {
               pesquisadores do grupo.
             </Subtitle>
             <Timeline>
-              {presentedWorksMock.map((work, index) => (
+              {presentedWorks.map((work, index) => (
                 <TimelineItem key={index}>
                   <TimelineDot />
 
                   <TimelineContent>
-                    <TimeLineAuthor>{work.author}</TimeLineAuthor>
+                    <TimelineYear>{formatDate(work.date)}</TimelineYear>
 
                     <TimelineTitle>{work.title}</TimelineTitle>
 
-                    <TimeLineEvent>{work.event}</TimeLineEvent>
+                    <TimeLineEvent>{work.meetingUrl}</TimeLineEvent>
 
-                    <TimelineYear>{work.year}</TimelineYear>
+                    <TimelineSubTitle>Apresentado por:</TimelineSubTitle>
+                    {work.authors.map((author, index) => (
+                      <TimeLineAuthor
+                        key={index}
+                      >{`${author.academicTitle.abbreviation}  ${author.name}`}</TimeLineAuthor>
+                    ))}
                   </TimelineContent>
                 </TimelineItem>
               ))}

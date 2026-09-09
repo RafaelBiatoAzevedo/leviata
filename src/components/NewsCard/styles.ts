@@ -14,7 +14,7 @@ export const Container = styled.a`
 
   background: ${({ theme }) => theme.colors.surface};
 
-  border: 2px solid ${({ theme }) => theme.colors.border};
+  /* border: 2px solid ${({ theme }) => theme.colors.border}; */
 
   position: relative;
 

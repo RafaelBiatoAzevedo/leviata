@@ -26,17 +26,17 @@ export const TabButton = styled.button<{
 }>`
   padding: 14px 22px;
 
-  border-radius: 12px;
+  border-radius: 0.6rem;
 
   border: 1px solid
     ${({ theme, $active }) =>
-      $active ? theme.colors.accent : "rgba(255,255,255,0.06)"};
+      $active ? theme.colors.primary : "rgba(255,255,255,0.06)"};
 
   background: ${({ theme, $active }) =>
     $active ? theme.colors.accentGlow : theme.colors.secondary};
 
   color: ${({ theme, $active }) =>
-    $active ? theme.colors.accent : theme.colors.onSecondary};
+    $active ? theme.colors.primary : theme.colors.primary};
 
   cursor: pointer;
 
@@ -124,6 +124,9 @@ export const TimelineDot = styled.div`
 `;
 
 export const TimelineContent = styled.div`
+  display: flex;
+  flex-direction: column;
+
   width: 100%;
 
   padding: 2rem;
@@ -150,11 +153,10 @@ export const TimelineContent = styled.div`
 export const TimelineYear = styled.span`
   color: ${({ theme }) => theme.colors.accent};
 
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 800;
 
   letter-spacing: 1px;
-
-  text-transform: uppercase;
 `;
 
 export const TimelineTitle = styled.h3`
@@ -163,6 +165,17 @@ export const TimelineTitle = styled.h3`
   font-size: 1.4rem;
 
   font-family: ${({ theme }) => theme.fonts.title};
+`;
+
+export const TimelineSubTitle = styled.h4`
+  color: ${({ theme }) => theme.colors.textSoft};
+
+  font-size: 0.8rem;
+
+  font-family: ${({ theme }) => theme.fonts.title};
+
+  text-transform: uppercase;
+  margin-top: 0.5rem;
 `;
 
 export const TimelineDescription = styled.p`
