@@ -31,3 +31,11 @@ export function mapJuryToForm(jury: JuryResponseDto): JuryFormData {
     meetingUrl: jury.meetingUrl ?? "",
   };
 }
+
+export function mapJuryToCreateDto(data: JuryFormData) {
+  const dto = { ...data };
+
+  delete (dto as Partial<JuryFormData & { coverUrl: string }>).coverUrl;
+
+  return dto;
+}

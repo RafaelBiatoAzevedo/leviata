@@ -25,13 +25,15 @@ import {
   personSchema,
   type PersonFormData,
 } from "../../../validations/person.schema";
-import { mapPersonToForm } from "../../../mappers/person.mapper";
+import {
+  mapPersonToCreateDto,
+  mapPersonToForm,
+} from "../../../mappers/person.mapper";
 import { personCategoryOptions } from "../../../utils/personCategory";
 import { useToast } from "../../../../hooks/useToast";
 import { personDefaultValues } from "./defaultValues";
 import { useAdminData } from "../../../hooks/useAdminData";
 import { toSelectOptions } from "../../../utils/helperSelectOptions";
-import { mapPersonToCreateDto } from "../../../mappers/personToCreate.mapper";
 
 export function PersonForm() {
   const navigate = useNavigate();

@@ -25,8 +25,10 @@ import {
   presentedWorkSchema,
   type PresentedWorkFormData,
 } from "../../../validations/presentedWork.schema";
-import { mapPresentedWorkToForm } from "../../../mappers/presentedWork.mapper";
-import { mapPresentedWorkToCreateDto } from "../../../mappers/presentedWorkToCreate.mapper";
+import {
+  mapPresentedWorkToCreateDto,
+  mapPresentedWorkToForm,
+} from "../../../mappers/presentedWork.mapper";
 
 export function PresentedWorkForm() {
   const navigate = useNavigate();

@@ -32,8 +32,10 @@ import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminError } from "../../../components/AdminError";
 import { GiInjustice } from "react-icons/gi";
-import { mapJuryToForm } from "../../../mappers/jury.mapper";
-import { mapJuryToCreateDto } from "../../../mappers/juryToCreate.mapper";
+import {
+  mapJuryToCreateDto,
+  mapJuryToForm,
+} from "../../../mappers/jury.mapper";
 import { AdminDateInput } from "../../../components/AdminDateInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
 

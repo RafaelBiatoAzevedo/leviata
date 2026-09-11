@@ -32,6 +32,9 @@ export const Sidebar = styled.aside<SidebarProps>`
   position: relative;
 
   z-index: 10;
+
+  height: 100vh;
+  overflow: hidden;
 `;
 
 export const Logo = styled.div<SidebarProps>`
@@ -108,10 +111,22 @@ export const Navigation = styled.nav`
   gap: 8px;
 
   flex: 1;
+  min-height: 0;
+
+  scroll-behavior: smooth;
+
+  overflow-y: auto;
+
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const NavItem = styled(NavLink)`
   height: 48px;
+  flex: 0 0 auto;
 
   border-radius: 0.6rem;
 
@@ -245,7 +260,7 @@ export const Avatar = styled.div`
 
   background: ${({ theme }) => theme.colors.primary};
 
-  color: #fff;
+  color: ${({ theme }) => theme.colors.text};
 
   font-weight: 700;
 

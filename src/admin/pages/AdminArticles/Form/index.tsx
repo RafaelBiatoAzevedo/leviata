@@ -10,8 +10,10 @@ import {
   type ArticleFormData,
 } from "../../../validations/article.schema";
 import { articleDefaultValues } from "./defaultValues";
-import { mapArticleToForm } from "../../../mappers/article.mapper";
-import { mapArticleToCreateDto } from "../../../mappers/articleToCreate.mapper";
+import {
+  mapArticleToCreateDto,
+  mapArticleToForm,
+} from "../../../mappers/article.mapper";
 import { AdminSelect } from "../../../components/AdminSelect";
 import {
   Actions,

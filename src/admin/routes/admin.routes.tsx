@@ -32,6 +32,9 @@ import { PresentedWorkForm } from "../pages/AdminPresentedWorks/Form";
 import { AdminThematics } from "../pages/AdminThematics/List";
 import { ThematicView } from "../pages/AdminThematics/View";
 import { ThematicForm } from "../pages/AdminThematics/Form";
+import { AdminVideos } from "../pages/AdminVideos/List";
+import { VideoView } from "../pages/AdminVideos/View";
+import { VideoForm } from "../pages/AdminVideos/Form";
 
 export const adminRoutes = (
   <Route
@@ -133,5 +136,23 @@ export const adminRoutes = (
     <Route path="tematicas/novo" element={<ThematicForm />} />
 
     <Route path="tematicas/:slug/editar" element={<ThematicForm />} />
+
+    {/* Actvities */}
+    <Route path="atividades" element={<AdminThematics />} />
+
+    <Route path="atividades/:slug" element={<ThematicView />} />
+
+    <Route path="atividades/novo" element={<ThematicForm />} />
+
+    <Route path="atividades/:slug/editar" element={<ThematicForm />} />
+
+    {/* Videos */}
+    <Route path="videos" element={<AdminVideos />} />
+
+    <Route path="videos/:slug" element={<VideoView />} />
+
+    <Route path="videos/novo" element={<VideoForm />} />
+
+    <Route path="videos/:slug/editar" element={<VideoForm />} />
   </Route>
 );

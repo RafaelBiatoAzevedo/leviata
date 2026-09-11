@@ -1,5 +1,5 @@
 import type { PersonResponseDto } from "../people/PersonResponseDto";
-import type { VideoResponseDto } from "../VideoResponseDto";
+import type { VideoResponseDto } from "../videos/VideoResponseDto";
 import type { ThematicVideoResponseDto } from "./ThematicVideoResponseDto";
 
 export interface ThematicResponseDto {

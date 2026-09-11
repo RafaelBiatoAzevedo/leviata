@@ -26,8 +26,10 @@ import { AdminInput } from "../../../components/AdminInput";
 import { AdminYearInput } from "../../../components/AdminYearInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
 import { FiArrowLeft, FiBook, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
-import { mapBookToForm } from "../../../mappers/book.mapper";
-import { mapBookToCreateDto } from "../../../mappers/bookToCreate.mapper";
+import {
+  mapBookToCreateDto,
+  mapBookToForm,
+} from "../../../mappers/book.mapper";
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
@@ -52,12 +54,6 @@ export function BookForm() {
   const { slug } = useParams();
 
   const isEdit = Boolean(slug);
-
-  // showToast({
-  //   title: "Capa atualizada com sucesso",
-  //   description: "A capa do livro foi atualizada.",
-  //   type: "success",
-  // });
 
   const {
     control,

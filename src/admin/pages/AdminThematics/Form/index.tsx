@@ -17,14 +17,17 @@ import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminError } from "../../../components/AdminError";
 import {
-  boardSchema,
-  type BoardFormData,
-} from "../../../validations/board,schema";
-import { boardsService } from "../../../services/boards";
-import { mapBoardToCreateDto } from "../../../mappers/boardToCreate.mapper";
-import { mapBoardToForm } from "../../../mappers/board.mapper";
-import { boardDefaultValues } from "./defaultValues";
+  thematicSchema,
+  type ThematicFormData,
+} from "../../../validations/thematic.schema";
+import { thematicsService } from "../../../services/thematics";
+import { thematicDefaultValues } from "./defaultValues";
 import { AdminDateInput } from "../../../components/AdminDateInput";
+import {
+  mapThematicToCreateDto,
+  mapThematicToForm,
+} from "../../../mappers/thematic.mapper";
+import { AdminTextarea } from "../../../components/AdminTextarea";
 
 export function ThematicForm() {
   const navigate = useNavigate();
@@ -48,31 +51,21 @@ export function ThematicForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<BoardFormData>({
-    resolver: zodResolver(boardSchema),
-    defaultValues: boardDefaultValues,
+  } = useForm<ThematicFormData>({
+    resolver: zodResolver(thematicSchema),
+    defaultValues: thematicDefaultValues,
   });
 
-  const members = useWatch({
-    control,
-    name: "members",
-  });
+  // const additionalVideos = useWatch({
+  //   control,
+  //   name: "additionalVideos",
+  // });
 
-  const candidateId = useWatch({
-    control,
-    name: "candidateId",
-  });
-
-  const advisorId = useWatch({
-    control,
-    name: "advisorId",
-  });
-
-  const loadBoard = useCallback(async () => {
+  const loadThematic = useCallback(async () => {
     if (!slug) return;
 
-    const response = await boardsService.getBySlug(slug);
-    const formData = mapBoardToForm(response.data);
+    const response = await thematicsService.getBySlug(slug);
+    const formData = mapThematicToForm(response.data);
 
     reset(formData);
   }, [reset, slug]);
@@ -91,123 +84,104 @@ export function ThematicForm() {
     if (!isEdit) return;
 
     (async () => {
-      await loadBoard();
+      await loadThematic();
     })();
-  }, [isEdit, loadBoard, loadPeople]);
+  }, [isEdit, loadThematic, loadPeople]);
 
-  function handleModal() {
-    showModal({
-      title: "Adicionar integrante",
+  // function handleModal() {
+  //   showModal({
+  //     title: "Adicionar integrante",
 
-      content: (
-        <div style={{ padding: "2rem 0rem" }}>
-          <br />
+  //     content: (
+  //       <div style={{ padding: "2rem 0rem" }}>
+  //         <br />
 
-          <AdminSelect
-            options={[
-              {
-                value: "",
-                label: "Selecione um integrante",
-              },
-              ...people
-                .filter(
-                  (person) =>
-                    !members.includes(person.id) &&
-                    person.id !== advisorId &&
-                    person.id !== candidateId,
-                )
-                .map((person) => ({
-                  value: person.id,
-                  label: person.name,
-                })),
-            ]}
-            label="Integrantes"
-            required
-            onChange={(event) => {
-              selectedMemberIdRef.current = event.target.value;
+  //         <AdminSelect
+  //           options={[
+  //             {
+  //               value: "",
+  //               label: "Selecione um integrante",
+  //             },
+  //             ...people
+  //               .filter(
+  //                 (person) =>
+  //                   !members.includes(person.id) &&
+  //                   person.id !== advisorId &&
+  //                   person.id !== candidateId,
+  //               )
+  //               .map((person) => ({
+  //                 value: person.id,
+  //                 label: person.name,
+  //               })),
+  //           ]}
+  //           label="Integrantes"
+  //           required
+  //           onChange={(event) => {
+  //             selectedMemberIdRef.current = event.target.value;
 
-              updateModal({
-                confirmDisabled: !event.target.value,
-              });
-            }}
-          />
-        </div>
-      ),
+  //             updateModal({
+  //               confirmDisabled: !event.target.value,
+  //             });
+  //           }}
+  //         />
+  //       </div>
+  //     ),
 
-      confirmText: "Adicionar",
+  //     confirmText: "Adicionar",
 
-      cancelText: "Cancelar",
+  //     cancelText: "Cancelar",
 
-      confirmVariant: "success",
+  //     confirmVariant: "success",
 
-      confirmDisabled: !selectedMemberIdRef.current,
+  //     confirmDisabled: !selectedMemberIdRef.current,
 
-      onConfirm: () => {
-        handleAddMember(selectedMemberIdRef.current);
-      },
+  //     onConfirm: () => {
+  //       handleAddMember(selectedMemberIdRef.current);
+  //     },
 
-      onCancel: () => {
-        selectedMemberIdRef.current = "";
-      },
-    });
-  }
+  //     onCancel: () => {
+  //       selectedMemberIdRef.current = "";
+  //     },
+  //   });
+  // }
 
-  function handleAddMember(personId: string) {
-    if (members.includes(personId)) return;
+  // function handleAddMember(personId: string) {
+  //   if (members.includes(personId)) return;
 
-    setValue("members", [...members, personId], {
-      shouldValidate: true,
-      shouldDirty: true,
-    });
+  //   setValue("members", [...members, personId], {
+  //     shouldValidate: true,
+  //     shouldDirty: true,
+  //   });
 
-    selectedMemberIdRef.current = "";
-  }
+  //   selectedMemberIdRef.current = "";
+  // }
 
-  function handleRemoveMember(personId: string) {
-    setValue(
-      "members",
-      members.filter((id) => id !== personId),
-      {
-        shouldValidate: true,
-        shouldDirty: true,
-      },
-    );
-  }
+  // function handleRemoveMember(personId: string) {
+  //   setValue(
+  //     "members",
+  //     members.filter((id) => id !== personId),
+  //     {
+  //       shouldValidate: true,
+  //       shouldDirty: true,
+  //     },
+  //   );
+  // }
 
-  const optionsAdvisor = [
+  const optionsCoordenator = [
     {
       value: "",
-      label: "Selecione um orientador",
+      label: "Selecione o coordenador(a)",
     },
-    ...people
-      .filter(
-        (person) => !members.includes(person.id) && person.id !== candidateId,
-      )
-      .map((person) => ({
-        value: person.id,
-        label: person.name,
-      })),
+    ...people.map((person) => ({
+      value: person.id,
+      label: person.name,
+    })),
   ];
 
-  const optionsCandidate = [
-    {
-      value: "",
-      label: "Selecione um candidato",
-    },
-    ...people
-      .filter(
-        (person) => !members.includes(person.id) && person.id !== advisorId,
-      )
-      .map((person) => ({
-        value: person.id,
-        label: person.name,
-      })),
-  ];
-
-  async function onSubmit(data: BoardFormData) {
+  async function onSubmit(data: ThematicFormData) {
     try {
       if (isEdit) {
-        await boardsService.updateBySlug(slug!, data);
+        await thematicsService.updateBySlug(slug!, data);
 
         showToast({
           title: "Temática atualizada",
@@ -215,7 +189,7 @@ export function ThematicForm() {
           type: "success",
         });
       } else {
-        await boardsService.create(mapBoardToCreateDto(data));
+        await thematicsService.create(mapThematicToCreateDto(data));
 
         showToast({
           title: "Temática criada",
@@ -263,47 +237,54 @@ export function ThematicForm() {
                 disabled
               />
 
-              <AdminDateInput
-                label="Data"
-                placeholder="10/02/2025"
-                required
-                {...register("date")}
-                error={errors.date?.message}
-              />
-
-              <AdminInput
+              {/* <AdminInput
                 label="Link da temática"
                 placeholder="Url da temática"
                 required
                 error={errors.meetingUrl?.message}
                 {...register("meetingUrl")}
-              />
+              /> */}
             </AdminFormGrid>
+            <AdminSelect
+              label="Coordenador"
+              required
+              error={errors.coordinatorId?.message}
+              {...register("coordinatorId")}
+              options={optionsCoordenator}
+            ></AdminSelect>
           </AdminSection>
         </AdminFormCard>
 
         <AdminFormCard>
-          <AdminSection title="Participantes principais">
-            <AdminFormGrid>
-              <AdminSelect
-                label="Candidato"
-                required
-                error={errors.candidateId?.message}
-                {...register("candidateId")}
-                options={optionsCandidate}
-              ></AdminSelect>
-              <AdminSelect
-                label="Orientador"
-                required
-                error={errors.advisorId?.message}
-                {...register("advisorId")}
-                options={optionsAdvisor}
-              ></AdminSelect>
-            </AdminFormGrid>
+          <AdminSection title="Descrição">
+            <AdminTextarea
+              placeholder="Escreva uma descrição..."
+              error={errors.description?.message}
+              {...register("description")}
+            ></AdminTextarea>
           </AdminSection>
         </AdminFormCard>
 
         <AdminFormCard>
+          <AdminSection title="Video principal">
+            <></>
+          </AdminSection>
+        </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection
+            title="Videos adicionais"
+            action={
+              <AdminButton size="medium" type="button" onClick={() => {}}>
+                <FiPlus />
+              </AdminButton>
+            }
+          >
+            <></>
+          </AdminSection>
+        </AdminFormCard>
+
+        {/* <AdminFormCard>
           <AdminSection
             title="Integrantes da temática"
             action={
@@ -337,13 +318,7 @@ export function ThematicForm() {
               <AdminError>{errors.members.message}</AdminError>
             )}
           </AdminSection>
-        </AdminFormCard>
-
-        <AdminFormCard>
-          <AdminSection title="Fotos">
-            <></>
-          </AdminSection>
-        </AdminFormCard>
+        </AdminFormCard> */}
 
         <Actions>
           <AdminButton

@@ -1,4 +1,4 @@
-import type { BoardFormData } from "../../../validations/board,schema";
+import type { BoardFormData } from "../../../validations/board.schema";
 
 export const boardDefaultValues: BoardFormData = {
   title: "",

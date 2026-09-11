@@ -32,8 +32,10 @@ import {
   type MeetingFormData,
 } from "../../../validations/meeting.schem";
 import { meetingDefaultValues } from "./defaultValues";
-import { mapMeetingToForm } from "../../../mappers/meeting.mapper";
-import { mapMeetingToCreateDto } from "../../../mappers/meetingToCreate.mapper";
+import {
+  mapMeetingToCreateDto,
+  mapMeetingToForm,
+} from "../../../mappers/meeting.mapper";
 import { meetingTypeOptions } from "../../../utils/meetingTypes";
 import { AdminDateInput } from "../../../components/AdminDateInput";
 

@@ -36,3 +36,11 @@ export function mapPersonToForm(person: PersonResponseDto): PersonFormData {
     bio: person.bio ?? "",
   };
 }
+
+export function mapPersonToCreateDto(data: PersonFormData) {
+  const dto = { ...data };
+
+  delete (dto as Partial<PersonFormData & { imageUrl: string }>).imageUrl;
+
+  return dto;
+}

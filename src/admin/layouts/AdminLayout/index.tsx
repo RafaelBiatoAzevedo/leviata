@@ -7,17 +7,19 @@ import {
   FiUsers,
   FiBook,
   FiFolder,
-  FiDatabase,
   FiCalendar,
   FiVideo,
   FiMail,
   FiLogOut,
   FiAward,
+  FiMic,
+  FiLayers,
+  FiFileText,
+  FiMonitor,
+  FiSearch,
+  FiClipboard,
 } from "react-icons/fi";
 
-import { MdOutlinePresentToAll, MdCategory } from "react-icons/md";
-
-import { BiNews } from "react-icons/bi";
 import { TbDoorEnter } from "react-icons/tb";
 
 import {
@@ -112,6 +114,17 @@ export function AdminLayout() {
 
             {!collapsed && <span>Livros</span>}
           </NavItem>
+          <NavItem to="/admin/videos" title="Videos">
+            <FiVideo />
+
+            {!collapsed && <span>Videos</span>}
+          </NavItem>
+
+          <NavItem to="/admin/newsletter" title="Newsletter">
+            <FiMail />
+
+            {!collapsed && <span>Newsletter</span>}
+          </NavItem>
 
           <NavItem to="/admin/artigos" title="Artigos / Dossiês">
             <FiFolder />
@@ -119,13 +132,38 @@ export function AdminLayout() {
             {!collapsed && <span>Artigos / Dossiês</span>}
           </NavItem>
 
-          <NavItem to="/admin/noticias" title="Notícias">
-            <BiNews />
-            {!collapsed && <span>Notícias</span>}
+          <NavItem
+            to="/admin/apresentacoes-trabalhos"
+            title="Apresentações de Trabalhos"
+          >
+            <FiMonitor />
+
+            {!collapsed && <span>Apres. de Trabalhos</span>}
+          </NavItem>
+
+          <NavItem
+            to="/admin/instrumentos-pesquisa"
+            title="Instrumentos de pesquisa"
+          >
+            <FiClipboard />
+
+            {!collapsed && <span>Instr. de Pesquisas</span>}
+          </NavItem>
+
+          <NavItem to="/admin/pesquisas" title="Pesquisas">
+            <FiSearch />
+
+            {!collapsed && <span>Pesquisas</span>}
+          </NavItem>
+
+          <NavItem to="/admin/juris" title="Juris">
+            <GiInjustice />
+
+            {!collapsed && <span>Juris</span>}
           </NavItem>
 
           <NavItem to="/admin/encontros" title="Encontros">
-            <FiVideo />
+            <FiMic />
 
             {!collapsed && <span>Encontros</span>}
           </NavItem>
@@ -136,42 +174,21 @@ export function AdminLayout() {
             {!collapsed && <span>Bancas</span>}
           </NavItem>
 
-          <NavItem to="/admin/juris" title="Juris">
-            <GiInjustice />
-
-            {!collapsed && <span>Juris</span>}
-          </NavItem>
-
-          <NavItem
-            to="/admin/apresentacoes-trabalhos"
-            title="Apresentações de Trabalhos"
-          >
-            <MdOutlinePresentToAll />
-
-            {!collapsed && <span>Apres. de Trabalhos</span>}
-          </NavItem>
-
           <NavItem to="/admin/tematicas" title="Temáicas">
-            <MdCategory />
+            <FiLayers />
 
             {!collapsed && <span>Temáicas</span>}
           </NavItem>
 
-          <NavItem to="/admin/banco-de-dados" title="Banco de Dados">
-            <FiDatabase />
-
-            {!collapsed && <span>Banco de Dados</span>}
+          <NavItem to="/admin/noticias" title="Notícias">
+            <FiFileText />
+            {!collapsed && <span>Notícias</span>}
           </NavItem>
 
           <NavItem to="/admin/agenda" title="Agenda">
             <FiCalendar />
 
             {!collapsed && <span>Agenda</span>}
-          </NavItem>
-          <NavItem to="/admin/newsletter" title="Newsletter">
-            <FiMail />
-
-            {!collapsed && <span>Newsletter</span>}
           </NavItem>
         </Navigation>
 

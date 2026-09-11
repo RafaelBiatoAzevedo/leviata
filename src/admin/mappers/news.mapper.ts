@@ -20,3 +20,11 @@ export function mapNewsToForm(news: NewsResponseDto): NewsFormData {
     relatedId: news.relatedId ?? null,
   };
 }
+
+export function mapNewsToCreateDto(data: NewsFormData) {
+  const dto = { ...data };
+
+  delete (dto as Partial<NewsFormData & { coverUrl: string }>).coverUrl;
+
+  return dto;
+}

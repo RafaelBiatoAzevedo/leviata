@@ -1,10 +1,13 @@
-import type { BoardFormData } from "../../../validations/board,schema";
+import type { ThematicFormData } from "../../../validations/thematic.schema";
 
-export const boardDefaultValues: BoardFormData = {
+export const thematicDefaultValues: ThematicFormData = {
   title: "",
-  candidateId: "",
-  advisorId: "",
-  members: [],
-  date: "",
-  meetingUrl: "",
+
+  description: "",
+
+  mainVideoId: "",
+
+  coordinatorId: "",
+
+  additionalVideos: [],
 };

@@ -16,19 +16,21 @@ import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminError } from "../../../components/AdminError";
-import {
-  boardSchema,
-  type BoardFormData,
-} from "../../../validations/board.schema";
-import { boardsService } from "../../../services/boards";
-import {
-  mapBoardToCreateDto,
-  mapBoardToForm,
-} from "../../../mappers/board.mapper";
-import { boardDefaultValues } from "./defaultValues";
-import { AdminDateInput } from "../../../components/AdminDateInput";
 
-export function BoardForm() {
+import { videosService } from "../../../services/videos";
+
+import {
+  videoSchema,
+  type VideoFormData,
+} from "../../../validations/video.schema";
+import { videoDefaultVideoValues } from "./defaultValues";
+import {
+  mapVideoToCreateDto,
+  mapVideoToForm,
+} from "../../../mappers/video.mapper";
+import { AdminTextarea } from "../../../components/AdminTextarea";
+
+export function VideoForm() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { showModal, updateModal } = useModal();
@@ -50,31 +52,21 @@ export function BoardForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<BoardFormData>({
-    resolver: zodResolver(boardSchema),
-    defaultValues: boardDefaultValues,
+  } = useForm<VideoFormData>({
+    resolver: zodResolver(videoSchema),
+    defaultValues: videoDefaultVideoValues,
   });
 
-  const members = useWatch({
+  const _people = useWatch({
     control,
-    name: "members",
+    name: "people",
   });
 
-  const candidateId = useWatch({
-    control,
-    name: "candidateId",
-  });
-
-  const advisorId = useWatch({
-    control,
-    name: "advisorId",
-  });
-
-  const loadBoard = useCallback(async () => {
+  const loadVideo = useCallback(async () => {
     if (!slug) return;
 
-    const response = await boardsService.getBySlug(slug);
-    const formData = mapBoardToForm(response.data);
+    const response = await videosService.getBySlug(slug);
+    const formData = mapVideoToForm(response.data);
 
     reset(formData);
   }, [reset, slug]);
@@ -93,13 +85,13 @@ export function BoardForm() {
     if (!isEdit) return;
 
     (async () => {
-      await loadBoard();
+      await loadVideo();
     })();
-  }, [isEdit, loadBoard, loadPeople]);
+  }, [isEdit, loadVideo, loadPeople]);
 
   function handleModal() {
     showModal({
-      title: "Adicionar integrante",
+      title: "Adicionar Participante",
 
       content: (
         <div style={{ padding: "2rem 0rem" }}>
@@ -109,21 +101,16 @@ export function BoardForm() {
             options={[
               {
                 value: "",
-                label: "Selecione um integrante",
+                label: "Selecione um Participante",
               },
               ...people
-                .filter(
-                  (person) =>
-                    !members.includes(person.id) &&
-                    person.id !== advisorId &&
-                    person.id !== candidateId,
-                )
+                .filter((person) => !(_people || []).includes(person.id))
                 .map((person) => ({
                   value: person.id,
                   label: person.name,
                 })),
             ]}
-            label="Integrantes"
+            label="Participantes"
             required
             onChange={(event) => {
               selectedMemberIdRef.current = event.target.value;
@@ -155,9 +142,9 @@ export function BoardForm() {
   }
 
   function handleAddMember(personId: string) {
-    if (members.includes(personId)) return;
+    if ((_people || []).includes(personId)) return;
 
-    setValue("members", [...members, personId], {
+    setValue("people", [...(_people || []), personId], {
       shouldValidate: true,
       shouldDirty: true,
     });
@@ -167,8 +154,8 @@ export function BoardForm() {
 
   function handleRemoveMember(personId: string) {
     setValue(
-      "members",
-      members.filter((id) => id !== personId),
+      "people",
+      (_people || []).filter((id) => id !== personId),
       {
         shouldValidate: true,
         shouldDirty: true,
@@ -176,63 +163,33 @@ export function BoardForm() {
     );
   }
 
-  const optionsAdvisor = [
-    {
-      value: "",
-      label: "Selecione um orientador",
-    },
-    ...people
-      .filter(
-        (person) => !members.includes(person.id) && person.id !== candidateId,
-      )
-      .map((person) => ({
-        value: person.id,
-        label: person.name,
-      })),
-  ];
-
-  const optionsCandidate = [
-    {
-      value: "",
-      label: "Selecione um candidato",
-    },
-    ...people
-      .filter(
-        (person) => !members.includes(person.id) && person.id !== advisorId,
-      )
-      .map((person) => ({
-        value: person.id,
-        label: person.name,
-      })),
-  ];
-
-  async function onSubmit(data: BoardFormData) {
+  async function onSubmit(data: VideoFormData) {
     try {
       if (isEdit) {
-        await boardsService.updateBySlug(slug!, data);
+        await videosService.updateBySlug(slug!, data);
 
         showToast({
-          title: "Banca atualizada",
+          title: "Video atualizada",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await boardsService.create(mapBoardToCreateDto(data));
+        await videosService.create(mapVideoToCreateDto(data));
 
         showToast({
-          title: "Banca criada",
-          description: "A banca foi cadastrada com sucesso.",
+          title: "Video criada",
+          description: "A video foi cadastrada com sucesso.",
           type: "success",
         });
       }
 
-      navigate("/admin/bancas");
+      navigate("/admin/videos");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
 
       showToast({
-        title: isEdit ? "Erro ao atualizar banca" : "Erro ao criar banca",
+        title: isEdit ? "Erro ao atualizar video" : "Erro ao criar video",
         description:
           message ?? "Não foi possível salvar os dados. Tente novamente.",
         type: "danger",
@@ -243,8 +200,8 @@ export function BoardForm() {
   return (
     <Container>
       <AdminPageHeader
-        title={isEdit ? "Editar banca" : "Nova banca"}
-        subtitle="Cadastre ou atualize os dados da banca."
+        title={isEdit ? "Editar video" : "Nova video"}
+        subtitle="Cadastre ou atualize os dados da video."
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -253,7 +210,7 @@ export function BoardForm() {
             <AdminFormGrid>
               <AdminInput
                 label="Título"
-                placeholder="Título da banca"
+                placeholder="Título da video"
                 required
                 error={errors.title?.message}
                 {...register("title")}
@@ -264,50 +221,30 @@ export function BoardForm() {
                 value={slug ?? ""}
                 disabled
               />
-
-              <AdminDateInput
-                label="Data"
-                placeholder="10/02/2025"
-                required
-                {...register("date")}
-                error={errors.date?.message}
-              />
-
-              <AdminInput
-                label="Link da banca"
-                placeholder="Url da banca"
-                required
-                error={errors.meetingUrl?.message}
-                {...register("meetingUrl")}
-              />
             </AdminFormGrid>
+            <AdminInput
+              label="Link do video"
+              required
+              placeholder="ex: https://www.youtube.com/watch?v=abc123"
+              error={errors.videoUrl?.message}
+              {...register("videoUrl")}
+            />
           </AdminSection>
         </AdminFormCard>
 
         <AdminFormCard>
-          <AdminSection title="Participantes principais">
-            <AdminFormGrid>
-              <AdminSelect
-                label="Candidato"
-                required
-                error={errors.candidateId?.message}
-                {...register("candidateId")}
-                options={optionsCandidate}
-              ></AdminSelect>
-              <AdminSelect
-                label="Orientador"
-                required
-                error={errors.advisorId?.message}
-                {...register("advisorId")}
-                options={optionsAdvisor}
-              ></AdminSelect>
-            </AdminFormGrid>
+          <AdminSection title="Descrição">
+            <AdminTextarea
+              placeholder="Escreva uma breve descrição..."
+              error={errors.description?.message}
+              {...register("description")}
+            ></AdminTextarea>
           </AdminSection>
         </AdminFormCard>
 
         <AdminFormCard>
           <AdminSection
-            title="Integrantes da banca"
+            title="Participantes do video"
             action={
               <AdminButton size="medium" type="button" onClick={handleModal}>
                 <FiPlus />
@@ -315,7 +252,7 @@ export function BoardForm() {
             }
           >
             <MemberList>
-              {members.map((memberId) => {
+              {(_people || []).map((memberId) => {
                 const member = people.find((person) => person.id === memberId);
 
                 if (!member) return null;
@@ -335,15 +272,7 @@ export function BoardForm() {
               })}
             </MemberList>
 
-            {errors.members && (
-              <AdminError>{errors.members.message}</AdminError>
-            )}
-          </AdminSection>
-        </AdminFormCard>
-
-        <AdminFormCard>
-          <AdminSection title="Fotos">
-            <></>
+            {errors.people && <AdminError>{errors.people.message}</AdminError>}
           </AdminSection>
         </AdminFormCard>
 

@@ -25,10 +25,12 @@ import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
 import { FiArrowLeft, FiSave } from "react-icons/fi";
-import { mapNewsToForm } from "../../../mappers/news.mapper";
+import {
+  mapNewsToCreateDto,
+  mapNewsToForm,
+} from "../../../mappers/news.mapper";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminSelect } from "../../../components/AdminSelect";
-import { mapNewsToCreateDto } from "../../../mappers/newsToCreate.mapper";
 import { BiNews } from "react-icons/bi";
 import { newsCategoryOptions } from "../../../utils/newsCategory";
 import { AdminDateInput } from "../../../components/AdminDateInput";
