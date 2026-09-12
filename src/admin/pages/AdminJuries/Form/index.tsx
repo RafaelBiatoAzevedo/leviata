@@ -138,12 +138,10 @@ export function JuryForm() {
   useEffect(() => {
     (async () => {
       await loadPeople();
-    })();
 
-    if (!isEdit) return;
-
-    (async () => {
-      await loadJury();
+      if (!isEdit) {
+        await loadJury();
+      }
     })();
   }, [isEdit, loadJury, loadPeople]);
 

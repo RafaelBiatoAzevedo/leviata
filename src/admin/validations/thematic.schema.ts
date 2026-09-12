@@ -12,17 +12,9 @@ export const thematicSchema = z.object({
     .optional()
     .or(z.literal("")),
 
-  mainVideoId: z
-    .string()
-    .uuid("Selecione um vídeo principal válido.")
-    .optional()
-    .or(z.literal("")),
+  mainVideoId: z.string().uuid("Selecione um vídeo principal válido."),
 
-  coordinatorId: z
-    .string()
-    .uuid("Selecione um coordenador válido.")
-    .optional()
-    .or(z.literal("")),
+  coordinatorId: z.string().uuid("Selecione um coordenador válido."),
 
   additionalVideos: z
     .array(z.string().uuid("Selecione vídeos válidos."))

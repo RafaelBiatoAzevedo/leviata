@@ -80,12 +80,10 @@ export function NewsForm() {
   useEffect(() => {
     (async () => {
       await loadEventRelated();
-    })();
 
-    if (!isEdit) return;
-
-    (async () => {
-      await loadNews();
+      if (!isEdit) {
+        await loadNews();
+      }
     })();
   }, [isEdit, loadNews, loadEventRelated]);
 

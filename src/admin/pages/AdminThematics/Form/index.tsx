@@ -15,19 +15,19 @@ import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
-import { AdminError } from "../../../components/AdminError";
 import {
   thematicSchema,
   type ThematicFormData,
 } from "../../../validations/thematic.schema";
 import { thematicsService } from "../../../services/thematics";
 import { thematicDefaultValues } from "./defaultValues";
-import { AdminDateInput } from "../../../components/AdminDateInput";
 import {
   mapThematicToCreateDto,
   mapThematicToForm,
 } from "../../../mappers/thematic.mapper";
 import { AdminTextarea } from "../../../components/AdminTextarea";
+import type { VideoResponseDto } from "../../../dtos/videos/VideoResponseDto";
+import { videosService } from "../../../services/videos";
 
 export function ThematicForm() {
   const navigate = useNavigate();
@@ -40,6 +40,10 @@ export function ThematicForm() {
     [] as PersonResponseDto[],
   );
 
+  const [videos, setVideos] = useState<VideoResponseDto[]>(
+    [] as VideoResponseDto[],
+  );
+
   const { slug } = useParams();
 
   const isEdit = Boolean(slug);
@@ -49,6 +53,7 @@ export function ThematicForm() {
     register,
     handleSubmit,
     reset,
+    watch,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<ThematicFormData>({
@@ -70,23 +75,23 @@ export function ThematicForm() {
     reset(formData);
   }, [reset, slug]);
 
-  const loadPeople = useCallback(async () => {
-    const response = await peopleService.getAll();
+  const load = useCallback(async () => {
+    const responsePepople = await peopleService.getAll();
+    const responseVideos = await videosService.getAll();
 
-    setPeople(response.data);
+    setPeople(responsePepople.data);
+    setVideos(responseVideos.data);
   }, []);
 
   useEffect(() => {
     (async () => {
-      await loadPeople();
-    })();
+      await load();
 
-    if (!isEdit) return;
-
-    (async () => {
-      await loadThematic();
+      if (isEdit) {
+        await loadThematic();
+      }
     })();
-  }, [isEdit, loadThematic, loadPeople]);
+  }, [isEdit, loadThematic, load]);
 
   // function handleModal() {
   //   showModal({
@@ -178,6 +183,17 @@ export function ThematicForm() {
     })),
   ];
 
+  const optionsMainVideo = [
+    {
+      value: "",
+      label: "Selecione o video",
+    },
+    ...videos.map((video) => ({
+      value: video.id,
+      label: video.title,
+    })),
+  ];
+
   async function onSubmit(data: ThematicFormData) {
     try {
       if (isEdit) {
@@ -198,7 +214,7 @@ export function ThematicForm() {
         });
       }
 
-      navigate("/admintematicas");
+      navigate("/admin/tematicas");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
@@ -252,6 +268,14 @@ export function ThematicForm() {
               {...register("coordinatorId")}
               options={optionsCoordenator}
             ></AdminSelect>
+
+            <AdminSelect
+              label="Video Principal"
+              required
+              error={errors.mainVideoId?.message}
+              {...register("mainVideoId")}
+              options={optionsMainVideo}
+            ></AdminSelect>
           </AdminSection>
         </AdminFormCard>
 
@@ -262,12 +286,6 @@ export function ThematicForm() {
               error={errors.description?.message}
               {...register("description")}
             ></AdminTextarea>
-          </AdminSection>
-        </AdminFormCard>
-
-        <AdminFormCard>
-          <AdminSection title="Video principal">
-            <></>
           </AdminSection>
         </AdminFormCard>
 

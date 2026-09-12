@@ -94,12 +94,10 @@ export function BookForm() {
   useEffect(() => {
     (async () => {
       await loadPeople();
-    })();
 
-    if (!isEdit) return;
-
-    (async () => {
-      await loadBook();
+      if (!isEdit) {
+        await loadBook();
+      }
     })();
   }, [isEdit, loadBook, loadPeople]);
 

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { PersonCategory } from "../types/TPersonCategory";
+import { PersonCategory, type TPersonCategory } from "../types/TPersonCategory";
 
 export const personSchema = z.object({
   imageUrl: z
@@ -10,9 +10,12 @@ export const personSchema = z.object({
 
   name: z.string().trim().min(1, "Informe o nome.").max(255),
 
-  category: z.nativeEnum(PersonCategory, {
-    error: "Selecione uma categoria.",
-  }),
+  category: z.enum(
+    Object.values(PersonCategory) as [TPersonCategory, ...TPersonCategory[]],
+    {
+      message: "Selecione uma categoria.",
+    },
+  ),
 
   isActive: z.boolean(),
 

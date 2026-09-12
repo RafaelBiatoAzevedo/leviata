@@ -113,7 +113,6 @@ export function AdminThematics() {
         <thead>
           <tr>
             <th>Título</th>
-            <th>Data</th>
             <th>Descrição</th>
             <th>Coordenador</th>
             <th>Ações</th>
@@ -133,7 +132,7 @@ export function AdminThematics() {
                 </td>
                 <td>{thematic.description}</td>
 
-                <td>{thematic.coordinator.name}</td>
+                <td>{`${thematic.coordinator.academicTitle.abbreviation} ${thematic.coordinator.name}`}</td>
 
                 <td>
                   <Actions>

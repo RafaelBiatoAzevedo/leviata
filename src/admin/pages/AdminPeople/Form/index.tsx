@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,6 +34,7 @@ import { useToast } from "../../../../hooks/useToast";
 import { personDefaultValues } from "./defaultValues";
 import { useAdminData } from "../../../hooks/useAdminData";
 import { toSelectOptions } from "../../../utils/helperSelectOptions";
+import type z from "zod";
 
 export function PersonForm() {
   const navigate = useNavigate();
@@ -62,30 +63,35 @@ export function PersonForm() {
     // watch,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<PersonFormData>({
+  } = useForm<
+    z.input<typeof personSchema>,
+    unknown,
+    z.output<typeof personSchema>
+  >({
     resolver: zodResolver(personSchema),
-
     defaultValues: personDefaultValues,
   });
 
-  useEffect(() => {
-    if (!isEdit) return;
+  const loadPerson = useCallback(async () => {
+    if (!slug) return;
 
-    async function loadPerson() {
-      if (!slug) return;
+    const response = await peopleService.getBySlug(slug);
+    const formData = mapPersonToForm(response.data);
 
-      const response = await peopleService.getBySlug(slug);
-      const formData = mapPersonToForm(response.data);
-
-      if (response.data.imageUrl) {
-        setImagePreview(response.data.imageUrl);
-      }
-
-      reset(formData);
+    if (response.data.imageUrl) {
+      setImagePreview(response.data.imageUrl);
     }
 
-    loadPerson();
-  }, [slug, isEdit, reset]);
+    reset(formData);
+  }, [reset, slug]);
+
+  useEffect(() => {
+    (async () => {
+      if (isEdit) {
+        await loadPerson();
+      }
+    })();
+  }, [isEdit, loadPerson]);
 
   async function onSubmit(data: PersonFormData) {
     try {

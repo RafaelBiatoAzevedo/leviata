@@ -88,12 +88,10 @@ export function BoardForm() {
   useEffect(() => {
     (async () => {
       await loadPeople();
-    })();
 
-    if (!isEdit) return;
-
-    (async () => {
-      await loadBoard();
+      if (!isEdit) {
+        await loadBoard();
+      }
     })();
   }, [isEdit, loadBoard, loadPeople]);
 

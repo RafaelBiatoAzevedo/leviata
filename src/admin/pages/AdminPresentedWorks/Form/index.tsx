@@ -80,12 +80,10 @@ export function PresentedWorkForm() {
   useEffect(() => {
     (async () => {
       await loadPeople();
-    })();
 
-    if (!isEdit) return;
-
-    (async () => {
-      await loadPresentedWork();
+      if (!isEdit) {
+        await loadPresentedWork();
+      }
     })();
   }, [isEdit, loadPresentedWork, loadPeople]);
 

@@ -79,7 +79,7 @@ export function ArticleForm() {
     name: "authors",
   });
 
-  const load = useCallback(async () => {
+  const loadArticle = useCallback(async () => {
     if (!slug) return;
 
     const response = await articlesService.getBySlug(slug);
@@ -101,14 +101,12 @@ export function ArticleForm() {
   useEffect(() => {
     (async () => {
       await loadPeople();
-    })();
 
-    if (!isEdit) return;
-
-    (async () => {
-      await load();
+      if (!isEdit) {
+        await loadArticle();
+      }
     })();
-  }, [isEdit, load, loadPeople]);
+  }, [isEdit, loadArticle, loadPeople]);
 
   function handleModal() {
     showModal({

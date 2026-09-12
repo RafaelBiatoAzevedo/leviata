@@ -96,12 +96,10 @@ export function MeetingForm() {
   useEffect(() => {
     (async () => {
       await loadPeople();
-    })();
 
-    if (!isEdit) return;
-
-    (async () => {
-      await loadMeeting();
+      if (!isEdit) {
+        await loadMeeting();
+      }
     })();
   }, [isEdit, loadMeeting, loadPeople]);
 
