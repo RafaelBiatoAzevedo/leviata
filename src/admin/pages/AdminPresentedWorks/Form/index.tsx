@@ -81,7 +81,7 @@ export function PresentedWorkForm() {
     (async () => {
       await loadPeople();
 
-      if (!isEdit) {
+      if (isEdit) {
         await loadPresentedWork();
       }
     })();

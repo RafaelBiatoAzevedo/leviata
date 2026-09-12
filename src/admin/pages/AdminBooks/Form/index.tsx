@@ -95,7 +95,7 @@ export function BookForm() {
     (async () => {
       await loadPeople();
 
-      if (!isEdit) {
+      if (isEdit) {
         await loadBook();
       }
     })();

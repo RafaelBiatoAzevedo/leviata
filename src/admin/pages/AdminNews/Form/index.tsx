@@ -81,7 +81,7 @@ export function NewsForm() {
     (async () => {
       await loadEventRelated();
 
-      if (!isEdit) {
+      if (isEdit) {
         await loadNews();
       }
     })();

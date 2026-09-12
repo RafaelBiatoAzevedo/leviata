@@ -89,7 +89,7 @@ export function BoardForm() {
     (async () => {
       await loadPeople();
 
-      if (!isEdit) {
+      if (isEdit) {
         await loadBoard();
       }
     })();

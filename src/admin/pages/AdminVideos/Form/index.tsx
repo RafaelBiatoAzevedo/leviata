@@ -80,7 +80,8 @@ export function VideoForm() {
   useEffect(() => {
     (async () => {
       await loadPeople();
-      if (!isEdit) {
+
+      if (isEdit) {
         await loadVideo();
       }
     })();

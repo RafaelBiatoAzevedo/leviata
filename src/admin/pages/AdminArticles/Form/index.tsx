@@ -102,7 +102,7 @@ export function ArticleForm() {
     (async () => {
       await loadPeople();
 
-      if (!isEdit) {
+      if (isEdit) {
         await loadArticle();
       }
     })();

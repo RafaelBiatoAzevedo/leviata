@@ -97,7 +97,7 @@ export function MeetingForm() {
     (async () => {
       await loadPeople();
 
-      if (!isEdit) {
+      if (isEdit) {
         await loadMeeting();
       }
     })();

@@ -139,7 +139,7 @@ export function JuryForm() {
     (async () => {
       await loadPeople();
 
-      if (!isEdit) {
+      if (isEdit) {
         await loadJury();
       }
     })();
