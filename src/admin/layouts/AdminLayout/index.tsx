@@ -16,11 +16,10 @@ import {
   FiLayers,
   FiFileText,
   FiMonitor,
-  FiSearch,
   FiClipboard,
 } from "react-icons/fi";
 
-import { TbDoorEnter } from "react-icons/tb";
+import { TbDoorEnter, TbFolderSearch } from "react-icons/tb";
 
 import {
   Container,
@@ -151,7 +150,7 @@ export function AdminLayout() {
           </NavItem>
 
           <NavItem to="/admin/pesquisas" title="Pesquisas">
-            <FiSearch />
+            <TbFolderSearch />
 
             {!collapsed && <span>Pesquisas</span>}
           </NavItem>

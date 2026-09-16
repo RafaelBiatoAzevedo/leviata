@@ -35,6 +35,12 @@ import { ThematicForm } from "../pages/AdminThematics/Form";
 import { AdminVideos } from "../pages/AdminVideos/List";
 import { VideoView } from "../pages/AdminVideos/View";
 import { VideoForm } from "../pages/AdminVideos/Form";
+import { AdminResearch } from "../pages/AdminResearch/List";
+import { SearchView } from "../pages/AdminResearch/View";
+import { SearchForm } from "../pages/AdminResearch/Form";
+import { AdminResearchInstruments } from "../pages/AdminResearchInstruments/List";
+import { ResearchInstrumentView } from "../pages/AdminResearchInstruments/View";
+import { ResearchInstrumentForm } from "../pages/AdminResearchInstruments/Form";
 
 export const adminRoutes = (
   <Route
@@ -154,5 +160,35 @@ export const adminRoutes = (
     <Route path="videos/novo" element={<VideoForm />} />
 
     <Route path="videos/:slug/editar" element={<VideoForm />} />
+
+    {/* Research */}
+    <Route path="pesquisas" element={<AdminResearch />} />
+
+    <Route path="pesquisas/:slug" element={<SearchView />} />
+
+    <Route path="pesquisas/novo" element={<SearchForm />} />
+
+    <Route path="pesquisas/:slug/editar" element={<SearchForm />} />
+
+    {/* ResearchInstruments */}
+    <Route
+      path="instrumentos-pesquisa"
+      element={<AdminResearchInstruments />}
+    />
+
+    <Route
+      path="instrumentos-pesquisa/:slug"
+      element={<ResearchInstrumentView />}
+    />
+
+    <Route
+      path="instrumentos-pesquisa/novo"
+      element={<ResearchInstrumentForm />}
+    />
+
+    <Route
+      path="instrumentos-pesquisa/:slug/editar"
+      element={<ResearchInstrumentForm />}
+    />
   </Route>
 );

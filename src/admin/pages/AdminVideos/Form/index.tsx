@@ -198,7 +198,7 @@ export function VideoForm() {
   return (
     <Container>
       <AdminPageHeader
-        title={isEdit ? "Editar video" : "Nova video"}
+        title={isEdit ? "Editar video" : "Novo video"}
         subtitle="Cadastre ou atualize os dados da video."
       />
 

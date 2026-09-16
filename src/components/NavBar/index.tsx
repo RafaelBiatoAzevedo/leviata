@@ -16,6 +16,7 @@ import {
   MobileMenu,
   MobileOnly,
   SubmenuItem,
+  TitleColumn,
   //SwitchCircle,
   //ThemeSwitch,
 } from "./styles";
@@ -178,6 +179,11 @@ export const Navbar = () => {
     <Container>
       <LogoButtonWrapper as="button" type="button" onClick={handleLogoClick}>
         <Logo src={leviataLogo} alt="Leviata e o cativeiro" />
+        <TitleColumn>
+          <p>Leviatã</p>
+          <p>e o</p>
+          <p>Cativeiro</p>
+        </TitleColumn>
       </LogoButtonWrapper>
 
       <DesktopOnly>

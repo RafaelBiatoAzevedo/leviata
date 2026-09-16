@@ -38,6 +38,9 @@ export const Container = styled.nav`
 export const LogoButtonWrapper = styled.button`
   display: flex;
   justify-content: center;
+  align-items: center;
+
+  gap: 0.5rem;
 
   position: relative;
 
@@ -54,6 +57,21 @@ export const LogoButtonWrapper = styled.button`
 
     filter: drop-shadow(0 0 18px ${({ theme }) => theme.colors.primary}70)
       drop-shadow(0 0 32px ${({ theme }) => theme.colors.primary}30);
+  }
+`;
+
+export const TitleColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  p {
+    margin: 0;
+    padding: 0;
+    font-size: 0.9rem;
+    font-family: ${({ theme }) => theme.fonts.title};
+    font-weight: 800;
+    line-height: 0.9;
   }
 `;
 
