@@ -1,12 +1,9 @@
-import type { BookFormData } from "../../../validations/book.schema";
+import type { SearchFormData } from "../../../validations/search.schema";
 
-export const bookDefaultValues: BookFormData = {
+export const searchDefaultValues: SearchFormData = {
   title: "",
-  subtitle: "",
-  description: "",
-  isbn: "",
-  year: 0,
-  publisher: "",
-  externalUrl: "",
-  authors: [],
+  content: "",
+  people: [],
+  images: [],
+  supports: [],
 };

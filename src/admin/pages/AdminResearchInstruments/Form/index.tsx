@@ -1,49 +1,40 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
-import {
-  Actions,
-  AuthorItem,
-  AuthorList,
-  BookTopWrapper,
-  Container,
-  Form,
-} from "./styles";
-import {
-  bookSchema,
-  type BookFormData,
-} from "../../../validations/book.schema";
-import { bookDefaultValues } from "./defaultValues";
+import { Actions, AuthorItem, AuthorList, Container, Form } from "./styles";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
-import { booksService } from "../../../services/books";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
-import { AdminImageUpload } from "../../../components/AdminImageUpload";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
 import { AdminYearInput } from "../../../components/AdminYearInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
-import { FiArrowLeft, FiBook, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
-import {
-  mapBookToCreateDto,
-  mapBookToForm,
-} from "../../../mappers/book.mapper";
+import { FiArrowLeft, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
+
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminError } from "../../../components/AdminError";
+import {
+  researchInstrumentSchema,
+  type ResearchInstrumentFormData,
+} from "../../../validations/researchInstrument.schema";
+import { researchInstrumentDefaultValues } from "./defaultValues";
+import { researchInstrumentsService } from "../../../services/researchInstruments";
+import {
+  mapResearchInstrumentToCreateDto,
+  mapResearchInstrumentToForm,
+} from "../../../mappers/researchInstrument.mapper";
 
 export function ResearchInstrumentForm() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { showModal, updateModal } = useModal();
-
-  const [coverFile, setCoverFile] = useState<File | null>(null);
-  const [coverPreview, setCoverPreview] = useState("");
 
   const selectedAuthorIdRef = useRef("");
 
@@ -62,25 +53,21 @@ export function ResearchInstrumentForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<BookFormData>({
-    resolver: zodResolver(bookSchema),
-    defaultValues: bookDefaultValues,
+  } = useForm<ResearchInstrumentFormData>({
+    resolver: zodResolver(researchInstrumentSchema),
+    defaultValues: researchInstrumentDefaultValues,
   });
 
-  const authors = useWatch({
+  const _people = useWatch({
     control,
-    name: "authors",
+    name: "people",
   });
 
-  const loadBook = useCallback(async () => {
+  const loadResearchInstrument = useCallback(async () => {
     if (!slug) return;
 
-    const response = await booksService.getBySlug(slug);
-    const formData = mapBookToForm(response.data);
-
-    if (response.data.coverUrl) {
-      setCoverPreview(response.data.coverUrl);
-    }
+    const response = await researchInstrumentsService.getBySlug(slug);
+    const formData = mapResearchInstrumentToForm(response.data);
 
     reset(formData);
   }, [reset, slug]);
@@ -96,10 +83,10 @@ export function ResearchInstrumentForm() {
       await loadPeople();
 
       if (isEdit) {
-        await loadBook();
+        await loadResearchInstrument();
       }
     })();
-  }, [isEdit, loadBook, loadPeople]);
+  }, [isEdit, loadResearchInstrument, loadPeople]);
 
   function handleModal() {
     showModal({
@@ -118,7 +105,7 @@ export function ResearchInstrumentForm() {
                 label: "Autores",
               },
               ...people
-                .filter((person) => !authors.includes(person.id))
+                .filter((person) => !(_people || []).includes(person.id))
                 .map((person) => ({
                   value: person.id,
                   label: person.name,
@@ -154,9 +141,9 @@ export function ResearchInstrumentForm() {
   }
 
   function handleAddAuthor(personId: string) {
-    if (authors.includes(personId)) return;
+    if (_people.includes(personId)) return;
 
-    setValue("authors", [...authors, personId], {
+    setValue("people", [..._people, personId], {
       shouldValidate: true,
       shouldDirty: true,
     });
@@ -166,8 +153,8 @@ export function ResearchInstrumentForm() {
 
   function handleRemoveAuthor(personId: string) {
     setValue(
-      "authors",
-      authors.filter((id) => id !== personId),
+      "people",
+      _people.filter((id) => id !== personId),
       {
         shouldValidate: true,
         shouldDirty: true,
@@ -175,33 +162,37 @@ export function ResearchInstrumentForm() {
     );
   }
 
-  async function onSubmit(data: BookFormData) {
+  async function onSubmit(data: ResearchInstrumentFormData) {
     try {
       if (isEdit) {
-        await booksService.updateBySlug(slug!, data);
+        await researchInstrumentsService.updateBySlug(slug!, data);
 
         showToast({
-          title: "Livro atualizado",
+          title: "Instrumento de pesquisa atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await booksService.create(mapBookToCreateDto(data), coverFile!);
+        await researchInstrumentsService.create(
+          mapResearchInstrumentToCreateDto(data),
+        );
 
         showToast({
-          title: "Livro criado",
-          description: "O livro foi cadastrado com sucesso.",
+          title: "Instrumento de pesquisa criado",
+          description: "O instrumento de pesquisa foi cadastrado com sucesso.",
           type: "success",
         });
       }
 
-      navigate("/admin/livros");
+      navigate("/admin/instrumento-pesquisa");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
 
       showToast({
-        title: isEdit ? "Erro ao atualizar livro" : "Erro ao criar livro",
+        title: isEdit
+          ? "Erro ao atualizar instrumento de pesquisa"
+          : "Erro ao criar instrumento de pesquisa",
         description:
           message ?? "Não foi possível salvar os dados. Tente novamente.",
         type: "danger",
@@ -209,118 +200,72 @@ export function ResearchInstrumentForm() {
     }
   }
 
-  async function handleUploadCover(file: File | null) {
-    if (!file) return;
-
-    if (isEdit) {
-      const response = await booksService.updateCover(slug!, file);
-
-      setCoverPreview(response.data.url);
-
-      setValue("coverUrl", response.data.url);
-
-      showToast({
-        title: "Capa atualizada com sucesso",
-        description: "A Capa do livro foi atualizada.",
-        type: "success",
-      });
-
-      return;
-    }
-
-    setCoverFile(file);
-
-    setCoverPreview(URL.createObjectURL(file));
-  }
-
   return (
     <Container>
       <AdminPageHeader
-        title={isEdit ? "Editar livro" : "Novo livro"}
-        subtitle="Cadastre ou atualize os dados do livro."
+        title={
+          isEdit
+            ? "Editar instrumento de pesquisa"
+            : "Novo instrumento de pesquisa"
+        }
+        subtitle="Cadastre ou atualize os dados do instrumento de pesquisa."
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BookTopWrapper>
-          <AdminFormGrid columns={1}>
-            <AdminImageUpload
-              icon={<FiBook size={42} />}
-              label="Capa"
-              variant="portrait"
-              imageUrl={coverPreview}
-              onChange={handleUploadCover}
-            />
-          </AdminFormGrid>
+        <AdminFormCard>
+          <AdminSection title="Dados Gerais">
+            <AdminFormGrid>
+              <AdminInput
+                label="Título"
+                placeholder="Título do instrumento de pesquisa"
+                required
+                error={errors.title?.message}
+                {...register("title")}
+              />
 
-          <AdminFormCard>
-            <AdminSection title="Dados Gerais">
-              <AdminFormGrid>
-                <AdminInput
-                  label="Título"
-                  placeholder="Título do livro"
-                  required
-                  error={errors.title?.message}
-                  {...register("title")}
-                />
+              <AdminInput
+                label="Slug (Gerado automaticamente)"
+                value={slug ?? ""}
+                disabled
+              />
 
-                <AdminInput
-                  label="Slug (Gerado automaticamente)"
-                  value={slug ?? ""}
-                  disabled
-                />
+              <AdminYearInput
+                label="Ano de publicação"
+                placeholder="2025"
+                required
+                {...register("startYear", { valueAsNumber: true })}
+                error={errors.startYear?.message}
+              />
 
-                <AdminInput
-                  label="Subtítulo"
-                  placeholder="Subtítulo do livro"
-                  error={errors.subtitle?.message}
-                  {...register("subtitle")}
-                />
+              <AdminYearInput
+                label="Ano de publicação"
+                placeholder="2025"
+                required
+                {...register("endYear", { valueAsNumber: true })}
+                error={errors.endYear?.message}
+              />
 
-                <AdminInput
-                  label="Isbn"
-                  type="number"
-                  placeholder="Número isbn"
-                  error={errors.isbn?.message}
-                  {...register("isbn")}
-                />
-
-                <AdminYearInput
-                  label="Ano de publicação"
-                  placeholder="2025"
-                  required
-                  {...register("year", { valueAsNumber: true })}
-                  error={errors.year?.message}
-                />
-
-                <AdminInput
-                  label="Editora"
-                  placeholder="Nome da editora"
-                  required
-                  error={errors.publisher?.message}
-                  {...register("publisher")}
-                />
-
-                <AdminInput
-                  label="Link"
-                  placeholder="Url do livro"
-                  required
-                  error={errors.externalUrl?.message}
-                  {...register("externalUrl")}
-                />
-              </AdminFormGrid>
-            </AdminSection>
-          </AdminFormCard>
-        </BookTopWrapper>
+              <AdminInput
+                label="Link"
+                placeholder="Url do instrumento de pesquisa"
+                required
+                error={errors.externalUrl?.message}
+                {...register("externalUrl")}
+              />
+            </AdminFormGrid>
+          </AdminSection>
+        </AdminFormCard>
 
         <AdminFormCard>
-          <AdminSection title="Descrição">
+          <AdminSection title="Conteúdo">
             <AdminTextarea
-              placeholder="Escreva uma breve descrição..."
-              error={errors.description?.message}
-              {...register("description")}
+              placeholder="Escreva o conteúdo..."
+              error={errors.content?.message}
+              {...register("content")}
             ></AdminTextarea>
           </AdminSection>
         </AdminFormCard>
+
         <AdminFormCard>
           <AdminSection
             title="Autores"
@@ -331,7 +276,7 @@ export function ResearchInstrumentForm() {
             }
           >
             <AuthorList>
-              {authors.map((authorId) => {
+              {_people.map((authorId) => {
                 const author = people.find((person) => person.id === authorId);
 
                 if (!author) return null;
@@ -351,9 +296,7 @@ export function ResearchInstrumentForm() {
               })}
             </AuthorList>
 
-            {errors.authors && (
-              <AdminError>{errors.authors.message}</AdminError>
-            )}
+            {errors.people && <AdminError>{errors.people.message}</AdminError>}
           </AdminSection>
         </AdminFormCard>
 

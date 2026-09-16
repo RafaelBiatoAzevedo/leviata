@@ -85,7 +85,7 @@ export function AdminResearch() {
         await researchService.removeBySlug(search.slug);
 
         showToast({
-          title: "Pesquisa excluído",
+          title: "Pesquisa excluída",
           description: `${search.title.toUpperCase()}`,
           type: "success",
         });
@@ -103,7 +103,7 @@ export function AdminResearch() {
     <Container>
       <AdminPageHeader
         title="Pesquisas"
-        subtitle="Gerencie os pesquisas cadastrados."
+        subtitle="Gerencie as pesquisas cadastrados."
       >
         <AdminButton onClick={() => navigate("/admin/pesquisas/novo")}>
           <FiPlus />

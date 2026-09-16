@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { TArticleType } from "../types/TArticleType";
+import { ArticleType, type TArticleType } from "../types/TArticleType";
 
 export const articleSchema = z.object({
   coverUrl: z
@@ -13,9 +13,12 @@ export const articleSchema = z.object({
     .min(1, "Informe o título.")
     .max(255, "O título deve ter no máximo 255 caracteres."),
 
-  type: z.enum(["ARTICLE", "DOSSIER"] as [TArticleType, ...TArticleType[]], {
-    message: "Selecione o tipo do artigo.",
-  }),
+  type: z.enum(
+    Object.values(ArticleType) as [TArticleType, ...TArticleType[]],
+    {
+      message: "Selecione o tipo do artigo.",
+    },
+  ),
 
   journal: z
     .string()

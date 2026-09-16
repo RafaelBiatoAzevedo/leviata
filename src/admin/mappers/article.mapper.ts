@@ -1,25 +1,25 @@
 import type { ArticleResponseDto } from "../dtos/articles/ArticleResponseDto";
 import type { ArticleFormData } from "../validations/article.schema";
 
-export function mapArticleToForm(book: ArticleResponseDto): ArticleFormData {
+export function mapArticleToForm(article: ArticleResponseDto): ArticleFormData {
   return {
-    title: book.title,
+    title: article.title,
 
-    type: book.type,
+    type: article.type,
 
-    volume: book.volume ?? "",
+    volume: article.volume ?? "",
 
-    doi: book.doi ?? "",
+    doi: article.doi ?? "",
 
-    journal: book.journal,
+    journal: article.journal,
 
-    year: book.year,
+    year: article.year,
 
-    externalUrl: book.externalUrl ?? "",
+    externalUrl: article.externalUrl ?? "",
 
-    summary: book.summary ?? "",
+    summary: article.summary ?? "",
 
-    authors: book.authors.map((author) => author.id!),
+    authors: article.authors.map((author) => author.id!),
   };
 }
 

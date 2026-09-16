@@ -1,12 +1,12 @@
-import type { BookFormData } from "../../../validations/book.schema";
+import { ResearchInstrumentType } from "../../../types/TResearchInstrumentType";
+import type { ResearchInstrumentFormData } from "../../../validations/researchInstrument.schema";
 
-export const bookDefaultValues: BookFormData = {
+export const researchInstrumentDefaultValues: ResearchInstrumentFormData = {
   title: "",
-  subtitle: "",
-  description: "",
-  isbn: "",
-  year: 0,
-  publisher: "",
+  type: ResearchInstrumentType.DOSSIER,
+  startYear: undefined,
+  endYear: undefined,
+  content: "",
   externalUrl: "",
-  authors: [],
+  people: [],
 };

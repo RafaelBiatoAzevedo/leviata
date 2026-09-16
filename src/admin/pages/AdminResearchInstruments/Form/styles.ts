@@ -16,16 +16,6 @@ export const Form = styled.form`
   gap: 2rem;
 `;
 
-export const BookTopWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-
-  > :first-child {
-    flex: 1;
-  }
-`;
-
 export const AuthorList = styled.div`
   display: flex;
 

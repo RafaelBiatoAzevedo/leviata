@@ -4,38 +4,43 @@ import {
   Actions,
   AuthorItem,
   AuthorList,
-  BookTopWrapper,
+  SearchTopWrapper,
   Container,
   Form,
 } from "./styles";
 import {
-  bookSchema,
-  type BookFormData,
-} from "../../../validations/book.schema";
-import { bookDefaultValues } from "./defaultValues";
+  searchSchema,
+  type SearchFormData,
+} from "../../../validations/search.schema";
+import { searchDefaultValues } from "./defaultValues";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
-import { booksService } from "../../../services/books";
+import { researchService } from "../../../services/research";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
 import { AdminImageUpload } from "../../../components/AdminImageUpload";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
-import { AdminYearInput } from "../../../components/AdminYearInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
-import { FiArrowLeft, FiBook, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
 import {
-  mapBookToCreateDto,
-  mapBookToForm,
-} from "../../../mappers/book.mapper";
+  FiArrowLeft,
+  FiSearch,
+  FiPlus,
+  FiSave,
+  FiTrash2,
+} from "react-icons/fi";
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminError } from "../../../components/AdminError";
+import {
+  mapSearchToCreateDto,
+  mapSearchToForm,
+} from "../../../mappers/search.mapper";
 
 export function SearchForm() {
   const navigate = useNavigate();
@@ -62,21 +67,21 @@ export function SearchForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<BookFormData>({
-    resolver: zodResolver(bookSchema),
-    defaultValues: bookDefaultValues,
+  } = useForm<SearchFormData>({
+    resolver: zodResolver(searchSchema),
+    defaultValues: searchDefaultValues,
   });
 
-  const authors = useWatch({
+  const _people = useWatch({
     control,
-    name: "authors",
+    name: "people",
   });
 
-  const loadBook = useCallback(async () => {
+  const loadSearch = useCallback(async () => {
     if (!slug) return;
 
-    const response = await booksService.getBySlug(slug);
-    const formData = mapBookToForm(response.data);
+    const response = await researchService.getBySlug(slug);
+    const formData = mapSearchToForm(response.data);
 
     if (response.data.coverUrl) {
       setCoverPreview(response.data.coverUrl);
@@ -96,10 +101,10 @@ export function SearchForm() {
       await loadPeople();
 
       if (isEdit) {
-        await loadBook();
+        await loadSearch();
       }
     })();
-  }, [isEdit, loadBook, loadPeople]);
+  }, [isEdit, loadSearch, loadPeople]);
 
   function handleModal() {
     showModal({
@@ -118,7 +123,7 @@ export function SearchForm() {
                 label: "Autores",
               },
               ...people
-                .filter((person) => !authors.includes(person.id))
+                .filter((person) => !(_people || []).includes(person.id))
                 .map((person) => ({
                   value: person.id,
                   label: person.name,
@@ -154,9 +159,9 @@ export function SearchForm() {
   }
 
   function handleAddAuthor(personId: string) {
-    if (authors.includes(personId)) return;
+    if ((_people || []).includes(personId)) return;
 
-    setValue("authors", [...authors, personId], {
+    setValue("people", [..._people, personId], {
       shouldValidate: true,
       shouldDirty: true,
     });
@@ -166,8 +171,8 @@ export function SearchForm() {
 
   function handleRemoveAuthor(personId: string) {
     setValue(
-      "authors",
-      authors.filter((id) => id !== personId),
+      "people",
+      _people.filter((id) => id !== personId),
       {
         shouldValidate: true,
         shouldDirty: true,
@@ -175,33 +180,33 @@ export function SearchForm() {
     );
   }
 
-  async function onSubmit(data: BookFormData) {
+  async function onSubmit(data: SearchFormData) {
     try {
       if (isEdit) {
-        await booksService.updateBySlug(slug!, data);
+        await researchService.updateBySlug(slug!, data);
 
         showToast({
-          title: "Livro atualizado",
+          title: "Pesquisa atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await booksService.create(mapBookToCreateDto(data), coverFile!);
+        await researchService.create(mapSearchToCreateDto(data), coverFile!);
 
         showToast({
-          title: "Livro criado",
-          description: "O livro foi cadastrado com sucesso.",
+          title: "Pesquisa criado",
+          description: "O pesquisa foi cadastrado com sucesso.",
           type: "success",
         });
       }
 
-      navigate("/admin/livros");
+      navigate("/admin/pesquisas");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
 
       showToast({
-        title: isEdit ? "Erro ao atualizar livro" : "Erro ao criar livro",
+        title: isEdit ? "Erro ao atualizar pesquisa" : "Erro ao criar pesquisa",
         description:
           message ?? "Não foi possível salvar os dados. Tente novamente.",
         type: "danger",
@@ -213,7 +218,7 @@ export function SearchForm() {
     if (!file) return;
 
     if (isEdit) {
-      const response = await booksService.updateCover(slug!, file);
+      const response = await researchService.updateCover(slug!, file);
 
       setCoverPreview(response.data.url);
 
@@ -221,7 +226,7 @@ export function SearchForm() {
 
       showToast({
         title: "Capa atualizada com sucesso",
-        description: "A Capa do livro foi atualizada.",
+        description: "A Capa do pesquisa foi atualizada.",
         type: "success",
       });
 
@@ -236,17 +241,17 @@ export function SearchForm() {
   return (
     <Container>
       <AdminPageHeader
-        title={isEdit ? "Editar livro" : "Novo livro"}
-        subtitle="Cadastre ou atualize os dados do livro."
+        title={isEdit ? "Editar pesquisa" : "Nova pesquisa"}
+        subtitle="Cadastre ou atualize os dados da pesquisa."
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BookTopWrapper>
+        <SearchTopWrapper>
           <AdminFormGrid columns={1}>
             <AdminImageUpload
-              icon={<FiBook size={42} />}
+              icon={<FiSearch size={42} />}
               label="Capa"
-              variant="portrait"
+              variant="landscape"
               imageUrl={coverPreview}
               onChange={handleUploadCover}
             />
@@ -257,7 +262,7 @@ export function SearchForm() {
               <AdminFormGrid>
                 <AdminInput
                   label="Título"
-                  placeholder="Título do livro"
+                  placeholder="Título do pesquisa"
                   required
                   error={errors.title?.message}
                   {...register("title")}
@@ -268,56 +273,17 @@ export function SearchForm() {
                   value={slug ?? ""}
                   disabled
                 />
-
-                <AdminInput
-                  label="Subtítulo"
-                  placeholder="Subtítulo do livro"
-                  error={errors.subtitle?.message}
-                  {...register("subtitle")}
-                />
-
-                <AdminInput
-                  label="Isbn"
-                  type="number"
-                  placeholder="Número isbn"
-                  error={errors.isbn?.message}
-                  {...register("isbn")}
-                />
-
-                <AdminYearInput
-                  label="Ano de publicação"
-                  placeholder="2025"
-                  required
-                  {...register("year", { valueAsNumber: true })}
-                  error={errors.year?.message}
-                />
-
-                <AdminInput
-                  label="Editora"
-                  placeholder="Nome da editora"
-                  required
-                  error={errors.publisher?.message}
-                  {...register("publisher")}
-                />
-
-                <AdminInput
-                  label="Link"
-                  placeholder="Url do livro"
-                  required
-                  error={errors.externalUrl?.message}
-                  {...register("externalUrl")}
-                />
               </AdminFormGrid>
             </AdminSection>
           </AdminFormCard>
-        </BookTopWrapper>
+        </SearchTopWrapper>
 
         <AdminFormCard>
-          <AdminSection title="Descrição">
+          <AdminSection title="Conteúdo">
             <AdminTextarea
-              placeholder="Escreva uma breve descrição..."
-              error={errors.description?.message}
-              {...register("description")}
+              placeholder="Escreva o conteúdo..."
+              error={errors.content?.message}
+              {...register("content")}
             ></AdminTextarea>
           </AdminSection>
         </AdminFormCard>
@@ -331,7 +297,7 @@ export function SearchForm() {
             }
           >
             <AuthorList>
-              {authors.map((authorId) => {
+              {_people.map((authorId) => {
                 const author = people.find((person) => person.id === authorId);
 
                 if (!author) return null;
@@ -351,9 +317,7 @@ export function SearchForm() {
               })}
             </AuthorList>
 
-            {errors.authors && (
-              <AdminError>{errors.authors.message}</AdminError>
-            )}
+            {errors.people && <AdminError>{errors.people.message}</AdminError>}
           </AdminSection>
         </AdminFormCard>
 

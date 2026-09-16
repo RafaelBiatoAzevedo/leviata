@@ -65,7 +65,7 @@ export function AdminResearchInstruments() {
 
   function handleDelete(researchInstrument: ResearchInstrumentResponseDto) {
     showModal({
-      title: "Excluir livro",
+      title: "Excluir instrumento de pesquisa",
 
       content: <AdminDeleteContent title={researchInstrument.title} />,
 
@@ -97,7 +97,7 @@ export function AdminResearchInstruments() {
     <Container>
       <AdminPageHeader
         title="Instrumento de Pesquisas"
-        subtitle="Gerencie os instrumentos pesquisascadastrados."
+        subtitle="Gerencie os instrumentos pesquisas cadastrados."
       >
         <AdminButton
           onClick={() => navigate("/admin/instrumentos-pesquisa/novo")}
@@ -111,7 +111,7 @@ export function AdminResearchInstruments() {
         <AdminSearchBar
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pesquisar livros..."
+          placeholder="Pesquisar instrumento de pesquisas..."
         />
       </Filters>
 
@@ -186,7 +186,7 @@ export function AdminResearchInstruments() {
       </AdminTable>
 
       {!loading && filteredResearchInstruments.length === 0 && (
-        <Empty>Nenhum livro encontrado.</Empty>
+        <Empty>Nenhum instrumento de pesquisa encontrado.</Empty>
       )}
     </Container>
   );
