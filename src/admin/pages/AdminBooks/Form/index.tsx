@@ -299,15 +299,14 @@ export function BookForm() {
                   error={errors.publisher?.message}
                   {...register("publisher")}
                 />
-
-                <AdminInput
-                  label="Link"
-                  placeholder="Url do livro"
-                  required
-                  error={errors.externalUrl?.message}
-                  {...register("externalUrl")}
-                />
               </AdminFormGrid>
+              <AdminInput
+                label="Link"
+                placeholder="Url do livro"
+                required
+                error={errors.externalUrl?.message}
+                {...register("externalUrl")}
+              />
             </AdminSection>
           </AdminFormCard>
         </BookTopWrapper>

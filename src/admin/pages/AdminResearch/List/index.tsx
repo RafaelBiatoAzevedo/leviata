@@ -125,8 +125,7 @@ export function AdminResearch() {
             <th>Capa</th>
             <th>Título</th>
             <th>Descrição</th>
-            <th>Ano</th>
-            <th>Publicação</th>
+            <th>N° Participantes</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -157,6 +156,7 @@ export function AdminResearch() {
                   <DescriptionCell>{search.content}</DescriptionCell>
                 </td>
 
+                <td>{search.people.length}</td>
                 <td>
                   <Actions>
                     <AdminIconButton

@@ -251,7 +251,7 @@ export function SearchForm() {
             <AdminImageUpload
               icon={<FiSearch size={42} />}
               label="Capa"
-              variant="landscape"
+              variant="square"
               imageUrl={coverPreview}
               onChange={handleUploadCover}
             />
@@ -289,7 +289,7 @@ export function SearchForm() {
         </AdminFormCard>
         <AdminFormCard>
           <AdminSection
-            title="Autores"
+            title="Participantes"
             action={
               <AdminButton size="medium" type="button" onClick={handleModal}>
                 <FiPlus />
@@ -318,6 +318,32 @@ export function SearchForm() {
             </AuthorList>
 
             {errors.people && <AdminError>{errors.people.message}</AdminError>}
+          </AdminSection>
+        </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection
+            title="Imagens"
+            action={
+              <AdminButton size="medium" type="button" onClick={() => {}}>
+                <FiPlus />
+              </AdminButton>
+            }
+          >
+            <></>
+          </AdminSection>
+        </AdminFormCard>
+
+        <AdminFormCard>
+          <AdminSection
+            title="Apoiadores"
+            action={
+              <AdminButton size="medium" type="button" onClick={() => {}}>
+                <FiPlus />
+              </AdminButton>
+            }
+          >
+            <></>
           </AdminSection>
         </AdminFormCard>
 

@@ -97,9 +97,9 @@ export function BookView() {
               <AdminDescriptionItem label="Ano" value={book.year} />
 
               <AdminDescriptionItem label="Editora" value={book.publisher} />
-
-              <AdminDescriptionItem label="Link" value={book.externalUrl} />
             </AdminDescriptionList>
+
+            <AdminDescriptionItem label="Link" value={book.externalUrl} />
           </AdminSection>
         </AdminFormCard>
       </ContentWrapper>

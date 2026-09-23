@@ -1,6 +1,13 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
-import { Actions, AuthorItem, AuthorList, Container, Form } from "./styles";
+import {
+  Actions,
+  AuthorItem,
+  AuthorList,
+  Container,
+  Form,
+  InstrumentTopWrapper,
+} from "./styles";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
@@ -12,7 +19,13 @@ import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
 import { AdminYearInput } from "../../../components/AdminYearInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
-import { FiArrowLeft, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
+import {
+  FiArrowLeft,
+  FiFileText,
+  FiPlus,
+  FiSave,
+  FiTrash2,
+} from "react-icons/fi";
 
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
@@ -30,6 +43,8 @@ import {
   mapResearchInstrumentToCreateDto,
   mapResearchInstrumentToForm,
 } from "../../../mappers/researchInstrument.mapper";
+import { AdminFileUpload } from "../../../components/AdminFileUpload";
+import { researchInstrumentTypeOptions } from "../../../utils/researchInstrument";
 
 export function ResearchInstrumentForm() {
   const navigate = useNavigate();
@@ -37,6 +52,9 @@ export function ResearchInstrumentForm() {
   const { showModal, updateModal } = useModal();
 
   const selectedAuthorIdRef = useRef("");
+
+  const [pdfPreview, setPdfPreview] = useState("");
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
 
   const [people, setPeople] = useState<PersonResponseDto[]>(
     [] as PersonResponseDto[],
@@ -162,6 +180,28 @@ export function ResearchInstrumentForm() {
     );
   }
 
+  async function handleUploadPdf(file: File | null) {
+    if (!file) return;
+
+    if (isEdit) {
+      const response = await researchInstrumentsService.updatePdf(slug!, file);
+
+      setPdfPreview(response.data.url);
+
+      setValue("pdfUrl", response.data.url);
+
+      showToast({
+        title: "PDF atualizado com sucesso",
+        description: "O arquivo PDF foi atualizado.",
+        type: "success",
+      });
+
+      return;
+    }
+
+    setPdfFile(file);
+  }
+
   async function onSubmit(data: ResearchInstrumentFormData) {
     try {
       if (isEdit) {
@@ -175,6 +215,7 @@ export function ResearchInstrumentForm() {
       } else {
         await researchInstrumentsService.create(
           mapResearchInstrumentToCreateDto(data),
+          pdfFile!,
         );
 
         showToast({
@@ -184,7 +225,7 @@ export function ResearchInstrumentForm() {
         });
       }
 
-      navigate("/admin/instrumento-pesquisa");
+      navigate("/admin/instrumentos-pesquisa");
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro desconhecido";
@@ -212,47 +253,71 @@ export function ResearchInstrumentForm() {
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
+        <InstrumentTopWrapper>
+          <AdminFormGrid columns={1}>
+            <AdminFileUpload
+              icon={<FiFileText size={42} />}
+              label="Arquivo PDF"
+              fileUrl={pdfPreview}
+              onChange={handleUploadPdf}
+              accept="application/pdf"
+            />
+          </AdminFormGrid>
+
+          <AdminFormCard>
+            <AdminSection title="Dados Gerais">
+              <AdminFormGrid>
+                <AdminInput
+                  label="Título"
+                  placeholder="Título do instrumento de pesquisa"
+                  required
+                  error={errors.title?.message}
+                  {...register("title")}
+                />
+
+                <AdminInput
+                  label="Slug (Gerado automaticamente)"
+                  value={slug ?? ""}
+                  disabled
+                />
+
+                <AdminYearInput
+                  label="Ano inicial"
+                  placeholder="1882"
+                  required
+                  {...register("startYear", { valueAsNumber: true })}
+                  error={errors.startYear?.message}
+                />
+
+                <AdminYearInput
+                  label="Ano final"
+                  placeholder="1940"
+                  required
+                  {...register("endYear", { valueAsNumber: true })}
+                  error={errors.endYear?.message}
+                />
+
+                <AdminSelect
+                  label="Tipo"
+                  options={researchInstrumentTypeOptions}
+                  error={errors.type?.message}
+                  required
+                  {...register("type")}
+                />
+              </AdminFormGrid>
+            </AdminSection>
+          </AdminFormCard>
+        </InstrumentTopWrapper>
+
         <AdminFormCard>
-          <AdminSection title="Dados Gerais">
-            <AdminFormGrid>
-              <AdminInput
-                label="Título"
-                placeholder="Título do instrumento de pesquisa"
-                required
-                error={errors.title?.message}
-                {...register("title")}
-              />
-
-              <AdminInput
-                label="Slug (Gerado automaticamente)"
-                value={slug ?? ""}
-                disabled
-              />
-
-              <AdminYearInput
-                label="Ano de publicação"
-                placeholder="2025"
-                required
-                {...register("startYear", { valueAsNumber: true })}
-                error={errors.startYear?.message}
-              />
-
-              <AdminYearInput
-                label="Ano de publicação"
-                placeholder="2025"
-                required
-                {...register("endYear", { valueAsNumber: true })}
-                error={errors.endYear?.message}
-              />
-
-              <AdminInput
-                label="Link"
-                placeholder="Url do instrumento de pesquisa"
-                required
-                error={errors.externalUrl?.message}
-                {...register("externalUrl")}
-              />
-            </AdminFormGrid>
+          <AdminSection title="Links">
+            <AdminInput
+              label="Link do conteúdo"
+              placeholder="Url do instrumento de pesquisa"
+              required
+              error={errors.externalUrl?.message}
+              {...register("externalUrl")}
+            />
           </AdminSection>
         </AdminFormCard>
 

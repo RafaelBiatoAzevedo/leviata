@@ -5,6 +5,12 @@ import {
 } from "../types/TResearchInstrumentType";
 
 export const researchInstrumentSchema = z.object({
+  pdfUrl: z
+    .string()
+    .url("Informe uma URL válida.")
+    .optional()
+    .or(z.literal("")),
+
   title: z
     .string()
     .min(1, "O título é obrigatório.")

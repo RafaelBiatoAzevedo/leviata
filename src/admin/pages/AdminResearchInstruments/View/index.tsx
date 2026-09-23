@@ -114,12 +114,12 @@ export function ResearchInstrumentView() {
                 label="Editora"
                 value={researchInstrument.publisher}
               /> */}
-
-              <AdminDescriptionItem
-                label="Link"
-                value={researchInstrument.externalUrl}
-              />
             </AdminDescriptionList>
+
+            <AdminDescriptionItem
+              label="Link"
+              value={researchInstrument.externalUrl}
+            />
           </AdminSection>
         </AdminFormCard>
       </ContentWrapper>

@@ -5,7 +5,7 @@ import type { ImageUploadResponseDto } from "../dtos/ImageUploadResponseDto";
 import type { UpdateResearchInstrumentRequestDto } from "../dtos/researchInstruments/UpdateResearchInstrumentRequestDto";
 
 export const researchInstrumentsService = {
-  create(data: CreateResearchInstrumentRequestDto, cover?: File) {
+  create(data: CreateResearchInstrumentRequestDto, pdf?: File) {
     const formData = new FormData();
 
     Object.entries(data).forEach(([key, value]) => {
@@ -29,8 +29,8 @@ export const researchInstrumentsService = {
       formData.append(key, value);
     });
 
-    if (cover) {
-      formData.append("cover", cover);
+    if (pdf) {
+      formData.append("pdf", pdf);
     }
 
     return api.post<ResearchInstrumentResponseDto>(
@@ -80,13 +80,13 @@ export const researchInstrumentsService = {
     return api.delete(`/researchInstruments/slug/${slug}`);
   },
 
-  updateCover(slug: string, cover: File) {
+  updatePdf(slug: string, pdf: File) {
     const formData = new FormData();
 
-    formData.append("cover", cover);
+    formData.append("pdf", pdf);
 
     return api.patch<ImageUploadResponseDto>(
-      `/researchInstruments/slug/${slug}/cover`,
+      `/researchInstruments/slug/${slug}/pdf`,
       formData,
       {
         headers: {
@@ -96,7 +96,7 @@ export const researchInstrumentsService = {
     );
   },
 
-  removeCover(slug: string) {
-    return api.delete(`/researchInstruments/slug/${slug}/cover`);
+  removePdf(slug: string) {
+    return api.delete(`/researchInstruments/slug/${slug}/pdf`);
   },
 };

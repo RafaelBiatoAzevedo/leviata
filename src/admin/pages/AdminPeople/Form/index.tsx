@@ -13,7 +13,7 @@ import { AdminSwitch } from "../../../components/AdminSwitch";
 import { AdminDateInput } from "../../../components/AdminDateInput";
 import { AdminImageUpload } from "../../../components/AdminImageUpload";
 
-import { Container, Form, Actions, PersonTopWrappe } from "./styles";
+import { Container, Form, Actions, PersonTopWrapper } from "./styles";
 
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
@@ -93,6 +93,30 @@ export function PersonForm() {
     })();
   }, [isEdit, loadPerson]);
 
+  async function handleUploadImage(file: File | null) {
+    if (!file) return;
+
+    if (isEdit) {
+      const response = await peopleService.updateImage(slug!, file);
+
+      setImagePreview(response.data.url);
+
+      setValue("imageUrl", response.data.url);
+
+      showToast({
+        title: "Imagem atualizada com sucesso",
+        description: "A imagem da pessoa foi atualizada.",
+        type: "success",
+      });
+
+      return;
+    }
+
+    setImageFile(file);
+
+    setImagePreview(URL.createObjectURL(file));
+  }
+
   async function onSubmit(data: PersonFormData) {
     try {
       if (isEdit) {
@@ -127,30 +151,6 @@ export function PersonForm() {
     }
   }
 
-  async function handleUploadImage(file: File | null) {
-    if (!file) return;
-
-    if (isEdit) {
-      const response = await peopleService.updateImage(slug!, file);
-
-      setImagePreview(response.data.url);
-
-      setValue("imageUrl", response.data.url);
-
-      showToast({
-        title: "Imagem atualizada com sucesso",
-        description: "A imagem da pessoa foi atualizada.",
-        type: "success",
-      });
-
-      return;
-    }
-
-    setImageFile(file);
-
-    setImagePreview(URL.createObjectURL(file));
-  }
-
   return (
     <Container>
       <AdminPageHeader
@@ -159,7 +159,7 @@ export function PersonForm() {
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <PersonTopWrappe>
+        <PersonTopWrapper>
           <AdminFormGrid columns={1}>
             <AdminImageUpload
               icon={<FiUser size={42} />}
@@ -206,7 +206,7 @@ export function PersonForm() {
               </AdminFormGrid>
             </AdminSection>
           </AdminFormCard>
-        </PersonTopWrappe>
+        </PersonTopWrapper>
 
         <AdminFormCard>
           <AdminSection title="Dados Pessoais">

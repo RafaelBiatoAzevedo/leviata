@@ -16,7 +16,7 @@ export const Form = styled.form`
   gap: 2rem;
 `;
 
-export const PersonTopWrappe = styled.div`
+export const PersonTopWrapper = styled.div`
   display: flex;
   flex-direction: row;
   gap: 2rem;

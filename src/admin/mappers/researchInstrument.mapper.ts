@@ -6,11 +6,19 @@ export function mapResearchInstrumentToForm(
 ): ResearchInstrumentFormData {
   return {
     title: instrument.title,
+
+    pdfUrl: instrument.pdfUrl ?? "",
+
     type: instrument.type,
+
     startYear: instrument.startYear ?? undefined,
+
     endYear: instrument.endYear ?? undefined,
+
     content: instrument.content ?? "",
+
     externalUrl: instrument.externalUrl ?? "",
+
     people: instrument.people.map((person) => person.id),
   };
 }
@@ -18,13 +26,10 @@ export function mapResearchInstrumentToForm(
 export function mapResearchInstrumentToCreateDto(
   data: ResearchInstrumentFormData,
 ) {
-  return {
-    title: data.title,
-    type: data.type,
-    startYear: data.startYear,
-    endYear: data.endYear,
-    content: data.content || undefined,
-    externalUrl: data.externalUrl || undefined,
-    people: data.people,
-  };
+  const dto = { ...data };
+
+  delete (dto as Partial<ResearchInstrumentFormData & { pdfUrl: string }>)
+    .pdfUrl;
+
+  return dto;
 }
