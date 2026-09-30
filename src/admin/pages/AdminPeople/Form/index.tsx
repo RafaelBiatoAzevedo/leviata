@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { FiArrowLeft, FiSave, FiUser } from "react-icons/fi";
+import { FiUser } from "react-icons/fi";
 
 import { AdminInput } from "../../../components/AdminInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
@@ -13,9 +13,8 @@ import { AdminSwitch } from "../../../components/AdminSwitch";
 import { AdminDateInput } from "../../../components/AdminDateInput";
 import { AdminImageUpload } from "../../../components/AdminImageUpload";
 
-import { Container, Form, Actions, PersonTopWrapper } from "./styles";
+import { Container, Form, PersonTopWrapper } from "./styles";
 
-import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
@@ -35,6 +34,7 @@ import { personDefaultValues } from "./defaultValues";
 import { useAdminData } from "../../../hooks/useAdminData";
 import { toSelectOptions } from "../../../utils/helperSelectOptions";
 import type z from "zod";
+import AdminFormActions from "../../../components/AdminFormActions";
 
 export function PersonForm() {
   const navigate = useNavigate();
@@ -303,21 +303,7 @@ export function PersonForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <Actions>
-          <AdminButton
-            variant="outline"
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            <FiArrowLeft />
-            Cancelar
-          </AdminButton>
-
-          <AdminButton type="submit" disabled={isSubmitting}>
-            <FiSave />
-            Salvar
-          </AdminButton>
-        </Actions>
+        <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>
   );

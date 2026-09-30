@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
-  Actions,
   AuthorItem,
   AuthorList,
   BookTopWrapper,
@@ -25,7 +24,7 @@ import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
 import { AdminYearInput } from "../../../components/AdminYearInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
-import { FiArrowLeft, FiBook, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
+import { FiBook, FiPlus, FiTrash2 } from "react-icons/fi";
 import {
   mapBookToCreateDto,
   mapBookToForm,
@@ -36,6 +35,7 @@ import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminError } from "../../../components/AdminError";
+import AdminFormActions from "../../../components/AdminFormActions";
 
 export function BookForm() {
   const navigate = useNavigate();
@@ -356,21 +356,7 @@ export function BookForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <Actions>
-          <AdminButton
-            variant="outline"
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            <FiArrowLeft />
-            Cancelar
-          </AdminButton>
-
-          <AdminButton type="submit" disabled={isSubmitting}>
-            <FiSave />
-            Salvar
-          </AdminButton>
-        </Actions>
+        <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>
   );

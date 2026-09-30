@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
-  Actions,
   AuthorItem,
   SpeakerList,
   MeetingTopWrapper,
@@ -20,7 +19,7 @@ import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
-import { FiArrowLeft, FiPlus, FiSave, FiTrash2, FiVideo } from "react-icons/fi";
+import { FiPlus, FiTrash2, FiVideo } from "react-icons/fi";
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
@@ -38,6 +37,7 @@ import {
 } from "../../../mappers/meeting.mapper";
 import { meetingTypeOptions } from "../../../utils/meetingTypes";
 import { AdminDateInput } from "../../../components/AdminDateInput";
+import AdminFormActions from "../../../components/AdminFormActions";
 
 export function MeetingForm() {
   const navigate = useNavigate();
@@ -368,21 +368,7 @@ export function MeetingForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <Actions>
-          <AdminButton
-            variant="outline"
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            <FiArrowLeft />
-            Cancelar
-          </AdminButton>
-
-          <AdminButton type="submit" disabled={isSubmitting}>
-            <FiSave />
-            Salvar
-          </AdminButton>
-        </Actions>
+        <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>
   );

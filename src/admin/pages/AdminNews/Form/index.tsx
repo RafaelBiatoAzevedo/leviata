@@ -1,13 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
-import {
-  Actions,
-  // AuthorItem,
-  // AuthorList,
-  NewsTopWrapper,
-  Container,
-  Form,
-} from "./styles";
+import { NewsTopWrapper, Container, Form } from "./styles";
 import {
   newsSchema,
   type NewsFormData,
@@ -24,18 +17,17 @@ import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
-import { FiArrowLeft, FiSave } from "react-icons/fi";
 import {
   mapNewsToCreateDto,
   mapNewsToForm,
 } from "../../../mappers/news.mapper";
-import { AdminButton } from "../../../components/AdminButton";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { BiNews } from "react-icons/bi";
 import { newsCategoryOptions } from "../../../utils/newsCategory";
 import { AdminDateInput } from "../../../components/AdminDateInput";
 import { AdminSwitch } from "../../../components/AdminSwitch";
 import { newsRelatedTypeOptions } from "../../../utils/newsRelatedType";
+import AdminFormActions from "../../../components/AdminFormActions";
 
 export function NewsForm() {
   const navigate = useNavigate();
@@ -243,21 +235,7 @@ export function NewsForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <Actions>
-          <AdminButton
-            variant="outline"
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            <FiArrowLeft />
-            Cancelar
-          </AdminButton>
-
-          <AdminButton type="submit" disabled={isSubmitting}>
-            <FiSave />
-            Salvar
-          </AdminButton>
-        </Actions>
+        <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>
   );

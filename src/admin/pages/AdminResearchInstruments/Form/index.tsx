@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
-  Actions,
   AuthorItem,
   AuthorList,
   Container,
@@ -19,13 +18,7 @@ import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
 import { AdminYearInput } from "../../../components/AdminYearInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
-import {
-  FiArrowLeft,
-  FiFileText,
-  FiPlus,
-  FiSave,
-  FiTrash2,
-} from "react-icons/fi";
+import { FiFileText, FiPlus, FiTrash2 } from "react-icons/fi";
 
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
@@ -45,6 +38,7 @@ import {
 } from "../../../mappers/researchInstrument.mapper";
 import { AdminFileUpload } from "../../../components/AdminFileUpload";
 import { researchInstrumentTypeOptions } from "../../../utils/researchInstrument";
+import AdminFormActions from "../../../components/AdminFormActions";
 
 export function ResearchInstrumentForm() {
   const navigate = useNavigate();
@@ -365,21 +359,7 @@ export function ResearchInstrumentForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <Actions>
-          <AdminButton
-            variant="outline"
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            <FiArrowLeft />
-            Cancelar
-          </AdminButton>
-
-          <AdminButton type="submit" disabled={isSubmitting}>
-            <FiSave />
-            Salvar
-          </AdminButton>
-        </Actions>
+        <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>
   );

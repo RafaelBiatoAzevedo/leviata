@@ -103,15 +103,3 @@ export const AuthorItem = styled.div`
     }
   }
 `;
-
-export const Actions = styled.div`
-  display: flex;
-
-  justify-content: flex-end;
-
-  gap: 1rem;
-
-  padding-top: 1rem;
-
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
-`;

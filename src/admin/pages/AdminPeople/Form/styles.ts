@@ -25,15 +25,3 @@ export const PersonTopWrapper = styled.div`
     flex: 1;
   }
 `;
-
-export const Actions = styled.div`
-  display: flex;
-
-  justify-content: flex-end;
-
-  gap: 1rem;
-
-  padding-top: 1rem;
-
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
-`;

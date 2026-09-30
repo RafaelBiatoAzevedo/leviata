@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
-  Actions,
   AuthorItem,
   AuthorList,
   SearchTopWrapper,
@@ -24,13 +23,7 @@ import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
-import {
-  FiArrowLeft,
-  FiSearch,
-  FiPlus,
-  FiSave,
-  FiTrash2,
-} from "react-icons/fi";
+import { FiSearch, FiPlus, FiTrash2 } from "react-icons/fi";
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
@@ -41,6 +34,7 @@ import {
   mapSearchToCreateDto,
   mapSearchToForm,
 } from "../../../mappers/search.mapper";
+import AdminFormActions from "../../../components/AdminFormActions";
 
 export function SearchForm() {
   const navigate = useNavigate();
@@ -347,21 +341,7 @@ export function SearchForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <Actions>
-          <AdminButton
-            variant="outline"
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            <FiArrowLeft />
-            Cancelar
-          </AdminButton>
-
-          <AdminButton type="submit" disabled={isSubmitting}>
-            <FiSave />
-            Salvar
-          </AdminButton>
-        </Actions>
+        <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>
   );

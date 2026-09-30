@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
-import { Actions, MemberItem, MemberList, Container, Form } from "./styles";
+import { MemberItem, MemberList, Container, Form } from "./styles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -9,7 +9,7 @@ import { AdminFormGrid } from "../../../components/AdminFormGrid";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
-import { FiArrowLeft, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
+import { FiPlus, FiTrash2 } from "react-icons/fi";
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
@@ -29,6 +29,7 @@ import {
   mapVideoToForm,
 } from "../../../mappers/video.mapper";
 import { AdminTextarea } from "../../../components/AdminTextarea";
+import AdminFormActions from "../../../components/AdminFormActions";
 
 export function VideoForm() {
   const navigate = useNavigate();
@@ -274,21 +275,7 @@ export function VideoForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <Actions>
-          <AdminButton
-            variant="outline"
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            <FiArrowLeft />
-            Cancelar
-          </AdminButton>
-
-          <AdminButton type="submit" disabled={isSubmitting}>
-            <FiSave />
-            Salvar
-          </AdminButton>
-        </Actions>
+        <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>
   );

@@ -23,8 +23,7 @@ export const articleSchema = z.object({
   journal: z
     .string()
     .max(255, "A revista deve ter no máximo 255 caracteres.")
-    .optional()
-    .or(z.literal("")),
+    .min(1, "Informe uma editora ou jornal."),
 
   volume: z
     .string()
@@ -50,8 +49,7 @@ export const articleSchema = z.object({
   externalUrl: z
     .string()
     .min(1, "Informe uma url.")
-    .url("Informe uma URL válida.")
-    .or(z.literal("")),
+    .url("Informe uma URL válida."),
 
   authors: z.array(z.string()).min(1, "Adicione pelo menos um autor."),
 });

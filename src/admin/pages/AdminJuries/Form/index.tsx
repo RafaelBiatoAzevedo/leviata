@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
-  Actions,
   MemberItem,
   MemberList,
   JuryTopWrapper,
@@ -23,7 +22,7 @@ import { AdminImageUpload } from "../../../components/AdminImageUpload";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
-import { FiArrowLeft, FiPlus, FiSave, FiTrash2 } from "react-icons/fi";
+import { FiPlus, FiTrash2 } from "react-icons/fi";
 
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
@@ -38,6 +37,7 @@ import {
 } from "../../../mappers/jury.mapper";
 import { AdminDateInput } from "../../../components/AdminDateInput";
 import { AdminTextarea } from "../../../components/AdminTextarea";
+import AdminFormActions from "../../../components/AdminFormActions";
 
 type TJuryRole = "judges" | "jurors" | "prosecutors" | "defenders" | "bailiffs";
 
@@ -633,21 +633,7 @@ export function JuryForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <Actions>
-          <AdminButton
-            variant="outline"
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            <FiArrowLeft />
-            Cancelar
-          </AdminButton>
-
-          <AdminButton type="submit" disabled={isSubmitting}>
-            <FiSave />
-            Salvar
-          </AdminButton>
-        </Actions>
+        <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>
   );

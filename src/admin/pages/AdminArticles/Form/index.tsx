@@ -16,7 +16,7 @@ import {
 } from "../../../mappers/article.mapper";
 import { AdminSelect } from "../../../components/AdminSelect";
 import {
-  Actions,
+  // Actions,
   AuthorItem,
   AuthorList,
   BookTopWrapper,
@@ -27,10 +27,10 @@ import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
 import { AdminImageUpload } from "../../../components/AdminImageUpload";
 import {
-  FiArrowLeft,
+  // FiArrowLeft,
   FiFolder,
   FiPlus,
-  FiSave,
+  // FiSave,
   FiTrash2,
 } from "react-icons/fi";
 import { AdminFormCard } from "../../../components/AdminFormCard";
@@ -43,6 +43,7 @@ import { AdminError } from "../../../components/AdminError";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { peopleService } from "../../../services/people";
 import { articlesTypeOptions } from "../../../utils/articleTypes";
+import AdminFormActions from "../../../components/AdminFormActions";
 
 export function ArticleForm() {
   const navigate = useNavigate();
@@ -371,21 +372,7 @@ export function ArticleForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <Actions>
-          <AdminButton
-            variant="outline"
-            type="button"
-            onClick={() => navigate(-1)}
-          >
-            <FiArrowLeft />
-            Cancelar
-          </AdminButton>
-
-          <AdminButton type="submit" disabled={isSubmitting}>
-            <FiSave />
-            Salvar
-          </AdminButton>
-        </Actions>
+        <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>
   );
