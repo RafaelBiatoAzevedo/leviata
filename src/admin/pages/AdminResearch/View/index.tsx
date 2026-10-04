@@ -1,3 +1,4 @@
+import { ImageGallery } from "../../../../components/ImageGallery";
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import {
@@ -107,6 +108,17 @@ export function SearchView() {
               value={`${author.academicTitle!.abbreviation} ${author.name} - ${author.institution!.acronym}`}
             />
           ))}
+        </AdminSection>
+      </AdminFormCard>
+      <AdminFormCard>
+        <AdminSection title="Fotos">
+          <ImageGallery images={search.images} />
+          {!search.images?.length && <p>Nenhuma imagem adicionada.</p>}
+        </AdminSection>
+      </AdminFormCard>
+      <AdminFormCard>
+        <AdminSection title="Apoiadores">
+          <ImageGallery images={search.supports} />
         </AdminSection>
       </AdminFormCard>
     </Container>

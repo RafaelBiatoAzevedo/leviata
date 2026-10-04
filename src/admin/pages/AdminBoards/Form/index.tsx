@@ -1,3 +1,5 @@
+import { AdminGallery } from "../../../components/AdminGallery";
+import { useGallery } from "../../../hooks/useGallery";
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { MemberItem, MemberList, Container, Form } from "./styles";
@@ -43,6 +45,9 @@ export function BoardForm() {
   const { slug } = useParams();
 
   const isEdit = Boolean(slug);
+  const [recordId, setRecordId] = useState<string | null>(null);
+  const gallery = useGallery("boards");
+  const loadGallery = gallery.load;
 
   const {
     control,
@@ -76,9 +81,11 @@ export function BoardForm() {
 
     const response = await boardsService.getBySlug(slug);
     const formData = mapBoardToForm(response.data);
+    setRecordId(response.data.id);
+    loadGallery(response.data.images);
 
     reset(formData);
-  }, [reset, slug]);
+  }, [reset, slug, loadGallery]);
 
   const loadPeople = useCallback(async () => {
     const response = await peopleService.getAll();
@@ -207,17 +214,21 @@ export function BoardForm() {
 
   async function onSubmit(data: BoardFormData) {
     try {
-      if (isEdit) {
-        await boardsService.updateBySlug(slug!, data);
+      if (isEdit && !recordId)
+        throw new Error("Aguarde o carregamento do registro antes de salvar.");
+      const saved = recordId
+        ? await boardsService.updateById(recordId, mapBoardToCreateDto(data))
+        : await boardsService.create(mapBoardToCreateDto(data));
+      setRecordId(saved.data.id);
+      await gallery.save(saved.data.id);
 
+      if (isEdit) {
         showToast({
           title: "Banca atualizada",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await boardsService.create(mapBoardToCreateDto(data));
-
         showToast({
           title: "Banca criada",
           description: "A banca foi cadastrada com sucesso.",
@@ -340,11 +351,7 @@ export function BoardForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <AdminFormCard>
-          <AdminSection title="Fotos">
-            <></>
-          </AdminSection>
-        </AdminFormCard>
+        <AdminGallery gallery={gallery} disabled={isSubmitting} />
 
         <AdminFormActions isSubmitting={isSubmitting} />
       </Form>

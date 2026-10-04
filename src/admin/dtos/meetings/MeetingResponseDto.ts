@@ -23,6 +23,8 @@ export interface MeetingResponseDto {
 
   registrationUrl: string | null;
 
+  recordingUrl: string | null;
+
   meetingUrl: string | null;
 
   speakers: Speaker[];

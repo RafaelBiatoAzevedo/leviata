@@ -9,6 +9,18 @@ import { GiInjustice } from "react-icons/gi";
 
 const activities = [
   {
+    to: "/atividades/pesquisas",
+    icon: <TbFolderSearch />,
+    title: "Pesquisas",
+    description: "Conheça os projetos e suas galerias de imagens.",
+  },
+  {
+    to: "/atividades/apresentacoes-trabalhos",
+    icon: <FiMic />,
+    title: "Trabalhos apresentados",
+    description: "Acompanhe as apresentações e os registros dos trabalhos.",
+  },
+  {
     to: "/atividades/nucleo-de-pesquisa-em-costas-negras",
     icon: <TbFolderSearch />,
     title: "Núcleo de pesquisa “Em costas negras”",

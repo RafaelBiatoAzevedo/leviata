@@ -41,6 +41,12 @@ import { SearchForm } from "../pages/AdminResearch/Form";
 import { AdminResearchInstruments } from "../pages/AdminResearchInstruments/List";
 import { ResearchInstrumentView } from "../pages/AdminResearchInstruments/View";
 import { ResearchInstrumentForm } from "../pages/AdminResearchInstruments/Form";
+import { AdminNewsletters } from "../pages/AdminNewsletter/List";
+import { NewsletterView } from "../pages/AdminNewsletter/View";
+import { NewsletterForm } from "../pages/AdminNewsletter/Form";
+import { AdminSchedule } from "../pages/AdminSchedule/List";
+import { ScheduleForm } from "../pages/AdminSchedule/Form";
+import { ScheduleView } from "../pages/AdminSchedule/View";
 
 export const adminRoutes = (
   <Route
@@ -52,6 +58,18 @@ export const adminRoutes = (
     }
   >
     <Route index element={<AdminDashboard />} />
+
+    {/* Agenda */}
+    <Route path="agenda" element={<AdminSchedule />} />
+    <Route path="agenda/novo" element={<ScheduleForm />} />
+    <Route path="agenda/:slug" element={<ScheduleView />} />
+    <Route path="agenda/:slug/editar" element={<ScheduleForm />} />
+
+    {/* Newsletter */}
+    <Route path="newsletter" element={<AdminNewsletters />} />
+    <Route path="newsletter/novo" element={<NewsletterForm />} />
+    <Route path="newsletter/:slug" element={<NewsletterView />} />
+    <Route path="newsletter/:slug/editar" element={<NewsletterForm />} />
 
     {/* Pessoas */}
     <Route path="pessoas" element={<AdminPeople />} />

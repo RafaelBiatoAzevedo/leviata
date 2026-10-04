@@ -1,19 +1,18 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
-import { MemberItem, MemberList, Container, Form } from "./styles";
+import { Container, Form } from "./styles";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useCallback, useEffect, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
-import { FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 import { peopleService } from "../../../services/people";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
-import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import {
   thematicSchema,
@@ -33,10 +32,6 @@ import AdminFormActions from "../../../components/AdminFormActions";
 export function ThematicForm() {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const { showModal, updateModal } = useModal();
-
-  const selectedMemberIdRef = useRef("");
-
   const [people, setPeople] = useState<PersonResponseDto[]>(
     [] as PersonResponseDto[],
   );
@@ -50,12 +45,9 @@ export function ThematicForm() {
   const isEdit = Boolean(slug);
 
   const {
-    control,
     register,
     handleSubmit,
     reset,
-    watch,
-    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ThematicFormData>({
     resolver: zodResolver(thematicSchema),

@@ -8,7 +8,7 @@ import { ToastProvider } from "./shared/Toast/ToastProvider";
 import { ModalProvider } from "./shared/Modal/ModalProvider";
 
 function App() {
-  const [theme, setTheme] = useState(() => {
+  const [theme] = useState(() => {
     // const savedTheme = localStorage.getItem("portfolio-theme");
 
     // if (savedTheme) return savedTheme;

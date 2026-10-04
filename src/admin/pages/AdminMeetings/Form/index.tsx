@@ -1,3 +1,5 @@
+import { AdminGallery } from "../../../components/AdminGallery";
+import { useGallery } from "../../../hooks/useGallery";
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
@@ -56,6 +58,9 @@ export function MeetingForm() {
   const { slug } = useParams();
 
   const isEdit = Boolean(slug);
+  const [recordId, setRecordId] = useState<string | null>(null);
+  const gallery = useGallery("meetings");
+  const loadGallery = gallery.load;
 
   const {
     control,
@@ -79,13 +84,15 @@ export function MeetingForm() {
 
     const response = await meetingsService.getBySlug(slug);
     const formData = mapMeetingToForm(response.data);
+    setRecordId(response.data.id);
+    loadGallery(response.data.images);
 
     if (response.data.coverUrl) {
       setCoverPreview(response.data.coverUrl);
     }
 
     reset(formData);
-  }, [reset, slug]);
+  }, [reset, slug, loadGallery]);
 
   const loadPeople = useCallback(async () => {
     const response = await peopleService.getAll();
@@ -179,17 +186,27 @@ export function MeetingForm() {
 
   async function onSubmit(data: MeetingFormData) {
     try {
-      if (isEdit) {
-        await meetingsService.updateBySlug(slug!, data);
+      if (isEdit && !recordId)
+        throw new Error("Aguarde o carregamento do registro antes de salvar.");
+      const saved = recordId
+        ? await meetingsService.updateById(
+            recordId,
+            mapMeetingToCreateDto(data),
+          )
+        : await meetingsService.create(
+            mapMeetingToCreateDto(data),
+            coverFile ?? undefined,
+          );
+      setRecordId(saved.data.id);
+      await gallery.save(saved.data.id);
 
+      if (isEdit) {
         showToast({
           title: "Encontro atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await meetingsService.create(mapMeetingToCreateDto(data), coverFile!);
-
         showToast({
           title: "Encontro criado",
           description: "O encontro foi cadastrado com sucesso.",
@@ -367,6 +384,8 @@ export function MeetingForm() {
             )}
           </AdminSection>
         </AdminFormCard>
+
+        <AdminGallery gallery={gallery} disabled={isSubmitting} />
 
         <AdminFormActions isSubmitting={isSubmitting} />
       </Form>

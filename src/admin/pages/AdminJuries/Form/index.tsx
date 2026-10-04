@@ -1,3 +1,5 @@
+import { AdminGallery } from "../../../components/AdminGallery";
+import { useGallery } from "../../../hooks/useGallery";
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
@@ -70,6 +72,9 @@ export function JuryForm() {
   const { slug } = useParams();
 
   const isEdit = Boolean(slug);
+  const [recordId, setRecordId] = useState<string | null>(null);
+  const gallery = useGallery("juries");
+  const loadGallery = gallery.load;
 
   const {
     control,
@@ -121,13 +126,15 @@ export function JuryForm() {
 
     const response = await juriesService.getBySlug(slug);
     const formData = mapJuryToForm(response.data);
+    setRecordId(response.data.id);
+    loadGallery(response.data.images);
 
     if (response.data.coverUrl) {
       setCoverPreview(response.data.coverUrl);
     }
 
     reset(formData);
-  }, [reset, slug]);
+  }, [reset, slug, loadGallery]);
 
   const loadPeople = useCallback(async () => {
     const response = await peopleService.getAll();
@@ -232,17 +239,24 @@ export function JuryForm() {
 
   async function onSubmit(data: JuryFormData) {
     try {
-      if (isEdit) {
-        await juriesService.updateBySlug(slug!, data);
+      if (isEdit && !recordId)
+        throw new Error("Aguarde o carregamento do registro antes de salvar.");
+      const saved = recordId
+        ? await juriesService.updateById(recordId, mapJuryToCreateDto(data))
+        : await juriesService.create(
+            mapJuryToCreateDto(data),
+            coverFile ?? undefined,
+          );
+      setRecordId(saved.data.id);
+      await gallery.save(saved.data.id);
 
+      if (isEdit) {
         showToast({
           title: "Júri atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await juriesService.create(mapJuryToCreateDto(data), coverFile!);
-
         showToast({
           title: "Júri criado",
           description: "O júri foi cadastrado com sucesso.",
@@ -632,6 +646,8 @@ export function JuryForm() {
             )}
           </AdminSection>
         </AdminFormCard>
+
+        <AdminGallery gallery={gallery} disabled={isSubmitting} />
 
         <AdminFormActions isSubmitting={isSubmitting} />
       </Form>

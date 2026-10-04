@@ -10,11 +10,14 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 16rem;
+  width: min(100%, 1200px);
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 4vw, 4rem);
   gap: 3rem;
 `;
 
 export const InfoWrapper = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
 

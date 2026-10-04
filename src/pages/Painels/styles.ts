@@ -10,7 +10,7 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 16rem;
+  padding: 2rem clamp(1rem, 4vw, 4rem);
   gap: 3rem;
 `;
 
@@ -51,6 +51,7 @@ export const Header = styled.header`
 `;
 
 export const Timeline = styled.div`
+  width: min(100%, 900px);
   position: relative;
 
   display: flex;
@@ -84,7 +85,7 @@ export const TimelineItem = styled.div`
 
   display: flex;
   align-items: flex-start;
-  width: 900px;
+  width: 100%;
 `;
 
 export const TimelineDot = styled.div<ITypeProps>`

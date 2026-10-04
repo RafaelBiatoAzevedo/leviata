@@ -175,7 +175,15 @@ export function Publications() {
                     alignItems: "stretch",
                   }}
                 >
-                  <ArticleCard {...article} />
+                  <ArticleCard
+                    {...article}
+                    year={String(article.year)}
+                    author={article.authors
+                      .map((author) => author.name)
+                      .filter(Boolean)
+                      .join(", ")}
+                    to={article.externalUrl}
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -234,7 +242,15 @@ export function Publications() {
                     alignItems: "stretch",
                   }}
                 >
-                  <ArticleCard {...dossier} />
+                  <ArticleCard
+                    {...dossier}
+                    year={String(dossier.year)}
+                    author={dossier.authors
+                      .map((author) => author.name)
+                      .filter(Boolean)
+                      .join(", ")}
+                    to={dossier.externalUrl}
+                  />
                 </SwiperSlide>
               ))}
             </Swiper>

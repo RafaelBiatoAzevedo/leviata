@@ -4,6 +4,4 @@ export const searchDefaultValues: SearchFormData = {
   title: "",
   content: "",
   people: [],
-  images: [],
-  supports: [],
 };

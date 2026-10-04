@@ -93,6 +93,15 @@ export const Description = styled.p`
 
   line-height: 1.6;
   white-space: pre-line;
+  overflow-wrap: anywhere;
 
   font-size: 0.95rem;
+`;
+
+export const Title = styled.h3`
+  color: ${({ theme }) => theme.colors.text};
+  font-family: ${({ theme }) => theme.fonts.title};
+  font-size: 1.25rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 `;

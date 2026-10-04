@@ -1,3 +1,4 @@
+import { ImageGallery } from "../../../../components/ImageGallery";
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { Container, Header, HeaderActions, Title } from "./styles";
@@ -132,6 +133,12 @@ export function PresentedWorkView() {
       <AdminFormCard>
         <AdminSection title="Imagens">
           <></>
+        </AdminSection>
+      </AdminFormCard>
+      <AdminFormCard>
+        <AdminSection title="Fotos">
+          <ImageGallery images={presentedWork.images} />
+          {!presentedWork.images?.length && <p>Nenhuma imagem adicionada.</p>}
         </AdminSection>
       </AdminFormCard>
     </Container>

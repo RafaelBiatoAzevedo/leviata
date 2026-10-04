@@ -1,3 +1,5 @@
+import { AdminGallery } from "../../../components/AdminGallery";
+import { useGallery } from "../../../hooks/useGallery";
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
@@ -53,6 +55,11 @@ export function SearchForm() {
   const { slug } = useParams();
 
   const isEdit = Boolean(slug);
+  const [recordId, setRecordId] = useState<string | null>(null);
+  const gallery = useGallery("research");
+  const loadGallery = gallery.load;
+  const supportsGallery = useGallery("research", "supports");
+  const loadSupportsGallery = supportsGallery.load;
 
   const {
     control,
@@ -76,13 +83,16 @@ export function SearchForm() {
 
     const response = await researchService.getBySlug(slug);
     const formData = mapSearchToForm(response.data);
+    setRecordId(response.data.id);
+    loadGallery(response.data.images);
+    loadSupportsGallery(response.data.supports);
 
     if (response.data.coverUrl) {
       setCoverPreview(response.data.coverUrl);
     }
 
     reset(formData);
-  }, [reset, slug]);
+  }, [reset, slug, loadGallery, loadSupportsGallery]);
 
   const loadPeople = useCallback(async () => {
     const response = await peopleService.getAll();
@@ -176,17 +186,25 @@ export function SearchForm() {
 
   async function onSubmit(data: SearchFormData) {
     try {
-      if (isEdit) {
-        await researchService.updateBySlug(slug!, data);
+      if (isEdit && !recordId)
+        throw new Error("Aguarde o carregamento do registro antes de salvar.");
+      const saved = recordId
+        ? await researchService.updateById(recordId, mapSearchToCreateDto(data))
+        : await researchService.create(
+            mapSearchToCreateDto(data),
+            coverFile ?? undefined,
+          );
+      setRecordId(saved.data.id);
+      await gallery.save(saved.data.id);
+      await supportsGallery.save(saved.data.id);
 
+      if (isEdit) {
         showToast({
           title: "Pesquisa atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await researchService.create(mapSearchToCreateDto(data), coverFile!);
-
         showToast({
           title: "Pesquisa criado",
           description: "O pesquisa foi cadastrado com sucesso.",
@@ -315,31 +333,17 @@ export function SearchForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <AdminFormCard>
-          <AdminSection
-            title="Imagens"
-            action={
-              <AdminButton size="medium" type="button" onClick={() => {}}>
-                <FiPlus />
-              </AdminButton>
-            }
-          >
-            <></>
-          </AdminSection>
-        </AdminFormCard>
+        <AdminGallery
+          gallery={gallery}
+          title="Imagens"
+          disabled={isSubmitting}
+        />
 
-        <AdminFormCard>
-          <AdminSection
-            title="Apoiadores"
-            action={
-              <AdminButton size="medium" type="button" onClick={() => {}}>
-                <FiPlus />
-              </AdminButton>
-            }
-          >
-            <></>
-          </AdminSection>
-        </AdminFormCard>
+        <AdminGallery
+          gallery={supportsGallery}
+          title="Apoiadores"
+          disabled={isSubmitting}
+        />
 
         <AdminFormActions isSubmitting={isSubmitting} />
       </Form>

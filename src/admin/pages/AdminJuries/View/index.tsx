@@ -1,3 +1,4 @@
+import { ImageGallery } from "../../../../components/ImageGallery";
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import {
@@ -191,6 +192,12 @@ export function JuryView() {
               value={`${bailiff.academicTitle!.abbreviation} ${bailiff.name} - ${bailiff.institution!.acronym}`}
             />
           ))}
+        </AdminSection>
+      </AdminFormCard>
+      <AdminFormCard>
+        <AdminSection title="Fotos">
+          <ImageGallery images={jury.images} />
+          {!jury.images?.length && <p>Nenhuma imagem adicionada.</p>}
         </AdminSection>
       </AdminFormCard>
     </Container>

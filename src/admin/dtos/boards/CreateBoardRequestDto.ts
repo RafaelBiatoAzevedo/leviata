@@ -1,5 +1,3 @@
-import type { ImageResponseDto } from "../ImageResponseDto";
-
 export interface CreateBoardRequestDto {
   title: string;
 
@@ -8,8 +6,6 @@ export interface CreateBoardRequestDto {
   advisorId: string;
 
   members: string[];
-
-  images?: ImageResponseDto[];
 
   date: string;
 

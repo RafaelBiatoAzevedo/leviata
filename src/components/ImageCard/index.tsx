@@ -1,20 +1,26 @@
-import { Container, Cover, Content, Description } from "./styles";
+import { Container, Cover, Content, Description, Title } from "./styles";
 
 interface ImageCardProps {
   imageUrl: string;
-  description?: string;
+  title?: string | null;
+  description?: string | null;
 }
 
-export function ImageCard({ imageUrl, description }: ImageCardProps) {
+export function ImageCard({ imageUrl, title, description }: ImageCardProps) {
   return (
     <Container>
       <Cover>
-        <img src={imageUrl} alt={description} />
+        <img
+          src={imageUrl}
+          alt={title || description || "Foto da galeria"}
+          loading="lazy"
+        />
       </Cover>
 
-      {!!description && (
+      {(!!title || !!description) && (
         <Content>
-          <Description>{description}</Description>
+          {title && <Title>{title}</Title>}
+          {description && <Description>{description}</Description>}
         </Content>
       )}
     </Container>

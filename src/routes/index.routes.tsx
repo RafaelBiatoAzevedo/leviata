@@ -1,3 +1,5 @@
+import { GalleryActivities } from "../pages/GalleryActivities";
+import { GalleryDetails } from "../components/GalleryDetails";
 import { Routes, Route } from "react-router-dom";
 
 import { Home } from "../pages/Home";
@@ -77,6 +79,40 @@ export function Router() {
         <Route
           path="/atividades/encontros-e-seminarios/:type/:id"
           element={<MeetingsAndSeminarsDetails />}
+        />
+
+        <Route
+          path="/atividades/pesquisas"
+          element={
+            <GalleryActivities
+              resource="research"
+              title="Pesquisas"
+              path="/atividades/pesquisas"
+            />
+          }
+        />
+        <Route
+          path="/atividades/pesquisas/:id"
+          element={<GalleryDetails resource="research" label="a pesquisa" />}
+        />
+        <Route
+          path="/atividades/apresentacoes-trabalhos"
+          element={
+            <GalleryActivities
+              resource="presented-works"
+              title="Trabalhos apresentados"
+              path="/atividades/apresentacoes-trabalhos"
+            />
+          }
+        />
+        <Route
+          path="/atividades/apresentacoes-trabalhos/:id"
+          element={
+            <GalleryDetails
+              resource="presented-works"
+              label="o trabalho apresentado"
+            />
+          }
         />
 
         <Route path="/agenda" element={<Schedule />} />

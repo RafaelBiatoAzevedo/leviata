@@ -15,6 +15,8 @@ export function mapMeetingToForm(meeting: MeetingResponseDto): MeetingFormData {
 
     registrationUrl: meeting.registrationUrl ?? "",
 
+    recordingUrl: meeting.recordingUrl ?? "",
+
     meetingUrl: meeting.meetingUrl ?? "",
 
     speakers: meeting.speakers?.map((speaker) => speaker.id!) ?? [],

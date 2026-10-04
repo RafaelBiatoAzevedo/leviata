@@ -1,3 +1,5 @@
+import { AdminGallery } from "../../../components/AdminGallery";
+import { useGallery } from "../../../hooks/useGallery";
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { Container, Form, AuthorItem, AuthorList } from "./styles";
@@ -45,6 +47,9 @@ export function PresentedWorkForm() {
   const { slug } = useParams();
 
   const isEdit = Boolean(slug);
+  const [recordId, setRecordId] = useState<string | null>(null);
+  const gallery = useGallery("presented-works");
+  const loadGallery = gallery.load;
 
   const {
     control,
@@ -68,9 +73,11 @@ export function PresentedWorkForm() {
 
     const response = await presentedWorksService.getBySlug(slug);
     const formData = mapPresentedWorkToForm(response.data);
+    setRecordId(response.data.id);
+    loadGallery(response.data.images);
 
     reset(formData);
-  }, [reset, slug]);
+  }, [reset, slug, loadGallery]);
 
   const loadPeople = useCallback(async () => {
     const response = await peopleService.getAll();
@@ -164,19 +171,24 @@ export function PresentedWorkForm() {
 
   async function onSubmit(data: PresentedWorkFormData) {
     try {
-      if (isEdit) {
-        //temp next line
-        data.meetingId = data.meetingId === "" ? undefined : data.meetingId;
-        await presentedWorksService.updateBySlug(slug!, data);
+      if (isEdit && !recordId)
+        throw new Error("Aguarde o carregamento do registro antes de salvar.");
+      const saved = recordId
+        ? await presentedWorksService.updateById(
+            recordId,
+            mapPresentedWorkToCreateDto(data),
+          )
+        : await presentedWorksService.create(mapPresentedWorkToCreateDto(data));
+      setRecordId(saved.data.id);
+      await gallery.save(saved.data.id);
 
+      if (isEdit) {
         showToast({
           title: "Apresentação atualizada",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await presentedWorksService.create(mapPresentedWorkToCreateDto(data));
-
         showToast({
           title: "Apresentação criada",
           description: "A apresentação foi cadastrada com sucesso.",
@@ -314,11 +326,7 @@ export function PresentedWorkForm() {
           </AdminSection>
         </AdminFormCard>
 
-        <AdminFormCard>
-          <AdminSection title="Imagens">
-            <></>
-          </AdminSection>
-        </AdminFormCard>
+        <AdminGallery gallery={gallery} disabled={isSubmitting} />
 
         <AdminFormActions isSubmitting={isSubmitting} />
       </Form>

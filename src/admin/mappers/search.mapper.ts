@@ -6,8 +6,6 @@ export function mapSearchToForm(search: SearchResponseDto): SearchFormData {
     title: search.title,
     content: search.content ?? "",
     people: search.people.map((person) => person.id),
-    images: search.images.map((image) => image.id),
-    supports: search.supports.map((support) => support.id),
   };
 }
 

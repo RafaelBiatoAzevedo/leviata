@@ -1,3 +1,4 @@
+import { ImageGallery } from "../../../../components/ImageGallery";
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { Container, Header, HeaderActions, Title } from "./styles";
@@ -114,6 +115,12 @@ export function BoardView() {
       <AdminFormCard>
         <AdminSection title="Fotos">
           <></>
+        </AdminSection>
+      </AdminFormCard>
+      <AdminFormCard>
+        <AdminSection title="Fotos">
+          <ImageGallery images={board.images} />
+          {!board.images?.length && <p>Nenhuma imagem adicionada.</p>}
         </AdminSection>
       </AdminFormCard>
     </Container>

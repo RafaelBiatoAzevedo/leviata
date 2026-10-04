@@ -3,6 +3,10 @@ export interface ImageResponseDto {
 
   imageUrl: string;
 
+  publicId: string | null;
+
+  title: string | null;
+
   description: string | null;
 
   boardId: string | null;

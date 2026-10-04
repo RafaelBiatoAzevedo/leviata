@@ -27,9 +27,6 @@ export const Input = styled.input<InputProps>`
 
   transition: all 0.2s ease;
 
-  /* color-scheme: ${({ theme }) =>
-    theme.title === "dark" ? "dark" : "light"}; */
-
   &::-webkit-calendar-picker-indicator {
     cursor: pointer;
 

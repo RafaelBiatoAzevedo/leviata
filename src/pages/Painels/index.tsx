@@ -1,45 +1,8 @@
+import { usePublicList } from "../../hooks/usePublicData";
+import type { BoardResponseDto } from "../../admin/dtos/boards/BoardResponseDto";
+import { ImageGallery } from "../../components/ImageGallery";
+import { Loading } from "../../components/Loading";
 import { SectionHeader } from "../../components/SectionHeader";
-
-export interface IPanels {
-  id: string;
-  tipo: "mestrado" | "defesa";
-  data: string;
-  titulo: string;
-  candidata: string;
-  banca: string[];
-  link?: string;
-}
-
-export const painelsMock: IPanels[] = [
-  {
-    id: "1",
-    tipo: "mestrado",
-    data: "08/12/2025 às 14h",
-    titulo:
-      "Entre o abolicionismo britânico e o escravismo brasileiro: conexões entre a ‘British and Foreign Anti-Slavery Society’ e a imprensa fluminense em meados do século XIX",
-    candidata: "Sofia Zambelli Menck",
-    banca: [
-      "Prof. Dr. Ricardo Alexandre Ferreira (Orientador – UNESP/Franca)",
-      "Profa. Dra. Adriana Pereira Campos (UFES)",
-      "Profa. Dra. Lúcia Helena Oliveira Silva (UNESP/Assis)",
-    ],
-    link: "http://meet.google.com/krw-mees-euk",
-  },
-  {
-    id: "2",
-    tipo: "mestrado",
-    data: "11/12/2025 às 08h",
-    titulo:
-      "Olhares estrangeiros: a escravidão no Brasil presente nos relatos de viajantes ingleses (1740-1793)",
-    candidata: "Maria Fernanda Minutti Teixeira",
-    banca: [
-      "Prof. Dr. Ricardo Alexandre Ferreira (UNESP/Franca) - Orientador",
-      "Profa. Dra. Ana Paula Ribeiro F. M. Avelar (UAB/Portugal)",
-      "Profa. Dra. Ana Carolina de Carvalho Viotti (UNESP/Marília)",
-    ],
-    link: "http://meet.google.com/kex-ryjo-hgy",
-  },
-];
 
 import { FiExternalLink } from "react-icons/fi";
 import {
@@ -60,6 +23,11 @@ import {
 } from "./styles";
 
 export default function Painels() {
+  const {
+    data: boards,
+    loading,
+    error,
+  } = usePublicList<BoardResponseDto>("boards");
   return (
     <Container>
       <Content>
@@ -70,39 +38,44 @@ export default function Painels() {
             pesquisas desenvolvidas pelo grupo."
         />
 
+        {loading && <Loading />}
+        {error && <p>Não foi possível carregar as bancas.</p>}
+        {!loading && !error && boards.length === 0 && (
+          <p>Nenhuma banca disponível.</p>
+        )}
         <Timeline>
-          {painelsMock.map((item) => (
+          {boards.map((item) => (
             <TimelineItem key={item.id}>
-              <TimelineDot $type={item.tipo} />
+              <TimelineDot $type="mestrado" />
 
               <TimelineContent>
-                <TypeBadge $type={item.tipo}>
-                  {item.tipo === "mestrado"
-                    ? "Qualificação de Mestrado"
-                    : "Defesa"}
-                </TypeBadge>
+                <TypeBadge $type="mestrado">Banca</TypeBadge>
 
-                <DateText>{item.data}</DateText>
+                <DateText>
+                  {new Date(item.date).toLocaleString("pt-BR", {
+                    timeZone: "America/Sao_Paulo",
+                  })}
+                </DateText>
 
-                <Title>{item.titulo}</Title>
+                <Title>{item.title}</Title>
 
                 <Section>
-                  <Label>Candidata</Label>
+                  <Label>Candidato</Label>
 
-                  <Text>{item.candidata}</Text>
+                  <Text>{item.candidate.name}</Text>
                 </Section>
 
                 <Section>
                   <Label>Banca</Label>
-                  {item.banca.map((b) => (
-                    <Text>{b}</Text>
+                  {[item.advisor, ...item.members].map((person) => (
+                    <Text key={person.id}>{person.name}</Text>
                   ))}
                 </Section>
 
-                {item.link && (
+                {item.meetingUrl && (
                   <Actions>
                     <ActionLink
-                      href={item.link}
+                      href={item.meetingUrl}
                       target="_blank"
                       rel="noreferrer"
                     >
@@ -111,6 +84,7 @@ export default function Painels() {
                     </ActionLink>
                   </Actions>
                 )}
+                <ImageGallery images={item.images} />
               </TimelineContent>
             </TimelineItem>
           ))}

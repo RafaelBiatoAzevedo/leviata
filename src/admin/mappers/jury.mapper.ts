@@ -22,7 +22,7 @@ export function mapJuryToForm(jury: JuryResponseDto): JuryFormData {
 
     bailiffs: jury.bailiffs.map((bailiff) => bailiff.id!),
 
-    documentUrl: jury.registrationUrl ?? "",
+    documentUrl: jury.documentUrl ?? "",
 
     registrationUrl: jury.registrationUrl ?? "",
 
