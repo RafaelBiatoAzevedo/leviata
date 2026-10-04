@@ -239,9 +239,7 @@ export const UserArea = styled.div`
 
   gap: 1rem;
 
-  padding: 1.25rem;
-
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  padding: 0;
 
   @media (max-width: 600px) {
     padding: 0;
@@ -306,44 +304,6 @@ export const UserRole = styled.span`
   color: ${({ theme }) => theme.colors.text};
 
   text-transform: capitalize;
-`;
-
-export const LogoutButton = styled.button`
-  display: flex;
-
-  align-items: center;
-
-  gap: 10px;
-
-  border: none;
-
-  cursor: pointer;
-
-  background: ${({ theme }) => theme.colors.primary};
-
-  color: ${({ theme }) => theme.colors.text};
-
-  padding: 10px 18px;
-
-  border-radius: 10px;
-
-  font-weight: 600;
-
-  transition: 0.2s;
-
-  svg {
-    font-size: 18px;
-  }
-
-  &:hover {
-    filter: brightness(0.95);
-  }
-
-  @media (max-width: 600px) {
-    padding: 10px;
-    font-size: 0;
-    gap: 0;
-  }
 `;
 
 export const Content = styled.main`

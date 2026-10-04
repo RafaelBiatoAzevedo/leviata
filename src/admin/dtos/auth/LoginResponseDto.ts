@@ -3,9 +3,9 @@ export interface LoginUserResponseDto {
 
   email: string;
 
-  firstName?: string;
+  firstName?: string | null;
 
-  lastName?: string;
+  lastName?: string | null;
 
   role: string;
 }

@@ -15,7 +15,8 @@ api.interceptors.response.use(
     if (
       error.response?.status === 401 &&
       !originalRequest._retry &&
-      !originalRequest.url?.includes("/auth/refresh")
+      !originalRequest.url?.includes("/auth/refresh") &&
+      !originalRequest.url?.includes("/auth/logout")
     ) {
       originalRequest._retry = true;
 
@@ -26,9 +27,11 @@ api.interceptors.response.use(
           refreshToken,
         });
 
-        const { accessToken } = response.data;
+        const { accessToken, refreshToken: rotatedRefreshToken } =
+          response.data;
 
         authStorage.setToken(accessToken);
+        authStorage.setRefreshToken(rotatedRefreshToken);
 
         api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 

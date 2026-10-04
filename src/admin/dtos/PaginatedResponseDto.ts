@@ -11,9 +11,11 @@ export interface AdminListQuery {
   search?: string;
   category?: string;
   type?: string;
+  role?: string;
+  isActive?: string;
 }
 
 export type AdminListFilters = Pick<
   AdminListQuery,
-  "search" | "category" | "type"
+  "search" | "category" | "type" | "role" | "isActive"
 >;

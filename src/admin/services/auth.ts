@@ -1,5 +1,8 @@
 import type { LoginRequestDto } from "../dtos/auth/LoginRequestDto";
-import type { LoginResponseDto } from "../dtos/auth/LoginResponseDto";
+import type {
+  LoginResponseDto,
+  LoginUserResponseDto,
+} from "../dtos/auth/LoginResponseDto";
 import { api } from "../../services/api";
 
 export async function login(data: LoginRequestDto): Promise<LoginResponseDto> {
@@ -21,7 +24,7 @@ export async function refresh(
 }
 
 export async function getMe() {
-  const response = await api.post("/auth/me");
+  const response = await api.get<LoginUserResponseDto>("/auth/me");
 
   return response.data;
 }

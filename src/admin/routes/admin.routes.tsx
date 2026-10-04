@@ -47,6 +47,10 @@ import { NewsletterForm } from "../pages/AdminNewsletter/Form";
 import { AdminSchedule } from "../pages/AdminSchedule/List";
 import { ScheduleForm } from "../pages/AdminSchedule/Form";
 import { ScheduleView } from "../pages/AdminSchedule/View";
+import { AdminUsers } from "../pages/AdminUsers/List";
+import { UserForm } from "../pages/AdminUsers/Form";
+import { UserView } from "../pages/AdminUsers/View";
+import { SuperAdminRoute } from "./superAdmin.routes";
 
 export const adminRoutes = (
   <Route
@@ -58,6 +62,13 @@ export const adminRoutes = (
     }
   >
     <Route index element={<AdminDashboard />} />
+    <Route path="minha-conta" element={<UserForm account />} />
+    <Route element={<SuperAdminRoute />}>
+      <Route path="usuarios" element={<AdminUsers />} />
+      <Route path="usuarios/novo" element={<UserForm />} />
+      <Route path="usuarios/:id" element={<UserView />} />
+      <Route path="usuarios/:id/editar" element={<UserForm />} />
+    </Route>
 
     {/* Agenda */}
     <Route path="agenda" element={<AdminSchedule />} />

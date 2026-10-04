@@ -10,7 +10,7 @@ import {
   FiCalendar,
   FiVideo,
   FiMail,
-  FiLogOut,
+  FiUserCheck,
   FiAward,
   FiMic,
   FiLayers,
@@ -33,7 +33,6 @@ import {
   Content,
   UserArea,
   UserName,
-  LogoutButton,
   LogoWrapper,
   LogoImage,
   UserInfo,
@@ -47,6 +46,8 @@ import leviataLogo from "../../../assets/images/leviataLogo.png";
 import { useAuth } from "../../hooks/useAuth";
 import { AdminButton } from "../../components/AdminButton";
 import { GiInjustice } from "react-icons/gi";
+import { AdminUserMenu } from "../../components/AdminUserMenu";
+import { formatUserRole } from "../../utils/users";
 
 export function AdminLayout() {
   const navigate = useNavigate();
@@ -57,7 +58,11 @@ export function AdminLayout() {
 
   const { user, signOut } = useAuth();
 
-  const initials = `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}`;
+  const initials = (
+    `${user?.firstName?.[0] ?? ""}${user?.lastName?.[0] ?? ""}` ||
+    user?.email.slice(0, 2) ||
+    "U"
+  ).toUpperCase();
 
   function handleLogout() {
     signOut();
@@ -65,19 +70,6 @@ export function AdminLayout() {
     navigate("/admin/login", {
       replace: true,
     });
-  }
-
-  function formatRole(role: string) {
-    switch (role) {
-      case "SUPER_ADMIN":
-        return "Super Administrador";
-
-      case "ADMIN":
-        return "Administrador";
-
-      default:
-        return role;
-    }
   }
 
   return (
@@ -191,6 +183,12 @@ export function AdminLayout() {
 
             {!collapsed && <span>Agenda</span>}
           </NavItem>
+          {user?.role === "SUPER_ADMIN" && (
+            <NavItem to="/admin/usuarios" title="Usuários">
+              <FiUserCheck />
+              {!collapsed && <span>Usuários</span>}
+            </NavItem>
+          )}
         </Navigation>
 
         <BackWebSiteWrapper>
@@ -222,17 +220,16 @@ export function AdminLayout() {
 
               <UserData>
                 <UserName>
-                  {user!.firstName} {user!.lastName}
+                  {[user?.firstName, user?.lastName]
+                    .filter(Boolean)
+                    .join(" ") || user?.email}
                 </UserName>
 
-                <UserRole>{formatRole(user!.role)}</UserRole>
+                <UserRole>{formatUserRole(user?.role ?? "")}</UserRole>
               </UserData>
             </UserInfo>
 
-            <LogoutButton aria-label="Sair da conta" onClick={handleLogout}>
-              <FiLogOut />
-              Logout
-            </LogoutButton>
+            <AdminUserMenu onLogout={handleLogout} />
           </UserArea>
         </Header>
 

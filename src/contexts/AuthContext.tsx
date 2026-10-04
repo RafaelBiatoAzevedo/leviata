@@ -1,5 +1,4 @@
 import {
-  createContext,
   useCallback,
   useEffect,
   useMemo,
@@ -13,52 +12,71 @@ import type {
   LoginResponseDto,
   LoginUserResponseDto,
 } from "../admin/dtos/auth/LoginResponseDto";
-import { logout } from "../admin/services/auth";
+import { getMe, logout } from "../admin/services/auth";
 import { authStorage } from "../admin/services/auth-storage";
-
-interface AuthContextData {
-  user: LoginUserResponseDto | null;
-
-  token: string | null;
-
-  isAuthenticated: boolean;
-
-  isLoading: boolean;
-
-  signIn(data: LoginResponseDto): void;
-
-  signOut(): void;
-
-  refreshSession(): void;
-}
+import { AuthContext } from "./auth-context";
 
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthContext = createContext({} as AuthContextData);
+function readStoredUser(): LoginUserResponseDto | null {
+  try {
+    const value = JSON.parse(
+      authStorage.getUser() ?? "null",
+    ) as LoginUserResponseDto | null;
+    return value &&
+      typeof value.id === "string" &&
+      typeof value.email === "string" &&
+      typeof value.role === "string"
+      ? value
+      : null;
+  } catch {
+    return null;
+  }
+}
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<LoginUserResponseDto | null>(null);
+  const [user, setUser] = useState<LoginUserResponseDto | null>(readStoredUser);
 
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string | null>(() =>
+    readStoredUser() ? authStorage.getToken() : null,
+  );
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(Boolean(user && token));
+  const userId = user?.id;
 
   useEffect(() => {
-    const storedToken = authStorage.getToken();
+    if (!token || !userId) return;
+    let cancelled = false;
+    api.defaults.headers.common.Authorization = `Bearer ${token}`;
+    getMe()
+      .then((current) => {
+        if (cancelled) return;
+        authStorage.setUser(current);
+        setUser(current);
+        setToken(authStorage.getToken());
+      })
+      .catch(() => {
+        if (cancelled) return;
+        authStorage.removeToken();
+        authStorage.removeRefreshToken();
+        authStorage.removeUser();
+        delete api.defaults.headers.common.Authorization;
+        setUser(null);
+        setToken(null);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [token, userId]);
 
-    const storedUser = authStorage.getUser();
-
-    if (storedToken && storedUser) {
-      setToken(storedToken);
-
-      setUser(JSON.parse(storedUser));
-
-      api.defaults.headers.common.Authorization = `Bearer ${storedToken}`;
-    }
-
-    setLoading(false);
+  const updateUser = useCallback((current: LoginUserResponseDto) => {
+    authStorage.setUser(current);
+    setUser(current);
   }, []);
 
   const refreshSession = useCallback(async () => {
@@ -68,13 +86,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
       throw new Error("Refresh token not found");
     }
 
-    const response = await api.post("/auth/refresh", {
+    const response = await api.post<{
+      accessToken: string;
+      refreshToken: string;
+    }>("/auth/refresh", {
       refreshToken,
     });
 
     const { accessToken } = response.data;
 
     authStorage.setToken(accessToken);
+    authStorage.setRefreshToken(response.data.refreshToken);
 
     api.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 
@@ -99,13 +121,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 
   const signOut = useCallback(() => {
+    void logout().catch(() => undefined);
     authStorage.removeToken();
 
     authStorage.removeRefreshToken();
 
     authStorage.removeUser();
-
-    logout();
 
     delete api.defaults.headers.common.Authorization;
 
@@ -127,10 +148,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       signIn,
 
       signOut,
+      updateUser,
 
       refreshSession,
     }),
-    [user, token, loading, signIn, signOut, refreshSession],
+    [user, token, loading, signIn, signOut, updateUser, refreshSession],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
