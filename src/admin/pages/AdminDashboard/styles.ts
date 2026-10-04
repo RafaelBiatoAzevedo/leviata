@@ -34,7 +34,7 @@ export const Eyebrow = styled.p`
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #777767;
+  color: ${({ theme }) => theme.colors.textSoft};
   margin: 0 0 8px;
 `;
 export const Title = styled.h1`
@@ -44,11 +44,11 @@ export const Title = styled.h1`
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: -0.035em;
-  color: #24382f;
+  color: ${({ theme }) => theme.colors.secondary};
 `;
 export const Subtitle = styled.p`
   margin: 9px 0 0;
-  color: #6b716b;
+  color: ${({ theme }) => theme.colors.textSoft};
   font-size: 14px;
   line-height: 1.6;
 `;
@@ -63,7 +63,7 @@ export const DateLabel = styled.span`
   align-items: center;
   gap: 8px;
   font-size: 12px;
-  color: #6b716b;
+  color: ${({ theme }) => theme.colors.textSoft};
   svg {
     color: ${({ theme }) => theme.colors.primary};
     font-size: 16px;
@@ -80,8 +80,9 @@ export const ActionLink = styled(Link)<{ $variant?: "gold" | "ghost" }>`
   line-height: 1.3;
   font-weight: 600;
   text-decoration: none;
-  border: 1px solid #e4e6df;
-  color: #344138;
+  border: 1px solid
+    color-mix(in srgb, ${({ theme }) => theme.colors.textSoft} 22%, transparent);
+  color: ${({ theme }) => theme.colors.secondary};
   background: ${({ theme }) => theme.colors.background};
   transition:
     background 0.2s,
@@ -92,26 +93,34 @@ export const ActionLink = styled(Link)<{ $variant?: "gold" | "ghost" }>`
   }
   &:hover {
     transform: translateY(-2px);
-    background: #f4f4ed;
+    background: ${({ theme }) => theme.colors.accentSoft};
   }
   ${({ $variant, theme }) =>
     $variant === "gold" &&
     css`
       background: ${theme.colors.primary};
-      color: #1c3029;
+      color: ${theme.colors.secondary};
       border-color: ${theme.colors.primary};
       &:hover {
         background: ${theme.colors.accentHover};
       }
     `}
-  ${({ $variant }) =>
+  ${({ $variant, theme }) =>
     $variant === "ghost" &&
     css`
       background: transparent;
-      color: #f4f1e7;
-      border-color: rgba(255, 255, 255, 0.22);
+      color: ${theme.colors.onSecondary};
+      border-color: color-mix(
+        in srgb,
+        ${theme.colors.onSecondary} 22%,
+        transparent
+      );
       &:hover {
-        background: rgba(255, 255, 255, 0.08);
+        background: color-mix(
+          in srgb,
+          ${theme.colors.onSecondary} 8%,
+          transparent
+        );
       }
     `}
   ${focus}
@@ -125,8 +134,8 @@ export const Banner = styled.section`
   gap: 40px;
   padding: 36px 42px;
   border-radius: 16px;
-  background: #1d342c;
-  color: #f4f1e7;
+  background: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.onSecondary};
   isolation: isolate;
   &::before,
   &::after {
@@ -138,13 +147,23 @@ export const Banner = styled.section`
     height: 510px;
     right: -130px;
     top: -120px;
-    border: 1px solid rgba(198, 161, 91, 0.17);
+    border: 1px solid ${({ theme }) => theme.colors.accentGlow};
     border-radius: 50%;
   }
   &::before {
     box-shadow:
-      0 0 0 52px rgba(198, 161, 91, 0.045),
-      0 0 0 106px rgba(198, 161, 91, 0.03);
+      0 0 0 52px
+        color-mix(
+          in srgb,
+          ${({ theme }) => theme.colors.primary} 4.5%,
+          transparent
+        ),
+      0 0 0 106px
+        color-mix(
+          in srgb,
+          ${({ theme }) => theme.colors.primary} 3%,
+          transparent
+        );
   }
   &::after {
     width: 280px;
@@ -167,7 +186,7 @@ export const BannerCopy = styled.div`
   > p {
     margin: 16px 0 0;
     max-width: 410px;
-    color: #c3ccc2;
+    color: ${({ theme }) => theme.colors.onSecondary};
     font-size: 14px;
     line-height: 1.8;
   }
@@ -180,24 +199,25 @@ export const BannerLabel = styled.div`
   font-weight: 500;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: #d4bd86;
+  color: ${({ theme }) => theme.colors.accentHover};
   span {
     height: 5px;
     width: 5px;
-    background: #c6a15b;
+    background: ${({ theme }) => theme.colors.primary};
     border-radius: 50%;
     flex-shrink: 0;
   }
 `;
 export const BannerTitle = styled.h2`
   font-family: ${({ theme }) => theme.fonts.title};
+  color: ${({ theme }) => theme.colors.onSecondary};
   font-size: clamp(36px, 3.5vw, 55px);
   font-weight: 500;
   line-height: 1.03;
   letter-spacing: -0.025em;
   margin: 19px 0 0;
   em {
-    color: #d7b972;
+    color: ${({ theme }) => theme.colors.accentHover};
     font-weight: 500;
   }
 
@@ -214,19 +234,24 @@ export const BannerActions = styled.div`
 `;
 export const BannerSummary = styled.div`
   justify-self: center;
-  border-left: 1px solid rgba(255, 255, 255, 0.16);
+  border-left: 1px solid
+    color-mix(
+      in srgb,
+      ${({ theme }) => theme.colors.onSecondary} 16%,
+      transparent
+    );
   padding-left: 44px;
   > span {
     font-size: 11px;
     letter-spacing: 0.13em;
     text-transform: uppercase;
-    color: #c3ccc2;
+    color: ${({ theme }) => theme.colors.onSecondary};
   }
   p {
     margin: 0;
     font-size: 12px;
     line-height: 1.6;
-    color: #c3ccc2;
+    color: ${({ theme }) => theme.colors.onSecondary};
   }
   small {
     margin-top: 25px;
@@ -234,7 +259,7 @@ export const BannerSummary = styled.div`
     align-items: center;
     gap: 7px;
     font-size: 11px;
-    color: #b6c6b9;
+    color: ${({ theme }) => theme.colors.onSecondary};
   }
   @media (max-width: 900px) {
     padding-left: 24px;
@@ -242,7 +267,12 @@ export const BannerSummary = styled.div`
   @media (max-width: 650px) {
     justify-self: stretch;
     border-left: 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.16);
+    border-top: 1px solid
+      color-mix(
+        in srgb,
+        ${({ theme }) => theme.colors.onSecondary} 16%,
+        transparent
+      );
     padding: 22px 0 0;
     small {
       margin-top: 12px;
@@ -258,7 +288,7 @@ export const BannerNumber = styled.div`
   font-weight: 500;
   line-height: 1;
   letter-spacing: -0.04em;
-  color: #f7f2e5;
+  color: ${({ theme }) => theme.colors.onSecondary};
   margin: 6px 0;
 `;
 export const StatGrid = styled.div`
@@ -278,24 +308,35 @@ export const StatCard = styled(Link)`
   flex-direction: column;
   min-width: 0;
   text-decoration: none;
-  border: 1px solid #e6e9e2;
+  border: 1px solid
+    color-mix(in srgb, ${({ theme }) => theme.colors.textSoft} 22%, transparent);
   border-radius: 12px;
   padding: 17px;
   background: ${({ theme }) => theme.colors.background};
-  box-shadow: 0 3px 10px rgba(33, 48, 39, 0.025);
+  box-shadow: 0 3px 10px
+    color-mix(
+      in srgb,
+      ${({ theme }) => theme.colors.secondary} 2.5%,
+      transparent
+    );
   transition:
     border-color 0.2s,
     transform 0.2s,
     box-shadow 0.2s;
   > span {
-    color: #6b716b;
+    color: ${({ theme }) => theme.colors.textSoft};
     font-size: 12px;
     line-height: 1.5;
   }
   &:hover {
-    border-color: #c6a15b;
+    border-color: ${({ theme }) => theme.colors.primary};
     transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(33, 48, 39, 0.05);
+    box-shadow: 0 8px 16px
+      color-mix(
+        in srgb,
+        ${({ theme }) => theme.colors.secondary} 5%,
+        transparent
+      );
   }
   ${focus}
 `;
@@ -305,30 +346,24 @@ export const StatTop = styled.div`
   align-items: center;
   > svg {
     font-size: 14px;
-    color: #a3aaa0;
+    color: ${({ theme }) => theme.colors.textSoft};
   }
 `;
-const iconColors = {
-  sage: { background: "#ecf1e9", color: "#59755a" },
-  gold: { background: "#f7f0e0", color: "#9e7d38" },
-  blue: { background: "#ecf0f5", color: "#5d7895" },
-  rose: { background: "#f6eeea", color: "#a07462" },
-};
-export const IconTile = styled.div<{ $color: keyof typeof iconColors }>`
+export const IconTile = styled.div`
   width: 33px;
   height: 33px;
   border-radius: 9px;
   display: grid;
   place-items: center;
-  background: ${({ $color }) => iconColors[$color].background};
-  color: ${({ $color }) => iconColors[$color].color};
+  background: ${({ theme }) => theme.colors.accentSoft};
+  color: ${({ theme }) => theme.colors.primary};
   svg {
     font-size: 17px;
   }
 `;
 export const StatValue = styled.strong`
   display: block;
-  color: #2c3b30;
+  color: ${({ theme }) => theme.colors.secondary};
   font-size: 28px;
   font-weight: 600;
   margin: 15px 0 5px;
@@ -344,7 +379,8 @@ export const PanelGrid = styled.div`
 `;
 export const Panel = styled.section`
   min-width: 0;
-  border: 1px solid #e6e9e2;
+  border: 1px solid
+    color-mix(in srgb, ${({ theme }) => theme.colors.textSoft} 22%, transparent);
   border-radius: 14px;
   padding: 25px;
   background: ${({ theme }) => theme.colors.background};
@@ -360,13 +396,13 @@ export const PanelHeader = styled.div`
   gap: 12px;
   margin-bottom: 20px;
   > span {
-    color: #848a80;
+    color: ${({ theme }) => theme.colors.textSoft};
     font-size: 12px;
   }
 `;
 export const SectionHeading = styled.h2`
   margin: 0;
-  color: #2c3b30;
+  color: ${({ theme }) => theme.colors.secondary};
   font-family: ${({ theme }) => theme.fonts.title};
   font-size: 27px;
   font-weight: 600;
@@ -377,7 +413,7 @@ export const PanelLink = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: #5f714d;
+  color: ${({ theme }) => theme.colors.primary};
   font-size: 11px;
   font-weight: 600;
   text-decoration: none;
@@ -386,7 +422,7 @@ export const PanelLink = styled(Link)`
     transition: transform 0.2s;
   }
   &:hover {
-    color: #88703e;
+    color: ${({ theme }) => theme.colors.accentHover};
     svg {
       transform: translateX(3px);
     }
@@ -398,7 +434,12 @@ export const EventList = styled.ul`
   padding: 0;
   margin: 0;
   li + li {
-    border-top: 1px solid #eff0eb;
+    border-top: 1px solid
+      color-mix(
+        in srgb,
+        ${({ theme }) => theme.colors.textSoft} 15%,
+        transparent
+      );
   }
 `;
 export const EventItem = styled(Link)`
@@ -409,12 +450,12 @@ export const EventItem = styled(Link)`
   padding: 17px 0;
   border-radius: 8px;
   > svg {
-    color: #9b9f94;
+    color: ${({ theme }) => theme.colors.textSoft};
     flex-shrink: 0;
     margin-left: auto;
   }
   &:hover h3 {
-    color: #9e7d38;
+    color: ${({ theme }) => theme.colors.primary};
   }
   ${focus}
 `;
@@ -427,9 +468,9 @@ export const DateTile = styled.div`
   height: 62px;
   flex-shrink: 0;
   border-radius: 10px;
-  background: #f3f2e9;
-  border: 1px solid #e9e7d8;
-  color: #53694e;
+  background: ${({ theme }) => theme.colors.accentSoft};
+  border: 1px solid ${({ theme }) => theme.colors.accentGlow};
+  color: ${({ theme }) => theme.colors.secondary};
   strong {
     font-size: 22px;
     font-weight: 600;
@@ -445,11 +486,11 @@ export const DateTile = styled.div`
 export const EventDetails = styled.div`
   min-width: 0;
   small {
-    color: #7c8576;
+    color: ${({ theme }) => theme.colors.textSoft};
     font-size: 11px;
   }
   h3 {
-    color: #364237;
+    color: ${({ theme }) => theme.colors.secondary};
     font-size: 14px;
     line-height: 1.5;
     font-weight: 500;
@@ -461,7 +502,7 @@ export const EventDetails = styled.div`
     align-items: center;
     gap: 4px;
     margin: 0;
-    color: #90968c;
+    color: ${({ theme }) => theme.colors.textSoft};
     font-size: 11px;
     line-height: 1.5;
     svg {
@@ -481,8 +522,8 @@ export const NewsThumbnail = styled.div`
   overflow: hidden;
   display: grid;
   place-items: center;
-  color: #a98d52;
-  background: #f3f0e6;
+  color: ${({ theme }) => theme.colors.primary};
+  background: ${({ theme }) => theme.colors.accentSoft};
   img {
     height: 100%;
     width: 100%;
@@ -501,7 +542,7 @@ export const NewsDetails = styled(EventDetails)`
     margin-bottom: 0;
   }
   small {
-    color: #a48a50;
+    color: ${({ theme }) => theme.colors.textSoft};
   }
 `;
 export const EmptyState = styled.div`
@@ -513,19 +554,19 @@ export const EmptyState = styled.div`
   min-height: 240px;
   justify-content: center;
   > svg {
-    color: #a59161;
+    color: ${({ theme }) => theme.colors.primary};
     font-size: 29px;
     margin-bottom: 15px;
   }
   h3 {
     font-size: 14px;
     font-weight: 500;
-    color: #495747;
+    color: ${({ theme }) => theme.colors.secondary};
     margin: 0 0 8px;
   }
   p {
     font-size: 12px;
-    color: #899180;
+    color: ${({ theme }) => theme.colors.textSoft};
     line-height: 1.7;
     max-width: 280px;
     margin: 0 0 16px;
@@ -540,7 +581,7 @@ export const ErrorState = styled.div`
   border-radius: 10px;
   border: 1px solid ${({ theme }) => theme.colors.feedback.danger.border};
   background: ${({ theme }) => theme.colors.feedback.danger.light};
-  color: #a04639;
+  color: ${({ theme }) => theme.colors.feedback.danger.main};
   font-size: 12px;
   margin-bottom: 15px;
   line-height: 1.6;
@@ -569,25 +610,26 @@ export const ShortcutGrid = styled.div`
 export const Shortcut = styled(Link)`
   min-width: 0;
   padding: 21px;
-  background: #f8f8f2;
-  border: 1px solid #e6e8dd;
+  background: ${({ theme }) => theme.colors.background};
+  border: 1px solid
+    color-mix(in srgb, ${({ theme }) => theme.colors.textSoft} 22%, transparent);
   border-radius: 12px;
   text-decoration: none;
   transition:
     border-color 0.2s,
     background 0.2s;
   > svg {
-    color: #819268;
+    color: ${({ theme }) => theme.colors.primary};
     font-size: 22px;
   }
   h3 {
-    color: #364237;
+    color: ${({ theme }) => theme.colors.secondary};
     margin: 16px 0 7px;
     font-size: 14px;
     font-weight: 600;
   }
   p {
-    color: #808773;
+    color: ${({ theme }) => theme.colors.textSoft};
     margin: 0;
     font-size: 11px;
     line-height: 1.7;
@@ -597,14 +639,14 @@ export const Shortcut = styled(Link)`
     align-items: center;
     justify-content: space-between;
     gap: 7px;
-    color: #708256;
+    color: ${({ theme }) => theme.colors.primary};
     font-size: 11px;
     font-weight: 600;
     margin-top: 20px;
   }
   &:hover {
-    background: #f2f3e8;
-    border-color: #c6a15b;
+    background: ${({ theme }) => theme.colors.accentSoft};
+    border-color: ${({ theme }) => theme.colors.primary};
   }
   ${focus}
 `;
@@ -621,9 +663,12 @@ export const Skeleton = styled.span<{
   border-radius: 8px;
   background: linear-gradient(
     90deg,
-    rgba(150, 158, 141, 0.12) 25%,
-    rgba(150, 158, 141, 0.23) 50%,
-    rgba(150, 158, 141, 0.12) 75%
+    color-mix(in srgb, ${({ theme }) => theme.colors.textSoft} 12%, transparent)
+      25%,
+    color-mix(in srgb, ${({ theme }) => theme.colors.textSoft} 23%, transparent)
+      50%,
+    color-mix(in srgb, ${({ theme }) => theme.colors.textSoft} 12%, transparent)
+      75%
   );
   background-size: 200% 100%;
   animation: ${shimmer} 1.7s ease-in-out infinite;
@@ -639,13 +684,13 @@ export const Footer = styled.footer`
   gap: 9px;
   padding: 4px 0 10px;
   font-size: 11px;
-  color: #9b9f93;
+  color: ${({ theme }) => theme.colors.textSoft};
   svg {
-    color: #b4a273;
+    color: ${({ theme }) => theme.colors.primary};
     font-size: 15px;
   }
   span:first-of-type {
-    color: #7f8678;
+    color: ${({ theme }) => theme.colors.textSoft};
     font-weight: 500;
   }
   span:last-of-type {

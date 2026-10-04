@@ -65,42 +65,36 @@ const metrics = [
     label: "Pesquisadores ativos",
     to: "/admin/pessoas",
     icon: FiUsers,
-    color: "sage",
   },
   {
     key: "books",
     label: "Livros",
     to: "/admin/livros",
     icon: FiBook,
-    color: "gold",
   },
   {
     key: "articles",
     label: "Artigos",
     to: "/admin/artigos",
     icon: FiFileText,
-    color: "blue",
   },
   {
     key: "dossiers",
     label: "Dossiês",
     to: "/admin/artigos",
     icon: FiLayers,
-    color: "rose",
   },
   {
     key: "news",
     label: "Notícias",
     to: "/admin/noticias",
     icon: FiCompass,
-    color: "gold",
   },
   {
     key: "meetings",
     label: "Encontros e seminários",
     to: "/admin/encontros",
     icon: FiMic,
-    color: "sage",
   },
 ] as const;
 
@@ -234,14 +228,14 @@ export function AdminDashboard() {
           </ErrorState>
         )}
         <StatGrid>
-          {metrics.map(({ key, label, to, icon: Icon, color }) => {
+          {metrics.map(({ key, label, to, icon: Icon }) => {
             const total = summary?.items.find(
               (item) => item.key === key,
             )?.total;
             return (
               <StatCard key={key} to={to}>
                 <StatTop>
-                  <IconTile $color={color}>
+                  <IconTile>
                     <Icon aria-hidden="true" />
                   </IconTile>
                   <FiArrowUpRight aria-hidden="true" />
