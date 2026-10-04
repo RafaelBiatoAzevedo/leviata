@@ -19,8 +19,8 @@ export const videosService = {
     );
   },
 
-  getAll() {
-    return api.get<VideoResponseDto[]>("/videos");
+  getAll(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<VideoResponseDto[]>("/videos", { params, signal });
   },
 
   getById(id: string) {

@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test:gallery": "node --test --test-isolation=none test/gallery.test.mjs",
     "test:pagination": "node --test --test-isolation=none test/pagination.test.cjs",
-    "test:users": "node --test --test-isolation=none test/users.test.mjs"
+    "test:users": "node --test --test-isolation=none test/users.test.mjs",
+    "test:thematics": "node --test --test-isolation=none test/thematics.test.mjs"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.2.11",

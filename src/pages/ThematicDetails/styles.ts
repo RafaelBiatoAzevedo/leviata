@@ -10,7 +10,7 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 16rem;
+  padding: 2rem clamp(1rem, 8vw, 12rem);
   gap: 1rem;
 `;
 
@@ -89,22 +89,28 @@ export const VideoWrapper = styled.div`
 
 export const AssociatedWrapper = styled.div`
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  align-items: start;
   gap: 2rem;
 `;
 
 export const AssociatedPresentationSection = styled.section`
-  max-width: 30%;
+  min-width: 0;
 
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1rem;
+  margin: 1rem 0;
   gap: 1rem;
+`;
+
+export const Description = styled.p`
+  margin: 0;
+  color: ${({ theme }) => theme.colors.text};
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 `;
 
 export const AssociatedPresentationLabel = styled.span`

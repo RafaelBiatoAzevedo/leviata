@@ -46,8 +46,8 @@ export const peopleService = {
     );
   },
 
-  getAll() {
-    return api.get<PersonResponseDto[]>("/people");
+  getAll(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PersonResponseDto[]>("/people", { params, signal });
   },
 
   getById(id: string) {

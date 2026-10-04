@@ -10,13 +10,17 @@ export function mapThematicToForm(
 
     description: thematic.description ?? "",
 
-    mainVideoId: thematic.mainVideoId ?? "",
+    mainVideoId: thematic.mainVideo?.id ?? "",
 
-    coordinatorId: thematic.coordinatorId,
+    coordinatorId: thematic.coordinator?.id ?? "",
 
-    additionalVideos: (thematic.additionalVideos || []).map(
-      (video) => video.videoId,
-    ),
+    additionalVideos: (thematic.additionalVideos ?? []).map((link) => ({
+      linkId: link.id,
+      videoId: link.videoId,
+      personId: link.person?.id ?? "",
+      title: link.title,
+      description: link.description ?? "",
+    })),
   };
 }
 
@@ -26,12 +30,18 @@ export function mapThematicToCreateDto(
   return {
     title: data.title,
 
-    description: data.description || undefined,
+    description: data.description?.trim() || null,
 
-    mainVideoId: data.mainVideoId || undefined,
+    mainVideoId: data.mainVideoId || null,
 
-    coordinatorId: data.coordinatorId || undefined,
+    coordinatorId: data.coordinatorId || null,
 
-    additionalVideos: data.additionalVideos,
+    additionalVideos: data.additionalVideos.map((link) => ({
+      ...(link.linkId && { id: link.linkId }),
+      videoId: link.videoId,
+      personId: link.personId || null,
+      title: link.title.trim(),
+      description: link.description.trim() || null,
+    })),
   };
 }

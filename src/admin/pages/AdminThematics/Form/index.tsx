@@ -1,225 +1,152 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { AdminPageHeader } from "../../../components/AdminPageHeader";
-import { Container, Form } from "./styles";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { useCallback, useEffect, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { FiPlus, FiTrash2 } from "react-icons/fi";
+import { isAxiosError } from "axios";
 import { useToast } from "../../../../hooks/useToast";
+import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminInput } from "../../../components/AdminInput";
-import { FiPlus } from "react-icons/fi";
-import { peopleService } from "../../../services/people";
-import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminSelect } from "../../../components/AdminSelect";
+import { AdminTextarea } from "../../../components/AdminTextarea";
+import { AdminError } from "../../../components/AdminError";
+import { AdminLoading } from "../../../components/AdminLoading";
+import AdminFormActions from "../../../components/AdminFormActions";
+import { peopleService } from "../../../services/people";
+import { videosService } from "../../../services/videos";
+import { thematicsService } from "../../../services/thematics";
+import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
+import type { VideoResponseDto } from "../../../dtos/videos/VideoResponseDto";
 import {
   thematicSchema,
   type ThematicFormData,
 } from "../../../validations/thematic.schema";
-import { thematicsService } from "../../../services/thematics";
 import { thematicDefaultValues } from "./defaultValues";
 import {
   mapThematicToCreateDto,
   mapThematicToForm,
 } from "../../../mappers/thematic.mapper";
-import { AdminTextarea } from "../../../components/AdminTextarea";
-import type { VideoResponseDto } from "../../../dtos/videos/VideoResponseDto";
-import { videosService } from "../../../services/videos";
-import AdminFormActions from "../../../components/AdminFormActions";
+import { loadAllPages } from "../../../../utils/loadAllPages";
+import {
+  Container,
+  Form,
+  VideoItem,
+  VideoItemHeader,
+  VideoList,
+  Empty,
+} from "./styles";
 
 export function ThematicForm() {
+  const { slug } = useParams();
+  return <ThematicEditor key={slug ?? "new"} slug={slug} />;
+}
+
+function ThematicEditor({ slug }: { slug?: string }) {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const [people, setPeople] = useState<PersonResponseDto[]>(
-    [] as PersonResponseDto[],
-  );
-
-  const [videos, setVideos] = useState<VideoResponseDto[]>(
-    [] as VideoResponseDto[],
-  );
-
-  const { slug } = useParams();
-
+  const [people, setPeople] = useState<PersonResponseDto[]>([]);
+  const [videos, setVideos] = useState<VideoResponseDto[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [attempt, setAttempt] = useState(0);
   const isEdit = Boolean(slug);
-
   const {
+    control,
     register,
     handleSubmit,
     reset,
+    getValues,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ThematicFormData>({
     resolver: zodResolver(thematicSchema),
     defaultValues: thematicDefaultValues,
   });
-
-  // const additionalVideos = useWatch({
-  //   control,
-  //   name: "additionalVideos",
-  // });
-
-  const loadThematic = useCallback(async () => {
-    if (!slug) return;
-
-    const response = await thematicsService.getBySlug(slug);
-    const formData = mapThematicToForm(response.data);
-
-    reset(formData);
-  }, [reset, slug]);
-
-  const load = useCallback(async () => {
-    const responsePepople = await peopleService.getAll();
-    const responseVideos = await videosService.getAll();
-
-    setPeople(responsePepople.data);
-    setVideos(responseVideos.data);
-  }, []);
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "additionalVideos",
+  });
 
   useEffect(() => {
-    (async () => {
-      await load();
+    const controller = new AbortController();
+    Promise.all([
+      loadAllPages((params) => peopleService.getAll(params, controller.signal)),
+      loadAllPages((params) => videosService.getAll(params, controller.signal)),
+      slug
+        ? thematicsService.getDetails(slug, controller.signal)
+        : Promise.resolve(null),
+    ])
+      .then(([peopleData, videosData, response]) => {
+        if (controller.signal.aborted) return;
+        setPeople(peopleData);
+        setVideos(videosData);
+        if (response) reset(mapThematicToForm(response.data));
+      })
+      .catch(() => {
+        if (!controller.signal.aborted)
+          setError("Não foi possível carregar os dados da temática.");
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [slug, reset, attempt]);
 
-      if (isEdit) {
-        await loadThematic();
-      }
-    })();
-  }, [isEdit, loadThematic, load]);
-
-  // function handleModal() {
-  //   showModal({
-  //     title: "Adicionar integrante",
-
-  //     content: (
-  //       <div style={{ padding: "2rem 0rem" }}>
-  //         <br />
-
-  //         <AdminSelect
-  //           options={[
-  //             {
-  //               value: "",
-  //               label: "Selecione um integrante",
-  //             },
-  //             ...people
-  //               .filter(
-  //                 (person) =>
-  //                   !members.includes(person.id) &&
-  //                   person.id !== advisorId &&
-  //                   person.id !== candidateId,
-  //               )
-  //               .map((person) => ({
-  //                 value: person.id,
-  //                 label: person.name,
-  //               })),
-  //           ]}
-  //           label="Integrantes"
-  //           required
-  //           onChange={(event) => {
-  //             selectedMemberIdRef.current = event.target.value;
-
-  //             updateModal({
-  //               confirmDisabled: !event.target.value,
-  //             });
-  //           }}
-  //         />
-  //       </div>
-  //     ),
-
-  //     confirmText: "Adicionar",
-
-  //     cancelText: "Cancelar",
-
-  //     confirmVariant: "success",
-
-  //     confirmDisabled: !selectedMemberIdRef.current,
-
-  //     onConfirm: () => {
-  //       handleAddMember(selectedMemberIdRef.current);
-  //     },
-
-  //     onCancel: () => {
-  //       selectedMemberIdRef.current = "";
-  //     },
-  //   });
-  // }
-
-  // function handleAddMember(personId: string) {
-  //   if (members.includes(personId)) return;
-
-  //   setValue("members", [...members, personId], {
-  //     shouldValidate: true,
-  //     shouldDirty: true,
-  //   });
-
-  //   selectedMemberIdRef.current = "";
-  // }
-
-  // function handleRemoveMember(personId: string) {
-  //   setValue(
-  //     "members",
-  //     members.filter((id) => id !== personId),
-  //     {
-  //       shouldValidate: true,
-  //       shouldDirty: true,
-  //     },
-  //   );
-  // }
-
-  const optionsCoordenator = [
-    {
-      value: "",
-      label: "Selecione o coordenador(a)",
-    },
-    ...people.map((person) => ({
-      value: person.id,
-      label: person.name,
-    })),
+  const personOptions = [
+    { value: "", label: "Nenhuma pessoa selecionada" },
+    ...people.map((person) => ({ value: person.id, label: person.name })),
   ];
-
-  const optionsMainVideo = [
-    {
-      value: "",
-      label: "Selecione o video",
-    },
-    ...videos.map((video) => ({
-      value: video.id,
-      label: video.title,
-    })),
+  const videoOptions = [
+    { value: "", label: "Selecione um vídeo" },
+    ...videos.map((video) => ({ value: video.id, label: video.title })),
   ];
 
   async function onSubmit(data: ThematicFormData) {
     try {
-      if (isEdit) {
-        await thematicsService.updateBySlug(slug!, data);
-
-        showToast({
-          title: "Temática atualizada",
-          description: "Os dados foram atualizados com sucesso.",
-          type: "success",
-        });
-      } else {
-        await thematicsService.create(mapThematicToCreateDto(data));
-
-        showToast({
-          title: "Temática criada",
-          description: "A temática foi cadastrada com sucesso.",
-          type: "success",
-        });
-      }
-
+      const dto = mapThematicToCreateDto(data);
+      if (slug) await thematicsService.updateBySlug(slug, dto);
+      else await thematicsService.create(dto);
+      showToast({
+        title: isEdit ? "Temática atualizada" : "Temática criada",
+        description: "Os dados e os vídeos foram salvos com sucesso.",
+        type: "success",
+      });
       navigate("/admin/tematicas");
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
+      const message = isAxiosError<{ message?: string | string[] }>(error)
+        ? error.response?.data.message
+        : undefined;
       showToast({
         title: isEdit ? "Erro ao atualizar temática" : "Erro ao criar temática",
-        description:
-          message ?? "Não foi possível salvar os dados. Tente novamente.",
+        description: Array.isArray(message)
+          ? message.join(" ")
+          : (message ?? "Não foi possível salvar os dados. Tente novamente."),
         type: "danger",
       });
     }
   }
+
+  if (loading) return <AdminLoading text="Carregando temática e vídeos..." />;
+  if (error)
+    return (
+      <Container>
+        <AdminError>{error}</AdminError>
+        <AdminButton
+          type="button"
+          onClick={() => {
+            setError("");
+            setLoading(true);
+            setAttempt((value) => value + 1);
+          }}
+        >
+          Tentar novamente
+        </AdminButton>
+      </Container>
+    );
 
   return (
     <Container>
@@ -227,10 +154,9 @@ export function ThematicForm() {
         title={isEdit ? "Editar temática" : "Nova temática"}
         subtitle="Cadastre ou atualize os dados da temática."
       />
-
       <Form onSubmit={handleSubmit(onSubmit)}>
         <AdminFormCard>
-          <AdminSection title="Dados Gerais">
+          <AdminSection title="Dados gerais">
             <AdminFormGrid>
               <AdminInput
                 label="Título"
@@ -239,98 +165,140 @@ export function ThematicForm() {
                 error={errors.title?.message}
                 {...register("title")}
               />
-
               <AdminInput
-                label="Slug (Gerado automaticamente)"
+                label="Slug (gerado automaticamente)"
                 value={slug ?? ""}
                 disabled
               />
-
-              {/* <AdminInput
-                label="Link da temática"
-                placeholder="Url da temática"
-                required
-                error={errors.meetingUrl?.message}
-                {...register("meetingUrl")}
-              /> */}
+              <AdminSelect
+                label="Coordenador"
+                error={errors.coordinatorId?.message}
+                {...register("coordinatorId")}
+                options={personOptions}
+              />
+              <AdminSelect
+                label="Vídeo principal"
+                error={errors.mainVideoId?.message}
+                {...register("mainVideoId")}
+                options={[
+                  { value: "", label: "Nenhum vídeo principal" },
+                  ...videoOptions.slice(1),
+                ]}
+              />
             </AdminFormGrid>
-            <AdminSelect
-              label="Coordenador"
-              required
-              error={errors.coordinatorId?.message}
-              {...register("coordinatorId")}
-              options={optionsCoordenator}
-            ></AdminSelect>
-
-            <AdminSelect
-              label="Video Principal"
-              required
-              error={errors.mainVideoId?.message}
-              {...register("mainVideoId")}
-              options={optionsMainVideo}
-            ></AdminSelect>
           </AdminSection>
         </AdminFormCard>
-
         <AdminFormCard>
           <AdminSection title="Descrição">
             <AdminTextarea
               placeholder="Escreva uma descrição..."
               error={errors.description?.message}
               {...register("description")}
-            ></AdminTextarea>
+            />
           </AdminSection>
         </AdminFormCard>
-
         <AdminFormCard>
           <AdminSection
-            title="Videos adicionais"
+            title="Vídeos adicionais"
             action={
-              <AdminButton size="medium" type="button" onClick={() => {}}>
-                <FiPlus />
+              <AdminButton
+                size="medium"
+                type="button"
+                disabled={isSubmitting}
+                onClick={() =>
+                  append({
+                    videoId: "",
+                    personId: "",
+                    title: "",
+                    description: "",
+                  })
+                }
+              >
+                <FiPlus /> Adicionar vídeo
               </AdminButton>
             }
           >
-            <></>
+            <VideoList>
+              {fields.map((field, index) => (
+                <VideoItem key={field.id}>
+                  <VideoItemHeader>
+                    <strong>Vídeo {index + 1}</strong>
+                    <AdminButton
+                      variant="danger"
+                      size="small"
+                      type="button"
+                      disabled={isSubmitting}
+                      aria-label={`Remover vídeo ${index + 1}`}
+                      onClick={() => remove(index)}
+                    >
+                      <FiTrash2 /> Remover
+                    </AdminButton>
+                  </VideoItemHeader>
+                  <AdminFormGrid>
+                    <AdminSelect
+                      id={`thematic-video-${field.id}`}
+                      label="Vídeo"
+                      required
+                      options={videoOptions}
+                      error={errors.additionalVideos?.[index]?.videoId?.message}
+                      {...register(`additionalVideos.${index}.videoId`, {
+                        onChange: (event) => {
+                          const video = videos.find(
+                            (item) => item.id === event.target.value,
+                          );
+                          if (
+                            video &&
+                            !getValues(`additionalVideos.${index}.title`)
+                          )
+                            setValue(
+                              `additionalVideos.${index}.title`,
+                              video.title,
+                              { shouldDirty: true, shouldValidate: true },
+                            );
+                        },
+                      })}
+                    />
+                    <AdminSelect
+                      id={`thematic-person-${field.id}`}
+                      label="Pessoa vinculada (opcional)"
+                      options={personOptions}
+                      error={
+                        errors.additionalVideos?.[index]?.personId?.message
+                      }
+                      {...register(`additionalVideos.${index}.personId`)}
+                    />
+                    <AdminInput
+                      id={`thematic-title-${field.id}`}
+                      label="Título na temática"
+                      required
+                      placeholder="Título deste vídeo na temática"
+                      error={errors.additionalVideos?.[index]?.title?.message}
+                      {...register(`additionalVideos.${index}.title`)}
+                    />
+                  </AdminFormGrid>
+                  <AdminTextarea
+                    id={`thematic-description-${field.id}`}
+                    label="Descrição (opcional)"
+                    placeholder="Descreva a contribuição deste vídeo..."
+                    error={
+                      errors.additionalVideos?.[index]?.description?.message
+                    }
+                    {...register(`additionalVideos.${index}.description`)}
+                  />
+                </VideoItem>
+              ))}
+              {!fields.length && (
+                <Empty>
+                  Nenhum vídeo adicional. Adicione vídeos já cadastrados no
+                  painel.
+                </Empty>
+              )}
+              {errors.additionalVideos?.message && (
+                <AdminError>{errors.additionalVideos.message}</AdminError>
+              )}
+            </VideoList>
           </AdminSection>
         </AdminFormCard>
-
-        {/* <AdminFormCard>
-          <AdminSection
-            title="Integrantes da temática"
-            action={
-              <AdminButton size="medium" type="button" onClick={handleModal}>
-                <FiPlus />
-              </AdminButton>
-            }
-          >
-            <MemberList>
-              {members.map((memberId) => {
-                const member = people.find((person) => person.id === memberId);
-
-                if (!member) return null;
-
-                return (
-                  <MemberItem key={member.id}>
-                    <span>{`${member.academicTitle?.abbreviation} ${member.name} - ${member.institution?.acronym} `}</span>
-
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveMember(member.id)}
-                    >
-                      <FiTrash2 />
-                    </button>
-                  </MemberItem>
-                );
-              })}
-            </MemberList>
-
-            {errors.members && (
-              <AdminError>{errors.members.message}</AdminError>
-            )}
-          </AdminSection>
-        </AdminFormCard> */}
-
         <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>

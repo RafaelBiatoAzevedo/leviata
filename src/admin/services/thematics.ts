@@ -6,6 +6,7 @@ import { api } from "../../services/api";
 import type { ThematicResponseDto } from "../dtos/thematics/ThematicResponseDto";
 import type { CreateThematicRequestDto } from "../dtos/thematics/CreateThematicRequestDto";
 import type { UpdateThematicRequestDto } from "../dtos/thematics/UpdateThematicRequestDto";
+import { loadAllPages } from "../../utils/loadAllPages";
 
 export const thematicsService = {
   create(data: CreateThematicRequestDto) {
@@ -19,8 +20,25 @@ export const thematicsService = {
     );
   },
 
-  getAll() {
-    return api.get<ThematicResponseDto[]>("/thematics");
+  getAll(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<ThematicResponseDto[]>("/thematics", { params, signal });
+  },
+
+  getAllAvailable(signal?: AbortSignal) {
+    return loadAllPages((params) => thematicsService.getAll(params, signal));
+  },
+
+  getDetails(identifier: string, signal?: AbortSignal) {
+    const isId =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
+        identifier,
+      );
+    return api.get<ThematicResponseDto>(
+      isId
+        ? `/thematics/${encodeURIComponent(identifier)}`
+        : `/thematics/slug/${encodeURIComponent(identifier)}`,
+      { signal },
+    );
   },
 
   getById(id: string) {

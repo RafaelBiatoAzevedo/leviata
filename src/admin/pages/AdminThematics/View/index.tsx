@@ -1,113 +1,162 @@
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
-import { AdminButton } from "../../../components/AdminButton";
-import { Container, Header, HeaderActions, Title } from "./styles";
 import { useNavigate, useParams } from "react-router-dom";
-import { useCallback, useEffect, useState } from "react";
-import { thematicsService } from "../../../services/thematics";
-import { useToast } from "../../../../hooks/useToast";
-import type { ThematicResponseDto } from "../../../dtos/thematics/ThematicResponseDto";
+import { useEffect, useState } from "react";
+import { AdminButton } from "../../../components/AdminButton";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
 import { AdminLoading } from "../../../components/AdminLoading";
+import { AdminError } from "../../../components/AdminError";
+import { thematicsService } from "../../../services/thematics";
+import type { ThematicResponseDto } from "../../../dtos/thematics/ThematicResponseDto";
+import {
+  Container,
+  Header,
+  HeaderActions,
+  Title,
+  VideoList,
+  VideoItem,
+  VideoPreview,
+} from "./styles";
 
 export function ThematicView() {
-  const navigate = useNavigate();
-
-  const { showToast } = useToast();
-
   const { slug } = useParams();
+  return <ThematicDetails key={slug} slug={slug} />;
+}
 
+function ThematicDetails({ slug }: { slug?: string }) {
+  const navigate = useNavigate();
   const [thematic, setThematic] = useState<ThematicResponseDto | null>(null);
-
-  const loadThematic = useCallback(async () => {
-    try {
-      const response = await thematicsService.getBySlug(slug!);
-      setThematic(response.data);
-    } catch (error) {
-      showToast({
-        title: "Ops! Não foi possível carregar a temática",
-        description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
-        type: "danger",
-      });
-    }
-  }, [showToast, slug]);
-
+  const [loading, setLoading] = useState(Boolean(slug));
+  const [error, setError] = useState("");
   useEffect(() => {
-    if (!thematic) {
-      (async () => {
-        await loadThematic();
-      })();
-    }
-  }, [thematic, loadThematic]);
+    if (!slug) return;
+    const controller = new AbortController();
+    thematicsService
+      .getDetails(slug, controller.signal)
+      .then(({ data }) => {
+        if (!controller.signal.aborted) setThematic(data);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted)
+          setError("Não foi possível carregar a temática.");
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [slug]);
 
-  if (!thematic) {
-    return <AdminLoading text="Carregando temática..." />;
-  }
+  if (loading) return <AdminLoading text="Carregando temática..." />;
+  if (!thematic)
+    return (
+      <Container>
+        <AdminError>{error || "Temática não encontrada."}</AdminError>
+        <AdminButton
+          variant="outline"
+          onClick={() => navigate("/admin/tematicas")}
+        >
+          Voltar
+        </AdminButton>
+      </Container>
+    );
 
   return (
     <Container>
       <Header>
         <HeaderActions>
-          <AdminButton variant="outline" onClick={() => navigate(-1)}>
-            <FiArrowLeft />
-            Voltar
-          </AdminButton>
-
           <AdminButton
-            onClick={() => navigate(`/admin/tematicas/${slug}/editar`)}
+            variant="outline"
+            onClick={() => navigate("/admin/tematicas")}
           >
-            <FiEdit2 />
-            Editar
+            <FiArrowLeft /> Voltar
+          </AdminButton>
+          <AdminButton
+            onClick={() => navigate(`/admin/tematicas/${thematic.slug}/editar`)}
+          >
+            <FiEdit2 /> Editar
           </AdminButton>
         </HeaderActions>
-
         <Title>Temática</Title>
       </Header>
-
       <AdminFormCard>
-        <AdminSection title="Dados Gerais">
+        <AdminSection title="Dados gerais">
           <AdminDescriptionList>
             <AdminDescriptionItem label="Título" value={thematic.title} />
-
             <AdminDescriptionItem label="Slug" value={thematic.slug} />
+            <AdminDescriptionItem
+              label="Coordenador"
+              value={thematic.coordinator?.name}
+            />
+            <AdminDescriptionItem
+              label="Descrição"
+              value={thematic.description}
+            />
           </AdminDescriptionList>
         </AdminSection>
       </AdminFormCard>
-
-      {/* <AdminFormCard>
-        <AdminSection title="Participantes principais">
-          <AdminDescriptionList>
-            <AdminDescriptionItem
-              label="Candidato"
-              value={`${thematic.candidate.academicTitle.abbreviation} ${thematic.candidate.name} - ${thematic.candidate.institution.acronym}`}
-            />
-
-            <AdminDescriptionItem
-              label="Orientador"
-              value={`${thematic.advisor.academicTitle.abbreviation} ${thematic.advisor.name} - ${thematic.advisor.institution.acronym}`}
-            />
-          </AdminDescriptionList>
-        </AdminSection>
-      </AdminFormCard> */}
-
-      {/* <AdminFormCard>
-        <AdminSection
-          title={`${thematic.members.length > 1 ? "Membros" : "Membro"}`}
-        >
-          {thematic.members.map((member, index) => (
-            <AdminDescriptionItem
-              key={index}
-              value={`${member.academicTitle!.abbreviation} ${member.name} - ${member.institution!.acronym}`}
-            />
-          ))}
-        </AdminSection>
-      </AdminFormCard> */}
-
       <AdminFormCard>
-        <AdminSection title="Fotos">
-          <></>
+        <AdminSection title="Vídeo principal">
+          {thematic.mainVideo ? (
+            <>
+              <AdminDescriptionItem
+                label="Título"
+                value={thematic.mainVideo.title}
+              />
+              <VideoPreview>
+                <iframe
+                  src={thematic.mainVideo.embedLink}
+                  title={thematic.mainVideo.title}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </VideoPreview>
+            </>
+          ) : (
+            <p>Nenhum vídeo principal vinculado.</p>
+          )}
+        </AdminSection>
+      </AdminFormCard>
+      <AdminFormCard>
+        <AdminSection title="Vídeos adicionais">
+          <VideoList>
+            {thematic.additionalVideos.map((link) => (
+              <VideoItem key={link.id}>
+                <AdminDescriptionList>
+                  <AdminDescriptionItem
+                    label="Título na temática"
+                    value={link.title}
+                  />
+                  <AdminDescriptionItem
+                    label="Vídeo cadastrado"
+                    value={link.video.title}
+                  />
+                  <AdminDescriptionItem
+                    label="Pessoa vinculada"
+                    value={link.person?.name}
+                  />
+                  <AdminDescriptionItem
+                    label="Descrição"
+                    value={link.description}
+                  />
+                </AdminDescriptionList>
+                <VideoPreview>
+                  <iframe
+                    src={link.video.embedLink}
+                    title={link.title}
+                    loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </VideoPreview>
+              </VideoItem>
+            ))}
+            {!thematic.additionalVideos.length && (
+              <p>Nenhum vídeo adicional vinculado.</p>
+            )}
+          </VideoList>
         </AdminSection>
       </AdminFormCard>
     </Container>

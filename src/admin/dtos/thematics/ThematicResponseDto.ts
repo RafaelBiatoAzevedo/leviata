@@ -11,15 +11,15 @@ export interface ThematicResponseDto {
 
   description?: string | null;
 
-  mainVideoId: string;
+  mainVideoId: string | null;
 
-  mainVideo: VideoResponseDto;
+  mainVideo: VideoResponseDto | null;
 
-  coordinatorId: string;
+  coordinatorId: string | null;
 
-  coordinator: PersonResponseDto;
+  coordinator: PersonResponseDto | null;
 
-  additionalVideos?: ThematicVideoResponseDto[];
+  additionalVideos: ThematicVideoResponseDto[];
 
   createdAt: string;
 

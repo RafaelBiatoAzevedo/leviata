@@ -8,6 +8,7 @@ import {
   Container,
   ContainerLoading,
   Content,
+  Description,
   PresentationLabel,
   PresentationSection,
   PresentationTitle,
@@ -16,142 +17,114 @@ import {
 import { Loading } from "../../components/Loading";
 import { SectionHeader } from "../../components/SectionHeader";
 import { HistoryDivider } from "../../components/HistotyDivider";
-
-interface IThematicData {
-  title: string;
-  author: string;
-  youtubeEmbedLink: string;
-  associatedResearchers: IThematicData[];
-}
+import { thematicsService } from "../../admin/services/thematics";
+import type { ThematicResponseDto } from "../../admin/dtos/thematics/ThematicResponseDto";
 
 export function ThematicDetails() {
   const { id } = useParams();
-  const [thematicData, setThematicData] = useState<null | IThematicData>(null);
-  const [loading, setLoading] = useState(true);
+  return <ThematicContent key={id} identifier={id} />;
+}
 
-  async function load() {
-    try {
-      //call api future
-
-      setTimeout(() => {
-        setThematicData({
-          title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
-          author: "Ana Carolina de Carvalho Viotti",
-          youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
-          associatedResearchers: [
-            {
-              title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
-              author: "Ana Carolina de Carvalho Viotti",
-              youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
-              associatedResearchers: [],
-            },
-            {
-              title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
-              author: "Ana Carolina de Carvalho Viotti",
-              youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
-              associatedResearchers: [],
-            },
-            {
-              title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
-              author: "Ana Carolina de Carvalho Viotti",
-              youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
-              associatedResearchers: [],
-            },
-            {
-              title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
-              author: "Ana Carolina de Carvalho Viotti",
-              youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
-              associatedResearchers: [],
-            },
-            {
-              title: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
-              author: "Ana Carolina de Carvalho Viotti",
-              youtubeEmbedLink: "https://www.youtube.com/embed/_n9U48W5evI",
-              associatedResearchers: [],
-            },
-          ],
-        });
-        setLoading(false);
-      }, 6000);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
+function ThematicContent({ identifier }: { identifier?: string }) {
+  const [thematic, setThematic] = useState<ThematicResponseDto | null>(null);
+  const [loading, setLoading] = useState(Boolean(identifier));
+  const [error, setError] = useState("");
   useEffect(() => {
-    if (!id) return;
+    if (!identifier) return;
+    const controller = new AbortController();
+    thematicsService
+      .getDetails(identifier, controller.signal)
+      .then(({ data }) => {
+        if (!controller.signal.aborted) setThematic(data);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted)
+          setError("Não foi possível carregar a temática.");
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setLoading(false);
+      });
+    return () => controller.abort();
+  }, [identifier]);
 
-    load();
-  }, [id]);
-
-  if (loading) {
+  if (loading)
     return (
       <ContainerLoading>
         <Loading />
-        <p>Carregando Temática ....</p>
+        <p>Carregando temática...</p>
       </ContainerLoading>
     );
-  }
-
-  if (!thematicData) {
+  if (!thematic)
     return (
       <ContainerLoading>
-        <p>Não foi possível carregar a Temática.</p>
+        <p role="alert">{error || "Temática não encontrada."}</p>
       </ContainerLoading>
     );
-  }
 
   return (
     <Container>
       <Content>
-        <SectionHeader center title={`${thematicData.title}`} />
-        <PresentationSection>
-          <PresentationLabel>
-            Confira os enfoques desta linha no vídeo da pesquisadora.
-          </PresentationLabel>
-
-          <PresentationTitle>{thematicData.author}</PresentationTitle>
-
-          <VideoWrapper>
-            <iframe
-              src={thematicData.youtubeEmbedLink}
-              title={thematicData.author}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </VideoWrapper>
-        </PresentationSection>
-
-        <HistoryDivider />
-
-        {!!thematicData.associatedResearchers.length && (
-          <AssociatedWrapper>
+        <SectionHeader center title={thematic.title} />
+        {thematic.description && (
+          <Description>{thematic.description}</Description>
+        )}
+        {thematic.mainVideo && (
+          <PresentationSection>
+            <PresentationLabel>
+              Apresentação da linha temática
+            </PresentationLabel>
+            <PresentationTitle>
+              {thematic.coordinator?.name ?? thematic.mainVideo.title}
+            </PresentationTitle>
+            <VideoWrapper>
+              <iframe
+                src={thematic.mainVideo.embedLink}
+                title={thematic.mainVideo.title}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </VideoWrapper>
+            {thematic.mainVideo.description && (
+              <Description>{thematic.mainVideo.description}</Description>
+            )}
+          </PresentationSection>
+        )}
+        {!!thematic.additionalVideos.length && (
+          <>
+            <HistoryDivider />
             <SectionHeader
               small
               title="Pesquisas vinculadas"
-              subtitle="Acompanhe as pesquisas vinculadas a temática"
+              subtitle="Acompanhe as pesquisas vinculadas à temática."
             />
-            {thematicData.associatedResearchers.map((associated) => (
-              <AssociatedPresentationSection>
-                <AssociatedPresentationLabel>
-                  Confira os enfoques desta linha no vídeo da pesquisadora.
-                </AssociatedPresentationLabel>
-
-                <AssociatedPresentationTitle>
-                  {associated.author}
-                </AssociatedPresentationTitle>
-
-                <VideoWrapper>
-                  <iframe
-                    src={associated.youtubeEmbedLink}
-                    title={associated.author}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </VideoWrapper>
-              </AssociatedPresentationSection>
-            ))}
-          </AssociatedWrapper>
+            <AssociatedWrapper>
+              {thematic.additionalVideos.map((link) => (
+                <AssociatedPresentationSection key={link.id}>
+                  {link.person && (
+                    <AssociatedPresentationLabel>
+                      {link.person.name}
+                    </AssociatedPresentationLabel>
+                  )}
+                  <AssociatedPresentationTitle>
+                    {link.title}
+                  </AssociatedPresentationTitle>
+                  <VideoWrapper>
+                    <iframe
+                      src={link.video.embedLink}
+                      title={link.title}
+                      loading="lazy"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  </VideoWrapper>
+                  {link.description && (
+                    <Description>{link.description}</Description>
+                  )}
+                </AssociatedPresentationSection>
+              ))}
+            </AssociatedWrapper>
+          </>
         )}
       </Content>
     </Container>

@@ -1,11 +1,12 @@
 export interface CreateThematicRequestDto {
   title: string;
 
-  description?: string;
+  description?: string | null;
 
-  mainVideoId?: string;
+  mainVideoId?: string | null;
 
-  coordinatorId?: string;
+  coordinatorId?: string | null;
 
-  additionalVideos?: string[];
+  additionalVideos?: ThematicVideoRequestDto[];
 }
+import type { ThematicVideoRequestDto } from "./ThematicVideoRequestDto";

@@ -1,27 +1,11 @@
 import { ThematicLinkCard } from "../../components/ThematicLinkCard";
 import { SectionHeader } from "../../components/SectionHeader";
 import { Container, Content, ThematicLinesGrid } from "./styles";
-
-const thematicLines = [
-  {
-    id: 1,
-    acronym: "CSA",
-    description: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
-  },
-  {
-    id: 2,
-    acronym: "MCE",
-    description:
-      "Monarquia, Cristianismo e Escravidão no Mundo Luso-brasileiro (séculos XVII e XVIII)",
-  },
-  {
-    id: 3,
-    acronym: "EIE",
-    description: "Estado, Imprensa e Escravidão no Brasil do Século XIX",
-  },
-];
+import { useThematics } from "../../hooks/useThematics";
+import { thematicAcronym } from "../../utils/thematics";
 
 export function ThematicLines() {
+  const { thematics, loading, error } = useThematics();
   return (
     <Container>
       <Content>
@@ -33,11 +17,17 @@ export function ThematicLines() {
         />
 
         <ThematicLinesGrid>
-          {thematicLines.map((thematic) => (
+          {loading && <p>Carregando linhas temáticas...</p>}
+          {error && <p role="alert">{error}</p>}
+          {!loading && !error && !thematics.length && (
+            <p>Nenhuma linha temática cadastrada.</p>
+          )}
+          {thematics.map((thematic) => (
             <ThematicLinkCard
-              to={`/grupo/linhas-tematicas/tematica/${thematic.id}`}
-              acronym={thematic.acronym}
-              description={thematic.description}
+              key={thematic.id}
+              to={`/grupo/linhas-tematicas/tematica/${thematic.slug}`}
+              acronym={thematicAcronym(thematic.title)}
+              description={thematic.title}
             />
           ))}
         </ThematicLinesGrid>

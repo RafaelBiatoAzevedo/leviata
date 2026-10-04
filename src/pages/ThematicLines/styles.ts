@@ -8,12 +8,13 @@ export const Container = styled.div`
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem 16rem;
+  padding: 2rem clamp(1rem, 8vw, 12rem);
   gap: 4rem;
 `;
 
 export const ThematicLinesGrid = styled.div`
-  width: 1300px;
+  width: 100%;
+  max-width: 1300px;
   align-self: center;
 
   display: flex;

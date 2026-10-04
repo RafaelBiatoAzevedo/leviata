@@ -103,7 +103,16 @@ export function AdminThematics() {
                 </td>
                 <td>{thematic.description}</td>
 
-                <td>{`${thematic.coordinator.academicTitle.abbreviation} ${thematic.coordinator.name}`}</td>
+                <td>
+                  {thematic.coordinator
+                    ? [
+                        thematic.coordinator.academicTitle?.abbreviation,
+                        thematic.coordinator.name,
+                      ]
+                        .filter(Boolean)
+                        .join(" ")
+                    : "—"}
+                </td>
 
                 <td>
                   <Actions>

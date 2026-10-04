@@ -16,6 +16,35 @@ export const Form = styled.form`
   gap: 2rem;
 `;
 
+export const VideoList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+export const VideoItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 12px;
+  background: ${({ theme }) => theme.colors.surface};
+`;
+
+export const VideoItemHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: ${({ theme }) => theme.colors.text};
+`;
+
+export const Empty = styled.p`
+  margin: 0;
+  color: ${({ theme }) => theme.colors.textSoft};
+`;
+
 export const BookTopWrapper = styled.div`
   display: flex;
   flex-direction: row;

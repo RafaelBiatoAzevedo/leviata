@@ -21,27 +21,15 @@ import type { BookResponseDto } from "../../admin/dtos/books/BookResponseDto";
 import { booksService } from "../../admin/services/books";
 import { newsService } from "../../admin/services/news";
 import type { NewsResponseDto } from "../../admin/dtos/news/NewsResponseDto";
-
-const thematicLinesMock = [
-  {
-    id: 1,
-    acronym: "CSA",
-    description: "Cativeiro, saúde e alimentação: séculos XVII e XVIII",
-  },
-  {
-    id: 2,
-    acronym: "MCE",
-    description:
-      "Monarquia, Cristianismo e Escravidão no Mundo Luso-brasileiro (séculos XVII e XVIII)",
-  },
-  {
-    id: 3,
-    acronym: "EIE",
-    description: "Estado, Imprensa e Escravidão no Brasil do Século XIX",
-  },
-];
+import { useThematics } from "../../hooks/useThematics";
+import { thematicAcronym } from "../../utils/thematics";
 
 export function Home() {
+  const {
+    thematics,
+    loading: loadingThematics,
+    error: thematicError,
+  } = useThematics();
   const [books, setBooks] = useState<BookResponseDto[]>(
     [] as BookResponseDto[],
   );
@@ -88,11 +76,17 @@ export function Home() {
             memória e construção do conhecimento histórico."
         />
         <ThematicLinesGrid>
-          {thematicLinesMock.map((thematic) => (
+          {loadingThematics && <p>Carregando linhas temáticas...</p>}
+          {thematicError && <p role="alert">{thematicError}</p>}
+          {!loadingThematics && !thematicError && !thematics.length && (
+            <p>Nenhuma linha temática cadastrada.</p>
+          )}
+          {thematics.map((thematic) => (
             <ThematicLinkCard
-              to={`/grupo/linhas-tematicas/tematica/${thematic.id}`}
-              acronym={thematic.acronym}
-              description={thematic.description}
+              key={thematic.id}
+              to={`/grupo/linhas-tematicas/tematica/${thematic.slug}`}
+              acronym={thematicAcronym(thematic.title)}
+              description={thematic.title}
             />
           ))}
         </ThematicLinesGrid>
