@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { VideoResponseDto } from "../dtos/videos/VideoResponseDto";
 import type { CreateVideoRequestDto } from "../dtos/videos/CreateVideoRequestDto";
@@ -6,6 +10,13 @@ import type { UpdateVideoRequestDto } from "../dtos/videos/UpdateVideoRequestDto
 export const videosService = {
   create(data: CreateVideoRequestDto) {
     return api.post<VideoResponseDto>("/videos", data);
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<VideoResponseDto>>(
+      "/videos/paginated",
+      { params, signal },
+    );
   },
 
   getAll() {

@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import type { CreatePersonDto } from "../dtos/people/CreatePersonRequestDto";
 import type { PersonResponseDto } from "../dtos/people/PersonResponseDto";
 import type { UpdatePersonDto } from "../dtos/people/UpdatePersonRequestDto";
@@ -33,6 +37,13 @@ export const peopleService = {
         "Content-Type": "multipart/form-data",
       },
     });
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<PersonResponseDto>>(
+      "/people/paginated",
+      { params, signal },
+    );
   },
 
   getAll() {

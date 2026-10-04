@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { CreatePresentedWorkRequestDto } from "../dtos/presentedWorks/CreatePresentedWorksRequestDto";
 import type { PresentedWorkResponseDto } from "../dtos/presentedWorks/PresentedWorkResponseDto";
@@ -7,6 +11,13 @@ import type { UpdatePresentedWorkRequestDto } from "../dtos/presentedWorks/Updat
 export const presentedWorksService = {
   create(data: CreatePresentedWorkRequestDto) {
     return api.post<PresentedWorkResponseDto>("/presented-works", data);
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<PresentedWorkResponseDto>>(
+      "/presented-works/paginated",
+      { params, signal },
+    );
   },
 
   getAll() {

@@ -1,3 +1,6 @@
+import { AdminPagination } from "../../../components/AdminPagination";
+import { AdminError } from "../../../components/AdminError";
+import { useAdminList } from "../../../hooks/useAdminList";
 import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 
 import { AdminButton } from "../../../components/AdminButton";
@@ -12,7 +15,7 @@ import {
   Filters,
 } from "./styles";
 import { AdminSearchBar } from "../../../components/AdminSearchBar";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
@@ -31,43 +34,10 @@ export function AdminResearch() {
 
   const { showModal } = useModal();
 
-  const [loading, setLoading] = useState(true);
-
-  const [research, setResearch] = useState<SearchResponseDto[]>([]);
-
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await researchService.getAll();
-
-      setResearch(response.data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      showToast({
-        title: "Ops! Lista não atualizada",
-        description: `Não foi possível atualizar a lista.\n${message}`,
-        type: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
-
-  const filteredResearch = research.filter((_search) => {
-    const matchesSearch =
-      _search.title.toLowerCase().includes(search.toLowerCase()) ||
-      _search.slug.toLowerCase().includes(search.toLowerCase());
-
-    return matchesSearch;
-  });
+  const { items, loading, error, load, pagination } = useAdminList(
+    researchService.getPage,
+    { search: search.trim() || undefined },
+  );
 
   function handleDelete(search: SearchResponseDto) {
     showModal({
@@ -90,7 +60,7 @@ export function AdminResearch() {
           type: "success",
         });
 
-        await load();
+        load();
       },
 
       onCancel: () => {
@@ -119,6 +89,7 @@ export function AdminResearch() {
         />
       </Filters>
 
+      {error && <AdminError>{error}</AdminError>}
       <AdminTable>
         <thead>
           <tr>
@@ -132,7 +103,7 @@ export function AdminResearch() {
 
         <tbody>
           {!loading &&
-            filteredResearch.map((search) => (
+            items.map((search) => (
               <tr key={search.id}>
                 <td>
                   {search.coverUrl ? (
@@ -189,8 +160,9 @@ export function AdminResearch() {
             ))}
         </tbody>
       </AdminTable>
+      <AdminPagination {...pagination} />
 
-      {!loading && filteredResearch.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty>Nenhum pesquisa encontrada.</Empty>
       )}
     </Container>

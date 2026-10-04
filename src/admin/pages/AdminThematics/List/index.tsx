@@ -1,9 +1,12 @@
+import { AdminPagination } from "../../../components/AdminPagination";
+import { AdminError } from "../../../components/AdminError";
+import { useAdminList } from "../../../hooks/useAdminList";
 import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { Actions, Container, Empty, Filters } from "./styles";
 import { AdminSearchBar } from "../../../components/AdminSearchBar";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
@@ -21,43 +24,10 @@ export function AdminThematics() {
 
   const { showModal } = useModal();
 
-  const [loading, setLoading] = useState(true);
-
-  const [thematics, setThematics] = useState<ThematicResponseDto[]>([]);
-
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await thematicsService.getAll();
-
-      setThematics(response.data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      showToast({
-        title: "Ops! Lista não atualizada",
-        description: `Não foi possível atualizar a lista.\n${message}`,
-        type: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
-
-  const filteredThematics = thematics.filter((thematic) => {
-    const matchesSearch =
-      thematic.title.toLowerCase().includes(search.toLowerCase()) ||
-      thematic.slug.toLowerCase().includes(search.toLowerCase());
-
-    return matchesSearch;
-  });
+  const { items, loading, error, load, pagination } = useAdminList(
+    thematicsService.getPage,
+    { search: search.trim() || undefined },
+  );
 
   function handleDelete(thematic: ThematicResponseDto) {
     showModal({
@@ -80,7 +50,7 @@ export function AdminThematics() {
           type: "success",
         });
 
-        await load();
+        load();
       },
 
       onCancel: () => {
@@ -109,6 +79,7 @@ export function AdminThematics() {
         />
       </Filters>
 
+      {error && <AdminError>{error}</AdminError>}
       <AdminTable>
         <thead>
           <tr>
@@ -121,7 +92,7 @@ export function AdminThematics() {
 
         <tbody>
           {!loading &&
-            filteredThematics.map((thematic) => (
+            items.map((thematic) => (
               <tr key={thematic.id}>
                 <td>
                   <strong>{thematic.title}</strong>
@@ -166,8 +137,9 @@ export function AdminThematics() {
             ))}
         </tbody>
       </AdminTable>
+      <AdminPagination {...pagination} />
 
-      {!loading && filteredThematics.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty>Nenhum temática encontrada.</Empty>
       )}
     </Container>

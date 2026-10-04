@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { JuryResponseDto } from "../dtos/juries/JuryResponseDto";
 import type { CreateJuryRequestDto } from "../dtos/juries/CreateJuryRequestDto";
@@ -37,6 +41,13 @@ export const juriesService = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+    });
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<JuryResponseDto>>("/juries/paginated", {
+      params,
+      signal,
     });
   },
 

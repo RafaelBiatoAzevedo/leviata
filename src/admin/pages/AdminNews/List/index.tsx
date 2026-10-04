@@ -1,3 +1,6 @@
+import { AdminPagination } from "../../../components/AdminPagination";
+import { AdminError } from "../../../components/AdminError";
+import { useAdminList } from "../../../hooks/useAdminList";
 import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
@@ -12,7 +15,7 @@ import {
   SelectWrapper,
 } from "./styles";
 import { AdminSearchBar } from "../../../components/AdminSearchBar";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
@@ -36,47 +39,12 @@ export function AdminNews() {
 
   const { showModal } = useModal();
 
-  const [loading, setLoading] = useState(true);
-
-  const [news, setNews] = useState<NewsResponseDto[]>([]);
-
   const [category, setCategory] = useState("");
 
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await newsService.getAll();
-
-      setNews(response.data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      showToast({
-        title: "Ops! Lista não atualizada",
-        description: `Não foi possível atualizar a lista.\n${message}`,
-        type: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
-
-  const filteredNews = news.filter((news) => {
-    const matchesSearch =
-      news.title.toLowerCase().includes(search.toLowerCase()) ||
-      news.slug.toLowerCase().includes(search.toLowerCase());
-
-    const matchesCategory = category === "" || news.category === category;
-
-    return matchesSearch && matchesCategory;
-  });
+  const { items, loading, error, load, pagination } = useAdminList(
+    newsService.getPage,
+    { search: search.trim() || undefined, category: category || undefined },
+  );
 
   function handleDelete(news: NewsResponseDto) {
     showModal({
@@ -99,7 +67,7 @@ export function AdminNews() {
           type: "success",
         });
 
-        await load();
+        load();
       },
 
       onCancel: () => {
@@ -140,6 +108,7 @@ export function AdminNews() {
         </SelectWrapper>
       </Filters>
 
+      {error && <AdminError>{error}</AdminError>}
       <AdminTable>
         <thead>
           <tr>
@@ -155,7 +124,7 @@ export function AdminNews() {
 
         <tbody>
           {!loading &&
-            filteredNews.map((news) => (
+            items.map((news) => (
               <tr key={news.id}>
                 <td>
                   {news.coverUrl ? (
@@ -219,8 +188,9 @@ export function AdminNews() {
             ))}
         </tbody>
       </AdminTable>
+      <AdminPagination {...pagination} />
 
-      {!loading && filteredNews.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty>Nenhuma notícia encontrado.</Empty>
       )}
     </Container>

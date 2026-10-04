@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { SearchResponseDto } from "../dtos/research/SearchResponseDto";
 import type { CreateSearchRequestDto } from "../dtos/research/CreateSearchRequestDto";
@@ -38,6 +42,13 @@ export const researchService = {
         "Content-Type": "multipart/form-data",
       },
     });
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<SearchResponseDto>>(
+      "/research/paginated",
+      { params, signal },
+    );
   },
 
   getAll() {

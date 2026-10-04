@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { CreateScheduleRequestDto } from "../dtos/schedule/CreateScheduleRequestDto";
 import type { ScheduleQueryDto } from "../dtos/schedule/ScheduleQueryDto";
@@ -7,6 +11,13 @@ import type { UpdateScheduleRequestDto } from "../dtos/schedule/UpdateScheduleRe
 export const scheduleService = {
   create(data: CreateScheduleRequestDto) {
     return api.post<ScheduleResponseDto>("/schedule", data);
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<ScheduleResponseDto>>(
+      "/schedule/paginated",
+      { params, signal },
+    );
   },
 
   getAll(params: ScheduleQueryDto = {}) {

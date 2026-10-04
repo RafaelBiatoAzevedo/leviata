@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { ThematicResponseDto } from "../dtos/thematics/ThematicResponseDto";
 import type { CreateThematicRequestDto } from "../dtos/thematics/CreateThematicRequestDto";
@@ -6,6 +10,13 @@ import type { UpdateThematicRequestDto } from "../dtos/thematics/UpdateThematicR
 export const thematicsService = {
   create(data: CreateThematicRequestDto) {
     return api.post<ThematicResponseDto>("/thematics", data);
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<ThematicResponseDto>>(
+      "/thematics/paginated",
+      { params, signal },
+    );
   },
 
   getAll() {

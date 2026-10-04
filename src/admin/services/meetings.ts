@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { ImageUploadResponseDto } from "../dtos/ImageUploadResponseDto";
 import type { CreateMeetingRequestDto } from "../dtos/meetings/CreateMeetingRequestDto";
@@ -38,6 +42,13 @@ export const meetingsService = {
         "Content-Type": "multipart/form-data",
       },
     });
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<MeetingResponseDto>>(
+      "/meetings/paginated",
+      { params, signal },
+    );
   },
 
   getAll() {

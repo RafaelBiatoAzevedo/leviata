@@ -1,3 +1,6 @@
+import { AdminPagination } from "../../../components/AdminPagination";
+import { AdminError } from "../../../components/AdminError";
+import { useAdminList } from "../../../hooks/useAdminList";
 import { FiEdit2, FiEye, FiFolder, FiPlus, FiTrash2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
@@ -14,7 +17,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import type { ArticleResponseDto } from "../../../dtos/articles/ArticleResponseDto";
 import { articlesService } from "../../../services/articles";
 import { AdminSelect } from "../../../components/AdminSelect";
@@ -32,11 +35,7 @@ export function AdminArticles() {
 
   const [search, setSearch] = useState("");
 
-  const [loading, setLoading] = useState(true);
-
   const [articleType, setArticleType] = useState("");
-
-  const [articles, setArticles] = useState<ArticleResponseDto[]>([]);
 
   const articleTypesFilterOptions = [
     { value: "", label: "Todos" },
@@ -44,42 +43,10 @@ export function AdminArticles() {
     ...articlesTypeOptions,
   ];
 
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await articlesService.getAll();
-
-      setArticles(response.data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      showToast({
-        title: "Ops! Lista não atualizada",
-        description: `Não foi possível atualizar a lista.\n${message}`,
-        type: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
-
-  const filteredArticles = articles.filter((article) => {
-    const matchesSearch =
-      article.title.toLowerCase().includes(search.toLowerCase()) ||
-      article.slug.toLowerCase().includes(search.toLowerCase());
-
-    const matchesArticleType =
-      articleType === "" || article.type === articleType;
-
-    return matchesSearch && matchesArticleType;
-  });
+  const { items, loading, error, load, pagination } = useAdminList(
+    articlesService.getPage,
+    { search: search.trim() || undefined, type: articleType || undefined },
+  );
 
   function handleDelete(article: ArticleResponseDto) {
     showModal({
@@ -102,7 +69,7 @@ export function AdminArticles() {
           type: "success",
         });
 
-        await load();
+        load();
       },
 
       onCancel: () => {
@@ -138,6 +105,7 @@ export function AdminArticles() {
         </SelectWrapper>
       </Filters>
 
+      {error && <AdminError>{error}</AdminError>}
       <AdminTable>
         <thead>
           <tr>
@@ -153,7 +121,7 @@ export function AdminArticles() {
 
         <tbody>
           {!loading &&
-            filteredArticles.map((article) => (
+            items.map((article) => (
               <tr key={article.id}>
                 <td>
                   {article.coverUrl ? (
@@ -211,8 +179,9 @@ export function AdminArticles() {
             ))}
         </tbody>
       </AdminTable>
+      <AdminPagination {...pagination} />
 
-      {!loading && filteredArticles.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty>Nenhum artigo ou dossiê encontrado.</Empty>
       )}
     </Container>

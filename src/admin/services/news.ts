@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 
 import type { ImageUploadResponseDto } from "../dtos/ImageUploadResponseDto";
@@ -38,6 +42,13 @@ export const newsService = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+    });
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<NewsResponseDto>>("/news/paginated", {
+      params,
+      signal,
     });
   },
 

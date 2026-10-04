@@ -1,3 +1,6 @@
+import { AdminPagination } from "../../../components/AdminPagination";
+import { AdminError } from "../../../components/AdminError";
+import { useAdminList } from "../../../hooks/useAdminList";
 import { FiBook, FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
@@ -11,7 +14,7 @@ import {
   Filters,
 } from "./styles";
 import { AdminSearchBar } from "../../../components/AdminSearchBar";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
@@ -29,43 +32,10 @@ export function AdminBooks() {
 
   const { showModal } = useModal();
 
-  const [loading, setLoading] = useState(true);
-
-  const [books, setBooks] = useState<BookResponseDto[]>([]);
-
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await booksService.getAll();
-
-      setBooks(response.data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      showToast({
-        title: "Ops! Lista não atualizada",
-        description: `Não foi possível atualizar a lista.\n${message}`,
-        type: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
-
-  const filteredBooks = books.filter((book) => {
-    const matchesSearch =
-      book.title.toLowerCase().includes(search.toLowerCase()) ||
-      book.slug.toLowerCase().includes(search.toLowerCase());
-
-    return matchesSearch;
-  });
+  const { items, loading, error, load, pagination } = useAdminList(
+    booksService.getPage,
+    { search: search.trim() || undefined },
+  );
 
   function handleDelete(book: BookResponseDto) {
     showModal({
@@ -88,7 +58,7 @@ export function AdminBooks() {
           type: "success",
         });
 
-        await load();
+        load();
       },
 
       onCancel: () => {
@@ -117,6 +87,7 @@ export function AdminBooks() {
         />
       </Filters>
 
+      {error && <AdminError>{error}</AdminError>}
       <AdminTable>
         <thead>
           <tr>
@@ -131,7 +102,7 @@ export function AdminBooks() {
 
         <tbody>
           {!loading &&
-            filteredBooks.map((book) => (
+            items.map((book) => (
               <tr key={book.id}>
                 <td>
                   {book.coverUrl ? (
@@ -189,8 +160,9 @@ export function AdminBooks() {
             ))}
         </tbody>
       </AdminTable>
+      <AdminPagination {...pagination} />
 
-      {!loading && filteredBooks.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty>Nenhum livro encontrado.</Empty>
       )}
     </Container>

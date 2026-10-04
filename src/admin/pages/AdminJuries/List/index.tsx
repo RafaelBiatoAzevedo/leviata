@@ -1,3 +1,6 @@
+import { AdminPagination } from "../../../components/AdminPagination";
+import { AdminError } from "../../../components/AdminError";
+import { useAdminList } from "../../../hooks/useAdminList";
 import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
@@ -10,7 +13,7 @@ import {
   Filters,
 } from "./styles";
 import { AdminSearchBar } from "../../../components/AdminSearchBar";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
@@ -30,43 +33,10 @@ export function AdminJuries() {
 
   const { showModal } = useModal();
 
-  const [loading, setLoading] = useState(true);
-
-  const [juries, setJuries] = useState<JuryResponseDto[]>([]);
-
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await juriesService.getAll();
-
-      setJuries(response.data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      showToast({
-        title: "Ops! Lista não atualizada",
-        description: `Não foi possível atualizar a lista.\n${message}`,
-        type: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
-
-  const filteredJuries = juries.filter((jury) => {
-    const matchesSearch =
-      jury.title.toLowerCase().includes(search.toLowerCase()) ||
-      jury.slug.toLowerCase().includes(search.toLowerCase());
-
-    return matchesSearch;
-  });
+  const { items, loading, error, load, pagination } = useAdminList(
+    juriesService.getPage,
+    { search: search.trim() || undefined },
+  );
 
   function handleDelete(jury: JuryResponseDto) {
     showModal({
@@ -89,7 +59,7 @@ export function AdminJuries() {
           type: "success",
         });
 
-        await load();
+        load();
       },
 
       onCancel: () => {
@@ -131,6 +101,7 @@ export function AdminJuries() {
         />
       </Filters>
 
+      {error && <AdminError>{error}</AdminError>}
       <AdminTable>
         <thead>
           <tr>
@@ -144,7 +115,7 @@ export function AdminJuries() {
 
         <tbody>
           {!loading &&
-            filteredJuries.map((jury) => (
+            items.map((jury) => (
               <tr key={jury.id}>
                 <td>
                   {jury.coverUrl ? (
@@ -198,8 +169,9 @@ export function AdminJuries() {
             ))}
         </tbody>
       </AdminTable>
+      <AdminPagination {...pagination} />
 
-      {!loading && filteredJuries.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty>Nenhum júri encontrado.</Empty>
       )}
     </Container>

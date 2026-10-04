@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { AdminPagination } from "../../../components/AdminPagination";
+import { useAdminList } from "../../../hooks/useAdminList";
+import { useState } from "react";
 import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../../../hooks/useModal";
@@ -17,46 +19,19 @@ import {
   formatScheduleDate,
   scheduleErrorMessage,
 } from "../../../utils/schedule";
-import { Actions, Container, Empty, Pagination } from "./styles";
-
-const pageSize = 10;
+import { Actions, Container, Empty } from "./styles";
 
 export function AdminSchedule() {
   const navigate = useNavigate();
   const { showToast } = useToast();
   const { showModal } = useModal();
-  const [items, setItems] = useState<ScheduleResponseDto[]>([]);
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(1);
-  const [refresh, setRefresh] = useState(0);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    let cancelled = false;
-    scheduleService
-      .getAll({ page, limit: pageSize, search: search.trim() || undefined })
-      .then(({ data }) => {
-        if (!cancelled) {
-          setItems(data);
-          setError("");
-        }
-      })
-      .catch((error: unknown) => {
-        if (!cancelled) setError(scheduleErrorMessage(error));
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [page, search, refresh]);
-
-  function changePage(next: number) {
-    setLoading(true);
-    setPage(next);
-  }
+  const { items, loading, error, load, pagination } = useAdminList(
+    scheduleService.getPage,
+    {
+      search: search.trim() || undefined,
+    },
+  );
 
   function handleDelete(item: ScheduleResponseDto) {
     showModal({
@@ -73,9 +48,7 @@ export function AdminSchedule() {
             description: item.title,
             type: "success",
           });
-          setLoading(true);
-          if (items.length === 1 && page > 1) setPage(page - 1);
-          else setRefresh((value) => value + 1);
+          load();
         } catch (error) {
           showToast({
             title: "Erro ao excluir evento",
@@ -98,11 +71,7 @@ export function AdminSchedule() {
       </AdminPageHeader>
       <AdminSearchBar
         value={search}
-        onChange={(event) => {
-          setLoading(true);
-          setSearch(event.target.value);
-          setPage(1);
-        }}
+        onChange={(event) => setSearch(event.target.value)}
         placeholder="Pesquisar por título, subtítulo ou local..."
       />
       {loading ? (
@@ -163,23 +132,7 @@ export function AdminSchedule() {
           {items.length === 0 && <Empty>Nenhum evento encontrado.</Empty>}
         </>
       )}
-      <Pagination>
-        <AdminButton
-          variant="outline"
-          disabled={loading || page === 1}
-          onClick={() => changePage(page - 1)}
-        >
-          Anterior
-        </AdminButton>
-        <span>Página {page}</span>
-        <AdminButton
-          variant="outline"
-          disabled={loading || Boolean(error) || items.length < pageSize}
-          onClick={() => changePage(page + 1)}
-        >
-          Próxima
-        </AdminButton>
-      </Pagination>
+      <AdminPagination {...pagination} />
     </Container>
   );
 }

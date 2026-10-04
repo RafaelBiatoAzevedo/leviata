@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { BookResponseDto } from "../dtos/books/BookResponseDto";
 import type { CreateBookRequestDto } from "../dtos/books/CreateBookRequestDto";
@@ -37,6 +41,13 @@ export const booksService = {
       headers: {
         "Content-Type": "multipart/form-data",
       },
+    });
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<BookResponseDto>>("/books/paginated", {
+      params,
+      signal,
     });
   },
 

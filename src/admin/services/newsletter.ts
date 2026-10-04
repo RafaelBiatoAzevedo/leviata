@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { CreateNewsletterRequestDto } from "../dtos/newsletter/CreateNewsletterRequestDto";
 import type { NewsletterResponseDto } from "../dtos/newsletter/NewsletterResponseDto";
@@ -7,6 +11,13 @@ export const newsletterService = {
   create(data: CreateNewsletterRequestDto) {
     return api.post<NewsletterResponseDto>("/newsletter", data);
   },
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<NewsletterResponseDto>>(
+      "/newsletter/paginated",
+      { params, signal },
+    );
+  },
+
   getAll() {
     return api.get<NewsletterResponseDto[]>("/newsletter");
   },

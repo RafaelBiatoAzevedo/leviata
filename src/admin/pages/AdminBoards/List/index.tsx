@@ -1,9 +1,12 @@
+import { AdminPagination } from "../../../components/AdminPagination";
+import { AdminError } from "../../../components/AdminError";
+import { useAdminList } from "../../../hooks/useAdminList";
 import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { Actions, Container, Empty, Filters } from "./styles";
 import { AdminSearchBar } from "../../../components/AdminSearchBar";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
@@ -22,43 +25,10 @@ export function AdminBoards() {
 
   const { showModal } = useModal();
 
-  const [loading, setLoading] = useState(true);
-
-  const [boards, setBoards] = useState<BoardResponseDto[]>([]);
-
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await boardsService.getAll();
-
-      setBoards(response.data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      showToast({
-        title: "Ops! Lista não atualizada",
-        description: `Não foi possível atualizar a lista.\n${message}`,
-        type: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
-
-  const filteredBoards = boards.filter((board) => {
-    const matchesSearch =
-      board.title.toLowerCase().includes(search.toLowerCase()) ||
-      board.slug.toLowerCase().includes(search.toLowerCase());
-
-    return matchesSearch;
-  });
+  const { items, loading, error, load, pagination } = useAdminList(
+    boardsService.getPage,
+    { search: search.trim() || undefined },
+  );
 
   function handleDelete(board: BoardResponseDto) {
     showModal({
@@ -81,7 +51,7 @@ export function AdminBoards() {
           type: "success",
         });
 
-        await load();
+        load();
       },
 
       onCancel: () => {
@@ -110,6 +80,7 @@ export function AdminBoards() {
         />
       </Filters>
 
+      {error && <AdminError>{error}</AdminError>}
       <AdminTable>
         <thead>
           <tr>
@@ -124,7 +95,7 @@ export function AdminBoards() {
 
         <tbody>
           {!loading &&
-            filteredBoards.map((board) => (
+            items.map((board) => (
               <tr key={board.id}>
                 <td>
                   <strong>{board.title}</strong>
@@ -171,8 +142,9 @@ export function AdminBoards() {
             ))}
         </tbody>
       </AdminTable>
+      <AdminPagination {...pagination} />
 
-      {!loading && filteredBoards.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty>Nenhum banca encontrada.</Empty>
       )}
     </Container>

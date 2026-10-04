@@ -1,4 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { AdminPagination } from "../../../components/AdminPagination";
+import { AdminError } from "../../../components/AdminError";
+import { useAdminList } from "../../../hooks/useAdminList";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { FiEdit2, FiEye, FiPlus, FiTrash2, FiUser } from "react-icons/fi";
@@ -35,54 +38,19 @@ export function AdminPeople() {
 
   const { showModal } = useModal();
 
-  const [loading, setLoading] = useState(true);
-
-  const [people, setPeople] = useState<PersonResponseDto[]>([]);
-
   const [search, setSearch] = useState("");
 
   const [category, setCategory] = useState("");
-
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await peopleService.getAll();
-
-      setPeople(response.data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      showToast({
-        title: "Ops! Lista não atualizada",
-        description: `Não foi possível atualizar a lista.\n${message}`,
-        type: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
 
   const personCategoriesFilterOptions = [
     { value: "", label: "Todas" },
     ...personCategoryOptions,
   ];
 
-  const filteredPeople = people.filter((person) => {
-    const matchesSearch =
-      person.name.toLowerCase().includes(search.toLowerCase()) ||
-      person.slug.toLowerCase().includes(search.toLowerCase());
-
-    const matchesCategory = category === "" || person.category === category;
-
-    return matchesSearch && matchesCategory;
-  });
+  const { items, loading, error, load, pagination } = useAdminList(
+    peopleService.getPage,
+    { search: search.trim() || undefined, category: category || undefined },
+  );
 
   function handleDelete(person: PersonResponseDto) {
     showModal({
@@ -105,7 +73,7 @@ export function AdminPeople() {
           type: "success",
         });
 
-        await load();
+        load();
       },
 
       onCancel: () => {
@@ -141,6 +109,7 @@ export function AdminPeople() {
         </SelectWrapper>
       </Filters>
 
+      {error && <AdminError>{error}</AdminError>}
       <AdminTable>
         <thead>
           <tr>
@@ -156,7 +125,7 @@ export function AdminPeople() {
 
         <tbody>
           {!loading &&
-            filteredPeople.map((person) => (
+            items.map((person) => (
               <tr key={person.id}>
                 <td>
                   {person.imageUrl ? (
@@ -218,8 +187,9 @@ export function AdminPeople() {
             ))}
         </tbody>
       </AdminTable>
+      <AdminPagination {...pagination} />
 
-      {!loading && filteredPeople.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty>Nenhuma pessoa encontrada.</Empty>
       )}
     </Container>

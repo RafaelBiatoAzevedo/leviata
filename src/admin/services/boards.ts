@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { BoardResponseDto } from "../dtos/boards/BoardResponseDto";
 import type { CreateBoardRequestDto } from "../dtos/boards/CreateBoardRequestDto";
@@ -6,6 +10,13 @@ import type { UpdateBoardRequestDto } from "../dtos/boards/UpdateBoardRequestDto
 export const boardsService = {
   create(data: CreateBoardRequestDto) {
     return api.post<BoardResponseDto>("/boards", data);
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<BoardResponseDto>>(
+      "/boards/paginated",
+      { params, signal },
+    );
   },
 
   getAll() {

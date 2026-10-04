@@ -1,9 +1,12 @@
+import { AdminPagination } from "../../../components/AdminPagination";
+import { AdminError } from "../../../components/AdminError";
+import { useAdminList } from "../../../hooks/useAdminList";
 import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { Actions, Container, Empty, Filters } from "./styles";
 import { AdminSearchBar } from "../../../components/AdminSearchBar";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
@@ -22,45 +25,10 @@ export function AdminPresentedWorks() {
 
   const { showModal } = useModal();
 
-  const [loading, setLoading] = useState(true);
-
-  const [presentedWorks, setPresentedWorks] = useState<
-    PresentedWorkResponseDto[]
-  >([]);
-
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await presentedWorksService.getAll();
-
-      setPresentedWorks(response.data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      showToast({
-        title: "Ops! Lista não atualizada",
-        description: `Não foi possível atualizar a lista.\n${message}`,
-        type: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
-
-  const filteredPresentedWorks = presentedWorks.filter((presentedWork) => {
-    const matchesSearch =
-      presentedWork.title.toLowerCase().includes(search.toLowerCase()) ||
-      presentedWork.slug.toLowerCase().includes(search.toLowerCase());
-
-    return matchesSearch;
-  });
+  const { items, loading, error, load, pagination } = useAdminList(
+    presentedWorksService.getPage,
+    { search: search.trim() || undefined },
+  );
 
   function handleDelete(presentedWork: PresentedWorkResponseDto) {
     showModal({
@@ -83,7 +51,7 @@ export function AdminPresentedWorks() {
           type: "success",
         });
 
-        await load();
+        load();
       },
 
       onCancel: () => {
@@ -114,6 +82,7 @@ export function AdminPresentedWorks() {
         />
       </Filters>
 
+      {error && <AdminError>{error}</AdminError>}
       <AdminTable>
         <thead>
           <tr>
@@ -126,7 +95,7 @@ export function AdminPresentedWorks() {
 
         <tbody>
           {!loading &&
-            filteredPresentedWorks.map((presentedWork) => (
+            items.map((presentedWork) => (
               <tr key={presentedWork.id}>
                 <td>
                   <strong>{presentedWork.title}</strong>
@@ -175,8 +144,9 @@ export function AdminPresentedWorks() {
             ))}
         </tbody>
       </AdminTable>
+      <AdminPagination {...pagination} />
 
-      {!loading && filteredPresentedWorks.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty>Nenhum banca encontrada.</Empty>
       )}
     </Container>

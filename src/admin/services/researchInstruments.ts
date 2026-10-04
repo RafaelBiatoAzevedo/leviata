@@ -1,3 +1,7 @@
+import type {
+  AdminListQuery,
+  PaginatedResponseDto,
+} from "../dtos/PaginatedResponseDto";
 import { api } from "../../services/api";
 import type { ResearchInstrumentResponseDto } from "../dtos/researchInstruments/ResearchInstrumentResponseDto";
 import type { CreateResearchInstrumentRequestDto } from "../dtos/researchInstruments/CreateResearchInstrumentRequestDto";
@@ -41,6 +45,13 @@ export const researchInstrumentsService = {
           "Content-Type": "multipart/form-data",
         },
       },
+    );
+  },
+
+  getPage(params: AdminListQuery = {}, signal?: AbortSignal) {
+    return api.get<PaginatedResponseDto<ResearchInstrumentResponseDto>>(
+      "/researchInstruments/paginated",
+      { params, signal },
     );
   },
 

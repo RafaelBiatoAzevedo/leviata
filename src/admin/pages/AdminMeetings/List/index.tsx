@@ -1,3 +1,6 @@
+import { AdminPagination } from "../../../components/AdminPagination";
+import { AdminError } from "../../../components/AdminError";
+import { useAdminList } from "../../../hooks/useAdminList";
 import { FiEdit2, FiEye, FiPlus, FiTrash2, FiVideo } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
@@ -11,7 +14,7 @@ import {
   Filters,
 } from "./styles";
 import { AdminSearchBar } from "../../../components/AdminSearchBar";
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "../../../../hooks/useToast";
 import { useModal } from "../../../../hooks/useModal";
@@ -31,43 +34,10 @@ export function AdminMeetings() {
 
   const { showModal } = useModal();
 
-  const [loading, setLoading] = useState(true);
-
-  const [meetings, setMeetings] = useState<MeetingResponseDto[]>([]);
-
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await meetingsService.getAll();
-
-      setMeetings(response.data);
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
-
-      showToast({
-        title: "Ops! Lista não atualizada",
-        description: `Não foi possível atualizar a lista.\n${message}`,
-        type: "danger",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [showToast]);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
-
-  const filteredMeetings = meetings.filter((meeting) => {
-    const matchesSearch =
-      meeting.title.toLowerCase().includes(search.toLowerCase()) ||
-      meeting.slug.toLowerCase().includes(search.toLowerCase());
-
-    return matchesSearch;
-  });
+  const { items, loading, error, load, pagination } = useAdminList(
+    meetingsService.getPage,
+    { search: search.trim() || undefined },
+  );
 
   function handleDelete(meeting: MeetingResponseDto) {
     showModal({
@@ -90,7 +60,7 @@ export function AdminMeetings() {
           type: "success",
         });
 
-        await load();
+        load();
       },
 
       onCancel: () => {
@@ -119,6 +89,7 @@ export function AdminMeetings() {
         />
       </Filters>
 
+      {error && <AdminError>{error}</AdminError>}
       <AdminTable>
         <thead>
           <tr>
@@ -133,7 +104,7 @@ export function AdminMeetings() {
 
         <tbody>
           {!loading &&
-            filteredMeetings.map((meeting) => (
+            items.map((meeting) => (
               <tr key={meeting.id}>
                 <td>
                   {meeting.coverUrl ? (
@@ -193,8 +164,9 @@ export function AdminMeetings() {
             ))}
         </tbody>
       </AdminTable>
+      <AdminPagination {...pagination} />
 
-      {!loading && filteredMeetings.length === 0 && (
+      {!loading && !error && items.length === 0 && (
         <Empty>Nenhum livro encontrado.</Empty>
       )}
     </Container>
