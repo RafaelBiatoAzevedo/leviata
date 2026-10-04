@@ -41,8 +41,14 @@ export const newsService = {
     });
   },
 
-  getAll() {
-    return api.get<NewsResponseDto[]>("/news");
+  getAll(
+    params: {
+      limit?: number;
+      sortBy?: "date" | "createdAt";
+      sortOrder?: "asc" | "desc";
+    } = {},
+  ) {
+    return api.get<NewsResponseDto[]>("/news", { params });
   },
 
   getById(id: string) {

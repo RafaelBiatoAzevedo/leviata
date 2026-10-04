@@ -15,6 +15,7 @@ export const Container = styled.div`
 `;
 
 export const Sidebar = styled.aside<SidebarProps>`
+  flex-shrink: 0;
   width: ${({ $collapsed }) => ($collapsed ? "76px" : "240px")};
 
   transition: 0.4s;
@@ -169,6 +170,7 @@ export const NavItem = styled(NavLink)`
 
 export const Main = styled.main`
   flex: 1;
+  min-width: 0;
 
   display: flex;
 
@@ -177,6 +179,7 @@ export const Main = styled.main`
 
 export const Header = styled.header`
   height: 70px;
+  flex-shrink: 0;
 
   display: flex;
 
@@ -195,6 +198,10 @@ export const Header = styled.header`
   position: relative;
 
   z-index: 10;
+
+  @media (max-width: 600px) {
+    padding: 0 12px;
+  }
 `;
 
 export const ToggleButton = styled.button`
@@ -235,6 +242,12 @@ export const UserArea = styled.div`
   padding: 1.25rem;
 
   border-top: 1px solid ${({ theme }) => theme.colors.border};
+
+  @media (max-width: 600px) {
+    padding: 0;
+    border: 0;
+    gap: 10px;
+  }
 `;
 
 export const UserInfo = styled.div`
@@ -273,6 +286,10 @@ export const UserData = styled.div`
   display: flex;
 
   flex-direction: column;
+
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 
 export const UserName = styled.span`
@@ -321,6 +338,12 @@ export const LogoutButton = styled.button`
   &:hover {
     filter: brightness(0.95);
   }
+
+  @media (max-width: 600px) {
+    padding: 10px;
+    font-size: 0;
+    gap: 0;
+  }
 `;
 
 export const Content = styled.main`
@@ -329,6 +352,10 @@ export const Content = styled.main`
   overflow-y: auto;
 
   padding: 32px;
+
+  @media (max-width: 768px) {
+    padding: 20px 16px;
+  }
 `;
 
 export const BackWebSiteWrapper = styled.div`

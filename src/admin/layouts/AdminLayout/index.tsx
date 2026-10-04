@@ -51,7 +51,9 @@ import { GiInjustice } from "react-icons/gi";
 export function AdminLayout() {
   const navigate = useNavigate();
 
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(
+    () => window.matchMedia("(max-width: 768px)").matches,
+  );
 
   const { user, signOut } = useAuth();
 
@@ -206,7 +208,11 @@ export function AdminLayout() {
 
       <Main>
         <Header>
-          <ToggleButton onClick={() => setCollapsed(!collapsed)}>
+          <ToggleButton
+            aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+            aria-expanded={!collapsed}
+            onClick={() => setCollapsed(!collapsed)}
+          >
             <FiMenu />
           </ToggleButton>
 
@@ -223,7 +229,7 @@ export function AdminLayout() {
               </UserData>
             </UserInfo>
 
-            <LogoutButton onClick={handleLogout}>
+            <LogoutButton aria-label="Sair da conta" onClick={handleLogout}>
               <FiLogOut />
               Logout
             </LogoutButton>
