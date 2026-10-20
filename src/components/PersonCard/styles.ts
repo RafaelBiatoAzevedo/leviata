@@ -1,7 +1,6 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-export const Container = styled(Link)`
+export const Container = styled.article`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -9,7 +8,7 @@ export const Container = styled(Link)`
 
   padding: 32px 24px;
 
-  border-radius: 18px;
+  border-radius: 1.4rem;
 
   text-decoration: none;
 
@@ -97,10 +96,6 @@ export const Content = styled.div`
   gap: 1.2rem;
 
   text-align: center;
-
-  position: relative;
-
-  z-index: 2;
 `;
 
 export const Name = styled.h3`
@@ -109,6 +104,28 @@ export const Name = styled.h3`
   font-size: 1.5rem;
 
   line-height: 1.2;
+`;
+
+export const ProfileLink = styled.a`
+  color: inherit;
+  text-decoration: none;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    border-radius: 18px;
+  }
+
+  &:focus-visible {
+    outline: none;
+  }
+
+  &:focus-visible::after {
+    outline: 2px solid ${({ theme }) => theme.colors.accent};
+    outline-offset: -4px;
+  }
 `;
 
 export const Category = styled.h4`
@@ -125,7 +142,15 @@ export const Category = styled.h4`
   }
 `;
 
-export const Description = styled.p`
+export const Biography = styled.div`
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  max-width: 320px;
+  flex: 1;
+`;
+
+export const Description = styled.p<{ $expanded: boolean }>`
   color: ${({ theme }) => theme.colors.textSoft};
   text-align: justify;
 
@@ -135,15 +160,43 @@ export const Description = styled.p`
 
   max-width: 320px;
 
-  flex: 1;
-
-  display: -webkit-box;
+  display: ${({ $expanded }) => ($expanded ? "block" : "-webkit-box")};
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 8;
+  -webkit-line-clamp: ${({ $expanded }) => ($expanded ? "unset" : "8")};
+
+  padding-bottom: ${({ $expanded }) => ($expanded ? "1.8rem" : "0")};
 
   overflow: hidden;
 
   overflow-wrap: break-word;
 
   white-space: pre-line;
+`;
+
+export const BioToggle = styled.button`
+  position: absolute;
+  right: 0;
+  bottom: 0;
+
+  border: 0;
+  padding: 0 0 0 8px;
+  background: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.accent};
+  box-shadow: -12px 0 12px ${({ theme }) => theme.colors.surface};
+
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.8;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.accent};
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
 `;

@@ -108,3 +108,33 @@ export const Description = styled.p`
 
   font-size: 15px;
 `;
+
+export const ReadMore = styled.span`
+  position: absolute;
+  right: 24px;
+  bottom: 16px;
+  z-index: 1;
+
+  padding: 4px 0 4px 12px;
+  background: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  pointer-events: none;
+
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease;
+
+  ${Container}:hover & {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+`;

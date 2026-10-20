@@ -7,6 +7,7 @@ import type { PersonResponseDto } from "../dtos/people/PersonResponseDto";
 import type { UpdatePersonDto } from "../dtos/people/UpdatePersonRequestDto";
 import { api } from "../../services/api";
 import type { ImageUploadResponseDto } from "../dtos/ImageUploadResponseDto";
+import { loadAllPages } from "../../utils/loadAllPages";
 
 export const peopleService = {
   create(data: CreatePersonDto, image?: File) {
@@ -48,6 +49,10 @@ export const peopleService = {
 
   getAll(params: AdminListQuery = {}, signal?: AbortSignal) {
     return api.get<PersonResponseDto[]>("/people", { params, signal });
+  },
+
+  getAllAvailable(signal?: AbortSignal) {
+    return loadAllPages((params) => peopleService.getAll(params, signal));
   },
 
   getById(id: string) {

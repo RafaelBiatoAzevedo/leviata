@@ -1,4 +1,12 @@
-import { Acronym, Bottom, Container, Description, Title, Top } from "./styles";
+import {
+  Acronym,
+  Bottom,
+  Container,
+  Description,
+  ReadMore,
+  Title,
+  Top,
+} from "./styles";
 
 interface CardLinkProps {
   to: string;
@@ -24,6 +32,8 @@ export function ThematicLinkCard({
 
         <Description>{description}</Description>
       </Bottom>
+
+      <ReadMore aria-hidden="true">Ver mais</ReadMore>
     </Container>
   );
 }

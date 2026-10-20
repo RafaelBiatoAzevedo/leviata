@@ -73,9 +73,9 @@ export function VideoForm() {
   }, [reset, slug]);
 
   const loadPeople = useCallback(async () => {
-    const response = await peopleService.getAll();
+    const people = await peopleService.getAllAvailable();
 
-    setPeople(response.data);
+    setPeople(people);
   }, []);
 
   useEffect(() => {

@@ -1,3 +1,4 @@
+import { useEffect, useId, useRef, useState } from "react";
 import type { AcademicTitleResponseDto } from "../../admin/dtos/AcademicTitleResponseDto";
 import type { InstitutionResponseDto } from "../../admin/dtos/InstitutionResponseDto";
 import type { TPersonCategory } from "../../admin/types/TPersonCategory";
@@ -8,6 +9,9 @@ import {
   Name,
   Description,
   Category,
+  Biography,
+  BioToggle,
+  ProfileLink,
 } from "./styles";
 
 interface PersonCardProps {
@@ -29,8 +33,28 @@ export function PersonCard({
   category,
   lattesUrl,
 }: PersonCardProps) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const descriptionRef = useRef<HTMLParagraphElement>(null);
+  const bioId = useId();
+  const displayName = `${academicTitle?.abbreviation ?? ""} ${name}`.trim();
+
+  useEffect(() => {
+    const description = descriptionRef.current;
+
+    if (!description || isExpanded) return;
+
+    const observer = new ResizeObserver(() => {
+      setIsOverflowing(description.scrollHeight > description.clientHeight);
+    });
+
+    observer.observe(description);
+
+    return () => observer.disconnect();
+  }, [bio, isExpanded]);
+
   return (
-    <Container to={lattesUrl ? lattesUrl : ""} target="_blank">
+    <Container>
       {!!imageUrl && (
         <ProfileImage>
           <img src={imageUrl} alt={name} />
@@ -38,10 +62,44 @@ export function PersonCard({
       )}
 
       <Content>
-        <Name>{`${academicTitle! ? academicTitle?.abbreviation : ""} ${name}`}</Name>
+        <Name>
+          {lattesUrl ? (
+            <ProfileLink href={lattesUrl} target="_blank" rel="noopener noreferrer">
+              {displayName}
+            </ProfileLink>
+          ) : (
+            displayName
+          )}
+        </Name>
         <Category>{category}</Category>
 
-        {!!bio && <Description>{bio}</Description>}
+        {!!bio && (
+          <Biography>
+            <Description
+              id={bioId}
+              ref={descriptionRef}
+              $expanded={isExpanded}
+            >
+              {bio}
+            </Description>
+
+            {isOverflowing && (
+              <BioToggle
+                type="button"
+                aria-expanded={isExpanded}
+                aria-controls={bioId}
+                aria-label={
+                  isExpanded
+                    ? `Recolher biografia de ${name}`
+                    : `Ver biografia completa de ${name}`
+                }
+                onClick={() => setIsExpanded((expanded) => !expanded)}
+              >
+                {isExpanded ? "Ver menos" : "Ver mais"}
+              </BioToggle>
+            )}
+          </Biography>
+        )}
 
         {!!institution?.acronym && <Category>{institution.acronym}</Category>}
       </Content>

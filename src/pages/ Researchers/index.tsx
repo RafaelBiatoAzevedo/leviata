@@ -30,10 +30,10 @@ export function Researchers() {
   const load = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await peopleService.getAll();
+      const people = await peopleService.getAllAvailable();
 
       const { internationalsPeople, nationalsPeople } = filterPeople(
-        response.data,
+        people,
       );
 
       setNationalsResearchers(nationalsPeople);
@@ -62,8 +62,8 @@ export function Researchers() {
 
         {!loading && (
           <Grid>
-            {nationalsResearchers.map((person, index) => (
-              <PersonCard key={index} {...person} />
+            {nationalsResearchers.map((person) => (
+              <PersonCard key={person.id} {...person} />
             ))}
           </Grid>
         )}
@@ -79,8 +79,8 @@ export function Researchers() {
 
         {!loading && (
           <Grid>
-            {internatinalsResearchers.map((person, index) => (
-              <PersonCard key={index} {...person} />
+            {internatinalsResearchers.map((person) => (
+              <PersonCard key={person.id} {...person} />
             ))}
           </Grid>
         )}
