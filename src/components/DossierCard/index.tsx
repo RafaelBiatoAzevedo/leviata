@@ -1,6 +1,18 @@
-import { FiArchive } from "react-icons/fi";
+import { FiArchive, FiArrowRight } from "react-icons/fi";
 
-import { Container, IconWrapper, Content, Title, Period } from "./styles";
+import {
+  Container,
+  Header,
+  IconWrapper,
+  HeaderLabel,
+  Reference,
+  Content,
+  Title,
+  Period,
+  Footer,
+  ReadMore,
+  LinkArrow,
+} from "./styles";
 
 interface IDossierCardProps {
   id: number;
@@ -17,14 +29,28 @@ export function DossierCard({
 }: IDossierCardProps) {
   return (
     <Container to={`/instrumentos/planilhas-biblio-tematicas/dossie/${id}`}>
-      <IconWrapper>
-        <FiArchive />
-      </IconWrapper>
+      <Header>
+        <IconWrapper aria-hidden="true">
+          <FiArchive />
+        </IconWrapper>
+        <HeaderLabel>Dossiê temático</HeaderLabel>
+        <Reference aria-hidden="true">{String(id).padStart(2, "0")}</Reference>
+      </Header>
 
       <Content>
-        <Title>{title}</Title>
+        <Title title={title}>{title}</Title>
 
-        <Period>{`${startYear} - ${endYear}`}</Period>
+        <Period>
+          <span>Período</span>
+          <strong>{`${startYear} — ${endYear}`}</strong>
+        </Period>
+
+        <Footer>
+          <ReadMore>Explorar dossiê</ReadMore>
+          <LinkArrow aria-hidden="true">
+            <FiArrowRight />
+          </LinkArrow>
+        </Footer>
       </Content>
     </Container>
   );

@@ -30,6 +30,13 @@ export const Required = styled.span`
   font-size: 0.9rem;
 `;
 
+export const LabelHint = styled.span`
+  color: ${({ theme }) => theme.colors.textSoft};
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.4;
+`;
+
 export const Description = styled.span`
   font-size: 0.82rem;
 

@@ -38,7 +38,10 @@ export function Home() {
 
   const load = useCallback(async () => {
     try {
-      const responseBooks = await booksService.getAll();
+      const responseBooks = await booksService.getAll({
+        sortBy: "year",
+        sortOrder: "desc",
+      });
       const responseNews = await newsService.getAll();
 
       setBooks(responseBooks.data);

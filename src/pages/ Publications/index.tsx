@@ -58,7 +58,10 @@ export function Publications() {
 
   const load = useCallback(async () => {
     try {
-      const responseBooks = await booksService.getAll();
+      const responseBooks = await booksService.getAll({
+        sortBy: "year",
+        sortOrder: "desc",
+      });
       const responseArticles = await articlesService.getAll();
       const responsePresentedWorks = await presentedWorksService.getAll();
 
@@ -177,7 +180,7 @@ export function Publications() {
                 >
                   <ArticleCard
                     {...article}
-                    year={String(article.year)}
+                    year={article.year}
                     author={article.authors
                       .map((author) => author.name)
                       .filter(Boolean)
@@ -244,7 +247,7 @@ export function Publications() {
                 >
                   <ArticleCard
                     {...dossier}
-                    year={String(dossier.year)}
+                    year={dossier.year}
                     author={dossier.authors
                       .map((author) => author.name)
                       .filter(Boolean)

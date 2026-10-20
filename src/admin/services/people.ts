@@ -9,6 +9,8 @@ import { api } from "../../services/api";
 import type { ImageUploadResponseDto } from "../dtos/ImageUploadResponseDto";
 import { loadAllPages } from "../../utils/loadAllPages";
 
+const personNameCollator = new Intl.Collator("pt-BR", { sensitivity: "base" });
+
 export const peopleService = {
   create(data: CreatePersonDto, image?: File) {
     const formData = new FormData();
@@ -53,6 +55,13 @@ export const peopleService = {
 
   getAllAvailable(signal?: AbortSignal) {
     return loadAllPages((params) => peopleService.getAll(params, signal));
+  },
+
+  async getForSelect(signal?: AbortSignal) {
+    const people = await peopleService.getAllAvailable(signal);
+    return [...people].sort((first, second) =>
+      personNameCollator.compare(first.name, second.name),
+    );
   },
 
   getById(id: string) {

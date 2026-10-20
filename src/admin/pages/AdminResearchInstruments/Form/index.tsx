@@ -85,7 +85,7 @@ export function ResearchInstrumentForm() {
   }, [reset, slug]);
 
   const loadPeople = useCallback(async () => {
-    const people = await peopleService.getAllAvailable();
+    const people = await peopleService.getForSelect();
 
     setPeople(people);
   }, []);

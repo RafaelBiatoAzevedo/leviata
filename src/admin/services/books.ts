@@ -51,8 +51,13 @@ export const booksService = {
     });
   },
 
-  getAll() {
-    return api.get<BookResponseDto[]>("/books");
+  getAll(
+    params: {
+      sortBy?: "title" | "year" | "createdAt" | "updatedAt";
+      sortOrder?: "asc" | "desc";
+    } = {},
+  ) {
+    return api.get<BookResponseDto[]>("/books", { params });
   },
 
   getById(id: string) {

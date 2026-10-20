@@ -6,6 +6,7 @@ import { Input } from "./styles";
 
 interface AdminInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
+  labelHint?: string;
   description?: string;
   error?: string;
   required?: boolean;
@@ -13,6 +14,7 @@ interface AdminInputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export function AdminInput({
   label,
+  labelHint,
   description,
   error,
   required = false,
@@ -24,6 +26,7 @@ export function AdminInput({
   return (
     <AdminField
       label={label}
+      labelHint={labelHint}
       description={description}
       error={error}
       required={required}

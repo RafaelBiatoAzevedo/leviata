@@ -80,7 +80,7 @@ export function PresentedWorkForm() {
   }, [reset, slug, loadGallery]);
 
   const loadPeople = useCallback(async () => {
-    const people = await peopleService.getAllAvailable();
+    const people = await peopleService.getForSelect();
 
     setPeople(people);
   }, []);

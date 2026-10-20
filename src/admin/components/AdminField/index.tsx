@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 
-import { Container, Description, Error, Label, Required } from "./styles";
+import { Container, Description, Error, Label, LabelHint, Required } from "./styles";
 
 interface AdminFieldProps {
   label?: string;
+  labelHint?: string;
   required?: boolean;
   description?: string;
   error?: string;
@@ -13,6 +14,7 @@ interface AdminFieldProps {
 
 export function AdminField({
   label,
+  labelHint,
   required = false,
   description,
   error,
@@ -24,6 +26,8 @@ export function AdminField({
       {label && (
         <Label htmlFor={htmlFor}>
           {label}
+
+          {labelHint && <LabelHint>({labelHint})</LabelHint>}
 
           {required && <Required>*</Required>}
         </Label>

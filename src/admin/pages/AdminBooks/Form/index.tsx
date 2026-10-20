@@ -36,6 +36,7 @@ import { useModal } from "../../../../hooks/useModal";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminError } from "../../../components/AdminError";
 import AdminFormActions from "../../../components/AdminFormActions";
+import { bookErrorDetails } from "../../../utils/bookErrors";
 
 export function BookForm() {
   const navigate = useNavigate();
@@ -61,6 +62,8 @@ export function BookForm() {
     handleSubmit,
     reset,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm<BookFormData>({
     resolver: zodResolver(bookSchema),
@@ -86,7 +89,7 @@ export function BookForm() {
   }, [reset, slug]);
 
   const loadPeople = useCallback(async () => {
-    const people = await peopleService.getAllAvailable();
+    const people = await peopleService.getForSelect();
 
     setPeople(people);
   }, []);
@@ -176,6 +179,8 @@ export function BookForm() {
   }
 
   async function onSubmit(data: BookFormData) {
+    clearErrors("root.server");
+
     try {
       if (isEdit) {
         await booksService.updateBySlug(slug!, data);
@@ -186,7 +191,7 @@ export function BookForm() {
           type: "success",
         });
       } else {
-        await booksService.create(mapBookToCreateDto(data), coverFile!);
+        await booksService.create(mapBookToCreateDto(data), coverFile ?? undefined);
 
         showToast({
           title: "Livro criado",
@@ -197,13 +202,16 @@ export function BookForm() {
 
       navigate("/admin/livros");
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
+      const { message, fieldErrors } = bookErrorDetails(error);
+
+      fieldErrors.forEach(({ field, message }, index) => {
+        setError(field, { type: "server", message }, { shouldFocus: index === 0 });
+      });
+      setError("root.server", { type: "server", message });
 
       showToast({
         title: isEdit ? "Erro ao atualizar livro" : "Erro ao criar livro",
-        description:
-          message ?? "Não foi possível salvar os dados. Tente novamente.",
+        description: message,
         type: "danger",
       });
     }
@@ -240,7 +248,7 @@ export function BookForm() {
         subtitle="Cadastre ou atualize os dados do livro."
       />
 
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form noValidate onSubmit={handleSubmit(onSubmit)}>
         <BookTopWrapper>
           <AdminFormGrid columns={1}>
             <AdminImageUpload
@@ -249,6 +257,7 @@ export function BookForm() {
               variant="portrait"
               imageUrl={coverPreview}
               onChange={handleUploadCover}
+              error={errors.coverUrl?.message}
             />
           </AdminFormGrid>
 
@@ -264,7 +273,8 @@ export function BookForm() {
                 />
 
                 <AdminInput
-                  label="Slug (Gerado automaticamente)"
+                  label="Slug"
+                  labelHint="Gerado automaticamente"
                   value={slug ?? ""}
                   disabled
                 />
@@ -277,9 +287,10 @@ export function BookForm() {
                 />
 
                 <AdminInput
-                  label="Isbn"
-                  type="number"
-                  placeholder="Número isbn"
+                  label="ISBN"
+                  labelHint="Pode conter números e hífens"
+                  type="text"
+                  placeholder="Ex.: 978-85-359-3392-9"
                   error={errors.isbn?.message}
                   {...register("isbn")}
                 />
@@ -355,6 +366,8 @@ export function BookForm() {
             )}
           </AdminSection>
         </AdminFormCard>
+
+        <AdminError>{errors.root?.server?.message}</AdminError>
 
         <AdminFormActions isSubmitting={isSubmitting} />
       </Form>

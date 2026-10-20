@@ -11,6 +11,7 @@
     "test:gallery": "node --test --test-isolation=none test/gallery.test.mjs",
     "test:pagination": "node --test --test-isolation=none test/pagination.test.cjs",
     "test:people": "node --test --test-isolation=none test/people.test.cjs",
+    "test:books": "node --test --test-isolation=none test/books.test.mjs",
     "test:users": "node --test --test-isolation=none test/users.test.mjs",
     "test:thematics": "node --test --test-isolation=none test/thematics.test.mjs"
   },

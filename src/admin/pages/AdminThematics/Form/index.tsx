@@ -74,7 +74,7 @@ function ThematicEditor({ slug }: { slug?: string }) {
   useEffect(() => {
     const controller = new AbortController();
     Promise.all([
-      peopleService.getAllAvailable(controller.signal),
+      peopleService.getForSelect(controller.signal),
       loadAllPages((params) => videosService.getAll(params, controller.signal)),
       slug
         ? thematicsService.getDetails(slug, controller.signal)
