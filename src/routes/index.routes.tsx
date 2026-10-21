@@ -13,6 +13,7 @@ import { Instruments } from "../pages/Instruments";
 import { Activities } from "../pages/Activities";
 import { Publications } from "../pages/ Publications";
 import { Schedule } from "../pages/Schecdule";
+import { PresentedWorks } from "../pages/PresentedWorks";
 import { ResearchCenter } from "../pages/ResearchCenter";
 import { Seminars } from "../pages/Seminars";
 import { BibliographicSpreadsheets } from "../pages/BibliographicSpreadsheets";
@@ -97,13 +98,7 @@ export function Router() {
         />
         <Route
           path="/atividades/apresentacoes-trabalhos"
-          element={
-            <GalleryActivities
-              resource="presented-works"
-              title="Trabalhos apresentados"
-              path="/atividades/apresentacoes-trabalhos"
-            />
-          }
+          element={<PresentedWorks />}
         />
         <Route
           path="/atividades/apresentacoes-trabalhos/:id"

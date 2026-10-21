@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
+  min-width: 0;
 
   display: flex;
   flex-direction: column;
@@ -22,6 +23,9 @@ export const ActionButton = styled.a`
   display: flex;
   align-items: center;
   gap: 1rem;
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
 
   padding: 8px 12px;
 
@@ -52,12 +56,9 @@ export const ActionButton = styled.a`
   }
 `;
 
-interface IViewerProps {
-  width: number;
-}
-
-export const Viewer = styled.div<IViewerProps>`
+export const Viewer = styled.div`
   width: 100%;
+  min-width: 0;
 
   max-height: 90vh;
 
@@ -65,18 +66,29 @@ export const Viewer = styled.div<IViewerProps>`
 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 
-  padding: 20px;
+  padding: clamp(8px, 2vw, 20px);
   gap: 1rem;
 
   border-radius: 18px;
 
   background: ${({ theme }) => theme.colors.backgroundCard};
 
+  > * {
+    flex-shrink: 0;
+  }
+
+  .react-pdf__Document {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    min-width: 0;
+  }
+
   .react-pdf__Page {
-    width: ${({ width }) => width};
+    max-width: 100%;
     overflow: hidden;
 
     border-radius: 12px;
@@ -87,8 +99,14 @@ export const Viewer = styled.div<IViewerProps>`
   }
 
   canvas {
+    display: block;
     max-width: 100%;
     height: auto !important;
+  }
+
+  &:fullscreen {
+    max-height: 100dvh;
+    height: 100dvh;
   }
 `;
 
@@ -97,7 +115,7 @@ export const Pagination = styled.div`
   align-items: center;
   justify-content: center;
 
-  gap: 18px;
+  gap: 12px;
 
   flex-wrap: wrap;
 `;
@@ -106,6 +124,7 @@ export const PageButton = styled.button`
   display: flex;
   align-items: center;
   gap: 8px;
+  min-height: 44px;
 
   padding: 12px 18px;
 

@@ -95,6 +95,7 @@ function ThematicContent({ identifier }: { identifier?: string }) {
             <HistoryDivider />
             <SectionHeader
               small
+              as="h2"
               title="Pesquisas vinculadas"
               subtitle="Acompanhe as pesquisas vinculadas à temática."
             />

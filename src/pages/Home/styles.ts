@@ -1,8 +1,9 @@
+import { portalContent } from "../../styles/portal";
 import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  padding-top: 70px;
+  padding-top: var(--portal-header-height, 70px);
 `;
 
 export const Content = styled.div`
@@ -10,14 +11,18 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 4rem;
-  padding: 2rem 16rem;
 
-  h1 {
+  > h1 {
+    max-width: 1100px;
+    font-size: clamp(22px, 2.2vw, 28px);
+    line-height: 1.5;
     text-align: center;
   }
+  ${portalContent}
 `;
 
 export const ImageHero = styled.img`
+  display: block;
   width: 100%;
   height: auto;
 `;
@@ -31,99 +36,16 @@ export const LinesLInksWrapper = styled.div`
   gap: 4rem;
 `;
 
-export const Carousel = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  width: 100%;
-  overflow: hidden;
-
-  .swiper {
-    width: 100%;
-    height: 100%;
-    padding: 2rem 2rem 4rem 2rem;
-  }
-
-  .swiper-button-next,
-  .swiper-button-prev {
-    color: ${({ theme }) => theme.colors.accent};
-
-    width: 48px;
-    height: 48px;
-
-    border-radius: 50%;
-
-    background: rgba(0, 0, 0, 0.2);
-
-    backdrop-filter: blur(8px);
-
-    transition: 0.3s;
-
-    padding: 8px;
-  }
-
-  .swiper-button-next:hover,
-  .swiper-button-prev:hover {
-    transform: scale(1.05);
-
-    box-shadow: 0 0 20px ${({ theme }) => theme.colors.accentGlow};
-  }
-
-  .swiper-pagination-bullet {
-    background: ${({ theme }) => theme.colors.textSoft};
-    opacity: 0.5;
-  }
-
-  .swiper-pagination-bullet-active {
-    background: ${({ theme }) => theme.colors.accent};
-    opacity: 1;
-  }
-
-  /* img {
-    width: 700px;
-    height: 400px;
-    object-fit: contain;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    img {
-      width: 100%;
-      height: 300px;
-    }
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    img {
-      width: 100%;
-      height: 250px;
-    }
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.smallMobile}) {
-    img {
-      width: 100%;
-      height: 200px;
-    }
-  } */
-`;
+export { Container as Carousel } from "../../components/Carousel/styles";
 
 export const ThematicLinesGrid = styled.div`
-  width: 1300px;
+  width: 100%;
+  max-width: 1300px;
   align-self: center;
 
   display: flex;
-  gap: 4rem;
+  gap: clamp(24px, 3vw, 40px);
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 `;

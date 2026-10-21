@@ -73,6 +73,7 @@ export function Home() {
         <HistoryDivider />
         <SectionHeader
           center
+          as="h2"
           title="Linhas Temáticas"
           subtitle="Conheça as principais linhas de investigação que orientam as
             pesquisas do grupo, abrangendo diferentes abordagens da história,
@@ -96,6 +97,7 @@ export function Home() {
         <HistoryDivider />
         <SectionHeader
           center
+          as="h2"
           title="Publicações recentes"
           subtitle="As publicações recentes reúnem os trabalhos mais atuais desenvolvidos pelo grupo “Leviatã e o Cativeiro”, destacando pesquisas, artigos e produções acadêmicas."
         />
@@ -105,10 +107,12 @@ export function Home() {
             modules={[Autoplay, Pagination, Navigation]}
             slidesPerView={"auto"}
             spaceBetween={30}
-            loop
+            rewind
+            watchOverflow
             navigation
             pagination={{
               clickable: true,
+              dynamicBullets: true,
             }}
             style={{ alignItems: "stretch" }}
           >
@@ -131,6 +135,7 @@ export function Home() {
         <HistoryDivider />
         <SectionHeader
           center
+          as="h2"
           title="Notícias"
           subtitle="As notícias reúnem atualizações sobre as atividades, pesquisas, eventos e produções do grupo “Leviatã e o Cativeiro”."
         />
@@ -140,10 +145,12 @@ export function Home() {
             modules={[Autoplay, Pagination, Navigation]}
             slidesPerView={"auto"}
             spaceBetween={50}
-            loop
+            rewind
+            watchOverflow
             navigation
             pagination={{
               clickable: true,
+              dynamicBullets: true,
             }}
             style={{ alignItems: "stretch" }}
           >

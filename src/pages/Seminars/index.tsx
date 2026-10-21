@@ -1,61 +1,66 @@
+import type { MeetingResponseDto } from "../../admin/dtos/meetings/MeetingResponseDto";
+import { MeetingType } from "../../admin/types/TMeetingType";
+import { EventTimeline } from "../../components/EventTimeline";
 import { SectionHeader } from "../../components/SectionHeader";
-
-import {
-  Container,
-  Content,
-  Timeline,
-  TimelineItem,
-  TimelineDot,
-  TimelineContent,
-  EventTitle,
-  EventDate,
-  EventLink,
-} from "./styles";
-
-const seminars = [
-  {
-    title: "I Seminário Aberto do Grupo Leviatã e o Cativeiro",
-    date: "13 de maio de 2025",
-    link: "#",
-  },
-];
+import { usePublicList } from "../../hooks/usePublicData";
+import { Container, Content } from "./styles";
 
 export function Seminars() {
+  const { data, loading, error } =
+    usePublicList<MeetingResponseDto>("meetings");
+  const seminars = data.filter(
+    (meeting) => meeting.type === MeetingType.SEMINAR,
+  );
+
   return (
     <Container>
       <Content>
         <SectionHeader
           title="Seminários"
-          subtitle="Nossos seminários ocorrem regularmente durante o ano letivo e alguns deles são abertos ao público externo. Acompanhe nossas notícias e redes sociais para participar."
+          subtitle="Nossos seminários ocorrem regularmente durante o ano letivo e alguns deles são abertos ao público externo. Conheça os próximos debates e revisite os encontros já realizados."
         />
-
-        <Timeline>
-          {seminars.map((seminar, index) => (
-            <TimelineItem key={index}>
-              <TimelineDot />
-
-              <TimelineContent>
-                <EventDate>{seminar.date}</EventDate>
-
-                <EventTitle>{seminar.title}</EventTitle>
-
-                <EventLink href={seminar.link} target="_blank">
-                  Saiba mais
-                </EventLink>
-              </TimelineContent>
-            </TimelineItem>
-          ))}
-        </Timeline>
-
-        {/* <SocialLinks /> */}
-
-        {/* <HistoryDivider /> */}
-        {/* 
-        <Intro>
-          Os seminários promovem encontros de discussão acadêmica, circulação de
-          pesquisas e debates relacionados aos estudos sobre Estado Moderno,
-          escravidão e instituições luso-brasileiras.
-        </Intro> */}
+        <EventTimeline
+          kind="seminars"
+          loading={loading}
+          error={error}
+          entries={seminars.map((seminar) => ({
+            id: seminar.id,
+            title: seminar.title,
+            date: seminar.date,
+            dateOnly: true,
+            description: seminar.description,
+            location: seminar.location,
+            authors: seminar.speakers.flatMap((speaker) =>
+              speaker.id && speaker.name
+                ? [
+                    {
+                      id: speaker.id,
+                      name: speaker.name,
+                      abbreviation: speaker.academicTitle?.abbreviation,
+                    },
+                  ]
+                : [],
+            ),
+            actions: [
+              {
+                kind: "registration",
+                label: "Inscrições",
+                url: seminar.registrationUrl,
+              },
+              {
+                kind: "meeting",
+                label: "Transmissão",
+                url: seminar.meetingUrl,
+              },
+              {
+                kind: "recording",
+                label: "Gravação",
+                url: seminar.recordingUrl,
+              },
+            ],
+            detailsTo: `/atividades/encontros-e-seminarios/seminario/${encodeURIComponent(seminar.slug || seminar.id)}`,
+          }))}
+        />
       </Content>
     </Container>
   );

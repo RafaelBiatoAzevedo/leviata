@@ -3,8 +3,7 @@ import { TbFolderSearch } from "react-icons/tb";
 
 import { SectionHeader } from "../../components/SectionHeader";
 
-import { Container, Content, Grid } from "./styles";
-import { LinkCard } from "../../components/LinkCard";
+import { ActivityCard, Container, Content, Grid } from "./styles";
 import { GiInjustice } from "react-icons/gi";
 
 const activities = [
@@ -55,14 +54,14 @@ export function Activities() {
         />
 
         <Grid>
-          {activities.map((activity, index) => (
-            <LinkCard
-              key={index}
+          {activities.map((activity) => (
+            <ActivityCard
+              key={activity.to}
               to={activity.to}
               icon={activity.icon}
               title={activity.title}
               description={activity.description}
-            ></LinkCard>
+            />
           ))}
         </Grid>
       </Content>

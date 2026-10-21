@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { api } from "../services/api";
 import type { GalleryResource } from "../admin/services/gallery";
 
-export function usePublicList<T>(resource: GalleryResource) {
+export function usePublicList<T>(
+  resource: GalleryResource | "schedule" | "newsletter",
+) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);

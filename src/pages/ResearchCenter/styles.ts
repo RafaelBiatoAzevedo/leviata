@@ -1,8 +1,9 @@
+import { portalContent } from "../../styles/portal";
 import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  margin-top: 70px;
+  margin-top: var(--portal-header-height, 70px);
 `;
 
 export const Content = styled.div`
@@ -10,10 +11,8 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: min(100%, 1200px);
-  margin: 0 auto;
-  padding: 2rem clamp(1rem, 4vw, 4rem);
   gap: 3rem;
+  ${portalContent}
 `;
 
 export const InfoWrapper = styled.div`

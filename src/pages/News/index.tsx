@@ -40,11 +40,13 @@ export function News() {
             modules={[Autoplay, Pagination, Navigation]}
             slidesPerView={"auto"}
             spaceBetween={50}
-            loop
+            rewind
+            watchOverflow
             navigation
             speed={700}
             pagination={{
               clickable: true,
+              dynamicBullets: true,
             }}
             style={{ alignItems: "stretch" }}
           >

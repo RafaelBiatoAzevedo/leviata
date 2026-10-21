@@ -1,8 +1,9 @@
-import styled from "styled-components";
+import { portalContent } from "../../styles/portal";
+import styled, { keyframes } from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  margin-top: 70px;
+  margin-top: var(--portal-header-height, 70px);
 `;
 
 export const Content = styled.div`
@@ -10,270 +11,185 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem 16rem;
   gap: 3rem;
+
+  ${portalContent}
 `;
 
 export const Tabs = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  max-width: 1040px;
+  padding: 8px;
+  border: 1px solid rgba(17, 24, 39, 0.1);
+  border-radius: 16px;
+  background: #fcfaf5;
+  box-shadow: 0 8px 30px rgba(17, 24, 39, 0.03);
 
-  gap: 14px;
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 `;
 
 export const TabButton = styled.button<{
   $active: boolean;
 }>`
-  padding: 14px 22px;
-
-  border-radius: 0.6rem;
-
-  border: 1px solid
-    ${({ theme, $active }) =>
-      $active ? theme.colors.primary : "rgba(255,255,255,0.06)"};
-
+  position: relative;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 100px;
+  padding: 22px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
   background: ${({ theme, $active }) =>
-    $active ? theme.colors.accentGlow : theme.colors.secondary};
-
+    $active ? theme.colors.secondary : "transparent"};
   color: ${({ theme, $active }) =>
-    $active ? theme.colors.primary : theme.colors.primary};
-
+    $active ? theme.colors.onSecondary : theme.colors.secondary};
+  text-align: left;
   cursor: pointer;
 
-  font-size: 1rem;
-  font-weight: 500;
+  transition:
+    background 0.25s ease,
+    color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
 
-  transition: 0.3s;
-
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.accent};
-
-    transform: translateY(-2px);
-  }
-`;
-
-export const Subtitle = styled.h3`
-  text-align: center;
-
-  margin-bottom: 2rem;
-
-  line-height: 1.1;
-
-  color: ${({ theme }) => theme.colors.text};
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-  }
-`;
-
-export const Timeline = styled.div`
-  position: relative;
-
-  display: flex;
-  flex-direction: column;
-
-  gap: 2rem;
-
-  padding-left: 2rem;
-
-  &::before {
+  &::after {
     content: "";
-
     position: absolute;
-
-    left: 10px;
-    top: 0;
+    right: 16px;
     bottom: 0;
-
-    width: 2px;
-
-    background: ${({ theme }) => theme.colors.border};
+    left: 16px;
+    height: 2px;
+    border-radius: 2px;
+    background: ${({ theme }) => theme.colors.primary};
+    transform: scaleX(${({ $active }) => ($active ? 1 : 0)});
+    transition: transform 0.25s ease;
   }
 
-  @media (max-width: 768px) {
-    padding-left: 1.5rem;
-  }
-`;
-
-export const TimelineItem = styled.div`
-  position: relative;
-
-  display: flex;
-  align-items: flex-start;
-  width: 900px;
-`;
-
-export const TimelineDot = styled.div`
-  position: absolute;
-
-  left: -1.91rem;
-  top: 1.8rem;
-
-  width: 20px;
-  height: 20px;
-
-  border-radius: 50%;
-
-  border: 4px solid ${({ theme }) => theme.colors.background};
-
-  z-index: 2;
-  background: ${({ theme }) => theme.colors.primary};
-
-  @media (max-width: 768px) {
-    left: -1.45rem;
-  }
-`;
-
-export const TimelineContent = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-
-  padding: 2rem;
-
-  border-radius: 18px;
-
-  background: ${({ theme }) => theme.colors.surface};
-
-  border: 1px solid ${({ theme }) => theme.colors.border};
-
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-
-  transition: 0.2s ease;
-
-  &:hover {
+  &:hover,
+  &:focus-visible {
+    border-color: ${({ theme }) => theme.colors.primary};
     transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(17, 24, 39, 0.07);
   }
 
-  @media (max-width: 768px) {
-    padding: 1.5rem;
-  }
-`;
-
-export const TimelineYear = styled.span`
-  color: ${({ theme }) => theme.colors.accent};
-
-  font-size: 1rem;
-  font-weight: 800;
-
-  letter-spacing: 1px;
-`;
-
-export const TimelineTitle = styled.h3`
-  color: ${({ theme }) => theme.colors.text};
-
-  font-size: 1.4rem;
-
-  font-family: ${({ theme }) => theme.fonts.title};
-`;
-
-export const TimelineSubTitle = styled.h4`
-  color: ${({ theme }) => theme.colors.textSoft};
-
-  font-size: 0.8rem;
-
-  font-family: ${({ theme }) => theme.fonts.title};
-
-  text-transform: uppercase;
-  margin-top: 0.5rem;
-`;
-
-export const TimelineDescription = styled.p`
-  color: ${({ theme }) => theme.colors.textSoft};
-
-  line-height: 1.7;
-`;
-
-export const Carousel = styled.div`
-  display: flex;
-  align-items: center;
-  flex: 1;
-  width: 100%;
-  overflow: hidden;
-
-  .swiper {
-    width: 100%;
-    height: 100%;
-    padding: 2rem 2rem 4rem 2rem;
-  }
-
-  .swiper-button-next,
-  .swiper-button-prev {
-    color: ${({ theme }) => theme.colors.accent};
-
-    width: 48px;
-    height: 48px;
-
-    border-radius: 50%;
-
-    background: rgba(0, 0, 0, 0.2);
-
-    backdrop-filter: blur(8px);
-
-    transition: 0.3s;
-
-    padding: 8px;
-  }
-
-  .swiper-button-next:hover,
-  .swiper-button-prev:hover {
-    transform: scale(1.05);
-
-    box-shadow: 0 0 20px ${({ theme }) => theme.colors.accentGlow};
-  }
-
-  .swiper-pagination-bullet {
-    background: ${({ theme }) => theme.colors.textSoft};
-    opacity: 0.5;
-  }
-
-  .swiper-pagination-bullet-active {
-    background: ${({ theme }) => theme.colors.accent};
-    opacity: 1;
-  }
-
-  /* img {
-    width: 700px;
-    height: 400px;
-    object-fit: contain;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    img {
-      width: 100%;
-      height: 300px;
-    }
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 2px;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    img {
-      width: 100%;
-      height: 250px;
-    }
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 8px;
+    min-height: 72px;
+    padding: 14px 10px;
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.smallMobile}) {
-    img {
-      width: 100%;
-      height: 200px;
+  @media (prefers-reduced-motion: reduce) {
+    &,
+    &::after {
+      transition: none;
     }
-  } */
+
+    &:hover,
+    &:focus-visible {
+      transform: none;
+    }
+  }
 `;
 
-export const TimeLineAuthor = styled.span`
-  color: ${({ theme }) => theme.colors.accent};
+export const TabIcon = styled.span`
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(198, 161, 91, 0.25);
+  border-radius: 9px;
+  background: rgba(198, 161, 91, 0.08);
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 18px;
 
-  font-size: 0.95rem;
-
-  font-weight: 600;
-
-  letter-spacing: 0.5px;
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    font-size: 15px;
+  }
 `;
 
-export const TimeLineEvent = styled.p`
-  color: ${({ theme }) => theme.colors.textSoft};
+export const TabCopy = styled.span`
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
 
-  font-size: 1rem;
+  strong {
+    font-family: ${({ theme }) => theme.fonts.title};
+    font-size: 23px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
 
-  line-height: 1.8;
+  span {
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0;
+    opacity: 0.65;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    strong {
+      font-size: 19px;
+    }
+
+    span {
+      display: none;
+    }
+  }
 `;
+
+export const TabOrdinal = styled.span`
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 8px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  opacity: 0.7;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    display: none;
+  }
+`;
+
+const panelReveal = keyframes`
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
+export const TabPanel = styled.div`
+  width: 100%;
+  min-width: 0;
+  animation: ${panelReveal} 0.25s ease;
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 6px;
+    border-radius: 12px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+`;
+
+export { Container as Carousel } from "../../components/Carousel/styles";

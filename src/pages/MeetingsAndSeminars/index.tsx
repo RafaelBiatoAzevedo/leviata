@@ -1,11 +1,9 @@
 import { usePublicList } from "../../hooks/usePublicData";
 import type { MeetingResponseDto } from "../../admin/dtos/meetings/MeetingResponseDto";
 import { Loading } from "../../components/Loading";
-import { LinkCard } from "../../components/LinkCard";
 import { SectionHeader } from "../../components/SectionHeader";
-import { Container, Content, Grid } from "./styles";
-import { FiVideo } from "react-icons/fi";
-import { FiMic } from "react-icons/fi";
+import { Container, Content, Grid, MeetingCard } from "./styles";
+import { FiMic, FiVideo } from "react-icons/fi";
 
 export function MeetingsAndSeminars() {
   const {
@@ -28,13 +26,13 @@ export function MeetingsAndSeminars() {
         )}
         <Grid>
           {meetings.map((meet) => (
-            <LinkCard
+            <MeetingCard
               key={meet.id}
               to={`/atividades/encontros-e-seminarios/${meet.type === "MEETING" ? "encontro" : "seminario"}/${meet.slug}`}
               icon={meet.type === "MEETING" ? <FiVideo /> : <FiMic />}
               title={meet.title}
               description={new Date(meet.date).toLocaleDateString("pt-BR", {
-                timeZone: "America/Sao_Paulo",
+                timeZone: "UTC",
               })}
             />
           ))}

@@ -5,7 +5,9 @@ export const Container = styled(Link)`
   display: flex;
   flex-direction: column;
   width: 360px;
-  height: 330px;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 330px;
 
   overflow: hidden;
 
@@ -61,6 +63,7 @@ export const Container = styled(Link)`
 
 export const Top = styled.div`
   height: 200px;
+  flex-shrink: 0;
 
   background: #000;
 
@@ -88,7 +91,7 @@ export const Acronym = styled.h2`
 `;
 
 export const Bottom = styled.div`
-  padding: 24px;
+  padding: 24px 24px 48px;
 `;
 
 export const Title = styled.h3`
@@ -132,9 +135,16 @@ export const ReadMore = styled.span`
     visibility 0.2s ease,
     transform 0.2s ease;
 
-  ${Container}:hover & {
+  ${Container}:hover &,
+  ${Container}:focus-visible & {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+  }
+
+  @media (hover: none) {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
   }
 `;

@@ -63,7 +63,10 @@ export function GalleryDetails({
           subtitle={
             data.date
               ? new Date(data.date).toLocaleDateString("pt-BR", {
-                  timeZone: "America/Sao_Paulo",
+                  timeZone:
+                    resource === "presented-works" || resource === "meetings"
+                      ? "UTC"
+                      : "America/Sao_Paulo",
                 })
               : undefined
           }
@@ -89,19 +92,19 @@ export function GalleryDetails({
         )}
         {!!data.images?.length && (
           <>
-            <SectionHeader title="Fotos" />
+            <SectionHeader as="h2" small title="Fotos" />
             <ImageGallery images={data.images} />
           </>
         )}
         {!!data.supports?.length && (
           <>
-            <SectionHeader title="Apoiadores" />
+            <SectionHeader as="h2" small title="Apoiadores" />
             <ImageGallery images={data.supports} />
           </>
         )}
         {!!data.presentedWorks?.length && (
           <>
-            <SectionHeader title="Trabalhos apresentados" />
+            <SectionHeader as="h2" small title="Trabalhos apresentados" />
             <Links>
               {data.presentedWorks.map((work) => (
                 <Link

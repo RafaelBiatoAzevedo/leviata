@@ -5,8 +5,7 @@ import { Loading } from "../../components/Loading";
 import { HistoryDivider } from "../../components/HistotyDivider";
 import { ParagraphText } from "../../components/ParagraphText";
 import { SectionHeader } from "../../components/SectionHeader";
-import { Container, Content, Grid, Label } from "./styles";
-import { LinkCard } from "../../components/LinkCard";
+import { Container, Content, Grid, JuryCard, Label } from "./styles";
 import { GiInjustice } from "react-icons/gi";
 
 const text = `“Júris Históricos: reflexões críticas sobre passado, presente, história e justiça no Brasil” 
@@ -48,7 +47,7 @@ export function HistoricalJuries() {
         )}
         <Grid>
           {juris.map((juri) => (
-            <LinkCard
+            <JuryCard
               key={juri.id}
               to={`/atividades/juris-historicos/juris/${juri.slug}`}
               icon={<GiInjustice />}
@@ -56,7 +55,7 @@ export function HistoricalJuries() {
               description={new Date(juri.date).toLocaleDateString("pt-BR", {
                 timeZone: "America/Sao_Paulo",
               })}
-            ></LinkCard>
+            />
           ))}
         </Grid>
 

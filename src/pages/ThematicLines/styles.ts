@@ -1,15 +1,16 @@
+import { portalContent } from "../../styles/portal";
 import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  padding-top: 70px;
+  padding-top: var(--portal-header-height, 70px);
 `;
 
 export const Content = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem clamp(1rem, 8vw, 12rem);
   gap: 4rem;
+  ${portalContent}
 `;
 
 export const ThematicLinesGrid = styled.div`
@@ -18,18 +19,8 @@ export const ThematicLinesGrid = styled.div`
   align-self: center;
 
   display: flex;
-  gap: 4rem;
+  gap: clamp(24px, 3vw, 40px);
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 `;

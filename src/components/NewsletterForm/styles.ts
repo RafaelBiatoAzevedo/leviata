@@ -1,125 +1,177 @@
 import styled from "styled-components";
+import {
+  portalButtonStyles,
+  portalFieldStyles,
+} from "../../styles/portalForms";
 
-interface IContainerProps {
-  size: "small" | "larger";
-}
-
-export const Container = styled.div<IContainerProps>`
-  width: ${({ size }) => (size === "small" ? "450px" : "600px")};
+export const Container = styled.section<{ $size: "small" | "larger" }>`
+  position: relative;
   display: flex;
   flex-direction: column;
-
+  gap: 24px;
+  width: ${({ $size }) => ($size === "small" ? "450px" : "600px")};
+  max-width: 100%;
+  min-width: 0;
+  padding: ${({ $size }) => ($size === "small" ? "22px 20px" : "32px")};
+  border: 1px solid ${({ theme }) => theme.colors.primary}40;
+  border-radius: 20px;
+  background: ${({ theme }) => theme.colors.surface};
   color: ${({ theme }) => theme.colors.text};
+  box-shadow: 0 8px 30px rgba(17, 24, 39, 0.04);
+  text-align: left;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 32px;
+    width: 40px;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: ${({ theme }) => theme.colors.primary};
+  }
+
+  @media (max-width: 480px) {
+    padding: 24px 20px;
+  }
+`;
+
+export const Header = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+`;
+
+export const HeaderIcon = styled.span`
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid ${({ theme }) => theme.colors.primary}55;
+  border-radius: 12px;
+  background: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.primary};
+  font-size: 21px;
+`;
+
+export const HeaderCopy = styled.div`
+  min-width: 0;
 
   h3 {
-    margin-left: 4px;
-    margin-bottom: 0.3rem;
-    font-family: ${({ theme }) => theme.fonts.title};
-    font-size: 18px;
+    margin-bottom: 6px;
+    font-size: clamp(23px, 2vw, 28px);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: 0;
+  }
+
+  p {
+    color: #6a706b;
+    font-size: 12px;
+    line-height: 1.7;
+    letter-spacing: 0.1px;
   }
 `;
 
 export const Form = styled.form`
-  align-items: center;
   display: flex;
-  flex-direction: row;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+`;
 
-  button {
-    align-self: flex-end;
+export const NameFields = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
   }
+`;
 
-  @media (max-width: 600px) {
-    flex-direction: column;
+export const Field = styled.label`
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+`;
+
+export const EmailActionRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  min-width: 0;
+
+  > label {
+    flex: 1 1 200px;
   }
 `;
 
 export const Input = styled.input`
-  width: 100%;
-  padding: 12px 14px;
+  ${portalFieldStyles}
+  min-height: 46px;
 
-  border-radius: 20px;
-
-  background: rgba(0, 0, 0, 0.2);
-  color: ${({ theme }) => theme.colors.text};
-  border: ${({ theme }) => theme.colors.primary} 1px solid;
-  outline: none;
-
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.3s ease;
-
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.accent};
-
-    box-shadow:
-      0 0 0 4px ${({ theme }) => theme.colors.accentGlow},
-      0 0 25px rgba(0, 0, 0, 0.25);
-
-    transform: translateY(-2px);
+  &[aria-invalid="true"] {
+    border-color: #b91c1c;
   }
 
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.colors.border};
-
-    border-radius: 10px;
+  &:disabled {
+    opacity: 0.7;
+    cursor: wait;
   }
 `;
 
-export const MainInputWrapper = styled.div`
+export const SubmitButton = styled.button`
+  ${portalButtonStyles}
+  flex: 1 0 auto;
+  align-self: flex-end;
+  padding-inline: 16px;
+  white-space: nowrap;
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+`;
+
+export const Note = styled.p`
+  color: #6a706b;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.7;
+  letter-spacing: 0.1px;
+`;
+
+export const FieldError = styled.span`
+  color: #b91c1c;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.5;
+`;
+
+export const StatusMessage = styled.p<{ $error?: boolean }>`
   display: flex;
-  flex: 1;
-
-  flex-direction: column;
-  gap: 1rem;
-`;
-
-export const TextArea = styled.textarea`
-  width: 100%;
-
-  min-height: 180px;
-
+  align-items: flex-start;
+  gap: 8px;
   padding: 12px 14px;
+  border: 1px solid ${({ $error }) => ($error ? "#fecaca" : "#bbf7d0")};
+  border-radius: 10px;
+  background: ${({ $error }) => ($error ? "#fef2f2" : "#f0fdf4")};
+  color: ${({ $error }) => ($error ? "#991b1b" : "#166534")};
+  font-size: 12px;
+  line-height: 1.6;
+  letter-spacing: 0;
 
-  border-radius: 20px;
-
-  resize: vertical;
-
-  outline: none;
-
-  border: ${({ theme }) => theme.colors.primary} 1px solid;
-
-  background: rgba(0, 0, 0, 0.2);
-
-  color: ${({ theme }) => theme.colors.text};
-
-  transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.3s ease;
-
-  &:focus {
-    border-color: ${({ theme }) => theme.colors.accent};
-
-    box-shadow:
-      0 0 0 4px ${({ theme }) => theme.colors.accentGlow},
-      0 0 25px rgba(0, 0, 0, 0.25);
-
-    transform: translateY(-2px);
-  }
-
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.colors.border};
-
-    border-radius: 20px;
+  svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 16px;
   }
 `;

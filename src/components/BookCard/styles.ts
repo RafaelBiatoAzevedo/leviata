@@ -102,6 +102,8 @@ export const CoverLabel = styled.span`
 
 export const Book = styled.div`
   position: relative;
+  max-width: 100%;
+  min-width: 0;
   z-index: 1;
   line-height: 0;
   transform: rotateY(-10deg) rotateZ(-3deg);
@@ -136,7 +138,7 @@ export const Book = styled.div`
     display: block;
     width: auto;
     height: auto;
-    max-width: 198px;
+    max-width: min(100%, 198px);
     max-height: 254px;
     border-radius: 2px 3px 3px 2px;
     box-shadow:
@@ -167,6 +169,7 @@ export const FallbackCover = styled.div`
   justify-content: center;
   gap: 22px;
   width: 182px;
+  max-width: 100%;
   height: 248px;
   padding: 26px;
   border: 1px solid ${({ theme }) => theme.colors.primary};

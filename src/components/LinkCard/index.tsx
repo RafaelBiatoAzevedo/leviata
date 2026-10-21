@@ -1,26 +1,46 @@
-import { CardDescription, CardTitle, Container, IconWrapper } from "./styles";
+import { FiArrowUpRight } from "react-icons/fi";
+import {
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  Container,
+  IconWrapper,
+  ReadMore,
+} from "./styles";
 import type { JSX } from "react";
 
 interface ILinkCardProps {
+  className?: string;
   to: string;
   icon: JSX.Element;
   title: string;
   description: string;
+  showReadMore?: boolean;
 }
 
 export function LinkCard({
+  className,
   to,
   icon: Icon,
   title,
   description,
+  showReadMore = false,
 }: ILinkCardProps) {
   return (
-    <Container to={to}>
-      <IconWrapper>{Icon}</IconWrapper>
-
-      <CardTitle>{title}</CardTitle>
+    <Container to={to} className={className} $showReadMore={showReadMore}>
+      <CardHeader>
+        <IconWrapper aria-hidden="true">{Icon}</IconWrapper>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
 
       <CardDescription>{description}</CardDescription>
+
+      {showReadMore && (
+        <ReadMore aria-hidden="true">
+          Ver mais
+          <FiArrowUpRight />
+        </ReadMore>
+      )}
     </Container>
   );
 }

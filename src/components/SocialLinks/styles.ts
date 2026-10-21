@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Links = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 1.2rem;
@@ -43,8 +44,8 @@ export const SocialButton = styled.a`
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     font-size: 1.7rem;
   }
 `;

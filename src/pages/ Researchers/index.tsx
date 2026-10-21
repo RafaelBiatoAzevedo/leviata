@@ -71,6 +71,7 @@ export function Researchers() {
         <HistoryDivider />
 
         <SectionHeader
+          as="h2"
           title="Colaboradores Internacionais"
           subtitle="Conheça os pesquisadores e instituições parceiras internacionais que
             colaboram com o grupo na construção e intercâmbio de conhecimentos

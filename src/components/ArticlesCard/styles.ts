@@ -95,6 +95,8 @@ export const Volume = styled.span`
 
 export const Issue = styled.div`
   position: relative;
+  max-width: 100%;
+  min-width: 0;
   z-index: 1;
   line-height: 0;
   transform: rotate(-3deg);
@@ -125,7 +127,7 @@ export const Issue = styled.div`
     display: block;
     width: auto;
     height: auto;
-    max-width: 244px;
+    max-width: min(100%, 244px);
     max-height: 190px;
     padding: 3px;
     background: #fcfaf5;
@@ -155,6 +157,7 @@ export const FallbackCover = styled.div`
   justify-content: center;
   gap: 16px;
   width: 190px;
+  max-width: 100%;
   height: 178px;
   padding: 22px;
   border-left: 3px solid ${({ theme }) => theme.colors.primary};

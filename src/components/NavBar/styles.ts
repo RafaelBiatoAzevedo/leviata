@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const Container = styled.nav`
   width: 100%;
-  height: 70px;
+  height: var(--portal-header-height, 70px);
   position: fixed;
   top: 0;
   left: 0;
@@ -12,7 +12,7 @@ export const Container = styled.nav`
   align-items: center;
   justify-content: space-between;
 
-  padding: 0 8%;
+  padding: 0 clamp(16px, 4vw, 64px);
   background: ${({ theme }) => theme.colors.surface};
 
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
@@ -21,18 +21,6 @@ export const Container = styled.nav`
   transition: all 0.3s ease;
 
   z-index: 1000;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.desktop}) {
-    padding: 0 4%;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
-    padding: 0 3%;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    height: 50px;
-  }
 `;
 
 export const LogoButtonWrapper = styled.button`
@@ -90,15 +78,15 @@ export const Logo = styled.img`
 
 export const Menu = styled.ul`
   display: flex;
-  gap: 2.4rem;
+  gap: clamp(12px, 1.6vw, 28px);
   list-style: none;
 `;
 
 export const MenuItem = styled.a<{ $active?: boolean }>`
   display: flex;
   align-items: center;
-  gap: 1rem;
-  font-size: 1.1rem;
+  min-height: 44px;
+  font-size: 14px;
   cursor: pointer;
   text-decoration: none;
 
@@ -179,7 +167,7 @@ export const LanguageButton = styled.button`
 `;
 
 export const DesktopOnly = styled.div`
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+  @media (max-width: 1200px) {
     display: none;
   }
 `;
@@ -187,64 +175,74 @@ export const DesktopOnly = styled.div`
 export const MobileOnly = styled.div`
   display: none;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.tablet}) {
+  @media (max-width: 1200px) {
     display: block;
   }
 `;
 
 export const MobileMenu = styled.div<{ $open: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: none;
   position: fixed;
-  top: 70px;
+  top: var(--portal-header-height, 70px);
   right: 0;
-
-  width: 50%;
-  height: 100dvh;
+  width: 100%;
+  height: calc(100dvh - var(--portal-header-height, 70px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
 
   background: ${({ theme }) => theme.colors.background};
 
-  display: flex;
-  flex-direction: column;
-
-  padding: 2rem;
-
-  transform: ${({ $open }) => ($open ? "translateX(0)" : "translateX(100%)")};
-
-  transition: 0.3s;
+  padding: 24px clamp(20px, 6vw, 64px);
+  visibility: ${({ $open }) => ($open ? "visible" : "hidden")};
+  opacity: ${({ $open }) => ($open ? 1 : 0)};
+  transition: opacity 0.2s ease, visibility 0.2s ease;
 
   z-index: 999;
 
   ${MenuItem} {
-    font-size: 1.2rem;
+    font-size: 17px;
+    font-weight: 600;
   }
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    top: 50px;
-    width: 60%;
+  @media (max-width: 1200px) {
+    display: block;
   }
+`;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.smallMobile}) {
-    width: 100%;
+export const MenuToggle = styled.button`
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid ${({ theme }) => theme.colors.primary}55;
+  border-radius: 10px;
+  color: ${({ theme }) => theme.colors.secondary};
+
+  svg {
+    width: 24px;
+    height: 24px;
   }
 `;
 
 export const MenuWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 24px;
+  max-width: 900px;
+  margin-inline: auto;
+
+  @media (max-width: 640px) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
 `;
 
 export const FooterMenuMobile = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 6.5rem 0px;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    padding: 5.5rem 0px;
-  }
+  padding: 24px 0;
 `;
 
 export const Copy = styled.p`
@@ -254,13 +252,18 @@ export const Copy = styled.p`
   color: ${({ theme }) => theme.colors.textSoft};
 `;
 
-export const Dropdown = styled.div`
+export const Dropdown = styled.li`
   position: relative;
-`;
-
-export const DropdownArrow = styled.div`
   display: flex;
   align-items: center;
+`;
+
+export const DropdownArrow = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  min-height: 44px;
 
   cursor: pointer;
 `;
@@ -289,6 +292,7 @@ export const DropdownContent = styled.div`
 `;
 
 export const SubmenuItem = styled(Link)`
+  display: block;
   padding: 12px;
 
   border-radius: 8px;
@@ -303,5 +307,15 @@ export const SubmenuItem = styled(Link)`
     background: ${({ theme }) => theme.colors.backgroundCard};
 
     color: ${({ theme }) => theme.colors.accent};
+  }
+
+  ${MobileMenu} & {
+    min-height: 44px;
+    padding: 12px 14px;
+    border-left: 1px solid ${({ theme }) => theme.colors.primary}55;
+    border-radius: 0;
+    color: ${({ theme }) => theme.colors.text};
+    font-size: 14px;
+    line-height: 1.5;
   }
 `;

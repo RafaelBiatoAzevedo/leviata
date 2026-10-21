@@ -1,8 +1,9 @@
+import { portalContent } from "../../styles/portal";
 import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  padding-top: 70px;
+  padding-top: var(--portal-header-height, 70px);
 `;
 
 export const Content = styled.div`
@@ -10,31 +11,23 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 4rem;
-  padding: 2rem 16rem;
+  ${portalContent}
 `;
 
 export const Paragraph = styled.p`
   text-align: justify;
   font-size: 1.2rem;
-  width: 900px;
+  width: 100%;
+  max-width: 900px;
 `;
 
 export const DossiersGrid = styled.div`
-  width: 1100px;
+  width: 100%;
+  max-width: 1100px;
 
   display: flex;
-  gap: 4rem;
+  gap: clamp(24px, 3vw, 40px);
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-
-  grid-template-columns: repeat(3, 1fr);
-
-  @media (max-width: 1200px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 `;

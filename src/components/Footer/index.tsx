@@ -22,20 +22,20 @@ export const Footer = () => {
 
   return (
     <Container id="contact">
-      <BackTopButton onClick={scrollToTop}>
+      <BackTopButton onClick={scrollToTop} aria-label="Voltar ao topo">
         <FiArrowUp />
       </BackTopButton>
 
       <ContentWrapper>
         <Content>
-          <Logo src={leviataLogo} />
+          <Logo src={leviataLogo} alt="Leviatã e o Cativeiro" />
 
           <TitleWrapper>
             <h2>
               Criado em 2019, o grupo de pesquisa “Leviatã e o Cativeiro” reúne
+              pesquisadores em torno do binômio temático Estado Moderno e
+              escravidão.
             </h2>
-            <h2>pesquisadores em torno do binômio temático Estado Moderno e</h2>
-            <h2>escravidão.</h2>
           </TitleWrapper>
 
           <NewsletterForm type="single" size="small" />

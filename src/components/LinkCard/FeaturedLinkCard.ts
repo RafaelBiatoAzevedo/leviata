@@ -1,0 +1,147 @@
+import styled from "styled-components";
+import { LinkCard } from "./index";
+import {
+  CardDescription,
+  CardHeader,
+  CardTitle,
+  IconWrapper,
+  ReadMore,
+} from "./styles";
+
+export const FeaturedLinkCard = styled(LinkCard).attrs({ showReadMore: true })`
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  gap: 20px;
+  padding: 32px 30px 68px;
+  border: 1px solid ${({ theme }) => theme.colors.primary}40;
+  border-radius: 16px;
+  background: ${({ theme }) => theme.colors.surface};
+  box-shadow: 0 6px 24px rgba(17, 24, 39, 0.035);
+
+  &::before {
+    inset: -60px -50px auto auto;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      ${({ theme }) => theme.colors.accentSoft},
+      transparent 70%
+    );
+    opacity: 0.6;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 30px;
+    width: 40px;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: ${({ theme }) => theme.colors.primary};
+    transition: width 0.3s ease;
+  }
+
+  &:hover,
+  &:focus-visible {
+    transform: translateY(-5px);
+    border-color: ${({ theme }) => theme.colors.primary};
+    box-shadow: 0 16px 36px rgba(17, 24, 39, 0.1);
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    width: 72px;
+  }
+
+  ${CardHeader} {
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  ${IconWrapper} {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border: 1px solid ${({ theme }) => theme.colors.primary}55;
+    border-radius: 14px;
+    background: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.primary};
+    font-size: 25px;
+    box-shadow: 0 6px 14px rgba(17, 24, 39, 0.1);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover ${IconWrapper},
+  &:focus-visible ${IconWrapper} {
+    transform: rotate(-5deg);
+  }
+
+  ${CardTitle} {
+    min-width: 0;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+
+  ${CardDescription} {
+    color: #6a706b;
+    font-size: 13px;
+    line-height: 1.8;
+    letter-spacing: 0.1px;
+  }
+
+  @media (max-width: 640px) {
+    min-height: 280px;
+    padding: 28px 24px 64px;
+
+    &::after {
+      left: 24px;
+    }
+
+    ${ReadMore} {
+      right: 24px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &,
+    &::after,
+    ${IconWrapper} {
+      transition: none;
+    }
+
+    &:hover,
+    &:focus-visible,
+    &:hover ${IconWrapper},
+    &:focus-visible ${IconWrapper} {
+      transform: none;
+    }
+  }
+`;
+
+export const DatedLinkCard = styled(FeaturedLinkCard)`
+  min-height: 260px;
+
+  ${CardDescription} {
+    align-self: center;
+    padding: 7px 14px;
+    border: 1px solid ${({ theme }) => theme.colors.primary}40;
+    border-radius: 20px;
+    background: ${({ theme }) => theme.colors.accentSoft};
+    color: ${({ theme }) => theme.colors.secondary};
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 640px) {
+    min-height: 240px;
+  }
+`;

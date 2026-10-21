@@ -1,18 +1,17 @@
+import { portalContent } from "../../styles/portal";
 import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  padding-top: 70px;
+  padding-top: var(--portal-header-height, 70px);
 `;
 
 export const Content = styled.div`
-  width: min(100%, 1200px);
-  margin: 0 auto;
-  padding: 2rem clamp(1rem, 4vw, 4rem);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
+  ${portalContent}
 `;
 
 export const Cover = styled.img`

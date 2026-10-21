@@ -3,76 +3,82 @@ import styled from "styled-components";
 export const Container = styled.div`
   position: relative;
   width: 100%;
-  margin-top: 4rem;
+  margin-top: clamp(28px, 4vw, 56px);
 `;
 
 export const BackTopButton = styled.button`
   position: absolute;
-  top: 30px;
-  right: 30px;
-
-  width: 42px;
-  height: 42px;
-
+  top: 20px;
+  right: 20px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
-  border: none;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: ${({ theme }) => theme.colors.primary}90;
-  color: ${({ theme }) => theme.colors.textSoft};
-
-  cursor: pointer;
-  transition: 0.3s ease;
-
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
-
-  &:hover {
-    transform: translateY(-3px);
-  }
+  background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.secondary};
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 
   svg {
-    font-size: 1.1rem;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
-    display: none;
+    font-size: 18px;
   }
 `;
 
 export const ContentWrapper = styled.footer`
-  padding: 3rem 2rem 1rem 2rem;
-
+  padding: 64px clamp(16px, 4vw, 64px) 24px;
   border-top: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
 export const Content = styled.div`
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr) minmax(280px, 400px);
   align-items: center;
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-  padding: 0px 8rem;
+  gap: 32px;
+  width: 100%;
+  max-width: 1312px;
+  margin-inline: auto;
+
+  @media (max-width: 1100px) {
+    grid-template-columns: 100px minmax(0, 1fr);
+
+    > :last-child {
+      grid-column: 1 / -1;
+      justify-self: center;
+    }
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 24px;
+    text-align: center;
+  }
 `;
 
 export const TitleWrapper = styled.div`
-  display: flex;
-  align-items: flex-star;
-  flex-direction: column;
-  justify-content: flex-start;
-  flex: 1;
+  min-width: 0;
+
+  h2 {
+    font-size: 1.6rem;
+    line-height: 1.4;
+    letter-spacing: 0.4px;
+  }
 `;
 
 export const Logo = styled.img`
-  width: 160px;
-  height: 160px;
+  width: 120px;
+  height: auto;
   object-fit: contain;
+
+  @media (max-width: 1100px) {
+    width: 100px;
+  }
 `;
 
 export const Copy = styled.p`
   text-align: center;
-  margin-top: 3rem;
-  font-size: 0.8rem;
+  margin-top: 32px;
+  font-size: 12px;
+  line-height: 1.6;
   color: ${({ theme }) => theme.colors.text};
 `;

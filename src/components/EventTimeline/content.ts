@@ -1,0 +1,77 @@
+import { FiCalendar, FiMic } from "react-icons/fi";
+
+export const timelineContent = {
+  events: {
+    Icon: FiCalendar,
+    singular: "evento",
+    plural: "eventos",
+    loading: "a agenda",
+    error: "a agenda",
+    overviewLabel: "O grupo em movimento",
+    overviewText:
+      "Novos encontros no horizonte. Uma história de eventos para revisitar.",
+    showTimes: true,
+    upcomingTitle: "Próximos eventos",
+    upcomingText: "Os próximos encontros, da data mais próxima às seguintes.",
+    upcomingEmpty: "Nenhum próximo evento previsto no momento.",
+    pastTitle: "Eventos passados",
+    pastText: "A memória dos encontros, do mais recente aos anteriores.",
+    pastEmpty: "Os eventos realizados aparecerão aqui após o término.",
+    pastStat: "Realizados",
+    pastStatus: "Realizado",
+    emptyTitle: "Nenhum evento disponível",
+    emptyText:
+      "Acompanhe este espaço para conferir as próximas datas e os encontros do grupo.",
+    participantsPast: "Apresentado por",
+    participantsUpcoming: "Com a participação de",
+  },
+  presentations: {
+    Icon: FiMic,
+    singular: "apresentação",
+    plural: "apresentações",
+    loading: "as apresentações",
+    error: "os trabalhos",
+    overviewLabel: "Pesquisa em circulação",
+    overviewText:
+      "Das próximas apresentações aos trabalhos que já compartilhamos.",
+    showTimes: false,
+    upcomingTitle: "Próximas apresentações",
+    upcomingText: "As próximas apresentações, em ordem de realização.",
+    upcomingEmpty: "Nenhuma apresentação prevista no momento.",
+    pastTitle: "Já apresentados",
+    pastText:
+      "Um registro da nossa produção, dos trabalhos mais recentes aos anteriores.",
+    pastEmpty:
+      "Os trabalhos apresentados aparecerão aqui após a data da apresentação.",
+    pastStat: "Apresentados",
+    pastStatus: "Apresentado",
+    emptyTitle: "Nenhuma apresentação disponível",
+    emptyText: "Acompanhe este espaço para conhecer as apresentações do grupo.",
+    participantsPast: "Apresentado por",
+    participantsUpcoming: "Com a participação de",
+  },
+  seminars: {
+    Icon: FiMic,
+    singular: "seminário",
+    plural: "seminários",
+    loading: "os seminários",
+    error: "os seminários",
+    overviewLabel: "Diálogos de pesquisa",
+    overviewText: "Os próximos debates e a memória dos seminários do grupo.",
+    showTimes: false,
+    upcomingTitle: "Próximos seminários",
+    upcomingText: "Os próximos debates, da data mais próxima às seguintes.",
+    upcomingEmpty: "Nenhum seminário previsto no momento.",
+    pastTitle: "Seminários realizados",
+    pastText: "Revisite os seminários, dos mais recentes aos anteriores.",
+    pastEmpty:
+      "Os seminários realizados aparecerão aqui após a data do encontro.",
+    pastStat: "Realizados",
+    pastStatus: "Realizado",
+    emptyTitle: "Nenhum seminário disponível",
+    emptyText:
+      "Acompanhe este espaço para conferir os próximos seminários e seus registros.",
+    participantsPast: "Palestrantes",
+    participantsUpcoming: "Palestrantes",
+  },
+} as const;

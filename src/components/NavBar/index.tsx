@@ -13,6 +13,7 @@ import {
   Menu,
   MenuItem,
   MenuWrapper,
+  MenuToggle,
   MobileMenu,
   MobileOnly,
   SubmenuItem,
@@ -30,8 +31,6 @@ import leviataLogo from "../../assets/images/leviataLogo.png";
 import { SocialLinks } from "../SocialLinks";
 
 import { FiChevronDown, FiChevronUp, FiMenu, FiX } from "react-icons/fi";
-
-import { useTheme } from "styled-components";
 
 import { Link, useLocation, useNavigate } from "react-router-dom";
 //import { useTranslation } from "react-i18next";
@@ -106,9 +105,9 @@ export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-
-  const { colors } = useTheme();
+  const dropdownRef = useRef<HTMLLIElement | null>(null);
+  const navRef = useRef<HTMLElement | null>(null);
+  const toggleRef = useRef<HTMLButtonElement | null>(null);
 
   //const { i18n } = useTranslation();
 
@@ -119,6 +118,49 @@ export const Navbar = () => {
   const clickCount = useRef(0);
 
   const timer = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const desktop = window.matchMedia("(min-width: 1201px)");
+    const closeOnDesktop = () => {
+      if (desktop.matches) setIsOpen(false);
+    };
+    const closeOnHistory = () => setIsOpen(false);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsOpen(false);
+        toggleRef.current?.focus();
+      }
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        navRef.current?.querySelectorAll<HTMLElement>("a[href], button") ?? [],
+      ).filter((element) => element.getClientRects().length > 0);
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last?.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first?.focus();
+      }
+    };
+
+    desktop.addEventListener("change", closeOnDesktop);
+    window.addEventListener("popstate", closeOnHistory);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      desktop.removeEventListener("change", closeOnDesktop);
+      window.removeEventListener("popstate", closeOnHistory);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -138,6 +180,7 @@ export const Navbar = () => {
   }, []);
 
   function handleLogoClick() {
+    setIsOpen(false);
     clickCount.current++;
 
     if (clickCount.current === 1) {
@@ -176,7 +219,7 @@ export const Navbar = () => {
   };
 
   return (
-    <Container>
+    <Container ref={navRef} aria-label="Navegação principal">
       <LogoButtonWrapper as="button" type="button" onClick={handleLogoClick}>
         <Logo src={leviataLogo} alt="Leviata e o cativeiro" />
         <TitleColumn>
@@ -207,26 +250,25 @@ export const Navbar = () => {
                   $active={isActive}
                 >
                   {menu.label}
-
-                  {menu.children && (
-                    <DropdownArrow
-                      onClick={(e) => {
-                        e.preventDefault();
-
-                        handleDropdown(menu.label);
-                      }}
-                    >
-                      {openDropdown === menu.label ? (
-                        <FiChevronUp />
-                      ) : (
-                        <FiChevronDown />
-                      )}
-                    </DropdownArrow>
-                  )}
                 </MenuItem>
+                {menu.children && (
+                  <DropdownArrow
+                    type="button"
+                    aria-label={`Submenu de ${menu.label}`}
+                    aria-expanded={openDropdown === menu.label}
+                    aria-controls={`submenu-${menu.path.slice(1)}`}
+                    onClick={() => handleDropdown(menu.label)}
+                  >
+                    {openDropdown === menu.label ? (
+                      <FiChevronUp />
+                    ) : (
+                      <FiChevronDown />
+                    )}
+                  </DropdownArrow>
+                )}
 
                 {menu.children && openDropdown === menu.label && (
-                  <DropdownContent>
+                  <DropdownContent id={`submenu-${menu.path.slice(1)}`}>
                     {menu.children.map((submenu) => (
                       <SubmenuItem
                         key={submenu.path}
@@ -260,22 +302,24 @@ export const Navbar = () => {
       </DesktopOnly>
 
       <MobileOnly>
-        {isOpen ? (
-          <FiX
-            size={"3rem"}
-            color={colors.textSoft}
-            onClick={() => setIsOpen(false)}
-          />
-        ) : (
-          <FiMenu
-            size={"3rem"}
-            color={colors.textSoft}
-            onClick={() => setIsOpen(true)}
-          />
-        )}
+        <MenuToggle
+          ref={toggleRef}
+          type="button"
+          aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+          aria-expanded={isOpen}
+          aria-controls="portal-mobile-menu"
+          onClick={() => setIsOpen((open) => !open)}
+        >
+          {isOpen ? <FiX /> : <FiMenu />}
+        </MenuToggle>
       </MobileOnly>
 
-      <MobileMenu $open={isOpen}>
+      <MobileMenu
+        id="portal-mobile-menu"
+        $open={isOpen}
+        inert={!isOpen}
+        aria-hidden={!isOpen}
+      >
         <MenuWrapper>
           {menus.map((menu) => (
             <div key={menu.label}>

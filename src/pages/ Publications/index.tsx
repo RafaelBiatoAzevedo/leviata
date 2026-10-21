@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
+import { FiBookOpen, FiFileText, FiLayers, FiMic } from "react-icons/fi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
@@ -8,23 +16,18 @@ import "swiper/css/pagination";
 
 import { SectionHeader } from "../../components/SectionHeader";
 import { BookCard } from "../../components/BookCard";
+import { PresentedWorksTimeline } from "../../components/PresentedWorksTimeline";
 
 import {
   Container,
   Content,
   Tabs,
   TabButton,
-  Timeline,
-  TimelineItem,
-  TimelineDot,
-  TimelineContent,
-  TimelineYear,
-  TimelineTitle,
+  TabIcon,
+  TabCopy,
+  TabOrdinal,
+  TabPanel,
   Carousel,
-  TimeLineAuthor,
-  TimeLineEvent,
-  Subtitle,
-  TimelineSubTitle,
 } from "./styles";
 import { ArticleCard } from "../../components/ArticlesCard";
 import type { BookResponseDto } from "../../admin/dtos/books/BookResponseDto";
@@ -32,14 +35,41 @@ import { booksService } from "../../admin/services/books";
 import type { ArticleResponseDto } from "../../admin/dtos/articles/ArticleResponseDto";
 import { articlesService } from "../../admin/services/articles";
 import { ArticleType } from "../../admin/types/TArticleType";
-import type { PresentedWorkResponseDto } from "../../admin/dtos/presentedWorks/PresentedWorkResponseDto";
-import { presentedWorksService } from "../../admin/services/presentedWorks";
-import { formatDate } from "../../admin/utils/formatDate";
 
-type TabType = "books" | "articles" | "presentations" | "dossiers";
+const publicationTabs = [
+  {
+    id: "books",
+    label: "Livros",
+    description: "Obras e edições",
+    Icon: FiBookOpen,
+  },
+  {
+    id: "articles",
+    label: "Artigos",
+    description: "Pesquisa em revista",
+    Icon: FiFileText,
+  },
+  {
+    id: "presentations",
+    label: "Trabalhos",
+    description: "Apresentações acadêmicas",
+    Icon: FiMic,
+  },
+  {
+    id: "dossiers",
+    label: "Dossiês",
+    description: "Edições temáticas",
+    Icon: FiLayers,
+  },
+] as const;
+
+type TabType = (typeof publicationTabs)[number]["id"];
 
 export function Publications() {
   const [activeTab, setActiveTab] = useState<TabType>("books");
+  const tabGroupId = useId();
+  const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const panelId = `${tabGroupId}-panel`;
   const [books, setBooks] = useState<BookResponseDto[]>(
     [] as BookResponseDto[],
   );
@@ -52,10 +82,6 @@ export function Publications() {
     [] as ArticleResponseDto[],
   );
 
-  const [presentedWorks, setPresentedWorks] = useState<
-    PresentedWorkResponseDto[]
-  >([] as PresentedWorkResponseDto[]);
-
   const load = useCallback(async () => {
     try {
       const responseBooks = await booksService.getAll({
@@ -63,10 +89,8 @@ export function Publications() {
         sortOrder: "desc",
       });
       const responseArticles = await articlesService.getAll();
-      const responsePresentedWorks = await presentedWorksService.getAll();
 
       setBooks(responseBooks.data);
-      setPresentedWorks(responsePresentedWorks.data);
 
       setArticles(
         responseArticles.data.filter(
@@ -89,6 +113,35 @@ export function Publications() {
     })();
   }, [load]);
 
+  function handleTabKeyDown(
+    event: KeyboardEvent<HTMLButtonElement>,
+    index: number,
+  ) {
+    let nextIndex: number;
+
+    switch (event.key) {
+      case "ArrowRight":
+        nextIndex = (index + 1) % publicationTabs.length;
+        break;
+      case "ArrowLeft":
+        nextIndex =
+          (index - 1 + publicationTabs.length) % publicationTabs.length;
+        break;
+      case "Home":
+        nextIndex = 0;
+        break;
+      case "End":
+        nextIndex = publicationTabs.length - 1;
+        break;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+    setActiveTab(publicationTabs[nextIndex].id);
+    tabRefs.current[nextIndex]?.focus();
+  }
+
   return (
     <Container>
       <Content>
@@ -97,168 +150,152 @@ export function Publications() {
           subtitle="Explore as produções acadêmicas desenvolvidas pelo grupo, reunindo livros, artigos, apresentações de trabalho e dossiês relacionados às pesquisas sobre Estado Moderno e escravidão."
         />
 
-        <Tabs>
-          <TabButton
-            $active={activeTab === "books"}
-            onClick={() => setActiveTab("books")}
-          >
-            Livros
-          </TabButton>
-
-          <TabButton
-            $active={activeTab === "articles"}
-            onClick={() => setActiveTab("articles")}
-          >
-            Artigos
-          </TabButton>
-
-          <TabButton
-            $active={activeTab === "presentations"}
-            onClick={() => setActiveTab("presentations")}
-          >
-            Apresentações de Trabalhos
-          </TabButton>
-
-          <TabButton
-            $active={activeTab === "dossiers"}
-            onClick={() => setActiveTab("dossiers")}
-          >
-            Dossiês
-          </TabButton>
+        <Tabs role="tablist" aria-label="Categorias de publicações">
+          {publicationTabs.map(({ id, label, description, Icon }, index) => (
+            <TabButton
+              key={id}
+              ref={(element) => {
+                tabRefs.current[index] = element;
+              }}
+              id={`${tabGroupId}-tab-${id}`}
+              type="button"
+              role="tab"
+              aria-selected={activeTab === id}
+              aria-controls={panelId}
+              tabIndex={activeTab === id ? 0 : -1}
+              $active={activeTab === id}
+              onClick={() => setActiveTab(id)}
+              onKeyDown={(event) => handleTabKeyDown(event, index)}
+            >
+              <TabIcon aria-hidden="true">
+                <Icon />
+              </TabIcon>
+              <TabCopy>
+                <strong>{label}</strong>
+                <span>{description}</span>
+              </TabCopy>
+              <TabOrdinal aria-hidden="true">
+                {String(index + 1).padStart(2, "0")}
+              </TabOrdinal>
+            </TabButton>
+          ))}
         </Tabs>
 
-        {activeTab === "books" && (
-          <Carousel>
-            <Swiper
-              modules={[Autoplay, Pagination, Navigation]}
-              slidesPerView={"auto"}
-              spaceBetween={50}
-              loop
-              navigation
-              pagination={{
-                clickable: true,
-              }}
-              style={{ alignItems: "stretch" }}
-            >
-              {books.map((book, index) => (
-                <SwiperSlide
-                  key={index}
-                  style={{
-                    width: "290px",
-                    height: "auto",
-                    display: "flex",
-                    alignItems: "stretch",
-                  }}
-                >
-                  <BookCard {...book} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Carousel>
-        )}
+        <TabPanel
+          key={activeTab}
+          id={panelId}
+          role="tabpanel"
+          aria-labelledby={`${tabGroupId}-tab-${activeTab}`}
+          tabIndex={0}
+        >
+          {activeTab === "books" && (
+            <Carousel>
+              <Swiper
+                modules={[Autoplay, Pagination, Navigation]}
+                slidesPerView={"auto"}
+                spaceBetween={50}
+                rewind
+                watchOverflow
+                navigation
+                pagination={{
+                  clickable: true,
+                  dynamicBullets: true,
+                }}
+                style={{ alignItems: "stretch" }}
+              >
+                {books.map((book, index) => (
+                  <SwiperSlide
+                    key={index}
+                    style={{
+                      width: "290px",
+                      height: "auto",
+                      display: "flex",
+                      alignItems: "stretch",
+                    }}
+                  >
+                    <BookCard {...book} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Carousel>
+          )}
 
-        {activeTab === "articles" && (
-          <Carousel>
-            <Swiper
-              modules={[Navigation, Pagination]}
-              slidesPerView={"auto"}
-              loop
-              spaceBetween={50}
-              navigation
-              pagination={{ clickable: true }}
-              style={{ alignItems: "stretch" }}
-            >
-              {articles.map((article, index) => (
-                <SwiperSlide
-                  key={index}
-                  style={{
-                    width: "340px",
-                    height: "auto",
-                    display: "flex",
-                    alignItems: "stretch",
-                  }}
-                >
-                  <ArticleCard
-                    {...article}
-                    year={article.year}
-                    author={article.authors
-                      .map((author) => author.name)
-                      .filter(Boolean)
-                      .join(", ")}
-                    to={article.externalUrl}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Carousel>
-        )}
+          {activeTab === "articles" && (
+            <Carousel>
+              <Swiper
+                modules={[Navigation, Pagination]}
+                slidesPerView={"auto"}
+                rewind
+                watchOverflow
+                spaceBetween={50}
+                navigation
+                pagination={{ clickable: true, dynamicBullets: true }}
+                style={{ alignItems: "stretch" }}
+              >
+                {articles.map((article, index) => (
+                  <SwiperSlide
+                    key={index}
+                    style={{
+                      width: "340px",
+                      height: "auto",
+                      display: "flex",
+                      alignItems: "stretch",
+                    }}
+                  >
+                    <ArticleCard
+                      {...article}
+                      year={article.year}
+                      author={article.authors
+                        .map((author) => author.name)
+                        .filter(Boolean)
+                        .join(", ")}
+                      to={article.externalUrl}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Carousel>
+          )}
 
-        {activeTab === "presentations" && (
-          <div>
-            <Subtitle>
-              Confira os trabalhos mais recentes apresentados pelos
-              pesquisadores do grupo.
-            </Subtitle>
-            <Timeline>
-              {presentedWorks.map((work, index) => (
-                <TimelineItem key={index}>
-                  <TimelineDot />
+          {activeTab === "presentations" && <PresentedWorksTimeline />}
 
-                  <TimelineContent>
-                    <TimelineYear>{formatDate(work.date)}</TimelineYear>
-
-                    <TimelineTitle>{work.title}</TimelineTitle>
-
-                    <TimeLineEvent>{work.meetingUrl}</TimeLineEvent>
-
-                    <TimelineSubTitle>Apresentado por:</TimelineSubTitle>
-                    {work.authors.map((author, index) => (
-                      <TimeLineAuthor
-                        key={index}
-                      >{`${author.academicTitle.abbreviation}  ${author.name}`}</TimeLineAuthor>
-                    ))}
-                  </TimelineContent>
-                </TimelineItem>
-              ))}
-            </Timeline>
-          </div>
-        )}
-
-        {activeTab === "dossiers" && (
-          <Carousel>
-            <Swiper
-              modules={[Navigation, Pagination]}
-              slidesPerView={"auto"}
-              spaceBetween={50}
-              loop
-              navigation
-              pagination={{ clickable: true }}
-              style={{ alignItems: "stretch" }}
-            >
-              {dossiers.map((dossier, index) => (
-                <SwiperSlide
-                  key={index}
-                  style={{
-                    width: "340px",
-                    height: "auto",
-                    display: "flex",
-                    alignItems: "stretch",
-                  }}
-                >
-                  <ArticleCard
-                    {...dossier}
-                    year={dossier.year}
-                    author={dossier.authors
-                      .map((author) => author.name)
-                      .filter(Boolean)
-                      .join(", ")}
-                    to={dossier.externalUrl}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </Carousel>
-        )}
+          {activeTab === "dossiers" && (
+            <Carousel>
+              <Swiper
+                modules={[Navigation, Pagination]}
+                slidesPerView={"auto"}
+                spaceBetween={50}
+                rewind
+                watchOverflow
+                navigation
+                pagination={{ clickable: true, dynamicBullets: true }}
+                style={{ alignItems: "stretch" }}
+              >
+                {dossiers.map((dossier, index) => (
+                  <SwiperSlide
+                    key={index}
+                    style={{
+                      width: "340px",
+                      height: "auto",
+                      display: "flex",
+                      alignItems: "stretch",
+                    }}
+                  >
+                    <ArticleCard
+                      {...dossier}
+                      year={dossier.year}
+                      author={dossier.authors
+                        .map((author) => author.name)
+                        .filter(Boolean)
+                        .join(", ")}
+                      to={dossier.externalUrl}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </Carousel>
+          )}
+        </TabPanel>
       </Content>
     </Container>
   );

@@ -20,7 +20,7 @@ export function ImageGallery({ images = [] }: { images?: GalleryImage[] }) {
         slidesPerView="auto"
         spaceBetween={30}
         navigation={images.length > 1}
-        pagination={{ clickable: true }}
+        pagination={{ clickable: true, dynamicBullets: true }}
         watchOverflow
         style={{ alignItems: "stretch" }}
       >

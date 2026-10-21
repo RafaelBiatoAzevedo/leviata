@@ -1,8 +1,9 @@
+import { portalContent } from "../../styles/portal";
 import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
-  padding-top: 70px;
+  padding-top: var(--portal-header-height, 70px);
 `;
 
 export const Content = styled.div`
@@ -10,19 +11,21 @@ export const Content = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 4rem;
-  padding: 2rem 16rem;
+  ${portalContent}
 `;
 
 export const Title = styled.h2`
   font-size: 2rem;
   text-align: center;
-  width: 900px;
+  width: 100%;
+  max-width: 900px;
 `;
 
 export const ParagraphDecoration = styled.p`
   text-align: center;
   font-size: 1rem;
-  padding: 0px 8rem;
+  width: 100%;
+  max-width: 900px;
   color: ${({ theme }) => theme.colors.primary};
 `;
 

@@ -21,7 +21,7 @@ import {
   FiMaximize,
 } from "react-icons/fi";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -37,6 +37,7 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
   const [pages, setPages] = useState(0);
   const [width, setWidth] = useState(900);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const viewerRef = useRef<HTMLDivElement | null>(null);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -59,30 +60,25 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
   }, []);
 
   useEffect(() => {
-    function handleResize() {
-      if (window.innerWidth < 768) {
-        setWidth(window.innerWidth - 40);
-      } else {
-        setWidth(900);
-      }
-    }
+    const viewer = viewerRef.current;
+    if (!viewer) return;
 
-    handleResize();
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
+    const observer = new ResizeObserver(([entry]) => {
+      setWidth(Math.max(1, Math.min(1100, Math.floor(entry.contentRect.width))));
+    });
+    observer.observe(viewer);
+    return () => observer.disconnect();
   }, []);
 
   function handleFullscreen() {
-    const element = document.getElementById("pdf-viewer");
+    const element = viewerRef.current;
 
     if (!element) return;
 
     if (document.fullscreenElement) {
       document.exitFullscreen();
     } else {
-      element.requestFullscreen();
+      element.requestFullscreen?.();
     }
   }
 
@@ -101,19 +97,34 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
 
   return (
     <Container>
-      <Viewer id="pdf-viewer" width={width}>
+      <Viewer ref={viewerRef}>
         <Actions>
-          <ActionButton onClick={handleFullscreen}>
+          <ActionButton
+            as="button"
+            type="button"
+            onClick={handleFullscreen}
+            aria-label={isFullscreen ? "Sair da tela cheia" : "Ver em tela cheia"}
+          >
             <FiMaximize />
           </ActionButton>
-          <ActionButton onClick={handlePrint}>
+          <ActionButton
+            as="button"
+            type="button"
+            onClick={handlePrint}
+            aria-label="Imprimir documento"
+          >
             <FiPrinter />
           </ActionButton>
-          <ActionButton href={pdf} download>
+          <ActionButton href={pdf} download aria-label="Baixar documento">
             <FiDownload />
           </ActionButton>
 
-          <ActionButton href={externalLink} target="_blank">
+          <ActionButton
+            href={externalLink}
+            target="_blank"
+            rel="noreferrer"
+            aria-label="Abrir documento em nova aba"
+          >
             <FiExternalLink />
           </ActionButton>
         </Actions>
@@ -126,7 +137,7 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
           <Page
             key={currentPage}
             pageNumber={currentPage}
-            width={isFullscreen ? window.innerWidth * 0.65 : width}
+            width={width}
             loading={null}
             renderTextLayer={true}
             renderAnnotationLayer={true}
@@ -142,7 +153,10 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
             Página {currentPage} de {pages}
           </PageInfo>
 
-          <PageButton onClick={handleNextPage} disabled={currentPage === pages}>
+          <PageButton
+            onClick={handleNextPage}
+            disabled={pages === 0 || currentPage >= pages}
+          >
             Próxima
             <FiChevronRight />
           </PageButton>
