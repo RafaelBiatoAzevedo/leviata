@@ -11,16 +11,33 @@ export const Form = styled.form`
   gap: 24px;
 `;
 export const Filters = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px 170px;
+  align-items: end;
   gap: 16px;
-  > :first-child {
-    flex: 1;
-    min-width: 180px;
+
+  > * {
+    min-width: 0;
   }
-  > :not(:first-child) {
-    min-width: 170px;
+
+  > :first-child {
+    max-width: none;
+  }
+
+  input {
+    min-width: 0;
+  }
+
+  @media (max-width: 960px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    > :first-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 480px) {
+    grid-template-columns: minmax(0, 1fr);
   }
 `;
 export const Actions = styled.div`

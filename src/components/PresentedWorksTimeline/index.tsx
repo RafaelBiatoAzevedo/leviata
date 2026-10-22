@@ -15,7 +15,6 @@ export function PresentedWorksTimeline() {
         id: work.id,
         title: work.title,
         date: work.date,
-        dateOnly: true,
         location: work.location || work.meeting?.location,
         meetingTitle: work.meeting?.title,
         authors: work.authors.map((author) => ({

@@ -51,8 +51,15 @@ export const articlesService = {
     );
   },
 
-  getAll() {
-    return api.get<ArticleResponseDto[]>("/articles");
+  getAll(
+    params: {
+      page?: number;
+      limit?: number;
+      sortBy?: "title" | "year" | "journal" | "volume" | "createdAt";
+      sortOrder?: "asc" | "desc";
+    } = {},
+  ) {
+    return api.get<ArticleResponseDto[]>("/articles", { params });
   },
 
   getById(id: string) {

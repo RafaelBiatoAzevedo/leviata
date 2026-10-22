@@ -9,8 +9,10 @@ import {
   FallbackCover,
   Content,
   Publisher,
+  TitleGroup,
   Title,
   Subtitle,
+  Authors,
   AuthorName,
   Footer,
   Year,
@@ -41,8 +43,7 @@ export function BookCard({
   const hasCover = !!coverUrl && coverUrl !== failedCoverUrl;
   const authorNames = authors
     .map((author) => author.name?.trim())
-    .filter(Boolean)
-    .join(" · ");
+    .filter((name): name is string => !!name);
 
   return (
     <Container
@@ -78,11 +79,18 @@ export function BookCard({
       <Content>
         {!!publisher && <Publisher title={publisher}>{publisher}</Publisher>}
 
-        <Title title={title}>{title}</Title>
+        <TitleGroup>
+          <Title title={title}>{title}</Title>
+          {!!subtitle && <Subtitle title={subtitle}>{subtitle}</Subtitle>}
+        </TitleGroup>
 
-        {!!subtitle && <Subtitle title={subtitle}>{subtitle}</Subtitle>}
-
-        {!!authorNames && <AuthorName title={authorNames}>{authorNames}</AuthorName>}
+        {authorNames.length > 0 && (
+          <Authors role="list" aria-label="Autores">
+            {authorNames.map((name, index) => (
+              <AuthorName key={`${name}-${index}`}>{name}</AuthorName>
+            ))}
+          </Authors>
+        )}
 
         <Footer>
           {!!year && (

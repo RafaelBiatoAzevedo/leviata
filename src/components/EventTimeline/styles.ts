@@ -94,13 +94,14 @@ export const OverviewIcon = styled.div`
 
 export const OverviewLinks = styled.nav`
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   flex-shrink: 0;
 `;
 
 export const OverviewStat = styled.a`
   display: flex;
-  flex: 1;
+  flex: 1 0 auto;
   flex-direction: column;
   gap: 8px;
   min-width: 112px;
@@ -127,9 +128,10 @@ export const OverviewStat = styled.a`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 12px;
+    gap: 8px;
     font-size: 11px;
     letter-spacing: 0;
+    white-space: nowrap;
   }
 
   svg {
@@ -515,6 +517,14 @@ export const AuthorList = styled.ul`
   span {
     margin-right: 5px;
     color: #626973;
+    letter-spacing: 0;
+  }
+
+  small {
+    display: block;
+    margin-top: 3px;
+    color: #626973;
+    font-size: 10px;
     letter-spacing: 0;
   }
 `;

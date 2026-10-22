@@ -11,7 +11,7 @@ import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
 import { AdminLoading } from "../../../components/AdminLoading";
-import { formatDate } from "../../../utils/formatDate";
+import { formatDateTime } from "../../../utils/dateTime";
 import { presentedWorksService } from "../../../services/presentedWorks";
 
 export function PresentedWorkView() {
@@ -79,8 +79,8 @@ export function PresentedWorkView() {
             <AdminDescriptionItem label="Slug" value={presentedWork.slug} />
 
             <AdminDescriptionItem
-              label="Data"
-              value={formatDate(presentedWork.date)}
+              label="Data e hora"
+              value={formatDateTime(presentedWork.date)}
             />
 
             <AdminDescriptionItem

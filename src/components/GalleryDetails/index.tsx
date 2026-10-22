@@ -47,6 +47,17 @@ export function GalleryDetails({
       </Status>
     );
 
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    timeZone: resource === "meetings" ? "UTC" : "America/Sao_Paulo",
+  };
+  if (resource === "presented-works") {
+    dateOptions.hour = "2-digit";
+    dateOptions.minute = "2-digit";
+  }
+
   const links = [
     { label: "Inscrições", url: data.registrationUrl },
     { label: "Gravação", url: data.recordingUrl },
@@ -62,12 +73,9 @@ export function GalleryDetails({
           title={data.title}
           subtitle={
             data.date
-              ? new Date(data.date).toLocaleDateString("pt-BR", {
-                  timeZone:
-                    resource === "presented-works" || resource === "meetings"
-                      ? "UTC"
-                      : "America/Sao_Paulo",
-                })
+              ? new Intl.DateTimeFormat("pt-BR", dateOptions).format(
+                  new Date(data.date),
+                )
               : undefined
           }
         />

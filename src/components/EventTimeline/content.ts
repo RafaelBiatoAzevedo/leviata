@@ -1,6 +1,30 @@
-import { FiCalendar, FiMic } from "react-icons/fi";
+import { FiCalendar, FiClipboard, FiMic } from "react-icons/fi";
 
 export const timelineContent = {
+  boards: {
+    Icon: FiClipboard,
+    singular: "banca",
+    plural: "bancas",
+    loading: "as bancas",
+    error: "as bancas",
+    overviewLabel: "Percursos de formação",
+    overviewText:
+      "Das próximas bancas às qualificações e defesas já realizadas.",
+    showTimes: false,
+    upcomingTitle: "Próximas bancas",
+    upcomingText: "Qualificações e defesas, da data mais próxima às seguintes.",
+    upcomingEmpty: "Nenhuma banca prevista no momento.",
+    pastTitle: "Bancas realizadas",
+    pastText: "Revisite as bancas, das mais recentes às anteriores.",
+    pastEmpty: "As bancas realizadas aparecerão aqui após a data cadastrada.",
+    pastStat: "Realizadas",
+    pastStatus: "Realizada",
+    emptyTitle: "Nenhuma banca disponível",
+    emptyText:
+      "Acompanhe este espaço para conferir as próximas qualificações e defesas do grupo.",
+    participantsPast: "Integrantes da banca",
+    participantsUpcoming: "Integrantes da banca",
+  },
   events: {
     Icon: FiCalendar,
     singular: "evento",
@@ -34,7 +58,7 @@ export const timelineContent = {
     overviewLabel: "Pesquisa em circulação",
     overviewText:
       "Das próximas apresentações aos trabalhos que já compartilhamos.",
-    showTimes: false,
+    showTimes: true,
     upcomingTitle: "Próximas apresentações",
     upcomingText: "As próximas apresentações, em ordem de realização.",
     upcomingEmpty: "Nenhuma apresentação prevista no momento.",

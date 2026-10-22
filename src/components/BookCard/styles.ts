@@ -202,25 +202,34 @@ export const Content = styled.div`
   display: flex;
   flex: 1;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   min-height: 210px;
   padding: 22px;
 `;
 
 export const Publisher = styled.span`
   overflow: hidden;
+  padding-left: 10px;
+  border-left: 2px solid ${({ theme }) => theme.colors.primary};
   color: #6a706b;
   font-size: 9px;
   font-weight: 600;
+  line-height: 1.6;
   letter-spacing: 1.7px;
   text-overflow: ellipsis;
   text-transform: uppercase;
   white-space: nowrap;
 `;
 
+export const TitleGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+`;
+
 export const Title = styled.h3`
   display: -webkit-box;
-  min-height: 2.3em;
+  margin: 0;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
@@ -234,6 +243,7 @@ export const Title = styled.h3`
 
 export const Subtitle = styled.p`
   display: -webkit-box;
+  margin: 0;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -244,12 +254,17 @@ export const Subtitle = styled.p`
   overflow-wrap: anywhere;
 `;
 
-export const AuthorName = styled.p`
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  color: #6a706b;
+export const Authors = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+`;
+
+export const AuthorName = styled.li`
+  color: ${({ theme }) => theme.colors.primary};
   font-size: 12px;
   font-weight: 400;
   line-height: 1.6;

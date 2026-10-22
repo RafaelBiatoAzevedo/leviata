@@ -7,13 +7,13 @@ export interface CreatePresentedWorkRequestDto {
 
   meetingId?: string;
 
-  documentUrl?: string;
+  documentUrl?: string | null;
 
-  registrationUrl?: string;
+  registrationUrl?: string | null;
 
-  recordingUrl?: string;
+  recordingUrl?: string | null;
 
-  meetingUrl?: string;
+  meetingUrl?: string | null;
 
   authors: string[];
 }

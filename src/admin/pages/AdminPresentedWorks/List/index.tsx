@@ -14,7 +14,7 @@ import { AdminTable } from "../../../components/AdminTable";
 import { AdminIconButton } from "../../../components/AdminIconButton";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
 import type { PresentedWorkResponseDto } from "../../../dtos/presentedWorks/PresentedWorkResponseDto";
-import { formatDate } from "../../../utils/formatDate";
+import { formatDateTime } from "../../../utils/dateTime";
 import { presentedWorksService } from "../../../services/presentedWorks";
 
 export function AdminPresentedWorks() {
@@ -87,7 +87,7 @@ export function AdminPresentedWorks() {
         <thead>
           <tr>
             <th>Título</th>
-            <th>Data</th>
+            <th>Data e hora</th>
             <th>Local</th>
             <th>Ações</th>
           </tr>
@@ -104,7 +104,7 @@ export function AdminPresentedWorks() {
 
                   <small>{presentedWork.slug}</small>
                 </td>
-                <td>{formatDate(presentedWork.date)}</td>
+                <td>{formatDateTime(presentedWork.date)}</td>
 
                 <td>{presentedWork.location}</td>
 

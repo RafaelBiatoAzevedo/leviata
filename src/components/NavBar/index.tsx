@@ -1,3 +1,14 @@
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from "react";
+import { FiArrowUpRight, FiChevronDown, FiMenu, FiX } from "react-icons/fi";
+import { useLocation, useNavigate } from "react-router-dom";
+import leviataLogo from "../../assets/images/leviataLogo.png";
+import { SocialLinks } from "../SocialLinks";
+import {
+  isNavigationActive,
+  navigationCurrent,
+  menus,
+  type NavigationSection,
+} from "./navigation";
 import {
   ActionsWrapper,
   Container,
@@ -6,137 +17,89 @@ import {
   Dropdown,
   DropdownArrow,
   DropdownContent,
+  DropdownHeading,
+  DropdownPanel,
   FooterMenuMobile,
-  //LanguageButton,
   Logo,
   LogoButtonWrapper,
   Menu,
   MenuItem,
-  MenuWrapper,
   MenuToggle,
+  MenuWrapper,
+  MobileCategoryCopy,
+  MobileCategoryIcon,
+  MobileGroup,
+  MobileGroupHeader,
+  MobileIntro,
   MobileMenu,
   MobileOnly,
+  MobileSubmenu,
+  SubmenuCopy,
+  SubmenuIcon,
   SubmenuItem,
+  SubmenuList,
   TitleColumn,
-  //SwitchCircle,
-  //ThemeSwitch,
+  // LanguageButton, SwitchCircle, ThemeSwitch,
 } from "./styles";
-
-//import { useTranslation } from "react-i18next";
-
-import { useEffect, useRef, useState } from "react";
-
-import leviataLogo from "../../assets/images/leviataLogo.png";
-
-import { SocialLinks } from "../SocialLinks";
-
-import { FiChevronDown, FiChevronUp, FiMenu, FiX } from "react-icons/fi";
-
-import { Link, useLocation, useNavigate } from "react-router-dom";
-//import { useTranslation } from "react-i18next";
-
-const menus = [
-  {
-    label: "O Grupo",
-    path: "/grupo",
-    children: [
-      { label: "O Grupo", path: "/grupo" },
-      { label: "Pesquisadores", path: "/grupo/pesquisadores" },
-      { label: "Linhas Temáticas", path: "/grupo/linhas-tematicas" },
-    ],
-  },
-  { label: "Publicações", path: "/publicacoes" },
-  {
-    label: "Instrumentos de Pesquisa",
-    path: "/instrumentos",
-    children: [
-      { label: "Intrumentos de Pesquisa", path: "/instrumentos" },
-      {
-        label: "Planilhas Biblio-Temáticas",
-        path: "/instrumentos/planilhas-biblio-tematicas",
-      },
-      { label: "Catálogos", path: "/instrumentos/catalogos" },
-      { label: "Banco de Dados", path: "/instrumentos/banco-de-dados" },
-    ],
-  },
-  {
-    label: "Atividades",
-    path: "/atividades",
-    children: [
-      { label: "Atividades", path: "/atividades" },
-      {
-        label: "Pesquisas",
-        path: "/atividades/nucleo-de-pesquisa-em-costas-negras",
-      },
-      { label: "Júris Históricos", path: "/atividades/juris-historicos" },
-      {
-        label: "Encontros e Seminários",
-        path: "/atividades/encontros-e-seminarios",
-      },
-    ],
-  },
-  {
-    label: "Agenda",
-    path: "/agenda",
-    children: [
-      { label: "Agenda", path: "/agenda" },
-      { label: "Encontros", path: "/agenda/encontros" },
-      { label: "Bancas", path: "/agenda/bancas" },
-      { label: "Seminários", path: "/agenda/seminarios" },
-    ],
-  },
-  {
-    label: "Notícias",
-    path: "/noticias",
-    children: [
-      { label: "Notícias", path: "/noticias" },
-      { label: "Newsletter", path: "/noticias/newsletter" },
-    ],
-  },
-  { label: "Contato", path: "/contato" },
-];
-
-// interface NavbarProps {
-//   toggleTheme: () => void;
-//   theme: string;
-// }
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const dropdownRef = useRef<HTMLLIElement | null>(null);
   const navRef = useRef<HTMLElement | null>(null);
+  const dropdownRef = useRef<HTMLLIElement | null>(null);
   const toggleRef = useRef<HTMLButtonElement | null>(null);
-
-  //const { i18n } = useTranslation();
-
-  const location = useLocation();
-
-  const navigate = useNavigate();
-
+  const mobileRef = useRef<HTMLDivElement | null>(null);
   const clickCount = useRef(0);
-
   const timer = useRef<number | null>(null);
+  const navId = useId();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const mobileMenuId = "portal-mobile-menu";
+
+  function submenuId(menu: NavigationSection, mode: "desktop" | "mobile") {
+    return `${navId}-${mode}-${menu.path.slice(1)}`;
+  }
+
+  function closeMenus() {
+    setIsOpen(false);
+    setOpenDropdown(null);
+  }
 
   useEffect(() => {
     if (!isOpen) return;
-
     const previousOverflow = document.body.style.overflow;
+    const background = Array.from(
+      navRef.current?.parentElement?.querySelectorAll<HTMLElement>(
+        "main, footer",
+      ) ?? [],
+    ).map((element) => ({ element, inert: element.inert }));
+    background.forEach(({ element }) => {
+      element.inert = true;
+    });
     document.body.style.overflow = "hidden";
+    const focusFrame = window.requestAnimationFrame(() =>
+      mobileRef.current?.querySelector<HTMLAnchorElement>("a[href]")?.focus(),
+    );
 
     const desktop = window.matchMedia("(min-width: 1201px)");
     const closeOnDesktop = () => {
-      if (desktop.matches) setIsOpen(false);
-    };
-    const closeOnHistory = () => setIsOpen(false);
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (desktop.matches) {
         setIsOpen(false);
+        setOpenDropdown(null);
+      }
+    };
+    const closeOnHistory = () => {
+      setIsOpen(false);
+      setOpenDropdown(null);
+    };
+    const handleKeyDown = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setIsOpen(false);
+        setOpenDropdown(null);
         toggleRef.current?.focus();
       }
       if (event.key !== "Tab") return;
-
       const focusable = Array.from(
         navRef.current?.querySelectorAll<HTMLElement>("a[href], button") ?? [],
       ).filter((element) => element.getClientRects().length > 0);
@@ -150,12 +113,15 @@ export const Navbar = () => {
         first?.focus();
       }
     };
-
     desktop.addEventListener("change", closeOnDesktop);
     window.addEventListener("popstate", closeOnHistory);
     document.addEventListener("keydown", handleKeyDown);
     return () => {
+      window.cancelAnimationFrame(focusFrame);
       document.body.style.overflow = previousOverflow;
+      background.forEach(({ element, inert }) => {
+        element.inert = inert;
+      });
       desktop.removeEventListener("change", closeOnDesktop);
       window.removeEventListener("popstate", closeOnHistory);
       document.removeEventListener("keydown", handleKeyDown);
@@ -163,66 +129,125 @@ export const Navbar = () => {
   }, [isOpen]);
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+    if (isOpen || !openDropdown) return;
+    const handleOutside = (event: PointerEvent) => {
+      if (!dropdownRef.current?.contains(event.target as Node))
         setOpenDropdown(null);
-      }
     };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
+    const handleEscape = (event: globalThis.KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      dropdownRef.current
+        ?.querySelector<HTMLButtonElement>("[data-submenu-toggle]")
+        ?.focus();
+      setOpenDropdown(null);
+    };
+    const handleHistory = () => setOpenDropdown(null);
+    document.addEventListener("pointerdown", handleOutside);
+    document.addEventListener("keydown", handleEscape);
+    window.addEventListener("popstate", handleHistory);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("pointerdown", handleOutside);
+      document.removeEventListener("keydown", handleEscape);
+      window.removeEventListener("popstate", handleHistory);
     };
-  }, []);
+  }, [isOpen, openDropdown]);
+
+  useEffect(
+    () => () => {
+      if (timer.current !== null) window.clearTimeout(timer.current);
+    },
+    [],
+  );
 
   function handleLogoClick() {
-    setIsOpen(false);
+    closeMenus();
     clickCount.current++;
-
-    if (clickCount.current === 1) {
-      navigate("/");
-    }
-
+    if (clickCount.current === 1) navigate("/");
+    if (timer.current !== null) window.clearTimeout(timer.current);
     if (clickCount.current === 3) {
-      if (timer.current) {
-        window.clearTimeout(timer.current);
-      }
-
       clickCount.current = 0;
-
+      timer.current = null;
       navigate("/admin");
-
       return;
     }
-
-    if (timer.current) {
-      window.clearTimeout(timer.current);
-    }
-
     timer.current = window.setTimeout(() => {
       clickCount.current = 0;
     }, 600);
   }
 
-  // const toggleLanguage = () => {
-  //   const newLang = i18n.language === "pt" ? "en" : "pt";
-  //   i18n.changeLanguage(newLang);
-  //   localStorage.setItem("portfolio-language", newLang);
-  // };
+  function handleMenuToggle() {
+    if (isOpen) closeMenus();
+    else {
+      setOpenDropdown(
+        menus.find(
+          (menu) =>
+            menu.children && isNavigationActive(location.pathname, menu.path),
+        )?.path ?? null,
+      );
+      setIsOpen(true);
+    }
+  }
 
-  const handleDropdown = (menu: string) => {
-    setOpenDropdown((prev) => (prev === menu ? null : menu));
-  };
+  function handleDropdownKeyDown(
+    event: KeyboardEvent<HTMLLIElement>,
+    menu: NavigationSection,
+  ) {
+    if (!menu.children) return;
+    if (event.key === "Escape" && openDropdown === menu.path) {
+      event.preventDefault();
+      event.stopPropagation();
+      setOpenDropdown(null);
+      event.currentTarget
+        .querySelector<HTMLButtonElement>("[data-submenu-toggle]")
+        ?.focus();
+      return;
+    }
+    const direction =
+      event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0;
+    const edge =
+      event.key === "Home" ? "first" : event.key === "End" ? "last" : null;
+    if (!direction && (!edge || openDropdown !== menu.path)) return;
+    event.preventDefault();
+    const panelId = submenuId(menu, "desktop");
+    if (openDropdown !== menu.path) {
+      setOpenDropdown(menu.path);
+      window.requestAnimationFrame(() => {
+        const links = document
+          .getElementById(panelId)
+          ?.querySelectorAll<HTMLAnchorElement>("a[href]");
+        const target = direction < 0 ? links?.[links.length - 1] : links?.[0];
+        target?.focus();
+      });
+      return;
+    }
+    const links = Array.from(
+      event.currentTarget.querySelectorAll<HTMLAnchorElement>(
+        "[data-submenu-link]",
+      ),
+    );
+    const index = links.indexOf(document.activeElement as HTMLAnchorElement);
+    const next =
+      edge === "first"
+        ? 0
+        : edge === "last"
+          ? links.length - 1
+          : index < 0
+            ? direction < 0
+              ? links.length - 1
+              : 0
+            : (index + direction + links.length) % links.length;
+    links[next]?.focus();
+  }
 
   return (
     <Container ref={navRef} aria-label="Navegação principal">
-      <LogoButtonWrapper as="button" type="button" onClick={handleLogoClick}>
-        <Logo src={leviataLogo} alt="Leviata e o cativeiro" />
-        <TitleColumn>
+      <LogoButtonWrapper
+        type="button"
+        onClick={handleLogoClick}
+        aria-label="Leviatã e o Cativeiro: página inicial"
+      >
+        <Logo src={leviataLogo} alt="" />
+        <TitleColumn aria-hidden="true">
           <p>Leviatã</p>
           <p>e o</p>
           <p>Cativeiro</p>
@@ -232,53 +257,107 @@ export const Navbar = () => {
       <DesktopOnly>
         <Menu>
           {menus.map((menu) => {
-            const isHashLink = menu.path.startsWith("#");
-
-            const isActive =
-              location.pathname === menu.path ||
-              menu.children?.some((child) => child.path === location.pathname);
-
+            const active = isNavigationActive(location.pathname, menu.path);
+            const expanded = openDropdown === menu.path;
             return (
               <Dropdown
-                key={menu.label}
-                ref={openDropdown === menu.label ? dropdownRef : null}
+                key={menu.path}
+                ref={expanded ? dropdownRef : null}
+                $active={active}
+                $open={expanded}
+                onPointerEnter={(event) => {
+                  if (event.pointerType === "mouse")
+                    setOpenDropdown(menu.children ? menu.path : null);
+                }}
+                onPointerLeave={(event) => {
+                  if (
+                    event.pointerType === "mouse" &&
+                    !event.currentTarget.contains(document.activeElement)
+                  )
+                    setOpenDropdown(null);
+                }}
+                onBlur={(event) => {
+                  if (
+                    !event.currentTarget.contains(
+                      event.relatedTarget as Node | null,
+                    )
+                  )
+                    setOpenDropdown(null);
+                }}
+                onKeyDown={(event) => handleDropdownKeyDown(event, menu)}
               >
                 <MenuItem
-                  as={isHashLink ? "a" : Link}
-                  href={isHashLink ? menu.path : undefined}
-                  to={!isHashLink ? menu.path : undefined}
-                  $active={isActive}
+                  to={menu.path}
+                  $active={active}
+                  onClick={closeMenus}
+                  data-main-link
+                  aria-current={navigationCurrent(location.pathname, menu.path)}
                 >
                   {menu.label}
                 </MenuItem>
                 {menu.children && (
                   <DropdownArrow
                     type="button"
+                    data-submenu-toggle
+                    $expanded={expanded}
                     aria-label={`Submenu de ${menu.label}`}
-                    aria-expanded={openDropdown === menu.label}
-                    aria-controls={`submenu-${menu.path.slice(1)}`}
-                    onClick={() => handleDropdown(menu.label)}
+                    aria-expanded={expanded}
+                    aria-controls={submenuId(menu, "desktop")}
+                    onClick={() =>
+                      setOpenDropdown((current) =>
+                        current === menu.path ? null : menu.path,
+                      )
+                    }
                   >
-                    {openDropdown === menu.label ? (
-                      <FiChevronUp />
-                    ) : (
-                      <FiChevronDown />
-                    )}
+                    <FiChevronDown aria-hidden="true" />
                   </DropdownArrow>
                 )}
-
-                {menu.children && openDropdown === menu.label && (
-                  <DropdownContent id={`submenu-${menu.path.slice(1)}`}>
-                    {menu.children.map((submenu) => (
-                      <SubmenuItem
-                        key={submenu.path}
-                        as={Link}
-                        to={submenu.path}
-                        onClick={() => setOpenDropdown(null)}
-                      >
-                        {submenu.label}
-                      </SubmenuItem>
-                    ))}
+                {menu.children && (
+                  <DropdownContent
+                    id={submenuId(menu, "desktop")}
+                    hidden={!expanded}
+                    inert={!expanded}
+                  >
+                    <DropdownPanel>
+                      <DropdownHeading>
+                        <strong>{menu.label}</strong>
+                        <span>{menu.description}</span>
+                      </DropdownHeading>
+                      <SubmenuList>
+                        {menu.children.map(({ Icon, ...submenu }) => {
+                          const selected =
+                            active &&
+                            isNavigationActive(location.pathname, submenu.path);
+                          return (
+                            <li key={submenu.path}>
+                              <SubmenuItem
+                                to={submenu.path}
+                                onClick={closeMenus}
+                                $active={selected}
+                                data-submenu-link
+                                aria-current={
+                                  selected
+                                    ? navigationCurrent(
+                                        location.pathname,
+                                        submenu.path,
+                                      )
+                                    : undefined
+                                }
+                              >
+                                <SubmenuIcon aria-hidden="true">
+                                  <Icon />
+                                </SubmenuIcon>
+                                <SubmenuCopy>
+                                  <strong>{submenu.label}</strong>
+                                  <span>{submenu.description}</span>
+                                </SubmenuCopy>
+                                <FiArrowUpRight aria-hidden="true" />
+                              </SubmenuItem>
+                            </li>
+                          );
+                        })}
+                      </SubmenuList>
+                    </DropdownPanel>
                   </DropdownContent>
                 )}
               </Dropdown>
@@ -287,14 +366,13 @@ export const Navbar = () => {
         </Menu>
       </DesktopOnly>
 
-      <DesktopOnly>
+      <DesktopOnly $actions>
         <ActionsWrapper style={{ display: "none" }}>
           {/* <ThemeSwitch onClick={toggleTheme}>
             <SwitchCircle themeMode={theme}>
               {theme === "dark" ? "🌙" : "☀️"}
             </SwitchCircle>
           </ThemeSwitch>
-
           <LanguageButton onClick={toggleLanguage}>
             {i18n.language === "pt" ? "🇧🇷 PT" : "🇺🇸 EN"}
           </LanguageButton> */}
@@ -305,62 +383,115 @@ export const Navbar = () => {
         <MenuToggle
           ref={toggleRef}
           type="button"
+          $open={isOpen}
           aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
           aria-expanded={isOpen}
-          aria-controls="portal-mobile-menu"
-          onClick={() => setIsOpen((open) => !open)}
+          aria-controls={mobileMenuId}
+          onClick={handleMenuToggle}
         >
-          {isOpen ? <FiX /> : <FiMenu />}
+          {isOpen ? <FiX aria-hidden="true" /> : <FiMenu aria-hidden="true" />}
         </MenuToggle>
       </MobileOnly>
 
       <MobileMenu
-        id="portal-mobile-menu"
+        ref={mobileRef}
+        id={mobileMenuId}
         $open={isOpen}
         inert={!isOpen}
         aria-hidden={!isOpen}
       >
+        <MobileIntro>
+          <span>Leviatã e o Cativeiro</span>
+          <h2>Explore o portal</h2>
+          <p>Pesquisas, produções e atividades do grupo.</p>
+        </MobileIntro>
         <MenuWrapper>
-          {menus.map((menu) => (
-            <div key={menu.label}>
-              <MenuItem
-                as={Link}
-                to={menu.path}
-                onClick={() => setIsOpen(false)}
-                $active={location.pathname === menu.path}
-              >
-                {menu.label}
-              </MenuItem>
-
-              {menu.children?.map((submenu) => (
-                <SubmenuItem
-                  key={submenu.path}
-                  as={Link}
-                  to={submenu.path}
-                  onClick={() => setIsOpen(false)}
-                >
-                  {submenu.label}
-                </SubmenuItem>
-              ))}
-            </div>
-          ))}
-
-          {/* <ActionsWrapper>
-            <ThemeSwitch onClick={toggleTheme}>
-              <SwitchCircle themeMode={theme}>
-                {theme === "dark" ? "🌙" : "☀️"}
-              </SwitchCircle>
-            </ThemeSwitch>
-
-            <LanguageButton onClick={toggleLanguage}>
-              {i18n.language === "pt" ? "🇧🇷 PT" : "🇺🇸 EN"}
-            </LanguageButton>
-          </ActionsWrapper> */}
+          {menus.map((menu) => {
+            const active = isNavigationActive(location.pathname, menu.path);
+            const expanded = openDropdown === menu.path;
+            const Icon = menu.Icon;
+            return (
+              <MobileGroup key={menu.path} $active={active}>
+                <MobileGroupHeader>
+                  <MenuItem
+                    to={menu.path}
+                    $active={active}
+                    onClick={closeMenus}
+                    id={`${navId}-mobile-${menu.path.slice(1)}-label`}
+                    aria-current={navigationCurrent(
+                      location.pathname,
+                      menu.path,
+                    )}
+                  >
+                    <MobileCategoryIcon aria-hidden="true">
+                      <Icon />
+                    </MobileCategoryIcon>
+                    <MobileCategoryCopy>
+                      <strong>{menu.label}</strong>
+                      <span>{menu.description}</span>
+                    </MobileCategoryCopy>
+                  </MenuItem>
+                  {menu.children && (
+                    <DropdownArrow
+                      type="button"
+                      $expanded={expanded}
+                      aria-label={`Submenu de ${menu.label}`}
+                      aria-expanded={expanded}
+                      aria-controls={submenuId(menu, "mobile")}
+                      onClick={() =>
+                        setOpenDropdown((current) =>
+                          current === menu.path ? null : menu.path,
+                        )
+                      }
+                    >
+                      <FiChevronDown aria-hidden="true" />
+                    </DropdownArrow>
+                  )}
+                </MobileGroupHeader>
+                {menu.children && (
+                  <MobileSubmenu
+                    id={submenuId(menu, "mobile")}
+                    hidden={!expanded}
+                  >
+                    {menu.children.map(({ Icon: ChildIcon, ...submenu }) => {
+                      const selected =
+                        active &&
+                        isNavigationActive(location.pathname, submenu.path);
+                      return (
+                        <li key={submenu.path}>
+                          <SubmenuItem
+                            to={submenu.path}
+                            onClick={closeMenus}
+                            $active={selected}
+                            aria-current={
+                              selected
+                                ? navigationCurrent(
+                                    location.pathname,
+                                    submenu.path,
+                                  )
+                                : undefined
+                            }
+                          >
+                            <SubmenuIcon aria-hidden="true">
+                              <ChildIcon />
+                            </SubmenuIcon>
+                            <SubmenuCopy>
+                              <strong>{submenu.label}</strong>
+                              <span>{submenu.description}</span>
+                            </SubmenuCopy>
+                            <FiArrowUpRight aria-hidden="true" />
+                          </SubmenuItem>
+                        </li>
+                      );
+                    })}
+                  </MobileSubmenu>
+                )}
+              </MobileGroup>
+            );
+          })}
         </MenuWrapper>
-
         <FooterMenuMobile>
           <SocialLinks />
-
           <Copy>© {new Date().getFullYear()} Rafael Azevedo</Copy>
         </FooterMenuMobile>
       </MobileMenu>

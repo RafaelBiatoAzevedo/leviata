@@ -1,6 +1,7 @@
 import type { CreatePresentedWorkRequestDto } from "../dtos/presentedWorks/CreatePresentedWorksRequestDto";
 import type { PresentedWorkResponseDto } from "../dtos/presentedWorks/PresentedWorkResponseDto";
 import type { PresentedWorkFormData } from "../validations/presentedWork.schema";
+import { toLocalDateTime } from "../utils/dateTime";
 
 export function mapPresentedWorkToForm(
   presentedWork: PresentedWorkResponseDto,
@@ -8,7 +9,7 @@ export function mapPresentedWorkToForm(
   return {
     title: presentedWork.title,
 
-    date: presentedWork.date,
+    date: toLocalDateTime(presentedWork.date),
 
     location: presentedWork.location ?? "",
 
@@ -32,19 +33,19 @@ export function mapPresentedWorkToCreateDto(
   return {
     title: data.title,
 
-    date: data.date,
+    date: new Date(data.date).toISOString(),
 
     location: data.location || undefined,
 
     meetingId: data.meetingId || undefined,
 
-    documentUrl: data.documentUrl || undefined,
+    documentUrl: data.documentUrl?.trim() || null,
 
-    registrationUrl: data.registrationUrl || undefined,
+    registrationUrl: data.registrationUrl?.trim() || null,
 
-    recordingUrl: data.recordingUrl || undefined,
+    recordingUrl: data.recordingUrl?.trim() || null,
 
-    meetingUrl: data.meetingUrl || undefined,
+    meetingUrl: data.meetingUrl?.trim() || null,
 
     authors: data.authors,
   };

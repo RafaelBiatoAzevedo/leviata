@@ -21,7 +21,6 @@ import { AdminError } from "../../../components/AdminError";
 
 import { presentedWorksService } from "../../../services/presentedWorks";
 
-import { AdminDateInput } from "../../../components/AdminDateInput";
 import { presentedWorkDefaultValues } from "./defaultValues";
 import {
   presentedWorkSchema,
@@ -235,9 +234,9 @@ export function PresentedWorkForm() {
                 value={slug ?? ""}
                 disabled
               />
-              <AdminDateInput
-                label="Data"
-                placeholder="10/02/2025"
+              <AdminInput
+                type="datetime-local"
+                label="Data e hora"
                 required
                 {...register("date")}
                 error={errors.date?.message}

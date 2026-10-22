@@ -16,11 +16,12 @@ export function Researchers() {
   );
 
   function filterPeople(people: PersonResponseDto[]) {
-    const nationalsPeople = people.filter(
+    const activePeople = people.filter((person) => person.isActive === true);
+    const nationalsPeople = activePeople.filter(
       (person) => person.nationality?.code === "BR",
     );
 
-    const internationalsPeople = people.filter(
+    const internationalsPeople = activePeople.filter(
       (person) => person.nationality?.code !== "BR",
     );
 

@@ -15,6 +15,7 @@ interface ILinkCardProps {
   icon: JSX.Element;
   title: string;
   description: string;
+  descriptionIcon?: JSX.Element;
   showReadMore?: boolean;
 }
 
@@ -24,6 +25,7 @@ export function LinkCard({
   icon: Icon,
   title,
   description,
+  descriptionIcon,
   showReadMore = false,
 }: ILinkCardProps) {
   return (
@@ -33,7 +35,10 @@ export function LinkCard({
         <CardTitle>{title}</CardTitle>
       </CardHeader>
 
-      <CardDescription>{description}</CardDescription>
+      <CardDescription>
+        {descriptionIcon}
+        {description}
+      </CardDescription>
 
       {showReadMore && (
         <ReadMore aria-hidden="true">

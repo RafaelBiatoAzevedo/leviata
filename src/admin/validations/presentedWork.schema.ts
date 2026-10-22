@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { toLocalDateTime } from "../utils/dateTime";
 
 export const presentedWorkSchema = z.object({
   title: z
@@ -6,7 +7,13 @@ export const presentedWorkSchema = z.object({
     .min(1, "Informe o título.")
     .max(255, "O título deve ter no máximo 255 caracteres."),
 
-  date: z.string().min(1, "Informe a data."),
+  date: z
+    .string()
+    .min(1, "Informe a data e hora.")
+    .refine(
+      (value) => !!value && toLocalDateTime(value) === value,
+      "Informe uma data e hora válidas.",
+    ),
 
   location: z.string().optional(),
 

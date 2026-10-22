@@ -222,34 +222,21 @@ export const Title = styled.h3`
   overflow-wrap: anywhere;
 `;
 
-export const Author = styled.p`
-  display: -webkit-box;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  color: #6a706b;
+export const Authors = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+`;
+
+export const Author = styled.li`
+  color: ${({ theme }) => theme.colors.primary};
   font-size: 12px;
   line-height: 1.6;
   letter-spacing: 0.1px;
   overflow-wrap: anywhere;
-`;
-
-export const Citation = styled.span`
-  overflow: hidden;
-  color: #6a706b;
-  font-size: 10px;
-  line-height: 1.5;
-  letter-spacing: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-
-  span {
-    margin-right: 7px;
-    color: ${({ theme }) => theme.colors.secondary};
-    font-size: 8px;
-    font-weight: 600;
-    letter-spacing: 1px;
-  }
 `;
 
 export const Footer = styled.div`

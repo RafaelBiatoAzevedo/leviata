@@ -1,3 +1,5 @@
+import { createElement } from "react";
+import { FiCalendar } from "react-icons/fi";
 import styled from "styled-components";
 import { LinkCard } from "./index";
 import {
@@ -76,8 +78,7 @@ export const FeaturedLinkCard = styled(LinkCard).attrs({ showReadMore: true })`
     transition: transform 0.3s ease;
   }
 
-  &:hover ${IconWrapper},
-  &:focus-visible ${IconWrapper} {
+  &:hover ${IconWrapper}, &:focus-visible ${IconWrapper} {
     transform: rotate(-5deg);
   }
 
@@ -120,25 +121,38 @@ export const FeaturedLinkCard = styled(LinkCard).attrs({ showReadMore: true })`
 
     &:hover,
     &:focus-visible,
-    &:hover ${IconWrapper},
-    &:focus-visible ${IconWrapper} {
+    &:hover ${IconWrapper}, &:focus-visible ${IconWrapper} {
       transform: none;
     }
   }
 `;
 
-export const DatedLinkCard = styled(FeaturedLinkCard)`
+export const DatedLinkCard = styled(FeaturedLinkCard).attrs({
+  descriptionIcon: createElement(FiCalendar, { "aria-hidden": true }),
+})`
   min-height: 260px;
 
   ${CardDescription} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     align-self: center;
-    padding: 7px 14px;
-    border: 1px solid ${({ theme }) => theme.colors.primary}40;
-    border-radius: 20px;
+    gap: 9px;
+    max-width: 100%;
+    padding: 8px 14px;
+    border: 1px solid ${({ theme }) => theme.colors.primary}55;
+    border-radius: 10px;
     background: ${({ theme }) => theme.colors.accentSoft};
     color: ${({ theme }) => theme.colors.secondary};
     text-align: center;
+    font-weight: 500;
     font-variant-numeric: tabular-nums;
+
+    svg {
+      flex-shrink: 0;
+      color: ${({ theme }) => theme.colors.primary};
+      font-size: 16px;
+    }
   }
 
   @media (max-width: 640px) {

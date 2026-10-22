@@ -5,6 +5,13 @@ export type TimelineStatus =
   | "past"
   | "undated";
 
+export interface TimelinePerson {
+  id: string;
+  name: string;
+  abbreviation?: string;
+  institution?: string;
+}
+
 export interface TimelineEntry {
   id: string;
   title: string;
@@ -15,7 +22,14 @@ export interface TimelineEntry {
   description?: string | null;
   location?: string | null;
   meetingTitle?: string | null;
-  authors?: { id: string; name: string; abbreviation?: string }[];
+  authors?: TimelinePerson[];
+  participantGroups?: { label: string; people: TimelinePerson[] }[];
+  images?: {
+    id: string;
+    imageUrl: string;
+    title?: string | null;
+    description?: string | null;
+  }[];
   actions?: {
     kind: "registration" | "meeting" | "recording" | "document" | "external";
     label: string;

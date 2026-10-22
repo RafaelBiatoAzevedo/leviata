@@ -20,9 +20,11 @@ import {
   timelineExternalUrl,
   timelineStatus,
   type TimelineEntry,
+  type TimelinePerson,
   type TimelineYearGroup,
 } from "../../utils/timeline";
 import { Loading } from "../Loading";
+import { ImageGallery } from "../ImageGallery";
 import { timelineContent } from "./content";
 import {
   Actions,
@@ -86,6 +88,20 @@ export function EventTimeline({
   const groups = groupTimeline(entries, now);
   const OverviewSymbol = copy.Icon;
 
+  function renderPeople(people: TimelinePerson[]) {
+    return (
+      <AuthorList>
+        {people.map((person) => (
+          <li key={person.id}>
+            {person.abbreviation && <span>{person.abbreviation}</span>}
+            {person.name}
+            {person.institution && <small>{person.institution}</small>}
+          </li>
+        ))}
+      </AuthorList>
+    );
+  }
+
   function renderEntry(entry: TimelineEntry) {
     const status = timelineStatus(entry, now);
     const stamp = timelineDateStamp(entry);
@@ -137,15 +153,19 @@ export function EventTimeline({
                 <FiUsers aria-hidden="true" />
                 {isPast ? copy.participantsPast : copy.participantsUpcoming}
               </p>
-              <AuthorList>
-                {entry.authors.map((author) => (
-                  <li key={author.id}>
-                    {author.abbreviation && <span>{author.abbreviation}</span>}
-                    {author.name}
-                  </li>
-                ))}
-              </AuthorList>
+              {renderPeople(entry.authors)}
             </Authors>
+          )}
+          {entry.participantGroups?.map((group) =>
+            group.people.length > 0 ? (
+              <Authors key={group.label}>
+                <p>
+                  <FiUsers aria-hidden="true" />
+                  {group.label}
+                </p>
+                {renderPeople(group.people)}
+              </Authors>
+            ) : null,
           )}
           <Actions>
             {entry.actions?.map((action) => {
@@ -171,6 +191,7 @@ export function EventTimeline({
               </DetailLink>
             )}
           </Actions>
+          {!!entry.images?.length && <ImageGallery images={entry.images} />}
         </Card>
       </Item>
     );

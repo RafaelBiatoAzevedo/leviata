@@ -35,6 +35,7 @@ import { booksService } from "../../admin/services/books";
 import type { ArticleResponseDto } from "../../admin/dtos/articles/ArticleResponseDto";
 import { articlesService } from "../../admin/services/articles";
 import { ArticleType } from "../../admin/types/TArticleType";
+import { loadAllPages } from "../../utils/loadAllPages";
 
 const publicationTabs = [
   {
@@ -88,17 +89,25 @@ export function Publications() {
         sortBy: "year",
         sortOrder: "desc",
       });
-      const responseArticles = await articlesService.getAll();
+      const orderedArticles = (
+        await loadAllPages((params) =>
+          articlesService.getAll({
+            ...params,
+            sortBy: "year",
+            sortOrder: "desc",
+          }),
+        )
+      ).sort((first, second) => (second.year ?? -1) - (first.year ?? -1));
 
       setBooks(responseBooks.data);
 
       setArticles(
-        responseArticles.data.filter(
+        orderedArticles.filter(
           (article) => article.type === ArticleType.ARTICLE,
         ),
       );
       setDossiers(
-        responseArticles.data.filter(
+        orderedArticles.filter(
           (article) => article.type === ArticleType.DOSSIER,
         ),
       );
@@ -245,10 +254,6 @@ export function Publications() {
                     <ArticleCard
                       {...article}
                       year={article.year}
-                      author={article.authors
-                        .map((author) => author.name)
-                        .filter(Boolean)
-                        .join(", ")}
                       to={article.externalUrl}
                     />
                   </SwiperSlide>
@@ -284,10 +289,6 @@ export function Publications() {
                     <ArticleCard
                       {...dossier}
                       year={dossier.year}
-                      author={dossier.authors
-                        .map((author) => author.name)
-                        .filter(Boolean)
-                        .join(", ")}
                       to={dossier.externalUrl}
                     />
                   </SwiperSlide>
