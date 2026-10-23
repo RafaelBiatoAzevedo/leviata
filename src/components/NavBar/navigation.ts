@@ -100,12 +100,6 @@ export const menus: NavigationSection[] = [
         Icon: FiFileText,
       },
       {
-        label: "Núcleo “Em costas negras”",
-        path: "/atividades/nucleo-de-pesquisa-em-costas-negras",
-        description: "História e cultura africana e afro-brasileira.",
-        Icon: FiUsers,
-      },
-      {
         label: "Júris Históricos",
         path: "/atividades/juris-historicos",
         description: "Diálogos entre história, direito e justiça.",

@@ -13,9 +13,10 @@ export interface AdminListQuery {
   type?: string;
   role?: string;
   isActive?: string;
+  isInternal?: "true" | "false";
 }
 
 export type AdminListFilters = Pick<
   AdminListQuery,
-  "search" | "category" | "type" | "role" | "isActive"
+  "search" | "category" | "type" | "role" | "isActive" | "isInternal"
 >;

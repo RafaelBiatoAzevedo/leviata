@@ -122,6 +122,14 @@ export function MeetingView() {
                 label="Tipo"
                 value={meetingTypeLabels[meeting.type]}
               />
+              <AdminDescriptionItem
+                label="Exibição no portal"
+                value={
+                  meeting.isInternal
+                    ? "Interno — exibido nas listas"
+                    : "Externo — acesso pelas notícias"
+                }
+              />
             </AdminDescriptionList>
             <AdminDescriptionItem label="Local" value={meeting.location} />
           </AdminSection>

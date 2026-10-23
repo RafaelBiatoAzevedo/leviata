@@ -6,10 +6,12 @@ import { usePublicList } from "../../hooks/usePublicData";
 import { Container, Content } from "./styles";
 
 export function Seminars() {
-  const { data, loading, error } =
-    usePublicList<MeetingResponseDto>("meetings");
+  const { data, loading, error } = usePublicList<MeetingResponseDto>(
+    "meetings",
+    { isInternal: "true" },
+  );
   const seminars = data.filter(
-    (meeting) => meeting.type === MeetingType.SEMINAR,
+    (meeting) => meeting.isInternal && meeting.type === MeetingType.SEMINAR,
   );
 
   return (

@@ -11,6 +11,8 @@ export interface MeetingResponseDto {
 
   type: TMeetingType;
 
+  isInternal: boolean;
+
   title: string;
 
   coverUrl: string | null;

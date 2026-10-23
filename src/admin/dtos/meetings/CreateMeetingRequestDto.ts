@@ -5,6 +5,8 @@ export interface CreateMeetingRequestDto {
 
   type: TMeetingType;
 
+  isInternal: boolean;
+
   description?: string;
 
   date: string;

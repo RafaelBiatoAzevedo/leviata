@@ -259,6 +259,33 @@ test("each relationship category loads actual IDs and titles from its own collec
   }
 });
 
+test("news can link both internal and external meetings without a visibility filter", async (context) => {
+  context.mock.method(api, "get", async (url, { params }) => {
+    assert.equal(url, "/meetings");
+    assert.equal(params.isInternal, undefined);
+    return {
+      data: [
+        {
+          id: "interno",
+          title: "Evento do grupo",
+          type: "MEETING",
+          isInternal: true,
+        },
+        {
+          id: "externo",
+          title: "Evento convidado",
+          type: "SEMINAR",
+          isInternal: false,
+        },
+      ],
+    };
+  });
+  assert.deepEqual(await loadNewsRelatedOptions("MEETING"), [
+    { value: "interno", label: "Encontro — Evento do grupo (interno)" },
+    { value: "externo", label: "Seminário — Evento convidado (externo)" },
+  ]);
+});
+
 test("related selectors include records beyond the first API page", async (context) => {
   const records = Array.from({ length: 205 }, (_, index) => ({
     id: `record-${index}`,

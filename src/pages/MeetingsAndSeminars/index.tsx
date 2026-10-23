@@ -6,11 +6,11 @@ import { Container, Content, Grid, MeetingCard } from "./styles";
 import { FiMic, FiVideo } from "react-icons/fi";
 
 export function MeetingsAndSeminars() {
-  const {
-    data: meetings,
-    loading,
-    error,
-  } = usePublicList<MeetingResponseDto>("meetings");
+  const { data, loading, error } = usePublicList<MeetingResponseDto>(
+    "meetings",
+    { isInternal: "true" },
+  );
+  const meetings = data.filter((meeting) => meeting.isInternal);
   return (
     <Container>
       <Content>

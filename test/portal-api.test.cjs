@@ -191,6 +191,10 @@ const {
 } = require("../src/components/GalleryDetails/index.tsx");
 const { NewsDetails } = require("../src/pages/NewsDetails/index.tsx");
 const { News } = require("../src/pages/News/index.tsx");
+const {
+  MeetingsAndSeminars,
+} = require("../src/pages/MeetingsAndSeminars/index.tsx");
+const { Seminars } = require("../src/pages/Seminars/index.tsx");
 const { Home } = require("../src/pages/Home/index.tsx");
 const { Researchers } = require("../src/pages/ Researchers/index.tsx");
 const { Publications } = load("../src/pages/ Publications/index.tsx", {
@@ -600,7 +604,7 @@ test("gallery details expose researchers, speakers, jury roles and board partici
   }
 });
 
-test("meeting speakers use the presentation profile details without biographies", () => {
+test("meeting speakers and research participants use profile details without biographies", () => {
   reset();
   const speaker = person("speaker", "Maria Palestrante", {
     honorificTitle: "Profa.",
@@ -647,12 +651,21 @@ test("meeting speakers use the presentation profile details without biographies"
     images: [],
     people: [speaker],
   };
-  assert.ok(
-    render(GalleryDetails, {
-      resource: "research",
-      label: "a pesquisa",
-    }).includes(speaker.bio),
-  );
+  const researchHtml = render(GalleryDetails, {
+    resource: "research",
+    label: "a pesquisa",
+  });
+  for (const value of [
+    "Pesquisadores",
+    "Maria Palestrante",
+    "Doutora",
+    "Universidade cadastrada",
+  ])
+    assert.ok(researchHtml.includes(value), value);
+  for (const field of ["lattesUrl", "website", "linkedinUrl"])
+    assert.ok(researchHtml.includes(`href="${speaker[field]}"`), field);
+  assert.ok(!researchHtml.includes(speaker.bio));
+  assert.ok(!researchHtml.includes("Ver biografia"));
 });
 
 test("gallery photos show optional API captions below their images without empty caption cards", () => {
@@ -780,6 +793,85 @@ test("the admin meeting view pairs each link with its saved field and omits abse
   assert.ok(!empty.includes('target="_blank"'));
   assert.ok(!empty.includes('href="#"'));
   assert.ok(!empty.includes('href="null"'));
+});
+
+test("portal meeting cards and seminar timelines only list internal events", () => {
+  reset();
+  const meeting = (id, type, isInternal) => ({
+    id,
+    slug: id,
+    title: `Evento ${id}`,
+    date: "2026-01-01T00:00:00Z",
+    speakers: [],
+    type,
+    isInternal,
+  });
+  lists.meetings = [
+    meeting("encontro-interno", "MEETING", true),
+    meeting("seminario-interno", "SEMINAR", true),
+    meeting("encontro-externo", "MEETING", false),
+    meeting("seminario-externo", "SEMINAR", false),
+  ];
+  const cards = render(MeetingsAndSeminars);
+  assert.ok(cards.includes("Evento encontro-interno"));
+  assert.ok(cards.includes("Evento seminario-interno"));
+  assert.ok(!cards.includes("Evento encontro-externo"));
+  assert.ok(!cards.includes("Evento seminario-externo"));
+  const timeline = render(Seminars);
+  assert.ok(timeline.includes("Evento seminario-interno"));
+  assert.ok(!timeline.includes("Evento encontro-interno"));
+  assert.ok(!timeline.includes("Evento seminario-externo"));
+  assert.deepEqual(requests, [
+    { resource: "meetings", query: { isInternal: "true" } },
+    { resource: "meetings", query: { isInternal: "true" } },
+  ]);
+
+  lists.meetings = lists.meetings.filter((event) => !event.isInternal);
+  assert.ok(
+    render(MeetingsAndSeminars).includes("Nenhum encontro disponível."),
+  );
+  assert.ok(!render(Seminars).includes("Evento seminario-externo"));
+});
+
+test("external meetings remain accessible through linked news and their detail pages", () => {
+  reset();
+  const id = "68c2af74-c459-4a33-8d98-d4a62d2152c9";
+  const destination = `/atividades/encontros-e-seminarios/encontro/${id}`;
+  lists.news = [
+    {
+      id: "news-id",
+      title: "Divulgação do evento externo",
+      slug: "noticia-evento-externo",
+      date: "2026-10-23",
+      category: "EVENT",
+      description: "Conheça este evento",
+      isInternal: true,
+      relatedType: "MEETING",
+      relatedId: id,
+    },
+  ];
+  assert.ok(render(News).includes(`href="${destination}"`));
+  records.meetings = {
+    id,
+    title: "Evento externo vinculado",
+    isInternal: false,
+    date: "2026-10-23",
+    description: "Descrição do encontro externo",
+    images: [],
+    speakers: [],
+    registrationUrl: "https://example.org/inscricoes",
+  };
+  const details = render(
+    GalleryDetails,
+    { resource: "meetings", label: "o encontro" },
+    id,
+  );
+  assert.ok(details.includes("Evento externo vinculado"));
+  assert.ok(details.includes("Descrição do encontro externo"));
+  assert.ok(details.includes('href="https://example.org/inscricoes"'));
+  assert.ok(render(MeetingView).includes("Externo — acesso pelas notícias"));
+  records.meetings.isInternal = true;
+  assert.ok(render(MeetingView).includes("Interno — exibido nas listas"));
 });
 
 test("internal news have a real detail view and valid related destinations", () => {

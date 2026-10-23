@@ -40,6 +40,7 @@ import {
 import { meetingTypeOptions } from "../../../utils/meetingTypes";
 import { AdminDateInput } from "../../../components/AdminDateInput";
 import AdminFormActions from "../../../components/AdminFormActions";
+import { AdminSwitch } from "../../../components/AdminSwitch";
 
 export function MeetingForm() {
   const navigate = useNavigate();
@@ -313,6 +314,18 @@ export function MeetingForm() {
             </AdminSection>
           </AdminFormCard>
         </MeetingTopWrapper>
+
+        <AdminFormCard>
+          <AdminSection title="Exibição no portal">
+            <AdminSwitch
+              label="Interno"
+              text="Exibir na lista de encontros e seminários"
+              description="Internos aparecem nas listas do portal. Externos ficam disponíveis para divulgação por uma notícia vinculada."
+              error={errors.isInternal?.message}
+              {...register("isInternal")}
+            />
+          </AdminSection>
+        </AdminFormCard>
 
         <AdminFormCard>
           <AdminSection title="Links">

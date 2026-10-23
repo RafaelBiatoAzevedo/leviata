@@ -43,10 +43,16 @@ export const CoverPlaceholder = styled.div`
 export const Filters = styled.div`
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
 
   justify-content: space-between;
 
   gap: 1rem;
+
+  > :last-child {
+    flex: 0 1 220px;
+  }
 `;
 
 export const Actions = styled.div`

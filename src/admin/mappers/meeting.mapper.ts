@@ -7,6 +7,8 @@ export function mapMeetingToForm(meeting: MeetingResponseDto): MeetingFormData {
 
     type: meeting.type,
 
+    isInternal: meeting.isInternal ?? true,
+
     description: meeting.description ?? "",
 
     date: meeting.date ? new Date(meeting.date).toISOString().slice(0, 10) : "",

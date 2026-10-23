@@ -13,6 +13,8 @@ export const meetingSchema = z.object({
     message: "Informe o tipo da reunião.",
   }),
 
+  isInternal: z.boolean(),
+
   description: z.string().optional(),
 
   date: z.string().min(1, "Informe a data."),

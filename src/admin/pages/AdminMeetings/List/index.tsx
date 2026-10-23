@@ -25,9 +25,12 @@ import { AdminIconButton } from "../../../components/AdminIconButton";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
 import { formatDate } from "../../../utils/formatDate";
 import { meetingTypeLabels } from "../../../types/TMeetingType";
+import { AdminSelect } from "../../../components/AdminSelect";
+import { AdminBadge } from "../../../components/AdminBadge";
 
 export function AdminMeetings() {
   const [search, setSearch] = useState("");
+  const [visibility, setVisibility] = useState<"" | "true" | "false">("");
   const navigate = useNavigate();
 
   const { showToast } = useToast();
@@ -36,7 +39,10 @@ export function AdminMeetings() {
 
   const { items, loading, error, load, pagination } = useAdminList(
     meetingsService.getPage,
-    { search: search.trim() || undefined },
+    {
+      search: search.trim() || undefined,
+      isInternal: visibility || undefined,
+    },
   );
 
   function handleDelete(meeting: MeetingResponseDto) {
@@ -73,7 +79,7 @@ export function AdminMeetings() {
     <Container>
       <AdminPageHeader
         title="Encontros"
-        subtitle="Gerencie ps encontros cadastrados."
+        subtitle="Gerencie os encontros e seminários cadastrados."
       >
         <AdminButton onClick={() => navigate("/admin/encontros/novo")}>
           <FiPlus />
@@ -87,6 +93,18 @@ export function AdminMeetings() {
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Pesquisar encontros..."
         />
+        <AdminSelect
+          label="Exibição no portal"
+          value={visibility}
+          onChange={(event) =>
+            setVisibility(event.target.value as "" | "true" | "false")
+          }
+          options={[
+            { value: "", label: "Todos" },
+            { value: "true", label: "Internos" },
+            { value: "false", label: "Externos" },
+          ]}
+        />
       </Filters>
 
       {error && <AdminError>{error}</AdminError>}
@@ -98,6 +116,7 @@ export function AdminMeetings() {
             <th>Descrição</th>
             <th>Data</th>
             <th>Tipo</th>
+            <th>Exibição</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -131,6 +150,14 @@ export function AdminMeetings() {
                 <td>{formatDate(meeting.date)}</td>
 
                 <td>{meetingTypeLabels[meeting.type]}</td>
+
+                <td>
+                  <AdminBadge
+                    variant={meeting.isInternal ? "primary" : "secondary"}
+                  >
+                    {meeting.isInternal ? "Interno" : "Externo"}
+                  </AdminBadge>
+                </td>
 
                 <td>
                   <Actions>
@@ -167,7 +194,7 @@ export function AdminMeetings() {
       <AdminPagination {...pagination} />
 
       {!loading && !error && items.length === 0 && (
-        <Empty>Nenhum livro encontrado.</Empty>
+        <Empty>Nenhum encontro encontrado.</Empty>
       )}
     </Container>
   );

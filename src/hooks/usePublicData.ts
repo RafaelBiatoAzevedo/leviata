@@ -12,7 +12,7 @@ export function usePublicList<T>(
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { type, isActive, sortBy, sortOrder, search } = query;
+  const { type, isActive, isInternal, sortBy, sortOrder, search } = query;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -24,7 +24,7 @@ export function usePublicList<T>(
       try {
         const records = await publicService.getAll<T>(
           resource,
-          { type, isActive, sortBy, sortOrder, search },
+          { type, isActive, isInternal, sortBy, sortOrder, search },
           controller.signal,
         );
         if (active) setData(records);
@@ -39,7 +39,7 @@ export function usePublicList<T>(
       active = false;
       controller.abort();
     };
-  }, [resource, type, isActive, sortBy, sortOrder, search]);
+  }, [resource, type, isActive, isInternal, sortBy, sortOrder, search]);
 
   return { data, loading, error };
 }

@@ -17,6 +17,7 @@ interface RelatedRecord {
   title: string;
   type?: string;
   year?: number | null;
+  isInternal?: boolean;
 }
 
 const resources = {
@@ -64,7 +65,11 @@ export async function loadNewsRelatedOptions(
           : undefined;
     return {
       value: record.id,
-      label: prefix ? `${prefix} — ${record.title}` : record.title,
+      label: `${prefix ? `${prefix} — ` : ""}${record.title}${
+        type === "MEETING" && typeof record.isInternal === "boolean"
+          ? ` (${record.isInternal ? "interno" : "externo"})`
+          : ""
+      }`,
     };
   });
 }

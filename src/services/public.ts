@@ -17,6 +17,7 @@ export type PublicResource =
 export interface PublicListQuery {
   type?: string;
   isActive?: "true" | "false";
+  isInternal?: "true" | "false";
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   search?: string;

@@ -187,7 +187,7 @@ export function GalleryDetails({
             key={group.title}
             title={group.title}
             people={group.people}
-            compact={resource === "meetings"}
+            compact={resource === "meetings" || resource === "research"}
           />
         ))}
         {resource !== "meetings" && links.length > 0 && (

@@ -1,7 +1,10 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { saveGallery } from "../src/admin/utils/saveGallery.ts";
-import { mapMeetingToForm } from "../src/admin/mappers/meeting.mapper.ts";
+import {
+  mapMeetingToForm,
+  mapMeetingToCreateDto,
+} from "../src/admin/mappers/meeting.mapper.ts";
 import { mapJuryToForm } from "../src/admin/mappers/jury.mapper.ts";
 
 const image = (values = {}) => ({
@@ -182,6 +185,24 @@ test("meeting date inputs preserve the UTC calendar day at year boundaries and a
     assert.equal(form.date, expected);
     if (expected) assert.match(form.date, /^\d{4}-\d{2}-\d{2}$/);
   }
+});
+
+test("meeting create and edit mappings preserve explicit internal and external classifications", () => {
+  for (const isInternal of [true, false]) {
+    const form = mapMeetingToForm({
+      title: "Evento",
+      type: "SEMINAR",
+      date: "2026-10-23",
+      speakers: [],
+      isInternal,
+    });
+    assert.equal(form.isInternal, isInternal);
+    assert.equal(mapMeetingToCreateDto(form).isInternal, isInternal);
+  }
+  assert.equal(
+    mapMeetingToForm({ title: "Anterior", speakers: [] }).isInternal,
+    true,
+  );
 });
 
 test("editing jury photos preserves the document independently of registration", () => {
