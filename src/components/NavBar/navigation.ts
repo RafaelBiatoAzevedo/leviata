@@ -7,6 +7,7 @@ import {
   FiCompass,
   FiDatabase,
   FiFileText,
+  FiFilm,
   FiFolder,
   FiGrid,
   FiMail,
@@ -88,16 +89,16 @@ export const menus: NavigationSection[] = [
     Icon: FiActivity,
     children: [
       {
+        label: "Bancas",
+        path: "/agenda/bancas",
+        description: "Exames de qualificação e defesas.",
+        Icon: FiClipboard,
+      },
+      {
         label: "Pesquisas",
         path: "/atividades/pesquisas",
         description: "Projetos e registros de investigação.",
         Icon: FiSearch,
-      },
-      {
-        label: "Apresentações de trabalhos",
-        path: "/atividades/apresentacoes-trabalhos",
-        description: "A pesquisa do grupo em circulação.",
-        Icon: FiFileText,
       },
       {
         label: "Júris Históricos",
@@ -106,10 +107,22 @@ export const menus: NavigationSection[] = [
         Icon: GiInjustice,
       },
       {
-        label: "Encontros e Seminários",
-        path: "/atividades/encontros-e-seminarios",
+        label: "Encontros",
+        path: "/atividades/encontros",
         description: "Conversas e registros de nossos encontros.",
         Icon: FiVideo,
+      },
+      {
+        label: "Seminários",
+        path: "/atividades/seminarios",
+        description: "Debates e pesquisas compartilhadas pelo grupo.",
+        Icon: FiMic,
+      },
+      {
+        label: "Mostra de documentários",
+        path: "/atividades/mostra-de-documentarios",
+        description: "Sessões de cinema, história e memória.",
+        Icon: FiFilm,
       },
     ],
   },
@@ -120,9 +133,9 @@ export const menus: NavigationSection[] = [
     Icon: FiCalendar,
     children: [
       {
-        label: "Encontros e Seminários",
-        path: "/atividades/encontros-e-seminarios",
-        description: "Consulte os encontros e seus registros.",
+        label: "Encontros",
+        path: "/agenda/encontros",
+        description: "Próximos encontros e conversas já realizadas.",
         Icon: FiVideo,
       },
       {
@@ -136,6 +149,12 @@ export const menus: NavigationSection[] = [
         path: "/agenda/seminarios",
         description: "Próximos debates e encontros realizados.",
         Icon: FiMic,
+      },
+      {
+        label: "Mostra de documentários",
+        path: "/agenda/mostra-de-documentarios",
+        description: "Próximas sessões e mostras já realizadas.",
+        Icon: FiFilm,
       },
     ],
   },

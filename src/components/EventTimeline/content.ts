@@ -1,4 +1,10 @@
-import { FiCalendar, FiClipboard, FiMic } from "react-icons/fi";
+import {
+  FiCalendar,
+  FiClipboard,
+  FiFilm,
+  FiMic,
+  FiVideo,
+} from "react-icons/fi";
 
 export const timelineContent = {
   boards: {
@@ -97,5 +103,55 @@ export const timelineContent = {
       "Acompanhe este espaço para conferir os próximos seminários e seus registros.",
     participantsPast: "Palestrantes",
     participantsUpcoming: "Palestrantes",
+  },
+  meetings: {
+    Icon: FiVideo,
+    singular: "encontro",
+    plural: "encontros",
+    loading: "os encontros",
+    error: "os encontros",
+    overviewLabel: "Conversas que nos aproximam",
+    overviewText: "Os próximos encontros e a memória dos diálogos do grupo.",
+    showTimes: false,
+    upcomingTitle: "Próximos encontros",
+    upcomingText: "Os próximos encontros, da data mais próxima às seguintes.",
+    upcomingEmpty: "Nenhum encontro previsto no momento.",
+    pastTitle: "Encontros realizados",
+    pastText: "Revisite os encontros, dos mais recentes aos anteriores.",
+    pastEmpty:
+      "Os encontros realizados aparecerão aqui após a data cadastrada.",
+    pastStat: "Realizados",
+    pastStatus: "Realizado",
+    emptyTitle: "Nenhum encontro disponível",
+    emptyText:
+      "Acompanhe este espaço para conferir os próximos encontros e seus registros.",
+    participantsPast: "Participantes",
+    participantsUpcoming: "Participantes",
+  },
+  documentaries: {
+    Icon: FiFilm,
+    singular: "mostra",
+    plural: "mostras",
+    loading: "as mostras de documentários",
+    error: "as mostras de documentários",
+    overviewLabel: "História em cena",
+    overviewText:
+      "As próximas sessões e a memória das mostras de documentários do grupo.",
+    showTimes: false,
+    upcomingTitle: "Próximas mostras",
+    upcomingText:
+      "As próximas sessões de documentários, em ordem de realização.",
+    upcomingEmpty: "Nenhuma mostra prevista no momento.",
+    pastTitle: "Mostras realizadas",
+    pastText:
+      "Revisite as sessões e os debates, dos mais recentes aos anteriores.",
+    pastEmpty: "As mostras realizadas aparecerão aqui após a data cadastrada.",
+    pastStat: "Realizadas",
+    pastStatus: "Realizada",
+    emptyTitle: "Nenhuma mostra de documentários disponível",
+    emptyText:
+      "Acompanhe este espaço para conferir as próximas sessões de documentários.",
+    participantsPast: "Participantes",
+    participantsUpcoming: "Participantes",
   },
 } as const;

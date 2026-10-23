@@ -1,4 +1,4 @@
-import { FiMic } from "react-icons/fi";
+import { FiFilm, FiMic, FiVideo } from "react-icons/fi";
 import { TbFolderSearch } from "react-icons/tb";
 
 import { SectionHeader } from "../../components/SectionHeader";
@@ -14,20 +14,6 @@ const activities = [
     description: "Conheça os projetos e suas galerias de imagens.",
   },
   {
-    to: "/atividades/apresentacoes-trabalhos",
-    icon: <FiMic />,
-    title: "Trabalhos apresentados",
-    description: "Acompanhe as apresentações e os registros dos trabalhos.",
-  },
-  {
-    to: "/atividades/nucleo-de-pesquisa-em-costas-negras",
-    icon: <TbFolderSearch />,
-    title: "Núcleo de pesquisa “Em costas negras”",
-    description:
-      "Espaço dedicado ao desenvolvimento de pesquisas, debates e investigações relacionadas à escravidão, experiências africanas e diásporas no mundo luso-brasileiro.",
-  },
-
-  {
     to: "/atividades/juris-historicos",
     icon: <GiInjustice />,
     title: "Júris Históricos",
@@ -36,11 +22,25 @@ const activities = [
   },
 
   {
-    to: "/atividades/encontros-e-seminarios",
+    to: "/atividades/encontros",
+    icon: <FiVideo />,
+    title: "Encontros",
+    description:
+      "Conversas e intercâmbios organizados pelo grupo para compartilhar experiências e conhecimento histórico.",
+  },
+  {
+    to: "/atividades/seminarios",
     icon: <FiMic />,
-    title: "Encontros e Seminários",
+    title: "Seminários",
     description:
       "Eventos, mesas de debate e seminários organizados pelo grupo para promover intercâmbio intelectual e difusão do conhecimento histórico.",
+  },
+  {
+    to: "/atividades/mostra-de-documentarios",
+    icon: <FiFilm />,
+    title: "Mostra de documentários",
+    description:
+      "Sessões de documentários e debates sobre história, imagem e memória.",
   },
 ];
 

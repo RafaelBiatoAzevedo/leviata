@@ -257,7 +257,7 @@ export function MeetingForm() {
     <Container>
       <AdminPageHeader
         title={isEdit ? "Editar encontro" : "Novo encontro"}
-        subtitle="Cadastre ou atualize os dados do encontro."
+        subtitle="Cadastre ou atualize encontros, seminários e mostras de documentários."
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -319,7 +319,7 @@ export function MeetingForm() {
           <AdminSection title="Exibição no portal">
             <AdminSwitch
               label="Interno"
-              text="Exibir na lista de encontros e seminários"
+              text="Exibir nas listas de atividades e na agenda"
               description="Internos aparecem nas listas do portal. Externos ficam disponíveis para divulgação por uma notícia vinculada."
               error={errors.isInternal?.message}
               {...register("isInternal")}

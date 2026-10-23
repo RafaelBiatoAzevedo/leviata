@@ -127,6 +127,57 @@ export const FeaturedLinkCard = styled(LinkCard).attrs({ showReadMore: true })`
   }
 `;
 
+export const CompactLinkCard = styled(FeaturedLinkCard)`
+  min-height: 200px;
+  gap: 12px;
+  padding: 18px 24px 44px;
+
+  &::after {
+    left: 24px;
+  }
+
+  ${CardHeader} {
+    gap: 12px;
+  }
+
+  ${IconWrapper} {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    font-size: 20px;
+  }
+
+  ${CardTitle} {
+    font-size: 24px;
+  }
+
+  ${CardDescription} {
+    line-height: 1.6;
+  }
+
+  ${ReadMore} {
+    right: 24px;
+    bottom: 14px;
+  }
+
+  @media (max-width: 640px) {
+    min-height: 184px;
+    padding: 16px 20px 42px;
+
+    &::after {
+      left: 20px;
+    }
+
+    ${CardTitle} {
+      font-size: 22px;
+    }
+
+    ${ReadMore} {
+      right: 20px;
+    }
+  }
+`;
+
 export const DatedLinkCard = styled(FeaturedLinkCard).attrs({
   descriptionIcon: createElement(FiCalendar, { "aria-hidden": true }),
 })`

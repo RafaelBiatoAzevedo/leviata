@@ -20,6 +20,7 @@ import { PresentedWorks } from "../pages/PresentedWorks";
 import { PresentedWorkDetails } from "../pages/PresentedWorkDetails";
 import { ResearchCenter } from "../pages/ResearchCenter";
 import { Seminars } from "../pages/Seminars";
+import { MeetingAgenda } from "../pages/MeetingAgenda";
 import { BibliographicSpreadsheets } from "../pages/BibliographicSpreadsheets";
 import { Catalogs } from "../pages/ Catalogs";
 import { Database } from "../pages/Database";
@@ -101,6 +102,35 @@ export function Router() {
           path="/atividades/encontros-e-seminarios/:type/:id"
           element={<MeetingsAndSeminarsDetails />}
         />
+        <Route
+          path="/atividades/encontros"
+          element={<MeetingsAndSeminars type="MEETING" />}
+        />
+        <Route
+          path="/atividades/seminarios"
+          element={<MeetingsAndSeminars type="SEMINAR" />}
+        />
+        <Route
+          path="/atividades/mostra-de-documentarios"
+          element={<MeetingsAndSeminars type="DOCUMENTARY" />}
+        />
+        <Route
+          path="/atividades/encontros/:id"
+          element={<GalleryDetails resource="meetings" label="o encontro" />}
+        />
+        <Route
+          path="/atividades/seminarios/:id"
+          element={<GalleryDetails resource="meetings" label="o seminário" />}
+        />
+        <Route
+          path="/atividades/mostra-de-documentarios/:id"
+          element={
+            <GalleryDetails
+              resource="meetings"
+              label="a mostra de documentários"
+            />
+          }
+        />
 
         <Route
           path="/atividades/pesquisas"
@@ -132,6 +162,14 @@ export function Router() {
           element={<GalleryDetails resource="boards" label="a banca" />}
         />
         <Route path="/agenda/seminarios" element={<Seminars />} />
+        <Route
+          path="/agenda/encontros"
+          element={<MeetingAgenda type="MEETING" />}
+        />
+        <Route
+          path="/agenda/mostra-de-documentarios"
+          element={<MeetingAgenda type="DOCUMENTARY" />}
+        />
 
         <Route path="/noticias" element={<News />} />
         <Route path="/noticias/:id" element={<NewsDetails />} />

@@ -6,6 +6,7 @@ import {
   mapMeetingToCreateDto,
 } from "../src/admin/mappers/meeting.mapper.ts";
 import { mapJuryToForm } from "../src/admin/mappers/jury.mapper.ts";
+import { meetingSchema } from "../src/admin/validations/meeting.schem.ts";
 
 const image = (values = {}) => ({
   key: "existing",
@@ -203,6 +204,21 @@ test("meeting create and edit mappings preserve explicit internal and external c
     mapMeetingToForm({ title: "Anterior", speakers: [] }).isInternal,
     true,
   );
+});
+
+test("meeting forms accept and round-trip all three event types", () => {
+  for (const type of ["MEETING", "SEMINAR", "DOCUMENTARY"]) {
+    const form = meetingSchema.parse(
+      mapMeetingToForm({
+        title: "Atividade cadastrada",
+        type,
+        isInternal: true,
+        date: "2026-10-23",
+        speakers: [{ id: "550e8400-e29b-41d4-a716-446655440000" }],
+      }),
+    );
+    assert.equal(mapMeetingToCreateDto(form).type, type);
+  }
 });
 
 test("editing jury photos preserves the document independently of registration", () => {

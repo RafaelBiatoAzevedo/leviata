@@ -141,19 +141,22 @@ test("general server and connection failures remain visible below the form", () 
 });
 
 test("internal news saves its related record without requiring an external link", async () => {
-  for (const externalUrl of ["", "link-antigo-invalido"]) {
-    const form = createFormControl({
-      defaultValues: { ...internal, externalUrl },
-      resolver: zodResolver(newsSchema),
-      shouldFocusError: false,
-    });
-    let submitted;
-    await form.handleSubmit((data) => {
-      submitted = mapNewsToCreateDto(data);
-    })();
-    assert.equal(submitted.externalUrl, null);
-    assert.equal(submitted.relatedType, "MEETING");
-    assert.equal(submitted.relatedId, uuid);
+  for (const relatedType of ["MEETING", "RESEARCH"]) {
+    for (const externalUrl of ["", "link-antigo-invalido"]) {
+      const form = createFormControl({
+        defaultValues: { ...internal, relatedType, externalUrl },
+        resolver: zodResolver(newsSchema),
+        shouldFocusError: false,
+      });
+      let submitted;
+      await form.handleSubmit((data) => {
+        submitted = mapNewsToCreateDto(data);
+      })();
+      assert.equal(submitted.externalUrl, null);
+      assert.equal(submitted.relatedType, relatedType);
+      assert.equal(submitted.relatedId, uuid);
+      assert.equal(mapNewsToForm(submitted).relatedType, relatedType);
+    }
   }
 });
 
@@ -233,6 +236,7 @@ test("each relationship category loads actual IDs and titles from its own collec
     ["BOARD", "boards"],
     ["JURY", "juries"],
     ["MEETING", "meetings"],
+    ["RESEARCH", "research"],
     ["RESEARCH_INSTRUMENT", "researchInstruments"],
     ["THEMATIC", "thematics"],
   ]) {
@@ -283,6 +287,25 @@ test("news can link both internal and external meetings without a visibility fil
   assert.deepEqual(await loadNewsRelatedOptions("MEETING"), [
     { value: "interno", label: "Encontro — Evento do grupo (interno)" },
     { value: "externo", label: "Seminário — Evento convidado (externo)" },
+  ]);
+});
+
+test("documentary screenings are available as linked news destinations", async (context) => {
+  context.mock.method(api, "get", async () => ({
+    data: [
+      {
+        id: uuid,
+        title: "Cinema e história",
+        type: "DOCUMENTARY",
+        isInternal: true,
+      },
+    ],
+  }));
+  assert.deepEqual(await loadNewsRelatedOptions("MEETING"), [
+    {
+      value: uuid,
+      label: "Mostra de documentários — Cinema e história (interno)",
+    },
   ]);
 });
 

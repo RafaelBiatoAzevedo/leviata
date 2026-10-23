@@ -1,16 +1,21 @@
 import { Link, useParams } from "react-router-dom";
+import { FiArrowUpRight, FiExternalLink, FiFileText } from "react-icons/fi";
 import type { NewsResponseDto } from "../../admin/dtos/news/NewsResponseDto";
 import { newsCategoryLabels } from "../../admin/types/TNewsCategory";
 import { newsRelatedTypeLabels } from "../../admin/types/TNewsRelatedType";
-import { formatDateLong } from "../../admin/utils/formatDate";
 import { usePublicRecord } from "../../hooks/usePublicData";
 import { SectionHeader } from "../../components/SectionHeader";
 import { ParagraphText } from "../../components/ParagraphText";
 import { PublicDataState } from "../../components/PublicDataState";
+import { ImageFrame } from "../../components/ImageFrame";
+import { YearBadge } from "../../components/YearBadge";
+import { HistoryDivider } from "../../components/HistotyDivider";
 import {
+  AccessLinks,
+  AccessSection,
   Container,
   Content,
-  Cover,
+  Header,
   Links,
   Status,
 } from "../../components/GalleryDetails/styles";
@@ -36,21 +41,19 @@ export function NewsDetails() {
     );
   const external = timelineExternalUrl(data.externalUrl);
   const related = newsRelatedPath(data.relatedType, data.relatedId);
-  const date = Number.isFinite(new Date(data.date).getTime())
-    ? formatDateLong(data.date)
-    : "";
   return (
     <Container>
       <Content>
-        <SectionHeader
-          center
-          title={data.title}
-          subtitle={[newsCategoryLabels[data.category], date]
-            .filter(Boolean)
-            .join(" · ")}
-        />
+        <Header>
+          <SectionHeader
+            center
+            title={data.title}
+            subtitle={newsCategoryLabels[data.category]}
+          />
+          <YearBadge date={data.date} />
+        </Header>
         {data.coverUrl && (
-          <Cover
+          <ImageFrame
             src={data.coverUrl}
             alt={data.title}
             onError={(event) => {
@@ -59,19 +62,35 @@ export function NewsDetails() {
           />
         )}
         {data.description?.trim() && <ParagraphText text={data.description} />}
+        {(external || related) && (
+          <>
+            <HistoryDivider />
+            <AccessSection>
+              <SectionHeader as="h2" small title="Acessos e materiais" />
+              <AccessLinks>
+                {external && (
+                  <a href={external} target="_blank" rel="noopener noreferrer">
+                    <FiExternalLink aria-hidden="true" />
+                    <span>Acessar fonte original</span>
+                    <FiArrowUpRight aria-hidden="true" />
+                  </a>
+                )}
+                {related && (
+                  <Link to={related}>
+                    <FiFileText aria-hidden="true" />
+                    <span>
+                      {data.relatedType === "PUBLICATION"
+                        ? "Ver publicação"
+                        : `Ver conteúdo relacionado: ${data.relatedType ? newsRelatedTypeLabels[data.relatedType] : ""}`}
+                    </span>
+                    <FiArrowUpRight aria-hidden="true" />
+                  </Link>
+                )}
+              </AccessLinks>
+            </AccessSection>
+          </>
+        )}
         <Links>
-          {external && (
-            <a href={external} target="_blank" rel="noopener noreferrer">
-              Acessar fonte original
-            </a>
-          )}
-          {related && (
-            <Link to={related}>
-              {data.relatedType === "PUBLICATION"
-                ? "Ver publicação"
-                : `Ver conteúdo relacionado: ${data.relatedType ? newsRelatedTypeLabels[data.relatedType] : ""}`}
-            </Link>
-          )}
           <Link to="/noticias">Voltar às notícias</Link>
         </Links>
       </Content>

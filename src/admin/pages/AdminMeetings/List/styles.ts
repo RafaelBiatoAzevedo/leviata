@@ -50,6 +50,11 @@ export const Filters = styled.div`
 
   gap: 1rem;
 
+  > * {
+    flex: 1 1 200px;
+    min-width: 0;
+  }
+
   > :last-child {
     flex: 0 1 220px;
   }

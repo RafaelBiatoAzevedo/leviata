@@ -195,6 +195,7 @@ const {
   MeetingsAndSeminars,
 } = require("../src/pages/MeetingsAndSeminars/index.tsx");
 const { Seminars } = require("../src/pages/Seminars/index.tsx");
+const { MeetingAgenda } = require("../src/pages/MeetingAgenda/index.tsx");
 const { Home } = require("../src/pages/Home/index.tsx");
 const { Researchers } = require("../src/pages/ Researchers/index.tsx");
 const { Publications } = load("../src/pages/ Publications/index.tsx", {
@@ -822,8 +823,16 @@ test("portal meeting cards and seminar timelines only list internal events", () 
   assert.ok(!timeline.includes("Evento encontro-interno"));
   assert.ok(!timeline.includes("Evento seminario-externo"));
   assert.deepEqual(requests, [
-    { resource: "meetings", query: { isInternal: "true" } },
-    { resource: "meetings", query: { isInternal: "true" } },
+    {
+      resource: "meetings",
+      query: {
+        type: undefined,
+        isInternal: "true",
+        sortBy: "date",
+        sortOrder: "desc",
+      },
+    },
+    { resource: "meetings", query: { type: "SEMINAR", isInternal: "true" } },
   ]);
 
   lists.meetings = lists.meetings.filter((event) => !event.isInternal);
@@ -831,6 +840,72 @@ test("portal meeting cards and seminar timelines only list internal events", () 
     render(MeetingsAndSeminars).includes("Nenhum encontro disponível."),
   );
   assert.ok(!render(Seminars).includes("Evento seminario-externo"));
+});
+
+test("each event category has its own cards and agenda without mixing types or external records", () => {
+  const types = [
+    ["MEETING", "encontros", "Próximos encontros", "Encontros realizados"],
+    ["SEMINAR", "seminarios", "Próximos seminários", "Seminários realizados"],
+    [
+      "DOCUMENTARY",
+      "mostra-de-documentarios",
+      "Próximas mostras",
+      "Mostras realizadas",
+    ],
+  ];
+  for (const [type, path, upcomingTitle, pastTitle] of types) {
+    reset();
+    lists.meetings = types.flatMap(([eventType]) => [
+      {
+        id: `${eventType}-past`,
+        slug: `${eventType}-past`,
+        title: `Registro ${eventType} passado`,
+        type: eventType,
+        isInternal: true,
+        date: "2000-01-01",
+        speakers: [],
+      },
+      {
+        id: `${eventType}-upcoming`,
+        slug: `${eventType}-upcoming`,
+        title: `Registro ${eventType} futuro`,
+        type: eventType,
+        isInternal: true,
+        date: "2099-01-01",
+        speakers: [],
+      },
+      {
+        id: `${eventType}-external`,
+        title: `Registro ${eventType} externo`,
+        type: eventType,
+        isInternal: false,
+        date: "2099-01-01",
+        speakers: [],
+      },
+    ]);
+    const cards = render(MeetingsAndSeminars, { type });
+    const timeline = render(MeetingAgenda, { type });
+    for (const html of [cards, timeline]) {
+      assert.ok(html.includes(`Registro ${type} passado`));
+      assert.ok(html.includes(`Registro ${type} futuro`));
+      assert.ok(html.includes(`href="/atividades/${path}/${type}-past"`));
+      assert.ok(!html.includes(`Registro ${type} externo`));
+      for (const [other] of types.filter(([other]) => other !== type))
+        assert.ok(!html.includes(`Registro ${other}`));
+    }
+    assert.ok(timeline.includes(upcomingTitle));
+    assert.ok(timeline.includes(pastTitle));
+    assert.deepEqual(requests, [
+      {
+        resource: "meetings",
+        query: { type, isInternal: "true", sortBy: "date", sortOrder: "desc" },
+      },
+      { resource: "meetings", query: { type, isInternal: "true" } },
+    ]);
+    lists.meetings = [];
+    assert.ok(!render(MeetingsAndSeminars, { type }).includes("Registro "));
+    assert.ok(!render(MeetingAgenda, { type }).includes("Registro "));
+  }
 });
 
 test("external meetings remain accessible through linked news and their detail pages", () => {
@@ -880,6 +955,7 @@ test("internal news have a real detail view and valid related destinations", () 
   records.news = {
     title: "Notícia cadastrada",
     date: "2026-10-22",
+    coverUrl: "https://example.org/noticia.jpg",
     description: "Texto completo da notícia",
     category: "RESEARCH",
     isInternal: true,
@@ -889,7 +965,17 @@ test("internal news have a real detail view and valid related destinations", () 
   };
   const html = render(NewsDetails);
   assert.ok(html.includes("Texto completo da notícia"));
-  assert.ok(html.includes('href="https://example.org/fonte"'));
+  assert.ok(html.includes('aria-label="Ano: 2026"'));
+  assert.ok(!html.includes("22 de outubro de 2026"));
+  assert.ok(html.includes('src="https://example.org/noticia.jpg"'));
+  assert.equal((html.match(/❧/g) || []).length, 2);
+  assert.ok(html.includes("Acessos e materiais"));
+  assert.ok(html.includes("<span>Acessar fonte original</span>"));
+  assert.ok(
+    html.includes(
+      'href="https://example.org/fonte" target="_blank" rel="noopener noreferrer"',
+    ),
+  );
   assert.ok(html.includes(`href="/instrumentos/registro/${uuid}"`));
   const source = ts.createSourceFile(
     "routes.tsx",
@@ -915,6 +1001,7 @@ test("internal news have a real detail view and valid related destinations", () 
     "JURY",
     "MEETING",
     "PUBLICATION",
+    "RESEARCH",
     "RESEARCH_INSTRUMENT",
     "THEMATIC",
   ])
@@ -940,6 +1027,7 @@ test("internal news cards open their related portal records directly", () => {
     "JURY",
     "MEETING",
     "PUBLICATION",
+    "RESEARCH",
     "RESEARCH_INSTRUMENT",
     "THEMATIC",
   ]) {

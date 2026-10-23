@@ -19,4 +19,4 @@ export const Grid = styled.div`
   ${portalGrid}
 `;
 
-export { FeaturedLinkCard as InstrumentCard } from "../../components/LinkCard/FeaturedLinkCard";
+export { CompactLinkCard as InstrumentCard } from "../../components/LinkCard/FeaturedLinkCard";

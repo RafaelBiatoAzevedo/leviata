@@ -13,6 +13,7 @@ import { PersonProfile } from "../../components/PersonProfile";
 import { SectionHeader } from "../../components/SectionHeader";
 import { usePublicRecord } from "../../hooks/usePublicData";
 import { timelineDateLabel, timelineExternalUrl } from "../../utils/timeline";
+import { meetingDetailPath } from "../../utils/meetings";
 import {
   Body,
   Container,
@@ -141,7 +142,10 @@ export function PresentedWorkDetails() {
                   {meeting.description && <p>{meeting.description}</p>}
                   <ResourceLinks>
                     <Link
-                      to={`/atividades/encontros-e-seminarios/${meeting.type === "MEETING" ? "encontro" : "seminario"}/${encodeURIComponent(meeting.slug || meeting.id)}`}
+                      to={meetingDetailPath(
+                        meeting.type,
+                        meeting.slug || meeting.id,
+                      )}
                     >
                       Ver encontro
                       <FiArrowUpRight aria-hidden="true" />

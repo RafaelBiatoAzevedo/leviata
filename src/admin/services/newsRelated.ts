@@ -24,6 +24,7 @@ const resources = {
   BOARD: "boards",
   JURY: "juries",
   MEETING: "meetings",
+  RESEARCH: "research",
   RESEARCH_INSTRUMENT: "researchInstruments",
   THEMATIC: "thematics",
 } as const satisfies Record<

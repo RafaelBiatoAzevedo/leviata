@@ -25,6 +25,8 @@ export function newsRelatedPath(
       return `/atividades/encontros-e-seminarios/encontro/${id}`;
     case NewsRelatedType.PUBLICATION:
       return `/publicacoes?publicacao=${id}`;
+    case NewsRelatedType.RESEARCH:
+      return `/atividades/pesquisas/${id}`;
     case NewsRelatedType.RESEARCH_INSTRUMENT:
       return `/instrumentos/registro/${id}`;
     case NewsRelatedType.THEMATIC:

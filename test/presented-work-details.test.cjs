@@ -161,11 +161,7 @@ test("renders the presentation, its presenter, affiliation, meeting, materials a
     assert.ok(html.includes(`href="${fixture.authors[0][field]}"`), field);
   }
   assert.ok(html.includes('href="https://orcid.org/0000-0001-2345-678X"'));
-  assert.ok(
-    html.includes(
-      'href="/atividades/encontros-e-seminarios/seminario/encontro-cadastrado"',
-    ),
-  );
+  assert.ok(html.includes('href="/atividades/seminarios/encontro-cadastrado"'));
   assert.ok(html.includes(`src="${fixture.images[0].imageUrl}"`));
   assert.match(css, /max-width:\s*640px/);
 });

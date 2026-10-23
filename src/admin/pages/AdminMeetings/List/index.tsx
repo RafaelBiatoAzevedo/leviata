@@ -24,12 +24,17 @@ import { AdminTable } from "../../../components/AdminTable";
 import { AdminIconButton } from "../../../components/AdminIconButton";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
 import { formatDate } from "../../../utils/formatDate";
-import { meetingTypeLabels } from "../../../types/TMeetingType";
+import {
+  meetingTypeLabels,
+  type TMeetingType,
+} from "../../../types/TMeetingType";
+import { meetingTypeOptions } from "../../../utils/meetingTypes";
 import { AdminSelect } from "../../../components/AdminSelect";
 import { AdminBadge } from "../../../components/AdminBadge";
 
 export function AdminMeetings() {
   const [search, setSearch] = useState("");
+  const [type, setType] = useState<TMeetingType | "">("");
   const [visibility, setVisibility] = useState<"" | "true" | "false">("");
   const navigate = useNavigate();
 
@@ -42,6 +47,7 @@ export function AdminMeetings() {
     {
       search: search.trim() || undefined,
       isInternal: visibility || undefined,
+      type: type || undefined,
     },
   );
 
@@ -79,7 +85,7 @@ export function AdminMeetings() {
     <Container>
       <AdminPageHeader
         title="Encontros"
-        subtitle="Gerencie os encontros e seminários cadastrados."
+        subtitle="Gerencie encontros, seminários e mostras de documentários."
       >
         <AdminButton onClick={() => navigate("/admin/encontros/novo")}>
           <FiPlus />
@@ -88,6 +94,12 @@ export function AdminMeetings() {
       </AdminPageHeader>
 
       <Filters>
+        <AdminSelect
+          label="Tipo"
+          value={type}
+          onChange={(event) => setType(event.target.value as TMeetingType | "")}
+          options={[{ value: "", label: "Todos" }, ...meetingTypeOptions]}
+        />
         <AdminSearchBar
           value={search}
           onChange={(e) => setSearch(e.target.value)}

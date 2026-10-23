@@ -10,6 +10,7 @@ import { usePublicRecord } from "../../hooks/usePublicData";
 import type { GalleryResource } from "../../admin/services/gallery";
 import type { ImageResponseDto } from "../../admin/dtos/ImageResponseDto";
 import type { PersonResponseDto } from "../../admin/dtos/people/PersonResponseDto";
+import type { TMeetingType } from "../../admin/types/TMeetingType";
 import { Loading } from "../Loading";
 import { ParagraphText } from "../ParagraphText";
 import { SectionHeader } from "../SectionHeader";
@@ -32,6 +33,7 @@ import {
 
 interface GalleryRecord {
   title: string;
+  type?: TMeetingType;
   date?: string;
   coverUrl?: string | null;
   description?: string | null;
@@ -136,7 +138,15 @@ export function GalleryDetails({
             { title: "Integrantes da banca", people: data.members },
           ]
         : resource === "meetings"
-          ? [{ title: "Palestrantes", people: data.speakers }]
+          ? [
+              {
+                title:
+                  data.type === "DOCUMENTARY"
+                    ? "Participantes"
+                    : "Palestrantes",
+                people: data.speakers,
+              },
+            ]
           : [{ title: "Pesquisadores", people: data.people }];
 
   return (

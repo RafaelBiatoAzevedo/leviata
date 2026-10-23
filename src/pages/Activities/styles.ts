@@ -19,4 +19,4 @@ export const Grid = styled.div`
   ${portalGrid}
 `;
 
-export { FeaturedLinkCard as ActivityCard } from "../../components/LinkCard/FeaturedLinkCard";
+export { CompactLinkCard as ActivityCard } from "../../components/LinkCard/FeaturedLinkCard";

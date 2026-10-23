@@ -9,8 +9,8 @@ export const meetingSchema = z.object({
 
   title: z.string().min(1, "Informe o título."),
 
-  type: z.enum(["MEETING", "SEMINAR"], {
-    message: "Informe o tipo da reunião.",
+  type: z.enum(["MEETING", "SEMINAR", "DOCUMENTARY"], {
+    message: "Informe o tipo da atividade.",
   }),
 
   isInternal: z.boolean(),

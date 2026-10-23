@@ -256,10 +256,27 @@ test("every menu destination resolves to a registered portal route", () => {
     activities.children.some((link) => link.path === "/atividades/pesquisas"),
   );
   assert.ok(
-    activities.children.some(
+    !activities.children.some(
       (link) => link.path === "/atividades/apresentacoes-trabalhos",
     ),
   );
+});
+
+test("activities and agenda have one destination for each event category", () => {
+  for (const section of ["atividades", "agenda"]) {
+    const links = menus.find((menu) => menu.path === `/${section}`).children;
+    for (const [label, path] of [
+      ["Encontros", "encontros"],
+      ["Seminários", "seminarios"],
+      ["Mostra de documentários", "mostra-de-documentarios"],
+    ]) {
+      const matching = links.filter((link) => link.label === label);
+      assert.equal(matching.length, 1);
+      assert.equal(matching[0].path, `/${section}/${path}`);
+    }
+    assert.equal(new Set(links.map((link) => link.path)).size, links.length);
+    assert.ok(!links.some((link) => link.label === "Encontros e Seminários"));
+  }
 });
 
 test("desktop submenus support hover, toggle, blur and keyboard arrows, Home, End and Escape", (context) => {
