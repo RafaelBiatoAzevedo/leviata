@@ -21,6 +21,7 @@ interface PersonCardProps {
   imageUrl?: string;
   name: string;
   academicTitle?: AcademicTitleResponseDto;
+  showAcademicAbbreviation?: boolean;
   category?: TPersonCategory;
   institution?: InstitutionResponseDto;
   bio?: string;
@@ -31,6 +32,7 @@ export function PersonCard({
   imageUrl,
   name,
   academicTitle,
+  showAcademicAbbreviation = true,
   institution,
   bio,
   category,
@@ -40,7 +42,8 @@ export function PersonCard({
   const [isOverflowing, setIsOverflowing] = useState(false);
   const descriptionRef = useRef<HTMLParagraphElement>(null);
   const bioId = useId();
-  const displayName = `${academicTitle?.abbreviation ?? ""} ${name}`.trim();
+  const displayName =
+    `${showAcademicAbbreviation ? (academicTitle?.abbreviation ?? "") : ""} ${name}`.trim();
 
   useEffect(() => {
     const description = descriptionRef.current;

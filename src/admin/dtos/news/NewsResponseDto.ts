@@ -1,5 +1,6 @@
 import type { TNewsCategory } from "../../types/TNewsCategory";
 import type { TNewsRelatedType } from "../../types/TNewsRelatedType";
+import type { ImageResponseDto } from "../ImageResponseDto";
 
 export interface NewsResponseDto {
   id: string;
@@ -23,6 +24,8 @@ export interface NewsResponseDto {
   relatedType: TNewsRelatedType | null;
 
   relatedId: string | null;
+
+  images: ImageResponseDto[];
 
   createdAt: string;
 

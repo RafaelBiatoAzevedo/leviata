@@ -7,9 +7,11 @@ import { Avatar, Profile, ProfileHeader, ResourceLinks } from "./styles";
 export function PersonProfile({
   person,
   showBio = true,
+  showAcademicAbbreviation = true,
 }: {
   person: Partial<PersonResponseDto>;
   showBio?: boolean;
+  showAcademicAbbreviation?: boolean;
 }) {
   const name = person.name?.trim();
   if (!name) return null;
@@ -48,7 +50,11 @@ export function PersonProfile({
         </Avatar>
         <div>
           <h3>
-            {[person.honorificTitle, person.academicTitle?.abbreviation, name]
+            {[
+              person.honorificTitle,
+              showAcademicAbbreviation && person.academicTitle?.abbreviation,
+              name,
+            ]
               .filter(Boolean)
               .join(" ")}
           </h3>

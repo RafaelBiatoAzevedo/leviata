@@ -27,10 +27,12 @@ export function PublicPeople({
   people = [],
   title = "Pesquisadores",
   compact = false,
+  showAcademicAbbreviation = true,
 }: {
   people?: Partial<PersonResponseDto>[];
   title?: string;
   compact?: boolean;
+  showAcademicAbbreviation?: boolean;
 }) {
   const records = people.flatMap((person) =>
     person?.name?.trim() ? [{ ...person, name: person.name.trim() }] : [],
@@ -47,11 +49,13 @@ export function PublicPeople({
               key={person.id || `${person.name}-${index}`}
               person={person}
               showBio={false}
+              showAcademicAbbreviation={showAcademicAbbreviation}
             />
           ) : (
             <PersonCard
               key={person.id || `${person.name}-${index}`}
               {...person}
+              showAcademicAbbreviation={showAcademicAbbreviation}
             />
           ),
         )}

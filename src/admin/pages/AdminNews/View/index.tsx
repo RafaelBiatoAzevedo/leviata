@@ -25,7 +25,7 @@ import { formatDate } from "../../../utils/formatDate";
 import { newsRelatedTypeLabels } from "../../../types/TNewsRelatedType";
 import { AdminLoading } from "../../../components/AdminLoading";
 import { AdminBadge } from "../../../components/AdminBadge";
-import { newsRelatedPath } from "../../../../utils/news";
+import { ImageGallery } from "../../../../components/ImageGallery";
 
 export function NewsView() {
   const navigate = useNavigate();
@@ -95,16 +95,7 @@ export function NewsView() {
       </Header>
 
       <ContentWrapper>
-        <CoverWrapper
-          to={
-            news.isInternal
-              ? newsRelatedPath(news.relatedType, news.relatedId) ||
-                `/noticias/${encodeURIComponent(news.slug)}`
-              : news.externalUrl || `/noticias/${encodeURIComponent(news.slug)}`
-          }
-          target={news.isInternal ? undefined : "_blank"}
-          rel={news.isInternal ? undefined : "noopener noreferrer"}
-        >
+        <CoverWrapper to={`/noticias/${encodeURIComponent(news.slug)}`}>
           {!!news.coverUrl && <Cover src={news.coverUrl} />}
 
           <NewsTitle>{news.title}</NewsTitle>
@@ -165,18 +156,12 @@ export function NewsView() {
           <AdminDescriptionItem label="Descrição" value={news.description} />
         </AdminSection>
       </AdminFormCard>
-      {/* <AdminFormCard>
-        <AdminSection
-          title={`${news.authors.length > 1 ? "Autores" : "Autor"}`}
-        >
-          {news.authors.map((author, index) => (
-            <AdminDescriptionItem
-              key={index}
-              value={`${author.academicTitle!.abbreviation} ${author.name} - ${author.institution!.acronym}`}
-            />
-          ))}
+      <AdminFormCard>
+        <AdminSection title="Fotos">
+          <ImageGallery images={news.images} />
+          {!news.images?.length && <p>Nenhuma imagem adicionada.</p>}
         </AdminSection>
-      </AdminFormCard> */}
+      </AdminFormCard>
     </Container>
   );
 }

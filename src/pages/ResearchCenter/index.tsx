@@ -61,10 +61,12 @@ export function ResearchCenter() {
         <PublicPeople
           people={people.filter((person) => person.category !== "DISCENTE")}
           title="Pesquisadores"
+          showAcademicAbbreviation={false}
         />
         <PublicPeople
           people={people.filter((person) => person.category === "DISCENTE")}
           title="Discentes"
+          showAcademicAbbreviation={false}
         />
         {supports.length > 0 && (
           <>

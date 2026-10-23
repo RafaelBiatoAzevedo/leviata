@@ -36,6 +36,8 @@ import {
 } from "../../../services/newsRelated";
 import type { TNewsRelatedType } from "../../../types/TNewsRelatedType";
 import { AdminButton } from "../../../components/AdminButton";
+import { AdminGallery } from "../../../components/AdminGallery";
+import { useGallery } from "../../../hooks/useGallery";
 
 export function NewsForm() {
   const navigate = useNavigate();
@@ -43,6 +45,12 @@ export function NewsForm() {
 
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState("");
+  const [savedRecord, setSavedRecord] = useState<{
+    id: string;
+    slug: string;
+  } | null>(null);
+  const gallery = useGallery("news");
+  const loadGallery = gallery.load;
   const [relatedCatalog, setRelatedCatalog] = useState<{
     type: TNewsRelatedType | null;
     options: NewsRelatedOption[];
@@ -86,13 +94,15 @@ export function NewsForm() {
 
     const response = await newsService.getBySlug(slug);
     const formData = mapNewsToForm(response.data);
+    setSavedRecord({ id: response.data.id, slug: response.data.slug });
+    loadGallery(response.data.images);
 
     if (response.data.coverUrl) {
       setCoverPreview(response.data.coverUrl);
     }
 
     reset(formData);
-  }, [reset, slug]);
+  }, [reset, slug, loadGallery]);
 
   useEffect(() => {
     (async () => {
@@ -166,18 +176,21 @@ export function NewsForm() {
     }
 
     try {
+      if (isEdit && !savedRecord)
+        throw new Error("Aguarde o carregamento da notícia antes de salvar.");
       const dto = mapNewsToCreateDto(data);
+      const saved = savedRecord
+        ? await newsService.updateById(savedRecord.id, dto)
+        : await newsService.create(dto, coverFile ?? undefined);
+      setSavedRecord({ id: saved.data.id, slug: saved.data.slug });
+      await gallery.save(saved.data.id);
       if (isEdit) {
-        await newsService.updateBySlug(slug!, dto);
-
         showToast({
           title: "Notícia atualizada",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await newsService.create(dto, coverFile ?? undefined);
-
         showToast({
           title: "Notícia criada",
           description: "A notícia foi cadastrada com sucesso.",
@@ -209,8 +222,8 @@ export function NewsForm() {
   async function handleUploadCover(file: File | null) {
     if (!file) return;
 
-    if (isEdit) {
-      const response = await newsService.updateCover(slug!, file);
+    if (savedRecord) {
+      const response = await newsService.updateCover(savedRecord.slug, file);
 
       setCoverPreview(response.data.url);
 
@@ -381,6 +394,11 @@ export function NewsForm() {
             ></AdminTextarea>
           </AdminSection>
         </AdminFormCard>
+
+        <AdminGallery
+          gallery={gallery}
+          disabled={isSubmitting || (isEdit && !savedRecord)}
+        />
 
         <AdminError>{errors.root?.server?.message}</AdminError>
         <AdminFormActions isSubmitting={isSubmitting} />

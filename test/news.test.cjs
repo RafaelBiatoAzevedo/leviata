@@ -23,7 +23,7 @@ const {
   mapNewsToCreateDto,
   mapNewsToForm,
 } = require("../src/admin/mappers/news.mapper.ts");
-const api = { get() {}, post() {}, patch() {} };
+const api = { get() {}, post() {}, patch() {}, delete() {} };
 const apiFilename = require.resolve("../src/services/api.ts");
 require.cache[apiFilename] = {
   id: apiFilename,
@@ -35,6 +35,7 @@ const {
   loadNewsRelatedOptions,
 } = require("../src/admin/services/newsRelated.ts");
 const { newsService } = require("../src/admin/services/news.ts");
+const { createGalleryService } = require("../src/admin/services/gallery.ts");
 
 const valid = {
   title: "Notícia do grupo",
@@ -54,6 +55,41 @@ const internal = {
   relatedType: "MEETING",
   relatedId: uuid,
 };
+
+test("news gallery saves files, clears optional captions and removes photos using news routes", async (context) => {
+  const gallery = createGalleryService("news");
+  const file = new File(["image"], "foto.png", { type: "image/png" });
+  const calls = [];
+  context.mock.method(api, "post", async (path, data) => {
+    calls.push(path);
+    assert.equal(data.get("image").name, "foto.png");
+    assert.equal(data.get("title"), "");
+    assert.equal(data.get("description"), "Legenda");
+    return { data: { id: "photo-id" } };
+  });
+  context.mock.method(api, "patch", async (path, data) => {
+    calls.push(path);
+    assert.deepEqual(data, { title: null, description: null });
+    return { data: {} };
+  });
+  context.mock.method(api, "delete", async (path) => {
+    calls.push(path);
+  });
+  await gallery.upload("news-id", file, {
+    title: null,
+    description: "Legenda",
+  });
+  await gallery.update("news-id", "photo-id", {
+    title: null,
+    description: null,
+  });
+  await gallery.remove("news-id", "photo-id");
+  assert.deepEqual(calls, [
+    "/news/news-id/images",
+    "/news/news-id/images/photo-id",
+    "/news/news-id/images/photo-id",
+  ]);
+});
 
 test("blank links block saving and expose the required error under the link field", async () => {
   for (const externalUrl of ["", "   ", "\t\n"]) {

@@ -89,12 +89,6 @@ export const menus: NavigationSection[] = [
     Icon: FiActivity,
     children: [
       {
-        label: "Bancas",
-        path: "/agenda/bancas",
-        description: "Exames de qualificação e defesas.",
-        Icon: FiClipboard,
-      },
-      {
         label: "Pesquisas",
         path: "/atividades/pesquisas",
         description: "Projetos e registros de investigação.",
@@ -133,16 +127,16 @@ export const menus: NavigationSection[] = [
     Icon: FiCalendar,
     children: [
       {
-        label: "Encontros",
-        path: "/agenda/encontros",
-        description: "Próximos encontros e conversas já realizadas.",
-        Icon: FiVideo,
-      },
-      {
         label: "Bancas",
         path: "/agenda/bancas",
         description: "Exames de qualificação e defesas.",
         Icon: FiClipboard,
+      },
+      {
+        label: "Encontros",
+        path: "/agenda/encontros",
+        description: "Próximos encontros e conversas já realizadas.",
+        Icon: FiVideo,
       },
       {
         label: "Seminários",

@@ -17,5 +17,7 @@ export interface ImageResponseDto {
 
   presentedWorkId: string | null;
 
+  newsId: string | null;
+
   createdAt: string;
 }

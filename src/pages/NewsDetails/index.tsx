@@ -10,6 +10,7 @@ import { PublicDataState } from "../../components/PublicDataState";
 import { ImageFrame } from "../../components/ImageFrame";
 import { YearBadge } from "../../components/YearBadge";
 import { HistoryDivider } from "../../components/HistotyDivider";
+import { ImageGallery } from "../../components/ImageGallery";
 import {
   AccessLinks,
   AccessSection,
@@ -62,6 +63,13 @@ export function NewsDetails() {
           />
         )}
         {data.description?.trim() && <ParagraphText text={data.description} />}
+        {!!data.images?.length && (
+          <>
+            <HistoryDivider />
+            <SectionHeader as="h2" small title="Fotos" />
+            <ImageGallery images={data.images} />
+          </>
+        )}
         {(external || related) && (
           <>
             <HistoryDivider />

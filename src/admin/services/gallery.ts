@@ -6,6 +6,7 @@ export type GalleryResource =
   | "juries"
   | "meetings"
   | "presented-works"
+  | "news"
   | "research";
 export type GalleryCollection = "images" | "supports";
 

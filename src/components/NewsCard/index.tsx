@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FiArrowRight, FiArrowUpRight, FiFileText } from "react-icons/fi";
+import { FiArrowRight, FiFileText } from "react-icons/fi";
 import { formatDateLong } from "../../admin/utils/formatDate";
-import { newsRelatedPath } from "../../utils/news";
-import type { TNewsRelatedType } from "../../admin/types/TNewsRelatedType";
 import {
   newsCategoryLabels,
   type TNewsCategory,
@@ -28,24 +26,16 @@ import {
 } from "./styles";
 
 interface NewsCardProps {
-  externalUrl?: string | null;
   coverUrl?: string | null;
   category?: TNewsCategory;
   date: string;
   title: string;
   slug: string;
   description: string;
-  isInternal: boolean;
-  relatedType?: TNewsRelatedType | null;
-  relatedId?: string | null;
 }
 
 export function NewsCard({
   slug,
-  isInternal,
-  relatedType,
-  relatedId,
-  externalUrl,
   coverUrl,
   category,
   date,
@@ -54,10 +44,6 @@ export function NewsCard({
 }: NewsCardProps) {
   const [failedCoverUrl, setFailedCoverUrl] = useState<string | null>(null);
   const hasCover = !!coverUrl && coverUrl !== failedCoverUrl;
-  const hasDestination = isInternal || !!externalUrl;
-  const internalDestination =
-    newsRelatedPath(relatedType, relatedId) ||
-    `/noticias/${encodeURIComponent(slug)}`;
   const parsedDate = new Date(date);
   const hasDate = !Number.isNaN(parsedDate.getTime());
   const formattedDate = hasDate ? formatDateLong(date) : undefined;
@@ -77,13 +63,7 @@ export function NewsCard({
     : "";
 
   return (
-    <Container
-      as={isInternal ? Link : externalUrl ? "a" : "article"}
-      to={isInternal ? internalDestination : undefined}
-      href={!isInternal ? (externalUrl ?? undefined) : undefined}
-      target={!isInternal && externalUrl ? "_blank" : undefined}
-      rel={!isInternal && externalUrl ? "noopener noreferrer" : undefined}
-    >
+    <Container as={Link} to={`/noticias/${encodeURIComponent(slug)}`}>
       <Cover>
         <ImageFrame>
           {hasCover ? (
@@ -134,17 +114,15 @@ export function NewsCard({
 
         <Description>{description}</Description>
 
-        {hasDestination && (
-          <Footer>
-            <Source>{isInternal ? "No portal" : "Link externo"}</Source>
-            <ReadMore>
-              {isInternal ? "Ver detalhes" : "Acessar notícia"}
-              <LinkArrow aria-hidden="true">
-                {isInternal ? <FiArrowRight /> : <FiArrowUpRight />}
-              </LinkArrow>
-            </ReadMore>
-          </Footer>
-        )}
+        <Footer>
+          <Source>No portal</Source>
+          <ReadMore>
+            Ver detalhes
+            <LinkArrow aria-hidden="true">
+              <FiArrowRight />
+            </LinkArrow>
+          </ReadMore>
+        </Footer>
       </Content>
     </Container>
   );

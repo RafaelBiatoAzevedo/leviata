@@ -220,6 +220,19 @@ const { MeetingView } = load(
     react: { ...React, useState: () => [records.meetings || null, () => {}] },
   },
 );
+const { NewsView } = load("../src/admin/pages/AdminNews/View/index.tsx", {
+  react: {
+    ...React,
+    useState: (initial) => [
+      initial === null
+        ? records.news || null
+        : typeof initial === "boolean"
+          ? false
+          : initial,
+      () => {},
+    ],
+  },
+});
 
 function render(Component, props = {}, identifier = "registro-real") {
   return renderToStaticMarkup(
@@ -381,6 +394,11 @@ test("the research center uses registered content, people and galleries without 
   ])
     assert.ok(html.includes(value), value);
   assert.ok(!html.includes("Mariana de Oliveira Lima"));
+  assert.ok(
+    html.indexOf("Pesquisadora cadastrada") < html.indexOf("Discentes"),
+  );
+  assert.ok(html.indexOf("Discentes") < html.indexOf("Discente cadastrado"));
+  assert.ok(!html.includes("Dra."));
   assert.ok(!html.includes("Rafaela Cia Vieira"));
 });
 
@@ -667,6 +685,58 @@ test("meeting speakers and research participants use profile details without bio
     assert.ok(researchHtml.includes(`href="${speaker[field]}"`), field);
   assert.ok(!researchHtml.includes(speaker.bio));
   assert.ok(!researchHtml.includes("Ver biografia"));
+  assert.ok(!researchHtml.includes("Dra."));
+  assert.ok(researchHtml.includes("Profa."));
+});
+
+test("research details separate students below researchers using the same compact profiles", () => {
+  reset();
+  const student = person("student", "Ana Estudante", {
+    category: "DISCENTE",
+    bio: "Resumo que não aparece neste perfil compacto",
+    academicTitle: { abbreviation: "Grad.", name: "Graduanda" },
+    institution: { name: "Universidade da pesquisa", acronym: "UP" },
+    lattesUrl: "https://example.org/lattes-discente",
+  });
+  records.research = {
+    title: "Núcleo cadastrado",
+    images: [],
+    people: [
+      student,
+      person("researcher", "Maria Pesquisadora"),
+      person("student-2", "João Estudante", { category: "DISCENTE" }),
+    ],
+  };
+  const html = render(GalleryDetails, {
+    resource: "research",
+    label: "a pesquisa",
+  });
+  assert.ok(html.indexOf("Pesquisadores") < html.indexOf("Maria Pesquisadora"));
+  assert.ok(html.indexOf("Maria Pesquisadora") < html.indexOf("Discentes"));
+  assert.ok(html.indexOf("Discentes") < html.indexOf("Ana Estudante"));
+  assert.ok(html.indexOf("Ana Estudante") < html.indexOf("João Estudante"));
+  assert.ok(html.includes("Graduanda"));
+  assert.ok(!html.includes("Grad."));
+  assert.ok(!html.includes("Dra."));
+  assert.ok(html.includes("Universidade da pesquisa"));
+  assert.ok(html.includes('href="https://example.org/lattes-discente"'));
+  assert.ok(!html.includes(student.bio));
+  assert.ok(!html.includes("Ver biografia"));
+
+  records.research.people = [student];
+  const onlyStudents = render(GalleryDetails, {
+    resource: "research",
+    label: "a pesquisa",
+  });
+  assert.ok(onlyStudents.includes("Discentes"));
+  assert.ok(!onlyStudents.includes("Pesquisadores"));
+  records.research.people = [person("researcher", "Maria Pesquisadora")];
+  assert.ok(
+    !render(GalleryDetails, {
+      resource: "research",
+      label: "a pesquisa",
+    }).includes("Discentes"),
+  );
 });
 
 test("gallery photos show optional API captions below their images without empty caption cards", () => {
@@ -925,7 +995,9 @@ test("external meetings remain accessible through linked news and their detail p
       relatedId: id,
     },
   ];
-  assert.ok(render(News).includes(`href="${destination}"`));
+  assert.ok(render(News).includes('href="/noticias/noticia-evento-externo"'));
+  records.news = lists.news[0];
+  assert.ok(render(NewsDetails).includes(`href="${destination}"`));
   records.meetings = {
     id,
     title: "Evento externo vinculado",
@@ -947,6 +1019,66 @@ test("external meetings remain accessible through linked news and their detail p
   assert.ok(render(MeetingView).includes("Externo — acesso pelas notícias"));
   records.meetings.isInternal = true;
   assert.ok(render(MeetingView).includes("Interno — exibido nas listas"));
+});
+
+test("news gallery captions appear in portal and admin views, and photo cards open the news page", () => {
+  reset();
+  records.news = {
+    id: "news-id",
+    slug: "noticia-com-fotos",
+    title: "Notícia com fotos cadastradas",
+    date: "2026-10-23",
+    category: "EVENT",
+    isInternal: true,
+    relatedType: "MEETING",
+    relatedId: "550e8400-e29b-41d4-a716-446655440000",
+    externalUrl: "https://example.org/fonte",
+    description: "Texto da notícia",
+    images: [
+      {
+        id: "photo-1",
+        imageUrl: "https://example.org/foto-1.jpg",
+        title: "Mesa de debate",
+        description: "Participantes reunidos no evento.",
+      },
+      {
+        id: "photo-2",
+        imageUrl: "https://example.org/foto-2.jpg",
+        title: null,
+        description: null,
+      },
+    ],
+  };
+  for (const Component of [NewsDetails, NewsView]) {
+    const html = render(Component);
+    assert.ok(html.includes("Fotos"));
+    assert.ok(html.includes("swiper-wrapper"));
+    assert.ok(html.includes('src="https://example.org/foto-1.jpg"'));
+    assert.ok(html.includes('src="https://example.org/foto-2.jpg"'));
+    assert.ok(
+      html.indexOf('src="https://example.org/foto-1.jpg"') <
+        html.indexOf("Mesa de debate</"),
+    );
+    assert.ok(html.includes("Participantes reunidos no evento."));
+  }
+  const details = render(NewsDetails);
+  assert.ok(details.includes('href="https://example.org/fonte"'));
+  assert.ok(
+    details.includes(
+      'href="/atividades/encontros-e-seminarios/encontro/550e8400-e29b-41d4-a716-446655440000"',
+    ),
+  );
+  for (const isInternal of [true, false]) {
+    lists.news = [{ ...records.news, isInternal }];
+    for (const Component of [News, Home]) {
+      const html = render(Component);
+      assert.ok(html.includes('href="/noticias/noticia-com-fotos"'));
+      assert.ok(!html.includes('href="https://example.org/fonte"'));
+    }
+  }
+  records.news.images = [];
+  assert.ok(!render(NewsDetails).includes("swiper-wrapper"));
+  assert.ok(render(NewsView).includes("Nenhuma imagem adicionada."));
 });
 
 test("internal news have a real detail view and valid related destinations", () => {
@@ -1019,7 +1151,7 @@ test("internal news have a real detail view and valid related destinations", () 
   assert.equal(newsRelatedPath("PUBLICATION", ""), null);
 });
 
-test("internal news cards open their related portal records directly", () => {
+test("all news cards open their own portal details, where internal and external access links remain available", () => {
   reset();
   const uuid = "550e8400-e29b-41d4-a716-446655440000";
   for (const type of [
@@ -1044,18 +1176,36 @@ test("internal news cards open their related portal records directly", () => {
         relatedId: uuid,
       },
     ];
-    const html = render(News);
-    assert.ok(html.includes(`href="${newsRelatedPath(type, uuid)}"`), type);
-    assert.ok(!html.includes('href="/noticias/noticia-interna"'));
-    assert.ok(!html.includes('target="_blank"'));
+    for (const Component of [News, Home]) {
+      const html = render(Component);
+      assert.ok(html.includes('href="/noticias/noticia-interna"'));
+      assert.ok(!html.includes(`href="${newsRelatedPath(type, uuid)}"`), type);
+      assert.ok(!html.includes('target="_blank"'));
+    }
+    records.news = lists.news[0];
+    assert.ok(
+      render(NewsDetails).includes(`href="${newsRelatedPath(type, uuid)}"`),
+      type,
+    );
   }
   lists.news[0].relatedId = "registro-antigo-invalido";
   assert.ok(render(News).includes('href="/noticias/noticia-interna"'));
   lists.news[0].isInternal = false;
   lists.news[0].externalUrl = "https://example.org/noticia";
-  const external = render(News);
-  assert.ok(external.includes('href="https://example.org/noticia"'));
-  assert.ok(external.includes('target="_blank"'));
+  for (const Component of [News, Home]) {
+    const external = render(Component);
+    assert.ok(external.includes('href="/noticias/noticia-interna"'));
+    assert.ok(!external.includes('href="https://example.org/noticia"'));
+    assert.ok(!external.includes('target="_blank"'));
+  }
+  records.news = lists.news[0];
+  assert.ok(
+    render(NewsDetails).includes(
+      'href="https://example.org/noticia" target="_blank" rel="noopener noreferrer"',
+    ),
+  );
+  lists.news[0].externalUrl = null;
+  assert.ok(render(News).includes('href="/noticias/noticia-interna"'));
 });
 
 test("publication news opens the matching category and selected book, article or dossier", () => {
@@ -1180,7 +1330,7 @@ test("publication tabs retain descending years, put missing years last and keep 
   assert.ok(!html.includes("Artigo recente"));
 });
 
-test("the researchers page hides inactive national and international people while preserving display order", () => {
+test("the researchers page hides students and inactive people of every nationality while preserving display order", () => {
   reset();
   lists.people = [
     person("b", "Primeira ativa", {
@@ -1203,14 +1353,30 @@ test("the researchers page hides inactive national and international people whil
       nationality: { code: "PT" },
       isActive: false,
     }),
+    person("student-br", "Discente brasileira", {
+      nationality: { code: "BR" },
+      isActive: true,
+      category: "DISCENTE",
+    }),
+    person("student-pt", "Discente internacional", {
+      nationality: { code: "PT" },
+      isActive: true,
+      category: "DISCENTE",
+    }),
   ];
   const html = render(Researchers);
   assert.ok(html.indexOf("Primeira ativa") < html.indexOf("Segunda ativa"));
   assert.ok(html.includes("Pessoa internacional ativa"));
   assert.ok(!html.includes("Inativa brasileira"));
   assert.ok(!html.includes("Inativa internacional"));
+  assert.ok(!html.includes("Discente brasileira"));
+  assert.ok(!html.includes("Discente internacional"));
   assert.equal(requests[0].query.isActive, "true");
   assert.equal(requests[0].query.sortBy, "displayOrder");
+  lists.people = lists.people.filter(
+    (person) => person.category === "DISCENTE",
+  );
+  assert.ok(render(Researchers).includes("Nenhum registro disponível"));
 });
 
 test("API-only pages provide empty, loading and error states without fixed documents or people", () => {

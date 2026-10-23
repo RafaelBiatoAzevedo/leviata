@@ -11,6 +11,7 @@ import type { GalleryResource } from "../../admin/services/gallery";
 import type { ImageResponseDto } from "../../admin/dtos/ImageResponseDto";
 import type { PersonResponseDto } from "../../admin/dtos/people/PersonResponseDto";
 import type { TMeetingType } from "../../admin/types/TMeetingType";
+import { PersonCategory } from "../../admin/types/TPersonCategory";
 import { Loading } from "../Loading";
 import { ParagraphText } from "../ParagraphText";
 import { SectionHeader } from "../SectionHeader";
@@ -147,7 +148,22 @@ export function GalleryDetails({
                 people: data.speakers,
               },
             ]
-          : [{ title: "Pesquisadores", people: data.people }];
+          : resource === "research"
+            ? [
+                {
+                  title: "Pesquisadores",
+                  people: data.people?.filter(
+                    (person) => person.category !== PersonCategory.DISCENTE,
+                  ),
+                },
+                {
+                  title: "Discentes",
+                  people: data.people?.filter(
+                    (person) => person.category === PersonCategory.DISCENTE,
+                  ),
+                },
+              ]
+            : [{ title: "Pesquisadores", people: data.people }];
 
   return (
     <Container>
@@ -198,6 +214,7 @@ export function GalleryDetails({
             title={group.title}
             people={group.people}
             compact={resource === "meetings" || resource === "research"}
+            showAcademicAbbreviation={resource !== "research"}
           />
         ))}
         {resource !== "meetings" && links.length > 0 && (

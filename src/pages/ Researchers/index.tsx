@@ -5,6 +5,7 @@ import { Container, Content, Grid } from "./styles";
 import type { PersonResponseDto } from "../../admin/dtos/people/PersonResponseDto";
 import { usePublicList } from "../../hooks/usePublicData";
 import { PublicDataState } from "../../components/PublicDataState";
+import { PersonCategory } from "../../admin/types/TPersonCategory";
 
 export function Researchers() {
   const {
@@ -16,11 +17,14 @@ export function Researchers() {
     sortBy: "displayOrder",
     sortOrder: "asc",
   });
-  const activePeople = people.filter((person) => person.isActive === true);
-  const nationalsResearchers = activePeople.filter(
+  const activeResearchers = people.filter(
+    (person) =>
+      person.isActive === true && person.category !== PersonCategory.DISCENTE,
+  );
+  const nationalsResearchers = activeResearchers.filter(
     (person) => person.nationality?.code === "BR",
   );
-  const internatinalsResearchers = activePeople.filter(
+  const internatinalsResearchers = activeResearchers.filter(
     (person) => person.nationality?.code !== "BR",
   );
   return (
@@ -35,7 +39,7 @@ export function Researchers() {
         <PublicDataState
           loading={loading}
           error={error}
-          empty={!activePeople.length}
+          empty={!activeResearchers.length}
           label="os pesquisadores"
         />
         {!loading && (
