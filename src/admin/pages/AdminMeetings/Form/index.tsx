@@ -289,7 +289,7 @@ export function MeetingForm() {
                 />
 
                 <AdminDateInput
-                  label="Data da publicação"
+                  label="Data do encontro"
                   placeholder="02/10/2025"
                   required
                   {...register("date")}

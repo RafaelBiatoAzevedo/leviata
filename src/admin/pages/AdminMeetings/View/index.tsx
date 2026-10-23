@@ -1,5 +1,5 @@
 import { ImageGallery } from "../../../../components/ImageGallery";
-import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
+import { FiArrowLeft, FiArrowUpRight, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import {
   MeetingTitle,
@@ -9,7 +9,7 @@ import {
   CoverWrapper,
   Header,
   HeaderActions,
-  // Subtitle,
+  ExternalLink,
   Title,
 } from "./styles";
 import { useNavigate, useParams } from "react-router-dom";
@@ -24,6 +24,18 @@ import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
 import { AdminLoading } from "../../../components/AdminLoading";
 import { formatDate } from "../../../utils/formatDate";
 import { meetingTypeLabels } from "../../../types/TMeetingType";
+import { timelineExternalUrl } from "../../../../utils/timeline";
+
+function renderLink(value: string | null) {
+  const url = timelineExternalUrl(value);
+  if (!url) return value?.trim() || undefined;
+  return (
+    <ExternalLink href={url} target="_blank" rel="noopener noreferrer">
+      <span>{url}</span>
+      <FiArrowUpRight aria-hidden="true" />
+    </ExternalLink>
+  );
+}
 
 export function MeetingView() {
   const navigate = useNavigate();
@@ -58,6 +70,10 @@ export function MeetingView() {
   if (!meeting) {
     return <AdminLoading text="Carregando encontro..." />;
   }
+  const coverHref =
+    timelineExternalUrl(meeting.registrationUrl) ||
+    timelineExternalUrl(meeting.recordingUrl) ||
+    timelineExternalUrl(meeting.meetingUrl);
 
   return (
     <Container>
@@ -80,7 +96,11 @@ export function MeetingView() {
       </Header>
 
       <ContentWrapper>
-        <CoverWrapper to={meeting.registrationUrl!} target={"_blank"}>
+        <CoverWrapper
+          href={coverHref || undefined}
+          target={coverHref ? "_blank" : undefined}
+          rel={coverHref ? "noopener noreferrer" : undefined}
+        >
           {!!meeting.coverUrl && <Cover src={meeting.coverUrl} />}
 
           <MeetingTitle>{meeting.title}</MeetingTitle>
@@ -110,14 +130,18 @@ export function MeetingView() {
 
       <AdminFormCard>
         <AdminSection title="Links">
-          <AdminDescriptionList>
+          <AdminDescriptionList columns={1}>
+            <AdminDescriptionItem
+              label="Link de inscrições"
+              value={renderLink(meeting.registrationUrl)}
+            />
             <AdminDescriptionItem
               label="Link do conteúdo"
-              value={meeting.registrationUrl}
+              value={renderLink(meeting.recordingUrl)}
             />
             <AdminDescriptionItem
               label="Link da transmissão"
-              value={meeting.meetingUrl}
+              value={renderLink(meeting.meetingUrl)}
             />
           </AdminDescriptionList>
         </AdminSection>

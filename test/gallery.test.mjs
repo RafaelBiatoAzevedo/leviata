@@ -154,7 +154,7 @@ test("a deletion retry only processes unfinished removals", async () => {
   assert.deepEqual(calls, ["first", "second", "second"]);
 });
 
-test("editing meeting photos preserves the existing recording link", () => {
+test("editing a meeting loads its date in date-input format and preserves the recording link", () => {
   const form = mapMeetingToForm({
     title: "Evento",
     type: "MEETING",
@@ -162,7 +162,26 @@ test("editing meeting photos preserves the existing recording link", () => {
     recordingUrl: "https://example.com/recording",
     speakers: [],
   });
+  assert.equal(form.date, "2026-10-04");
   assert.equal(form.recordingUrl, "https://example.com/recording");
+});
+
+test("meeting date inputs preserve the UTC calendar day at year boundaries and accept an absent date", () => {
+  for (const [date, expected] of [
+    ["2026-01-01T00:00:00.000Z", "2026-01-01"],
+    ["2026-12-31T23:59:00.000Z", "2026-12-31"],
+    ["2026-10-23", "2026-10-23"],
+    [null, ""],
+  ]) {
+    const form = mapMeetingToForm({
+      title: "Encontro",
+      type: "MEETING",
+      date,
+      speakers: [],
+    });
+    assert.equal(form.date, expected);
+    if (expected) assert.match(form.date, /^\d{4}-\d{2}-\d{2}$/);
+  }
 });
 
 test("editing jury photos preserves the document independently of registration", () => {

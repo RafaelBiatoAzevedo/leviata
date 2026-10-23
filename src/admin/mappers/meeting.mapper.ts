@@ -9,7 +9,7 @@ export function mapMeetingToForm(meeting: MeetingResponseDto): MeetingFormData {
 
     description: meeting.description ?? "",
 
-    date: meeting.date ? new Date(meeting.date).toISOString().slice(0, 16) : "",
+    date: meeting.date ? new Date(meeting.date).toISOString().slice(0, 10) : "",
 
     location: meeting.location ?? "",
 

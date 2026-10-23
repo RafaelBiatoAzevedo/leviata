@@ -18,7 +18,8 @@
     "test:navigation": "node --test --test-isolation=none test/navigation.test.cjs",
     "test:users": "node --test --test-isolation=none test/users.test.mjs",
     "test:thematics": "node --test --test-isolation=none test/thematics.test.mjs",
-    "test:portal": "node --test --test-isolation=none test/portal-api.test.cjs"
+    "test:portal": "node --test --test-isolation=none test/portal-api.test.cjs",
+    "test:news": "node --test --test-isolation=none test/news.test.cjs"
   },
   "dependencies": {
     "@fontsource/cormorant-garamond": "^5.2.11",

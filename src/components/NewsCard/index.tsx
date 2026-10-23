@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowRight, FiArrowUpRight, FiFileText } from "react-icons/fi";
 import { formatDateLong } from "../../admin/utils/formatDate";
+import { newsRelatedPath } from "../../utils/news";
+import type { TNewsRelatedType } from "../../admin/types/TNewsRelatedType";
 import {
   newsCategoryLabels,
   type TNewsCategory,
@@ -34,11 +36,15 @@ interface NewsCardProps {
   slug: string;
   description: string;
   isInternal: boolean;
+  relatedType?: TNewsRelatedType | null;
+  relatedId?: string | null;
 }
 
 export function NewsCard({
   slug,
   isInternal,
+  relatedType,
+  relatedId,
   externalUrl,
   coverUrl,
   category,
@@ -49,6 +55,9 @@ export function NewsCard({
   const [failedCoverUrl, setFailedCoverUrl] = useState<string | null>(null);
   const hasCover = !!coverUrl && coverUrl !== failedCoverUrl;
   const hasDestination = isInternal || !!externalUrl;
+  const internalDestination =
+    newsRelatedPath(relatedType, relatedId) ||
+    `/noticias/${encodeURIComponent(slug)}`;
   const parsedDate = new Date(date);
   const hasDate = !Number.isNaN(parsedDate.getTime());
   const formattedDate = hasDate ? formatDateLong(date) : undefined;
@@ -70,7 +79,7 @@ export function NewsCard({
   return (
     <Container
       as={isInternal ? Link : externalUrl ? "a" : "article"}
-      to={isInternal ? `/noticias/${slug}` : undefined}
+      to={isInternal ? internalDestination : undefined}
       href={!isInternal ? (externalUrl ?? undefined) : undefined}
       target={!isInternal && externalUrl ? "_blank" : undefined}
       rel={!isInternal && externalUrl ? "noopener noreferrer" : undefined}
@@ -102,7 +111,9 @@ export function NewsCard({
           )}
         </ImageFrame>
 
-        <Category>{category ? newsCategoryLabels[category] : "Notícia"}</Category>
+        <Category>
+          {category ? newsCategoryLabels[category] : "Notícia"}
+        </Category>
 
         {hasDate && (
           <DateBadge aria-hidden="true">
@@ -114,7 +125,9 @@ export function NewsCard({
 
       <Content>
         {hasDate && (
-          <DateText dateTime={parsedDate.toISOString()}>{formattedDate}</DateText>
+          <DateText dateTime={parsedDate.toISOString()}>
+            {formattedDate}
+          </DateText>
         )}
 
         <Title title={title}>{title}</Title>
@@ -125,7 +138,7 @@ export function NewsCard({
           <Footer>
             <Source>{isInternal ? "No portal" : "Link externo"}</Source>
             <ReadMore>
-              {isInternal ? "Ler notícia" : "Acessar notícia"}
+              {isInternal ? "Ver detalhes" : "Acessar notícia"}
               <LinkArrow aria-hidden="true">
                 {isInternal ? <FiArrowRight /> : <FiArrowUpRight />}
               </LinkArrow>

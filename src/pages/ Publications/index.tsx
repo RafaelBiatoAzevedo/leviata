@@ -1,6 +1,7 @@
 import { useId, useRef, useState, type KeyboardEvent } from "react";
 import { FiBookOpen, FiFileText, FiLayers, FiMic } from "react-icons/fi";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useSearchParams } from "react-router-dom";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 
 import "swiper/css";
@@ -59,7 +60,22 @@ const publicationTabs = [
 type TabType = (typeof publicationTabs)[number]["id"];
 
 export function Publications() {
-  const [activeTab, setActiveTab] = useState<TabType>("books");
+  const [params] = useSearchParams();
+  const selectedPublicationId = params.get("publicacao");
+  return (
+    <PublicationContent
+      key={selectedPublicationId || "all"}
+      selectedPublicationId={selectedPublicationId}
+    />
+  );
+}
+
+function PublicationContent({
+  selectedPublicationId,
+}: {
+  selectedPublicationId: string | null;
+}) {
+  const [selectedTab, setActiveTab] = useState<TabType | null>(null);
   const tabGroupId = useId();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const panelId = `${tabGroupId}-panel`;
@@ -88,6 +104,26 @@ export function Publications() {
   const dossiers = orderedArticles.filter(
     (article) => article.type === ArticleType.DOSSIER,
   );
+  const matchesSelection = (record: { id: string; slug: string }) =>
+    !!selectedPublicationId &&
+    (record.id === selectedPublicationId ||
+      record.slug === selectedPublicationId);
+  const linkedArticle = orderedArticles.find(matchesSelection);
+  const activeTab =
+    selectedTab ||
+    (linkedArticle
+      ? linkedArticle.type === ArticleType.DOSSIER
+        ? "dossiers"
+        : "articles"
+      : "books");
+  const missingSelection =
+    selectedPublicationId &&
+    !loadingBooks &&
+    !loadingArticles &&
+    !booksError &&
+    !articlesError &&
+    !books.some(matchesSelection) &&
+    !linkedArticle;
 
   function handleTabKeyDown(
     event: KeyboardEvent<HTMLButtonElement>,
@@ -125,6 +161,11 @@ export function Publications() {
           title="Publicações"
           subtitle="Explore as produções acadêmicas desenvolvidas pelo grupo, reunindo livros, artigos, apresentações de trabalho e dossiês relacionados às pesquisas sobre Estado Moderno e escravidão."
         />
+        {missingSelection && (
+          <p role="status">
+            A publicação relacionada não está mais disponível.
+          </p>
+        )}
 
         <Tabs role="tablist" aria-label="Categorias de publicações">
           {publicationTabs.map(({ id, label, description, Icon }, index) => (
@@ -175,6 +216,7 @@ export function Publications() {
           {activeTab === "books" && books.length > 0 && (
             <Carousel>
               <Swiper
+                initialSlide={Math.max(0, books.findIndex(matchesSelection))}
                 modules={[Autoplay, Pagination, Navigation]}
                 slidesPerView={"auto"}
                 spaceBetween={50}
@@ -190,6 +232,7 @@ export function Publications() {
                 {books.map((book) => (
                   <SwiperSlide
                     key={book.id}
+                    aria-current={matchesSelection(book) ? "true" : undefined}
                     style={{
                       width: "var(--book-card-width, 290px)",
                       height: "auto",
@@ -215,6 +258,7 @@ export function Publications() {
           {activeTab === "articles" && articles.length > 0 && (
             <Carousel>
               <Swiper
+                initialSlide={Math.max(0, articles.findIndex(matchesSelection))}
                 modules={[Navigation, Pagination]}
                 slidesPerView={"auto"}
                 rewind
@@ -227,6 +271,9 @@ export function Publications() {
                 {articles.map((article) => (
                   <SwiperSlide
                     key={article.id}
+                    aria-current={
+                      matchesSelection(article) ? "true" : undefined
+                    }
                     style={{
                       width: "340px",
                       height: "auto",
@@ -258,6 +305,7 @@ export function Publications() {
           {activeTab === "dossiers" && dossiers.length > 0 && (
             <Carousel>
               <Swiper
+                initialSlide={Math.max(0, dossiers.findIndex(matchesSelection))}
                 modules={[Navigation, Pagination]}
                 slidesPerView={"auto"}
                 spaceBetween={50}
@@ -270,6 +318,9 @@ export function Publications() {
                 {dossiers.map((dossier) => (
                   <SwiperSlide
                     key={dossier.id}
+                    aria-current={
+                      matchesSelection(dossier) ? "true" : undefined
+                    }
                     style={{
                       width: "340px",
                       height: "auto",

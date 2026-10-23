@@ -209,6 +209,12 @@ const { ThematicDetails } = load("../src/pages/ThematicDetails/index.tsx", {
     ],
   },
 });
+const { MeetingView } = load(
+  "../src/admin/pages/AdminMeetings/View/index.tsx",
+  {
+    react: { ...React, useState: () => [records.meetings || null, () => {}] },
+  },
+);
 
 function render(Component, props = {}, identifier = "registro-real") {
   return renderToStaticMarkup(
@@ -587,8 +593,193 @@ test("gallery details expose researchers, speakers, jury roles and board partici
     const html = render(GalleryDetails, { resource, label: "o registro" });
     for (const value of Object.values(relations).flat())
       assert.ok(html.includes(value.name), value.name);
-    if (resource !== "research") assert.ok(html.includes("22/10/2026"));
+    if (resource === "meetings") {
+      assert.ok(html.includes('aria-label="Ano: 2026"'));
+      assert.ok(!html.includes("22/10/2026"));
+    } else if (resource !== "research") assert.ok(html.includes("22/10/2026"));
   }
+});
+
+test("meeting speakers use the presentation profile details without biographies", () => {
+  reset();
+  const speaker = person("speaker", "Maria Palestrante", {
+    honorificTitle: "Profa.",
+    academicTitle: { abbreviation: "Dra.", name: "Doutora" },
+    institution: { name: "Universidade cadastrada", acronym: "UC" },
+    imageUrl: "https://example.org/palestrante.jpg",
+    bio: "Biografia longa que não deve aparecer no encontro.",
+    lattesUrl: "https://example.org/lattes",
+    website: "https://example.org/site",
+    linkedinUrl: "https://example.org/linkedin",
+    orcid: "0000-0001-2345-678X",
+  });
+  records.meetings = {
+    title: "Encontro cadastrado",
+    images: [],
+    speakers: [speaker, { id: "second", name: "João Palestrante" }],
+  };
+  const html = render(GalleryDetails, {
+    resource: "meetings",
+    label: "o encontro",
+  });
+  for (const value of [
+    "Palestrantes",
+    "Maria Palestrante",
+    "João Palestrante",
+    "Profa.",
+    "Dra.",
+    "Doutora",
+    "Universidade cadastrada",
+    "Pesquisador",
+  ])
+    assert.ok(html.includes(value), value);
+  assert.ok(html.includes('src="https://example.org/palestrante.jpg"'));
+  for (const field of ["lattesUrl", "website", "linkedinUrl"])
+    assert.ok(html.includes(`href="${speaker[field]}"`), field);
+  assert.ok(html.includes('href="https://orcid.org/0000-0001-2345-678X"'));
+  assert.ok(!html.includes(speaker.bio));
+  assert.ok(!html.includes("Ver biografia"));
+  assert.ok(
+    html.indexOf("Maria Palestrante") < html.indexOf("João Palestrante"),
+  );
+  records.research = {
+    title: "Pesquisa cadastrada",
+    images: [],
+    people: [speaker],
+  };
+  assert.ok(
+    render(GalleryDetails, {
+      resource: "research",
+      label: "a pesquisa",
+    }).includes(speaker.bio),
+  );
+});
+
+test("gallery photos show optional API captions below their images without empty caption cards", () => {
+  reset();
+  records.meetings = {
+    title: "Encontro com fotos",
+    speakers: [],
+    images: [
+      {
+        id: "captioned",
+        imageUrl: "https://example.org/foto-legendada.jpg",
+        title: "Registro do encontro",
+        description: "Legenda do encontro cadastrada",
+      },
+      {
+        id: "uncaptioned",
+        imageUrl: "https://example.org/foto-sem-legenda.jpg",
+        title: null,
+        description: null,
+      },
+      {
+        id: "blank-caption",
+        imageUrl: "https://example.org/foto-legenda-vazia.jpg",
+        title: " ",
+        description: "\n ",
+      },
+    ],
+  };
+  const html = render(GalleryDetails, {
+    resource: "meetings",
+    label: "o encontro",
+  });
+  assert.equal((html.match(/<figure\b/g) || []).length, 3);
+  assert.equal((html.match(/<figcaption\b/g) || []).length, 1);
+  assert.ok(
+    html.indexOf('src="https://example.org/foto-legendada.jpg"') <
+      html.indexOf("Legenda do encontro cadastrada"),
+  );
+  assert.ok(html.includes("Registro do encontro"));
+  assert.ok(html.includes('src="https://example.org/foto-sem-legenda.jpg"'));
+  assert.ok(html.includes('src="https://example.org/foto-legenda-vazia.jpg"'));
+});
+
+test("meeting access links are visible before speakers and only available URLs become actions", () => {
+  reset();
+  records.meetings = {
+    title: "Encontro com materiais",
+    speakers: [person("p", "Palestrante cadastrado")],
+    images: [],
+    registrationUrl: "https://example.org/inscricoes",
+    recordingUrl: "https://example.org/conteudo",
+    meetingUrl: "https://example.org/transmissao",
+  };
+  const html = render(GalleryDetails, {
+    resource: "meetings",
+    label: "o encontro",
+  });
+  assert.ok(html.indexOf("Acessos e materiais") < html.indexOf("Palestrantes"));
+  for (const [field, label] of [
+    ["registrationUrl", "Inscrições"],
+    ["recordingUrl", "Acessar conteúdo"],
+    ["meetingUrl", "Acessar transmissão"],
+  ]) {
+    assert.ok(
+      html.includes(
+        `href="${records.meetings[field]}" target="_blank" rel="noopener noreferrer"`,
+      ),
+      field,
+    );
+    assert.ok(html.includes(label), label);
+  }
+  records.meetings.registrationUrl = null;
+  records.meetings.recordingUrl = "";
+  records.meetings.meetingUrl = "javascript:alert(1)";
+  const empty = render(GalleryDetails, {
+    resource: "meetings",
+    label: "o encontro",
+  });
+  assert.ok(!empty.includes("Acessos e materiais"));
+  assert.ok(!empty.includes("javascript:"));
+  records.meetings.recordingUrl = "https://example.org/conteudo";
+  const oneLink = render(GalleryDetails, {
+    resource: "meetings",
+    label: "o encontro",
+  });
+  assert.ok(oneLink.includes("Acessar conteúdo"));
+  assert.ok(!oneLink.includes("Acessar transmissão"));
+});
+
+test("the admin meeting view pairs each link with its saved field and omits absent destinations", () => {
+  reset();
+  records.meetings = {
+    title: "Encontro cadastrado",
+    slug: "encontro-cadastrado",
+    date: "2026-10-23",
+    type: "MEETING",
+    speakers: [],
+    images: [],
+    registrationUrl: "https://example.org/inscricao",
+    recordingUrl: "https://example.org/conteudo",
+    meetingUrl: "https://example.org/transmissao",
+  };
+  const html = render(MeetingView);
+  for (const [field, label] of [
+    ["registrationUrl", "Link de inscrições"],
+    ["recordingUrl", "Link do conteúdo"],
+    ["meetingUrl", "Link da transmissão"],
+  ]) {
+    const value = html.indexOf(
+      `href="${records.meetings[field]}"`,
+      html.indexOf(label),
+    );
+    assert.ok(value > html.indexOf(label), label);
+    assert.ok(
+      html.includes(
+        `href="${records.meetings[field]}" target="_blank" rel="noopener noreferrer"`,
+      ),
+      field,
+    );
+  }
+  records.meetings.registrationUrl = null;
+  records.meetings.recordingUrl = null;
+  records.meetings.meetingUrl = null;
+  const empty = render(MeetingView);
+  assert.ok(!empty.includes('target="_blank"'));
+  assert.ok(!empty.includes('href="#"'));
+  assert.ok(!empty.includes('href="null"'));
 });
 
 test("internal news have a real detail view and valid related destinations", () => {
@@ -636,11 +827,97 @@ test("internal news have a real detail view and valid related destinations", () 
     "THEMATIC",
   ])
     assert.ok(
-      paths.some((path) => matchPath(path, newsRelatedPath(type, uuid))),
+      paths.some((path) =>
+        matchPath(
+          path,
+          new URL(newsRelatedPath(type, uuid), "https://portal.example")
+            .pathname,
+        ),
+      ),
       type,
     );
   assert.equal(newsRelatedPath("MEETING", "MEETING"), null);
   assert.equal(newsRelatedPath("PUBLICATION", ""), null);
+});
+
+test("internal news cards open their related portal records directly", () => {
+  reset();
+  const uuid = "550e8400-e29b-41d4-a716-446655440000";
+  for (const type of [
+    "BOARD",
+    "JURY",
+    "MEETING",
+    "PUBLICATION",
+    "RESEARCH_INSTRUMENT",
+    "THEMATIC",
+  ]) {
+    lists.news = [
+      {
+        id: "internal-news",
+        title: "Notícia interna",
+        slug: "noticia-interna",
+        date: "2026-10-23",
+        isInternal: true,
+        externalUrl: null,
+        description: "Notícia sobre um cadastro do portal",
+        relatedType: type,
+        relatedId: uuid,
+      },
+    ];
+    const html = render(News);
+    assert.ok(html.includes(`href="${newsRelatedPath(type, uuid)}"`), type);
+    assert.ok(!html.includes('href="/noticias/noticia-interna"'));
+    assert.ok(!html.includes('target="_blank"'));
+  }
+  lists.news[0].relatedId = "registro-antigo-invalido";
+  assert.ok(render(News).includes('href="/noticias/noticia-interna"'));
+  lists.news[0].isInternal = false;
+  lists.news[0].externalUrl = "https://example.org/noticia";
+  const external = render(News);
+  assert.ok(external.includes('href="https://example.org/noticia"'));
+  assert.ok(external.includes('target="_blank"'));
+});
+
+test("publication news opens the matching category and selected book, article or dossier", () => {
+  const bookId = "550e8400-e29b-41d4-a716-446655440000";
+  const articleId = "550e8400-e29b-41d4-a716-446655440001";
+  const dossierId = "550e8400-e29b-41d4-a716-446655440002";
+  for (const [id, type, title] of [
+    [bookId, "books", "Livro vinculado"],
+    [articleId, "articles", "Artigo vinculado"],
+    [dossierId, "dossiers", "Dossiê vinculado"],
+  ]) {
+    reset();
+    activeTab = null;
+    lists.books = [
+      { id: "other-book", title: "Outro livro", year: 2026, authors: [] },
+      { id: bookId, title: "Livro vinculado", year: 2024, authors: [] },
+    ];
+    lists.articles = [
+      {
+        id: articleId,
+        title: "Artigo vinculado",
+        year: 2025,
+        type: "ARTICLE",
+        authors: [],
+      },
+      {
+        id: dossierId,
+        title: "Dossiê vinculado",
+        year: 2023,
+        type: "DOSSIER",
+        authors: [],
+      },
+    ];
+    const html = render(Publications, {}, `publicacoes?publicacao=${id}`);
+    assert.ok(html.includes(title));
+    assert.match(
+      html,
+      new RegExp(`id="[^"]*-tab-${type}"[^>]*aria-selected="true"`),
+    );
+    assert.ok(html.includes('aria-current="true"'));
+    assert.ok(!html.includes("não está mais disponível"));
+  }
 });
 
 test("home and news lists render records beyond the former ten-item API default", () => {

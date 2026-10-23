@@ -7,20 +7,24 @@ interface ImageCardProps {
 }
 
 export function ImageCard({ imageUrl, title, description }: ImageCardProps) {
+  const captionTitle = title?.trim();
+  const captionDescription = description?.trim();
   return (
     <Container>
       <Cover>
         <img
           src={imageUrl}
-          alt={title || description || "Foto da galeria"}
+          alt={captionTitle || captionDescription || "Foto da galeria"}
           loading="lazy"
         />
       </Cover>
 
-      {(!!title || !!description) && (
+      {(captionTitle || captionDescription) && (
         <Content>
-          {title && <Title>{title}</Title>}
-          {description && <Description>{description}</Description>}
+          {captionTitle && <Title>{captionTitle}</Title>}
+          {captionDescription && (
+            <Description>{captionDescription}</Description>
+          )}
         </Content>
       )}
     </Container>

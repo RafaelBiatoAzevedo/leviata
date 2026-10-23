@@ -68,7 +68,7 @@ export function NewsDetails() {
           {related && (
             <Link to={related}>
               {data.relatedType === "PUBLICATION"
-                ? "Ver publicações"
+                ? "Ver publicação"
                 : `Ver conteúdo relacionado: ${data.relatedType ? newsRelatedTypeLabels[data.relatedType] : ""}`}
             </Link>
           )}

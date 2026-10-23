@@ -1,5 +1,6 @@
 import type { NewsResponseDto } from "../dtos/news/NewsResponseDto";
 import type { NewsFormData } from "../validations/news.schema";
+import type { CreateNewsRequestDto } from "../dtos/news/CreateNewsRequestDto";
 
 export function mapNewsToForm(news: NewsResponseDto): NewsFormData {
   return {
@@ -13,18 +14,23 @@ export function mapNewsToForm(news: NewsResponseDto): NewsFormData {
 
     isInternal: news.isInternal,
 
-    externalUrl: news.externalUrl ?? "",
+    externalUrl: news.isInternal ? "" : (news.externalUrl ?? ""),
 
-    relatedType: news.relatedType ?? null,
+    relatedType: news.isInternal ? (news.relatedType ?? null) : null,
 
-    relatedId: news.relatedId ?? null,
+    relatedId: news.isInternal ? (news.relatedId ?? null) : null,
   };
 }
 
-export function mapNewsToCreateDto(data: NewsFormData) {
-  const dto = { ...data };
-
-  delete (dto as Partial<NewsFormData & { coverUrl: string }>).coverUrl;
-
-  return dto;
+export function mapNewsToCreateDto(data: NewsFormData): CreateNewsRequestDto {
+  return {
+    title: data.title,
+    description: data.description,
+    date: data.date,
+    category: data.category,
+    isInternal: data.isInternal,
+    externalUrl: data.isInternal ? null : data.externalUrl.trim(),
+    relatedType: data.isInternal ? data.relatedType || null : null,
+    relatedId: data.isInternal ? data.relatedId?.trim() || null : null,
+  };
 }

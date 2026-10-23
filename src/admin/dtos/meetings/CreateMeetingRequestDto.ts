@@ -13,6 +13,8 @@ export interface CreateMeetingRequestDto {
 
   registrationUrl?: string;
 
+  recordingUrl?: string;
+
   meetingUrl?: string;
 
   speakers: string[];

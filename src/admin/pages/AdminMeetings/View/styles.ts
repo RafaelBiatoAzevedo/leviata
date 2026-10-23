@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 export const Container = styled.div`
@@ -41,7 +40,7 @@ export const Title = styled.h1`
   color: ${({ theme }) => theme.colors.text};
 `;
 
-export const CoverWrapper = styled(Link)`
+export const CoverWrapper = styled.a`
   display: flex;
 
   flex-direction: column;
@@ -61,6 +60,35 @@ export const CoverWrapper = styled(Link)`
   border: 1px solid ${({ theme }) => theme.colors.border};
 
   transition: 2s ease;
+`;
+
+export const ExternalLink = styled.a`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-width: 0;
+  color: ${({ theme }) => theme.colors.primary};
+  text-decoration: none;
+
+  span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 3px;
+  }
 `;
 
 export const Cover = styled.img`

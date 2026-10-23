@@ -25,6 +25,7 @@ import { formatDate } from "../../../utils/formatDate";
 import { newsRelatedTypeLabels } from "../../../types/TNewsRelatedType";
 import { AdminLoading } from "../../../components/AdminLoading";
 import { AdminBadge } from "../../../components/AdminBadge";
+import { newsRelatedPath } from "../../../../utils/news";
 
 export function NewsView() {
   const navigate = useNavigate();
@@ -94,7 +95,16 @@ export function NewsView() {
       </Header>
 
       <ContentWrapper>
-        <CoverWrapper to={news.externalUrl!} target={"_blank"}>
+        <CoverWrapper
+          to={
+            news.isInternal
+              ? newsRelatedPath(news.relatedType, news.relatedId) ||
+                `/noticias/${encodeURIComponent(news.slug)}`
+              : news.externalUrl || `/noticias/${encodeURIComponent(news.slug)}`
+          }
+          target={news.isInternal ? undefined : "_blank"}
+          rel={news.isInternal ? undefined : "noopener noreferrer"}
+        >
           {!!news.coverUrl && <Cover src={news.coverUrl} />}
 
           <NewsTitle>{news.title}</NewsTitle>

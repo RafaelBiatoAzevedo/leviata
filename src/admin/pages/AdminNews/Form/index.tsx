@@ -7,7 +7,7 @@ import {
 } from "../../../validations/news.schema";
 import { newsDefaultValues } from "./defaultValues";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import { newsService } from "../../../services/news";
@@ -28,29 +28,58 @@ import { AdminDateInput } from "../../../components/AdminDateInput";
 import { AdminSwitch } from "../../../components/AdminSwitch";
 import { newsRelatedTypeOptions } from "../../../utils/newsRelatedType";
 import AdminFormActions from "../../../components/AdminFormActions";
+import { AdminError } from "../../../components/AdminError";
+import { newsErrorDetails } from "../../../utils/newsErrors";
+import {
+  loadNewsRelatedOptions,
+  type NewsRelatedOption,
+} from "../../../services/newsRelated";
+import type { TNewsRelatedType } from "../../../types/TNewsRelatedType";
+import { AdminButton } from "../../../components/AdminButton";
 
 export function NewsForm() {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  //const { showModal, updateModal } = useModal();
 
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState("");
+  const [relatedCatalog, setRelatedCatalog] = useState<{
+    type: TNewsRelatedType | null;
+    options: NewsRelatedOption[];
+    loading: boolean;
+    error: string;
+  }>({ type: null, options: [], loading: false, error: "" });
+  const [relatedRetry, setRelatedRetry] = useState(0);
 
   const { slug } = useParams();
 
   const isEdit = Boolean(slug);
 
   const {
+    control,
     register,
     handleSubmit,
     reset,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors, isSubmitting },
   } = useForm<NewsFormData>({
     resolver: zodResolver(newsSchema),
     defaultValues: newsDefaultValues,
   });
+  const [isInternal, relatedType, relatedId] = useWatch({
+    control,
+    name: ["isInternal", "relatedType", "relatedId"],
+  });
+  const relatedOptions =
+    relatedCatalog.type === relatedType ? relatedCatalog.options : [];
+  const relatedLoading =
+    !!isInternal &&
+    !!relatedType &&
+    (relatedCatalog.type !== relatedType || relatedCatalog.loading);
+  const relatedError =
+    relatedCatalog.type === relatedType ? relatedCatalog.error : "";
 
   const loadNews = useCallback(async () => {
     if (!slug) return;
@@ -65,49 +94,113 @@ export function NewsForm() {
     reset(formData);
   }, [reset, slug]);
 
-  const loadEventRelated = useCallback(async () => {
-    //load events, jury, meeting ....
-  }, []);
-
   useEffect(() => {
     (async () => {
-      await loadEventRelated();
-
-      if (isEdit) {
-        await loadNews();
-      }
+      if (isEdit) await loadNews();
     })();
-  }, [isEdit, loadNews, loadEventRelated]);
+  }, [isEdit, loadNews]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    async function loadRelated() {
+      if (!isInternal || !relatedType) {
+        setRelatedCatalog({
+          type: null,
+          options: [],
+          loading: false,
+          error: "",
+        });
+        return;
+      }
+      setRelatedCatalog({
+        type: relatedType,
+        options: [],
+        loading: true,
+        error: "",
+      });
+      try {
+        const options = await loadNewsRelatedOptions(
+          relatedType,
+          controller.signal,
+        );
+        if (!controller.signal.aborted)
+          setRelatedCatalog({
+            type: relatedType,
+            options,
+            loading: false,
+            error: "",
+          });
+      } catch {
+        if (!controller.signal.aborted)
+          setRelatedCatalog({
+            type: relatedType,
+            options: [],
+            loading: false,
+            error: "Não foi possível carregar os itens desta categoria.",
+          });
+      }
+    }
+    void loadRelated();
+    return () => controller.abort();
+  }, [isInternal, relatedType, relatedRetry]);
 
   async function onSubmit(data: NewsFormData) {
+    clearErrors("root.server");
+    if (
+      data.isInternal &&
+      (relatedLoading ||
+        relatedError ||
+        !relatedOptions.some((option) => option.value === data.relatedId))
+    ) {
+      setError(
+        "relatedId",
+        {
+          type: "validate",
+          message: relatedLoading
+            ? "Aguarde o carregamento dos itens."
+            : relatedError || "Selecione um item disponível nesta categoria.",
+        },
+        { shouldFocus: true },
+      );
+      return;
+    }
+
     try {
+      const dto = mapNewsToCreateDto(data);
       if (isEdit) {
-        await newsService.updateBySlug(slug!, data);
+        await newsService.updateBySlug(slug!, dto);
 
         showToast({
-          title: "Notícia atualizado",
+          title: "Notícia atualizada",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
-        await newsService.create(mapNewsToCreateDto(data), coverFile!);
+        await newsService.create(dto, coverFile ?? undefined);
 
         showToast({
           title: "Notícia criada",
-          description: "O notícia foi cadastrada com sucesso.",
+          description: "A notícia foi cadastrada com sucesso.",
           type: "success",
         });
       }
 
       navigate("/admin/noticias");
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Erro desconhecido";
+      const { message, fieldErrors } = newsErrorDetails(error);
+
+      fieldErrors.forEach(({ field, message }, index) => {
+        setError(
+          field,
+          { type: "server", message },
+          { shouldFocus: index === 0 },
+        );
+      });
+      setError("root.server", { type: "server", message });
 
       showToast({
         title: isEdit ? "Erro ao atualizar notícia" : "Erro ao criar notícia",
-        description:
-          message ?? "Não foi possível salvar os dados. Tente novamente.",
+        description: message,
         type: "danger",
       });
     }
@@ -144,7 +237,7 @@ export function NewsForm() {
         subtitle="Cadastre ou atualize os dados da notícia."
       />
 
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form noValidate onSubmit={handleSubmit(onSubmit)}>
         <NewsTopWrapper>
           <AdminFormGrid columns={1}>
             <AdminImageUpload
@@ -194,34 +287,88 @@ export function NewsForm() {
         </NewsTopWrapper>
 
         <AdminFormCard>
-          <AdminSection title="Relacionamento">
-            <AdminSwitch label="Interna" {...register("isInternal")} />
-
-            <AdminFormGrid>
-              <AdminSelect
-                label="Categoria"
-                options={newsRelatedTypeOptions}
-                required
-                error={errors.relatedType?.message}
-                {...register("relatedType")}
-              ></AdminSelect>
-
-              <AdminSelect
-                label="Relacionada com"
-                required
-                error={errors.relatedId?.message}
-                {...register("relatedId")}
-                options={newsRelatedTypeOptions}
-              ></AdminSelect>
-            </AdminFormGrid>
-
-            <AdminInput
-              label="Link"
-              placeholder="Url do notícia"
-              required
-              error={errors.externalUrl?.message}
-              {...register("externalUrl")}
+          <AdminSection title="Destino da notícia">
+            <AdminSwitch
+              label="Interna"
+              {...register("isInternal", {
+                onChange: () => {
+                  setValue("externalUrl", "");
+                  setValue("relatedType", null);
+                  setValue("relatedId", "");
+                  clearErrors(["externalUrl", "relatedType", "relatedId"]);
+                  clearErrors("root.server");
+                },
+              })}
             />
+
+            {isInternal ? (
+              <>
+                <AdminFormGrid>
+                  <AdminSelect
+                    id="news-related-type"
+                    label="Categoria"
+                    options={[
+                      { value: "", label: "Selecione uma categoria" },
+                      ...newsRelatedTypeOptions,
+                    ]}
+                    required
+                    error={errors.relatedType?.message}
+                    {...register("relatedType", {
+                      onChange: () => {
+                        setValue("relatedId", "", { shouldDirty: true });
+                        clearErrors(["relatedType", "relatedId"]);
+                        clearErrors("root.server");
+                      },
+                    })}
+                    value={relatedType ?? ""}
+                  ></AdminSelect>
+
+                  <AdminSelect
+                    label="Relacionada com"
+                    required
+                    disabled={!relatedType || relatedLoading || !!relatedError}
+                    error={errors.relatedId?.message || relatedError}
+                    {...register("relatedId")}
+                    value={relatedId ?? ""}
+                    options={[
+                      {
+                        value: "",
+                        label: !relatedType
+                          ? "Selecione a categoria primeiro"
+                          : relatedLoading
+                            ? "Carregando itens..."
+                            : relatedError
+                              ? "Itens indisponíveis"
+                              : !relatedOptions.length
+                                ? "Nenhum item cadastrado nesta categoria"
+                                : "Selecione o conteúdo relacionado",
+                      },
+                      ...relatedOptions,
+                    ]}
+                  ></AdminSelect>
+                </AdminFormGrid>
+                {relatedError && (
+                  <AdminButton
+                    type="button"
+                    variant="outline"
+                    onClick={() => setRelatedRetry((value) => value + 1)}
+                  >
+                    Tentar novamente
+                  </AdminButton>
+                )}
+              </>
+            ) : (
+              <AdminInput
+                label="Link"
+                type="url"
+                inputMode="url"
+                placeholder="https://exemplo.com/noticia"
+                required
+                aria-invalid={!!errors.externalUrl}
+                error={errors.externalUrl?.message}
+                {...register("externalUrl")}
+              />
+            )}
           </AdminSection>
         </AdminFormCard>
 
@@ -235,6 +382,7 @@ export function NewsForm() {
           </AdminSection>
         </AdminFormCard>
 
+        <AdminError>{errors.root?.server?.message}</AdminError>
         <AdminFormActions isSubmitting={isSubmitting} />
       </Form>
     </Container>

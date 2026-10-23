@@ -1,10 +1,11 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.figure`
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  margin: 0;
 
   overflow: hidden;
 
@@ -12,9 +13,9 @@ export const Container = styled.div`
 
   text-decoration: none;
 
-  background: ${({ theme }) => theme.colors.secondary};
+  background: ${({ theme }) => theme.colors.surface};
 
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid ${({ theme }) => theme.colors.primary}40;
 
   position: relative;
 
@@ -61,13 +62,15 @@ export const Container = styled.div`
 
 export const Cover = styled.div`
   width: 100%;
-  height: 400px;
+  aspect-ratio: 1;
+  flex-shrink: 0;
 
   overflow: hidden;
 
   background: ${({ theme }) => theme.colors.backgroundCard};
 
   img {
+    display: block;
     width: 100%;
     height: 100%;
 
@@ -77,7 +80,7 @@ export const Cover = styled.div`
   }
 `;
 
-export const Content = styled.div`
+export const Content = styled.figcaption`
   display: flex;
   flex-direction: column;
 
@@ -89,7 +92,9 @@ export const Content = styled.div`
 `;
 
 export const Description = styled.p`
+  margin: 0;
   color: ${({ theme }) => theme.colors.textSoft};
+  text-align: left;
 
   line-height: 1.6;
   white-space: pre-line;
@@ -99,7 +104,9 @@ export const Description = styled.p`
 `;
 
 export const Title = styled.h3`
+  margin: 0;
   color: ${({ theme }) => theme.colors.text};
+  text-align: center;
   font-family: ${({ theme }) => theme.fonts.title};
   font-size: 1.25rem;
   line-height: 1.4;

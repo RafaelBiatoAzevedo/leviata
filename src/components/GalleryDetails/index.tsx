@@ -1,4 +1,11 @@
 import { Link, useParams } from "react-router-dom";
+import {
+  FiArrowUpRight,
+  FiEdit3,
+  FiFileText,
+  FiPlayCircle,
+  FiVideo,
+} from "react-icons/fi";
 import { usePublicRecord } from "../../hooks/usePublicData";
 import type { GalleryResource } from "../../admin/services/gallery";
 import type { ImageResponseDto } from "../../admin/dtos/ImageResponseDto";
@@ -7,9 +14,21 @@ import { Loading } from "../Loading";
 import { ParagraphText } from "../ParagraphText";
 import { SectionHeader } from "../SectionHeader";
 import { ImageGallery } from "../ImageGallery";
+import { ImageFrame } from "../ImageFrame";
+import { HistoryDivider } from "../HistotyDivider";
 import { PublicPeople } from "../PublicPeople";
+import { YearBadge } from "../YearBadge";
 import { timelineExternalUrl } from "../../utils/timeline";
-import { Container, Content, Cover, Links, Status } from "./styles";
+import {
+  AccessLinks,
+  AccessSection,
+  Container,
+  Content,
+  Cover,
+  Header,
+  Links,
+  Status,
+} from "./styles";
 
 interface GalleryRecord {
   title: string;
@@ -72,15 +91,31 @@ export function GalleryDetails({
     dateOptions.hour = "2-digit";
     dateOptions.minute = "2-digit";
   }
+  const parsedDate = data.date ? new Date(data.date) : null;
+  const formattedDate =
+    parsedDate &&
+    Number.isFinite(parsedDate.getTime()) &&
+    resource !== "meetings"
+      ? new Intl.DateTimeFormat("pt-BR", dateOptions).format(parsedDate)
+      : undefined;
 
   const links = [
-    { label: "Inscrições", url: data.registrationUrl },
-    { label: "Gravação", url: data.recordingUrl },
-    { label: "Acessar reunião", url: data.meetingUrl },
-    { label: "Documento", url: data.documentUrl },
+    { label: "Inscrições", url: data.registrationUrl, Icon: FiEdit3 },
+    {
+      label: resource === "meetings" ? "Acessar conteúdo" : "Gravação",
+      url: data.recordingUrl,
+      Icon: FiPlayCircle,
+    },
+    {
+      label:
+        resource === "meetings" ? "Acessar transmissão" : "Acessar reunião",
+      url: data.meetingUrl,
+      Icon: FiVideo,
+    },
+    { label: "Documento", url: data.documentUrl, Icon: FiFileText },
   ].flatMap((link) => {
     const url = timelineExternalUrl(link.url);
-    return url ? [{ label: link.label, url }] : [];
+    return url ? [{ ...link, url }] : [];
   });
   const groups =
     resource === "juries"
@@ -107,30 +142,55 @@ export function GalleryDetails({
   return (
     <Container>
       <Content>
-        <SectionHeader
-          center
-          title={data.title}
-          subtitle={
-            data.date
-              ? new Intl.DateTimeFormat("pt-BR", dateOptions).format(
-                  new Date(data.date),
-                )
-              : undefined
-          }
-        />
-        {data.coverUrl && <Cover src={data.coverUrl} alt={data.title} />}
+        <Header>
+          <SectionHeader center title={data.title} subtitle={formattedDate} />
+          {resource === "meetings" && <YearBadge date={data.date} />}
+        </Header>
+        {data.coverUrl &&
+          (resource === "meetings" ? (
+            <ImageFrame src={data.coverUrl} alt={data.title} />
+          ) : (
+            <Cover src={data.coverUrl} alt={data.title} />
+          ))}
         {data.location && <p>{data.location}</p>}
         {(data.description || data.content) && (
           <ParagraphText text={data.description || data.content || ""} />
+        )}
+        {resource === "meetings" && links.length > 0 && (
+          <>
+            <HistoryDivider />
+            <AccessSection>
+              <SectionHeader as="h2" small title="Acessos e materiais" />
+              <AccessLinks>
+                {links.map(({ label, url, Icon }) => (
+                  <a
+                    key={label}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Icon aria-hidden="true" />
+                    <span>{label}</span>
+                    <FiArrowUpRight aria-hidden="true" />
+                  </a>
+                ))}
+              </AccessLinks>
+            </AccessSection>
+            {(data.speakers?.some((person) => person?.name?.trim()) ||
+              !!data.images?.length ||
+              !!data.supports?.length ||
+              !!data.presentedWorks?.length) && <HistoryDivider />}
+          </>
         )}
         {groups.map((group) => (
           <PublicPeople
             key={group.title}
             title={group.title}
             people={group.people}
+            compact={resource === "meetings"}
           />
         ))}
-        {links.length > 0 && (
+        {resource !== "meetings" && links.length > 0 && (
           <Links>
             {links.map((link) => (
               <a

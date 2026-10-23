@@ -4,25 +4,21 @@ import {
   FiArrowUpRight,
   FiCalendar,
   FiMapPin,
-  FiUser,
 } from "react-icons/fi";
 import type { PresentedWorkResponseDto } from "../../admin/dtos/presentedWorks/PresentedWorkResponseDto";
 import { meetingTypeLabels } from "../../admin/types/TMeetingType";
-import { personCategoryLabels } from "../../admin/types/TPersonCategory";
 import { ImageGallery } from "../../components/ImageGallery";
 import { Loading } from "../../components/Loading";
+import { PersonProfile } from "../../components/PersonProfile";
 import { SectionHeader } from "../../components/SectionHeader";
 import { usePublicRecord } from "../../hooks/usePublicData";
 import { timelineDateLabel, timelineExternalUrl } from "../../utils/timeline";
 import {
-  Avatar,
   Body,
   Container,
   Content,
   Details,
   Meeting,
-  Profile,
-  ProfileHeader,
   Profiles,
   RecordDates,
   ResourceLinks,
@@ -117,87 +113,12 @@ export function PresentedWorkDetails() {
             />
             {presenters.length === 0 && <p>Apresentadores não informados.</p>}
             <Profiles>
-              {presenters.map((person, index) => {
-                const orcid = person.orcid?.trim();
-                const profileLinks = [
-                  { label: "Currículo Lattes", url: person.lattesUrl },
-                  { label: "Site", url: person.website },
-                  { label: "LinkedIn", url: person.linkedinUrl },
-                  {
-                    label: "ORCID",
-                    url:
-                      orcid && /^\d{4}-\d{4}-\d{4}-\d{3}[\dX]$/i.test(orcid)
-                        ? `https://orcid.org/${orcid}`
-                        : orcid,
-                  },
-                ].flatMap((link) => {
-                  const href = timelineExternalUrl(link.url);
-                  return href ? [{ label: link.label, href }] : [];
-                });
-                return (
-                  <Profile key={person.id || `${person.name}-${index}`}>
-                    <ProfileHeader>
-                      <Avatar>
-                        <FiUser aria-hidden="true" />
-                        {person.imageUrl && (
-                          <img
-                            src={person.imageUrl}
-                            alt={`Foto de ${person.name}`}
-                            loading="lazy"
-                            onError={(event) => {
-                              event.currentTarget.hidden = true;
-                            }}
-                          />
-                        )}
-                      </Avatar>
-                      <div>
-                        <h3>
-                          {[
-                            person.honorificTitle,
-                            person.academicTitle?.abbreviation,
-                            person.name,
-                          ]
-                            .filter(Boolean)
-                            .join(" ")}
-                        </h3>
-                        {person.academicTitle?.name && (
-                          <p>{person.academicTitle.name}</p>
-                        )}
-                        {person.institution?.name && (
-                          <p>
-                            {person.institution.name}
-                            {person.institution.acronym &&
-                              ` (${person.institution.acronym})`}
-                          </p>
-                        )}
-                        {!person.institution?.name &&
-                          person.institution?.acronym && (
-                            <p>{person.institution.acronym}</p>
-                          )}
-                        {person.category && (
-                          <small>{personCategoryLabels[person.category]}</small>
-                        )}
-                      </div>
-                    </ProfileHeader>
-                    {person.bio?.trim() && <p>{person.bio}</p>}
-                    {profileLinks.length > 0 && (
-                      <ResourceLinks>
-                        {profileLinks.map((link) => (
-                          <a
-                            key={link.label}
-                            href={link.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {link.label}
-                            <FiArrowUpRight aria-hidden="true" />
-                          </a>
-                        ))}
-                      </ResourceLinks>
-                    )}
-                  </Profile>
-                );
-              })}
+              {presenters.map((person, index) => (
+                <PersonProfile
+                  key={person.id || `${person.name}-${index}`}
+                  person={person}
+                />
+              ))}
             </Profiles>
           </Section>
 
