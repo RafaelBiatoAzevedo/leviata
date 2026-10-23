@@ -58,6 +58,10 @@ export const Container = styled.div`
     opacity: 1;
   }
 
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    --book-card-width: 340px;
+  }
+
   @media (max-width: 640px) {
     .swiper {
       padding: 12px 0 72px;

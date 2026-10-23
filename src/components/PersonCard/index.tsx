@@ -1,7 +1,10 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { AcademicTitleResponseDto } from "../../admin/dtos/AcademicTitleResponseDto";
 import type { InstitutionResponseDto } from "../../admin/dtos/InstitutionResponseDto";
-import type { TPersonCategory } from "../../admin/types/TPersonCategory";
+import {
+  personCategoryLabels,
+  type TPersonCategory,
+} from "../../admin/types/TPersonCategory";
 import {
   Container,
   ProfileImage,
@@ -18,7 +21,7 @@ interface PersonCardProps {
   imageUrl?: string;
   name: string;
   academicTitle?: AcademicTitleResponseDto;
-  category: TPersonCategory;
+  category?: TPersonCategory;
   institution?: InstitutionResponseDto;
   bio?: string;
   lattesUrl?: string;
@@ -64,22 +67,22 @@ export function PersonCard({
       <Content>
         <Name>
           {lattesUrl ? (
-            <ProfileLink href={lattesUrl} target="_blank" rel="noopener noreferrer">
+            <ProfileLink
+              href={lattesUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {displayName}
             </ProfileLink>
           ) : (
             displayName
           )}
         </Name>
-        <Category>{category}</Category>
+        {category && <Category>{personCategoryLabels[category]}</Category>}
 
         {!!bio && (
           <Biography>
-            <Description
-              id={bioId}
-              ref={descriptionRef}
-              $expanded={isExpanded}
-            >
+            <Description id={bioId} ref={descriptionRef} $expanded={isExpanded}>
               {bio}
             </Description>
 

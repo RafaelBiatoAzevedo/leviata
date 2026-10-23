@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-  type KeyboardEvent,
-} from "react";
+import { useId, useRef, useState, type KeyboardEvent } from "react";
 import { FiBookOpen, FiFileText, FiLayers, FiMic } from "react-icons/fi";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
@@ -31,11 +24,10 @@ import {
 } from "./styles";
 import { ArticleCard } from "../../components/ArticlesCard";
 import type { BookResponseDto } from "../../admin/dtos/books/BookResponseDto";
-import { booksService } from "../../admin/services/books";
 import type { ArticleResponseDto } from "../../admin/dtos/articles/ArticleResponseDto";
-import { articlesService } from "../../admin/services/articles";
 import { ArticleType } from "../../admin/types/TArticleType";
-import { loadAllPages } from "../../utils/loadAllPages";
+import { usePublicList } from "../../hooks/usePublicData";
+import { PublicDataState } from "../../components/PublicDataState";
 
 const publicationTabs = [
   {
@@ -71,56 +63,31 @@ export function Publications() {
   const tabGroupId = useId();
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const panelId = `${tabGroupId}-panel`;
-  const [books, setBooks] = useState<BookResponseDto[]>(
-    [] as BookResponseDto[],
+  const {
+    data: books,
+    loading: loadingBooks,
+    error: booksError,
+  } = usePublicList<BookResponseDto>("books", {
+    sortBy: "year",
+    sortOrder: "desc",
+  });
+  const {
+    data: allArticles,
+    loading: loadingArticles,
+    error: articlesError,
+  } = usePublicList<ArticleResponseDto>("articles", {
+    sortBy: "year",
+    sortOrder: "desc",
+  });
+  const orderedArticles = [...allArticles].sort(
+    (first, second) => (second.year ?? -1) - (first.year ?? -1),
   );
-
-  const [articles, setArticles] = useState<ArticleResponseDto[]>(
-    [] as ArticleResponseDto[],
+  const articles = orderedArticles.filter(
+    (article) => article.type === ArticleType.ARTICLE,
   );
-
-  const [dossiers, setDossiers] = useState<ArticleResponseDto[]>(
-    [] as ArticleResponseDto[],
+  const dossiers = orderedArticles.filter(
+    (article) => article.type === ArticleType.DOSSIER,
   );
-
-  const load = useCallback(async () => {
-    try {
-      const responseBooks = await booksService.getAll({
-        sortBy: "year",
-        sortOrder: "desc",
-      });
-      const orderedArticles = (
-        await loadAllPages((params) =>
-          articlesService.getAll({
-            ...params,
-            sortBy: "year",
-            sortOrder: "desc",
-          }),
-        )
-      ).sort((first, second) => (second.year ?? -1) - (first.year ?? -1));
-
-      setBooks(responseBooks.data);
-
-      setArticles(
-        orderedArticles.filter(
-          (article) => article.type === ArticleType.ARTICLE,
-        ),
-      );
-      setDossiers(
-        orderedArticles.filter(
-          (article) => article.type === ArticleType.DOSSIER,
-        ),
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
 
   function handleTabKeyDown(
     event: KeyboardEvent<HTMLButtonElement>,
@@ -198,6 +165,14 @@ export function Publications() {
           tabIndex={0}
         >
           {activeTab === "books" && (
+            <PublicDataState
+              loading={loadingBooks}
+              error={booksError}
+              empty={!books.length}
+              label="os livros"
+            />
+          )}
+          {activeTab === "books" && books.length > 0 && (
             <Carousel>
               <Swiper
                 modules={[Autoplay, Pagination, Navigation]}
@@ -212,11 +187,11 @@ export function Publications() {
                 }}
                 style={{ alignItems: "stretch" }}
               >
-                {books.map((book, index) => (
+                {books.map((book) => (
                   <SwiperSlide
-                    key={index}
+                    key={book.id}
                     style={{
-                      width: "290px",
+                      width: "var(--book-card-width, 290px)",
                       height: "auto",
                       display: "flex",
                       alignItems: "stretch",
@@ -230,6 +205,14 @@ export function Publications() {
           )}
 
           {activeTab === "articles" && (
+            <PublicDataState
+              loading={loadingArticles}
+              error={articlesError}
+              empty={!articles.length}
+              label="os artigos"
+            />
+          )}
+          {activeTab === "articles" && articles.length > 0 && (
             <Carousel>
               <Swiper
                 modules={[Navigation, Pagination]}
@@ -241,9 +224,9 @@ export function Publications() {
                 pagination={{ clickable: true, dynamicBullets: true }}
                 style={{ alignItems: "stretch" }}
               >
-                {articles.map((article, index) => (
+                {articles.map((article) => (
                   <SwiperSlide
-                    key={index}
+                    key={article.id}
                     style={{
                       width: "340px",
                       height: "auto",
@@ -265,6 +248,14 @@ export function Publications() {
           {activeTab === "presentations" && <PresentedWorksTimeline />}
 
           {activeTab === "dossiers" && (
+            <PublicDataState
+              loading={loadingArticles}
+              error={articlesError}
+              empty={!dossiers.length}
+              label="os dossiês"
+            />
+          )}
+          {activeTab === "dossiers" && dossiers.length > 0 && (
             <Carousel>
               <Swiper
                 modules={[Navigation, Pagination]}
@@ -276,9 +267,9 @@ export function Publications() {
                 pagination={{ clickable: true, dynamicBullets: true }}
                 style={{ alignItems: "stretch" }}
               >
-                {dossiers.map((dossier, index) => (
+                {dossiers.map((dossier) => (
                   <SwiperSlide
-                    key={index}
+                    key={dossier.id}
                     style={{
                       width: "340px",
                       height: "auto",

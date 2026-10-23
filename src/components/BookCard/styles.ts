@@ -34,6 +34,10 @@ export const Container = styled.a`
     outline-offset: 4px;
   }
 
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    width: 340px;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     transition: none;
 
@@ -76,6 +80,11 @@ export const Cover = styled.div`
       transparent
     );
     opacity: 0.3;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    height: 252px;
+    padding: 50px 26px 26px;
   }
 `;
 
@@ -131,7 +140,11 @@ export const Book = styled.div`
     z-index: -1;
     width: 6px;
     border-radius: 0 2px 2px 0;
-    background: repeating-linear-gradient(90deg, #e8e1d2 0 1px, #fcfaf5 1px 2px);
+    background: repeating-linear-gradient(
+      90deg,
+      #e8e1d2 0 1px,
+      #fcfaf5 1px 2px
+    );
   }
 
   img {
@@ -144,6 +157,12 @@ export const Book = styled.div`
     box-shadow:
       14px 18px 26px rgba(0, 0, 0, 0.4),
       0 2px 6px rgba(0, 0, 0, 0.2);
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    img {
+      max-height: 190px;
+    }
   }
 
   ${Container}:hover &,
@@ -196,6 +215,18 @@ export const FallbackCover = styled.div`
     line-height: 1.3;
     text-align: center;
   }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    height: 178px;
+    gap: 16px;
+    padding: 22px;
+
+    span {
+      -webkit-line-clamp: 4;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+  }
 `;
 
 export const Content = styled.div`
@@ -205,6 +236,12 @@ export const Content = styled.div`
   gap: 16px;
   min-height: 210px;
   padding: 22px;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
+    gap: 14px;
+    min-height: 220px;
+    padding: 24px;
+  }
 `;
 
 export const Publisher = styled.span`

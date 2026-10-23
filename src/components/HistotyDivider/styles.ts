@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 interface IContainerProps {
-  hasMarginVertical: boolean;
+  $hasMarginVertical: boolean;
 }
 
 export const Container = styled.div<IContainerProps>`
@@ -11,8 +11,8 @@ export const Container = styled.div<IContainerProps>`
   align-items: center;
   justify-content: center;
 
-  margin: ${({ hasMarginVertical }) =>
-    hasMarginVertical ? " 80px 0px" : "0px 0px"};
+  margin: ${({ $hasMarginVertical }) =>
+    $hasMarginVertical ? " 80px 0px" : "0px 0px"};
 
   position: relative;
 

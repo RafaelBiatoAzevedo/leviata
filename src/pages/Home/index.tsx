@@ -2,10 +2,12 @@ import {
   Carousel,
   Container,
   Content,
+  Hero,
   ImageHero,
   ThematicLinesGrid,
 } from "./styles";
 import leviataHero from "../../assets/images/leviataHero.webp";
+import leviataMobile from "../../assets/images/leviataMobile.jpeg";
 
 import { ButtonLink } from "../../components/ButtonLink";
 import { ThematicLinkCard } from "../../components/ThematicLinkCard";
@@ -16,13 +18,12 @@ import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { NewsCard } from "../../components/NewsCard";
 import { HistoryDivider } from "../../components/HistotyDivider";
 import { SectionHeader } from "../../components/SectionHeader";
-import { useCallback, useEffect, useState } from "react";
 import type { BookResponseDto } from "../../admin/dtos/books/BookResponseDto";
-import { booksService } from "../../admin/services/books";
-import { newsService } from "../../admin/services/news";
 import type { NewsResponseDto } from "../../admin/dtos/news/NewsResponseDto";
 import { useThematics } from "../../hooks/useThematics";
 import { thematicAcronym } from "../../utils/thematics";
+import { usePublicList } from "../../hooks/usePublicData";
+import { PublicDataState } from "../../components/PublicDataState";
 
 export function Home() {
   const {
@@ -30,36 +31,29 @@ export function Home() {
     loading: loadingThematics,
     error: thematicError,
   } = useThematics();
-  const [books, setBooks] = useState<BookResponseDto[]>(
-    [] as BookResponseDto[],
-  );
-
-  const [news, setNews] = useState<NewsResponseDto[]>([] as NewsResponseDto[]);
-
-  const load = useCallback(async () => {
-    try {
-      const responseBooks = await booksService.getAll({
-        sortBy: "year",
-        sortOrder: "desc",
-      });
-      const responseNews = await newsService.getAll();
-
-      setBooks(responseBooks.data);
-      setNews(responseNews.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
+  const {
+    data: books,
+    loading: loadingBooks,
+    error: booksError,
+  } = usePublicList<BookResponseDto>("books", {
+    sortBy: "year",
+    sortOrder: "desc",
+  });
+  const {
+    data: news,
+    loading: loadingNews,
+    error: newsError,
+  } = usePublicList<NewsResponseDto>("news", {
+    sortBy: "date",
+    sortOrder: "desc",
+  });
 
   return (
     <Container>
-      <ImageHero src={leviataHero}></ImageHero>
+      <Hero>
+        <source media="(aspect-ratio < 1/1)" srcSet={leviataMobile} />
+        <ImageHero src={leviataHero} alt="Leviatã e o Cativeiro" />
+      </Hero>
       <Content>
         <h1>
           Criado em 2019, o grupo de pesquisa “Leviatã e o Cativeiro” reúne
@@ -102,35 +96,43 @@ export function Home() {
           subtitle="As publicações recentes reúnem os trabalhos mais atuais desenvolvidos pelo grupo “Leviatã e o Cativeiro”, destacando pesquisas, artigos e produções acadêmicas."
         />
 
-        <Carousel>
-          <Swiper
-            modules={[Autoplay, Pagination, Navigation]}
-            slidesPerView={"auto"}
-            spaceBetween={30}
-            rewind
-            watchOverflow
-            navigation
-            pagination={{
-              clickable: true,
-              dynamicBullets: true,
-            }}
-            style={{ alignItems: "stretch" }}
-          >
-            {books.map((book, index) => (
-              <SwiperSlide
-                key={index}
-                style={{
-                  width: "290px",
-                  height: "auto",
-                  display: "flex",
-                  alignItems: "stretch",
-                }}
-              >
-                <BookCard {...book} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </Carousel>
+        <PublicDataState
+          loading={loadingBooks}
+          error={booksError}
+          empty={!books.length}
+          label="os livros"
+        />
+        {books.length > 0 && (
+          <Carousel>
+            <Swiper
+              modules={[Autoplay, Pagination, Navigation]}
+              slidesPerView={"auto"}
+              spaceBetween={30}
+              rewind
+              watchOverflow
+              navigation
+              pagination={{
+                clickable: true,
+                dynamicBullets: true,
+              }}
+              style={{ alignItems: "stretch" }}
+            >
+              {books.map((book) => (
+                <SwiperSlide
+                  key={book.id}
+                  style={{
+                    width: "var(--book-card-width, 290px)",
+                    height: "auto",
+                    display: "flex",
+                    alignItems: "stretch",
+                  }}
+                >
+                  <BookCard {...book} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Carousel>
+        )}
         <ButtonLink to="/publicacoes" title="Ver mais"></ButtonLink>
         <HistoryDivider />
         <SectionHeader
@@ -140,35 +142,43 @@ export function Home() {
           subtitle="As notícias reúnem atualizações sobre as atividades, pesquisas, eventos e produções do grupo “Leviatã e o Cativeiro”."
         />
 
-        <Carousel>
-          <Swiper
-            modules={[Autoplay, Pagination, Navigation]}
-            slidesPerView={"auto"}
-            spaceBetween={50}
-            rewind
-            watchOverflow
-            navigation
-            pagination={{
-              clickable: true,
-              dynamicBullets: true,
-            }}
-            style={{ alignItems: "stretch" }}
-          >
-            {news.map((newMock, index) => (
-              <SwiperSlide
-                key={index}
-                style={{
-                  width: "350px",
-                  height: "auto",
-                  display: "flex",
-                  alignItems: "stretch",
-                }}
-              >
-                <NewsCard {...newMock} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </Carousel>
+        <PublicDataState
+          loading={loadingNews}
+          error={newsError}
+          empty={!news.length}
+          label="as notícias"
+        />
+        {news.length > 0 && (
+          <Carousel>
+            <Swiper
+              modules={[Autoplay, Pagination, Navigation]}
+              slidesPerView={"auto"}
+              spaceBetween={50}
+              rewind
+              watchOverflow
+              navigation
+              pagination={{
+                clickable: true,
+                dynamicBullets: true,
+              }}
+              style={{ alignItems: "stretch" }}
+            >
+              {news.map((item) => (
+                <SwiperSlide
+                  key={item.id}
+                  style={{
+                    width: "350px",
+                    height: "auto",
+                    display: "flex",
+                    alignItems: "stretch",
+                  }}
+                >
+                  <NewsCard {...item} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </Carousel>
+        )}
       </Content>
     </Container>
   );

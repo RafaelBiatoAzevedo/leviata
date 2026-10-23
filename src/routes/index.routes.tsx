@@ -9,6 +9,9 @@ import { ThematicLines } from "../pages/ThematicLines";
 import { Newsletter } from "../pages/Newsletter";
 import { Contact } from "../pages/Contact";
 import { News } from "../pages/News";
+import { NewsDetails } from "../pages/NewsDetails";
+import { ResearchInstrumentDetails } from "../components/ResearchInstrumentDetails";
+import { ResearchInstrumentType } from "../admin/types/TResearchInstrumentType";
 import { Instruments } from "../pages/Instruments";
 import { Activities } from "../pages/Activities";
 import { Publications } from "../pages/ Publications";
@@ -59,7 +62,23 @@ export function Router() {
           element={<DossierDetails />}
         />
         <Route path="/instrumentos/catalogos" element={<Catalogs />} />
+        <Route
+          path="/instrumentos/catalogos/:id"
+          element={
+            <ResearchInstrumentDetails type={ResearchInstrumentType.CATALOG} />
+          }
+        />
         <Route path="/instrumentos/banco-de-dados" element={<Database />} />
+        <Route
+          path="/instrumentos/banco-de-dados/:id"
+          element={
+            <ResearchInstrumentDetails type={ResearchInstrumentType.DATABASE} />
+          }
+        />
+        <Route
+          path="/instrumentos/registro/:id"
+          element={<ResearchInstrumentDetails />}
+        />
 
         <Route path="/atividades" element={<Activities />} />
         <Route
@@ -108,9 +127,14 @@ export function Router() {
 
         <Route path="/agenda" element={<Schedule />} />
         <Route path="/agenda/bancas" element={<Painels />} />
+        <Route
+          path="/agenda/bancas/:id"
+          element={<GalleryDetails resource="boards" label="a banca" />}
+        />
         <Route path="/agenda/seminarios" element={<Seminars />} />
 
         <Route path="/noticias" element={<News />} />
+        <Route path="/noticias/:id" element={<NewsDetails />} />
         <Route path="/noticias/newsletter" element={<Newsletter />} />
 
         <Route path="/newsletter" element={<Newsletter />} />

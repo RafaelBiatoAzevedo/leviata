@@ -1,57 +1,28 @@
-import { useCallback, useEffect, useState } from "react";
 import { HistoryDivider } from "../../components/HistotyDivider";
 import { PersonCard } from "../../components/PersonCard";
 import { SectionHeader } from "../../components/SectionHeader";
 import { Container, Content, Grid } from "./styles";
 import type { PersonResponseDto } from "../../admin/dtos/people/PersonResponseDto";
-import { peopleService } from "../../admin/services/people";
+import { usePublicList } from "../../hooks/usePublicData";
+import { PublicDataState } from "../../components/PublicDataState";
 
 export function Researchers() {
-  const [loading, setLoading] = useState(false);
-  const [nationalsResearchers, setNationalsResearchers] = useState(
-    [] as PersonResponseDto[],
+  const {
+    data: people,
+    loading,
+    error,
+  } = usePublicList<PersonResponseDto>("people", {
+    isActive: "true",
+    sortBy: "displayOrder",
+    sortOrder: "asc",
+  });
+  const activePeople = people.filter((person) => person.isActive === true);
+  const nationalsResearchers = activePeople.filter(
+    (person) => person.nationality?.code === "BR",
   );
-  const [internatinalsResearchers, setInternatinalsResearchers] = useState(
-    [] as PersonResponseDto[],
+  const internatinalsResearchers = activePeople.filter(
+    (person) => person.nationality?.code !== "BR",
   );
-
-  function filterPeople(people: PersonResponseDto[]) {
-    const activePeople = people.filter((person) => person.isActive === true);
-    const nationalsPeople = activePeople.filter(
-      (person) => person.nationality?.code === "BR",
-    );
-
-    const internationalsPeople = activePeople.filter(
-      (person) => person.nationality?.code !== "BR",
-    );
-
-    return { nationalsPeople, internationalsPeople };
-  }
-
-  const load = useCallback(async () => {
-    try {
-      setLoading(true);
-      const people = await peopleService.getAllAvailable();
-
-      const { internationalsPeople, nationalsPeople } = filterPeople(
-        people,
-      );
-
-      setNationalsResearchers(nationalsPeople);
-      setInternatinalsResearchers(internationalsPeople);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      await load();
-    })();
-  }, [load]);
-
   return (
     <Container>
       <Content>
@@ -61,6 +32,12 @@ export function Researchers() {
             construção do acervo histórico e acadêmico."
         />
 
+        <PublicDataState
+          loading={loading}
+          error={error}
+          empty={!activePeople.length}
+          label="os pesquisadores"
+        />
         {!loading && (
           <Grid>
             {nationalsResearchers.map((person) => (

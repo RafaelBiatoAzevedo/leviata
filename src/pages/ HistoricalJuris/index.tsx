@@ -53,7 +53,7 @@ export function HistoricalJuries() {
               icon={<GiInjustice />}
               title={juri.title}
               description={new Date(juri.date).toLocaleDateString("pt-BR", {
-                timeZone: "America/Sao_Paulo",
+                timeZone: "UTC",
               })}
             />
           ))}

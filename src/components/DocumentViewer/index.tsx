@@ -10,6 +10,7 @@ import {
   Pagination,
   PageButton,
   PageInfo,
+  ViewerMessage,
 } from "./styles";
 
 import {
@@ -30,7 +31,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 interface IDocumentViewerProps {
   pdf: string;
-  externalLink: string;
+  externalLink?: string | null;
 }
 
 export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
@@ -64,7 +65,9 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
     if (!viewer) return;
 
     const observer = new ResizeObserver(([entry]) => {
-      setWidth(Math.max(1, Math.min(1100, Math.floor(entry.contentRect.width))));
+      setWidth(
+        Math.max(1, Math.min(1100, Math.floor(entry.contentRect.width))),
+      );
     });
     observer.observe(viewer);
     return () => observer.disconnect();
@@ -103,7 +106,9 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
             as="button"
             type="button"
             onClick={handleFullscreen}
-            aria-label={isFullscreen ? "Sair da tela cheia" : "Ver em tela cheia"}
+            aria-label={
+              isFullscreen ? "Sair da tela cheia" : "Ver em tela cheia"
+            }
           >
             <FiMaximize />
           </ActionButton>
@@ -120,7 +125,7 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
           </ActionButton>
 
           <ActionButton
-            href={externalLink}
+            href={externalLink || pdf}
             target="_blank"
             rel="noreferrer"
             aria-label="Abrir documento em nova aba"
@@ -130,7 +135,17 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
         </Actions>
         <Document
           file={pdf}
-          loading={null}
+          loading={
+            <ViewerMessage role="status">Carregando documento...</ViewerMessage>
+          }
+          error={
+            <ViewerMessage role="alert">
+              Não foi possível visualizar o documento.{" "}
+              <a href={pdf} target="_blank" rel="noopener noreferrer">
+                Abrir PDF em nova aba
+              </a>
+            </ViewerMessage>
+          }
           onLoadSuccess={({ numPages }) => setPages(numPages)}
           externalLinkTarget="_blank"
         >
@@ -143,24 +158,26 @@ export function DocumentViewer({ pdf, externalLink }: IDocumentViewerProps) {
             renderAnnotationLayer={true}
           />
         </Document>
-        <Pagination>
-          <PageButton onClick={handlePrevPage} disabled={currentPage === 1}>
-            <FiChevronLeft />
-            Anterior
-          </PageButton>
+        {pages > 0 && (
+          <Pagination>
+            <PageButton onClick={handlePrevPage} disabled={currentPage === 1}>
+              <FiChevronLeft />
+              Anterior
+            </PageButton>
 
-          <PageInfo>
-            Página {currentPage} de {pages}
-          </PageInfo>
+            <PageInfo>
+              Página {currentPage} de {pages}
+            </PageInfo>
 
-          <PageButton
-            onClick={handleNextPage}
-            disabled={pages === 0 || currentPage >= pages}
-          >
-            Próxima
-            <FiChevronRight />
-          </PageButton>
-        </Pagination>
+            <PageButton
+              onClick={handleNextPage}
+              disabled={pages === 0 || currentPage >= pages}
+            >
+              Próxima
+              <FiChevronRight />
+            </PageButton>
+          </Pagination>
+        )}
       </Viewer>
     </Container>
   );

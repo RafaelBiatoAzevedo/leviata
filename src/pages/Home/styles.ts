@@ -14,11 +14,16 @@ export const Content = styled.div`
 
   > h1 {
     max-width: 1100px;
-    font-size: clamp(22px, 2.2vw, 28px);
-    line-height: 1.5;
+    font-size: clamp(18px, 2vw, 24px);
+    line-height: 1.3;
     text-align: center;
   }
   ${portalContent}
+`;
+
+export const Hero = styled.picture`
+  display: block;
+  width: 100%;
 `;
 
 export const ImageHero = styled.img`

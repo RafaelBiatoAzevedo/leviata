@@ -1,14 +1,15 @@
+import { HistoryDivider } from "../../components/HistotyDivider";
 import { NewsletterForm } from "../../components/NewsletterForm";
 import { ParagraphText } from "../../components/ParagraphText";
+import { SectionHeader } from "../../components/SectionHeader";
+import { PublicDataState } from "../../components/PublicDataState";
 import {
-  Container,
-  Content,
-  PresentationLabel,
-  PresentationSection,
-  PresentationTitle,
-  Title,
-  VideoWrapper,
-} from "./styles";
+  VideoCarousel,
+  VideoPresentation,
+} from "../../components/VideoPresentation";
+import { usePublicList } from "../../hooks/usePublicData";
+import type { VideoResponseDto } from "../../admin/dtos/videos/VideoResponseDto";
+import { Container, Content } from "./styles";
 
 const text = `Criado em 2019, o grupo de pesquisa “Leviatã e o Cativeiro” reúne
           pesquisadores em torno do binômio temático Estado Moderno e
@@ -24,32 +25,39 @@ const text = `Criado em 2019, o grupo de pesquisa “Leviatã e o Cativeiro” r
           abrindo a comunicação com todo o público interessado.`;
 
 export function Group() {
+  const {
+    data: videos,
+    loading,
+    error,
+  } = usePublicList<VideoResponseDto>("videos");
+  const featured = videos.find(
+    (video) =>
+      video.title
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .replace(/\s+/g, " ")
+        .toLocaleLowerCase("pt-BR") === "grupo leviata e o cativeiro",
+  );
+  const otherVideos = videos.filter((video) => video.id !== featured?.id);
   return (
     <Container>
       <Content>
-        <Title>O Grupo</Title>
+        <SectionHeader center title="O Grupo" />
 
         <ParagraphText text={text} />
 
-        <PresentationSection>
-          <PresentationLabel>
-            Testemunho e reflexão sobre os caminhos de pesquisa, memória e
-            construção intelectual do grupo.
-          </PresentationLabel>
+        <PublicDataState
+          loading={loading}
+          error={error}
+          empty={!videos.length}
+          label="os vídeos do grupo"
+        />
+        {featured && <VideoPresentation video={featured} />}
 
-          <PresentationTitle>
-            Palavras do Prof. Dr. Ricardo Alexandre Ferreira
-          </PresentationTitle>
+        {featured && otherVideos.length > 0 && <HistoryDivider />}
 
-          <VideoWrapper>
-            <iframe
-              src="https://www.youtube.com/embed/UqRGZf3lhIQ"
-              title="Prof. Dr. Ricardo Alexandre Ferreira"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </VideoWrapper>
-        </PresentationSection>
+        <VideoCarousel videos={otherVideos} label="Outros vídeos do grupo" />
 
         <NewsletterForm type="middle" />
       </Content>

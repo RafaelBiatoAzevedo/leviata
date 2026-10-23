@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import leviataHero from "../../../assets/images/leviataHero.webp";
 
 export const Container = styled.main`
   min-height: 100vh;
@@ -17,7 +18,7 @@ export const Container = styled.main`
     position: absolute;
     inset: 0;
 
-    background-image: url("/src/assets/images/leviataHero.webp");
+    background-image: url(${leviataHero});
     background-size: cover;
     background-position: center;
 

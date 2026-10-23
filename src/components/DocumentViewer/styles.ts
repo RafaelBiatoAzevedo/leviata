@@ -166,3 +166,13 @@ export const PageInfo = styled.span`
 
   font-size: 0.95rem;
 `;
+
+export const ViewerMessage = styled.p`
+  padding: 20px;
+  color: ${({ theme }) => theme.colors.onSecondary};
+  line-height: 1.8;
+  text-align: center;
+  a {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`;

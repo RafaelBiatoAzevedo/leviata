@@ -1,22 +1,13 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  AssociatedPresentationLabel,
-  AssociatedPresentationSection,
-  AssociatedPresentationTitle,
-  AssociatedWrapper,
-  Container,
-  ContainerLoading,
-  Content,
-  Description,
-  PresentationLabel,
-  PresentationSection,
-  PresentationTitle,
-  VideoWrapper,
-} from "./styles";
+import { Container, ContainerLoading, Content, Description } from "./styles";
 import { Loading } from "../../components/Loading";
 import { SectionHeader } from "../../components/SectionHeader";
 import { HistoryDivider } from "../../components/HistotyDivider";
+import {
+  VideoCarousel,
+  VideoPresentation,
+} from "../../components/VideoPresentation";
 import { thematicsService } from "../../admin/services/thematics";
 import type { ThematicResponseDto } from "../../admin/dtos/thematics/ThematicResponseDto";
 
@@ -61,6 +52,22 @@ function ThematicContent({ identifier }: { identifier?: string }) {
       </ContainerLoading>
     );
 
+  const mainVideo = thematic.mainVideo
+    ? {
+        ...thematic.mainVideo,
+        people: thematic.coordinator
+          ? [thematic.coordinator]
+          : thematic.mainVideo.people,
+      }
+    : null;
+  const additionalVideos = thematic.additionalVideos.map((link) => ({
+    ...link.video,
+    id: link.id,
+    title: link.title,
+    description: link.description,
+    people: link.person ? [link.person] : [],
+  }));
+
   return (
     <Container>
       <Content>
@@ -68,65 +75,19 @@ function ThematicContent({ identifier }: { identifier?: string }) {
         {thematic.description && (
           <Description>{thematic.description}</Description>
         )}
-        {thematic.mainVideo && (
-          <PresentationSection>
-            <PresentationLabel>
-              Apresentação da linha temática
-            </PresentationLabel>
-            <PresentationTitle>
-              {thematic.coordinator?.name ?? thematic.mainVideo.title}
-            </PresentationTitle>
-            <VideoWrapper>
-              <iframe
-                src={thematic.mainVideo.embedLink}
-                title={thematic.mainVideo.title}
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </VideoWrapper>
-            {thematic.mainVideo.description && (
-              <Description>{thematic.mainVideo.description}</Description>
-            )}
-          </PresentationSection>
+        {mainVideo && (
+          <VideoPresentation
+            video={mainVideo}
+            showTitle={false}
+            uppercasePresenter
+          />
         )}
-        {!!thematic.additionalVideos.length && (
-          <>
-            <HistoryDivider />
-            <SectionHeader
-              small
-              as="h2"
-              title="Pesquisas vinculadas"
-              subtitle="Acompanhe as pesquisas vinculadas à temática."
-            />
-            <AssociatedWrapper>
-              {thematic.additionalVideos.map((link) => (
-                <AssociatedPresentationSection key={link.id}>
-                  {link.person && (
-                    <AssociatedPresentationLabel>
-                      {link.person.name}
-                    </AssociatedPresentationLabel>
-                  )}
-                  <AssociatedPresentationTitle>
-                    {link.title}
-                  </AssociatedPresentationTitle>
-                  <VideoWrapper>
-                    <iframe
-                      src={link.video.embedLink}
-                      title={link.title}
-                      loading="lazy"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  </VideoWrapper>
-                  {link.description && (
-                    <Description>{link.description}</Description>
-                  )}
-                </AssociatedPresentationSection>
-              ))}
-            </AssociatedWrapper>
-          </>
-        )}
+        {mainVideo && additionalVideos.length > 0 && <HistoryDivider />}
+        <VideoCarousel
+          videos={additionalVideos}
+          title="Pesquisas vinculadas"
+          subtitle="Acompanhe as pesquisas vinculadas à temática."
+        />
       </Content>
     </Container>
   );

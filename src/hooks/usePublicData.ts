@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import { api } from "../services/api";
-import type { GalleryResource } from "../admin/services/gallery";
+import {
+  publicService,
+  type PublicListQuery,
+  type PublicResource,
+} from "../services/public";
 
 export function usePublicList<T>(
-  resource: GalleryResource | "schedule" | "newsletter",
+  resource: PublicResource,
+  query: PublicListQuery = {},
 ) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const { type, isActive, sortBy, sortOrder, search } = query;
 
   useEffect(() => {
     const controller = new AbortController();
@@ -17,15 +22,11 @@ export function usePublicList<T>(
       setError(false);
       setData([]);
       try {
-        const records: T[] = [];
-        for (let page = 1; ; page++) {
-          const response = await api.get<T[]>(`/${resource}`, {
-            params: { page, limit: 100 },
-            signal: controller.signal,
-          });
-          records.push(...response.data);
-          if (response.data.length < 100) break;
-        }
+        const records = await publicService.getAll<T>(
+          resource,
+          { type, isActive, sortBy, sortOrder, search },
+          controller.signal,
+        );
         if (active) setData(records);
       } catch {
         if (active) setError(true);
@@ -38,13 +39,13 @@ export function usePublicList<T>(
       active = false;
       controller.abort();
     };
-  }, [resource]);
+  }, [resource, type, isActive, sortBy, sortOrder, search]);
 
   return { data, loading, error };
 }
 
 export function usePublicRecord<T>(
-  resource: GalleryResource,
+  resource: PublicResource,
   identifier?: string,
 ) {
   const [data, setData] = useState<T | null>(null);
@@ -60,13 +61,10 @@ export function usePublicRecord<T>(
       setError(false);
       try {
         if (!identifier) throw new Error("Registro não informado.");
-        const isId =
-          /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(
-            identifier,
-          );
-        const response = await api.get<T>(
-          `/${resource}/${isId ? "" : "slug/"}${encodeURIComponent(identifier)}`,
-          { signal: controller.signal },
+        const response = await publicService.getRecord<T>(
+          resource,
+          identifier,
+          controller.signal,
         );
         if (active) setData(response.data);
       } catch {

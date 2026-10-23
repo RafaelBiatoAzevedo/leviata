@@ -56,6 +56,7 @@ export default function Painels() {
               },
             ],
             images: board.images,
+            detailsTo: `/agenda/bancas/${encodeURIComponent(board.slug || board.id)}`,
           }))}
         />
       </Content>

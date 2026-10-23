@@ -12,7 +12,7 @@ export function HistoryDivider({
   hasMarginVertical = false,
 }: HistoryDividerProps) {
   return (
-    <Container hasMarginVertical={hasMarginVertical}>
+    <Container $hasMarginVertical={hasMarginVertical}>
       <Ornament>{symbol}</Ornament>
     </Container>
   );
