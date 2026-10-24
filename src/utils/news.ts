@@ -23,6 +23,8 @@ export function newsRelatedPath(
       return `/atividades/juris-historicos/juris/${id}`;
     case NewsRelatedType.MEETING:
       return `/atividades/encontros-e-seminarios/encontro/${id}`;
+    case NewsRelatedType.PRESENTED_WORK:
+      return `/atividades/apresentacoes-trabalhos/${id}`;
     case NewsRelatedType.PUBLICATION:
       return `/publicacoes?publicacao=${id}`;
     case NewsRelatedType.RESEARCH:

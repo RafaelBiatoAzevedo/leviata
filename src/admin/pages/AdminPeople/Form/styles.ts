@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  width: 100%;
+  min-width: 0;
   display: flex;
 
   flex-direction: column;
@@ -9,6 +11,8 @@ export const Container = styled.div`
 `;
 
 export const Form = styled.form`
+  min-width: 0;
+  width: 100%;
   display: flex;
 
   flex-direction: column;
@@ -16,12 +20,4 @@ export const Form = styled.form`
   gap: 2rem;
 `;
 
-export const PersonTopWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-
-  > :first-child {
-    flex: 1;
-  }
-`;
+export { AdminSplitLayout as PersonTopWrapper } from "../../../components/AdminResponsive";

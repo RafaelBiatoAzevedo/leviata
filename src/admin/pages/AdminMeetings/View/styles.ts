@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  width: 100%;
+  min-width: 0;
   display: flex;
 
   flex-direction: column;
@@ -16,19 +18,9 @@ export const Header = styled.div`
   gap: 1rem;
 `;
 
-export const HeaderActions = styled.div`
-  display: flex;
+export { AdminHeaderActions as HeaderActions } from "../../../components/AdminResponsive";
 
-  justify-content: space-between;
-`;
-
-export const ContentWrapper = styled.div`
-  display: flex;
-
-  flex-direction: row;
-
-  gap: 2rem;
-`;
+export { AdminDetailLayout as ContentWrapper } from "../../../components/AdminResponsive";
 
 export const Title = styled.h1`
   margin: 0;
@@ -41,6 +33,9 @@ export const Title = styled.h1`
 `;
 
 export const CoverWrapper = styled.a`
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
   display: flex;
 
   flex-direction: column;
@@ -92,9 +87,11 @@ export const ExternalLink = styled.a`
 `;
 
 export const Cover = styled.img`
+  max-width: 100%;
   width: 260px;
 
-  height: 260px;
+  height: auto;
+  max-height: 360px;
 
   border-radius: 4px;
 

@@ -14,7 +14,12 @@ export function AdminIconButton({
   ...rest
 }: IAdminIconButtonProps) {
   return (
-    <Container type="button" $variant={variant} {...rest}>
+    <Container
+      type="button"
+      $variant={variant}
+      aria-label={rest["aria-label"] || rest.title}
+      {...rest}
+    >
       {children}
     </Container>
   );

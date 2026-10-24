@@ -2,10 +2,11 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
+  min-width: 0;
 
   max-width: 420px;
 
-  height: 46px;
+  min-height: 46px;
 
   display: flex;
 
@@ -40,6 +41,8 @@ export const Container = styled.div`
 
 export const Input = styled.input`
   flex: 1;
+  width: 100%;
+  min-width: 0;
 
   border: none;
 
@@ -49,7 +52,11 @@ export const Input = styled.input`
 
   color: ${({ theme }) => theme.colors.text};
 
-  font-size: 0.95rem;
+  font-size: 14px;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.text};

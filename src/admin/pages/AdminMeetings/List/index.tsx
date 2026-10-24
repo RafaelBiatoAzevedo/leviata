@@ -94,16 +94,16 @@ export function AdminMeetings() {
       </AdminPageHeader>
 
       <Filters>
+        <AdminSearchBar
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Pesquisar encontros..."
+        />
         <AdminSelect
           label="Tipo"
           value={type}
           onChange={(event) => setType(event.target.value as TMeetingType | "")}
           options={[{ value: "", label: "Todos" }, ...meetingTypeOptions]}
-        />
-        <AdminSearchBar
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pesquisar encontros..."
         />
         <AdminSelect
           label="Exibição no portal"
@@ -120,7 +120,7 @@ export function AdminMeetings() {
       </Filters>
 
       {error && <AdminError>{error}</AdminError>}
-      <AdminTable>
+      <AdminTable loading={loading}>
         <thead>
           <tr>
             <th>Capa</th>

@@ -55,6 +55,8 @@ const variants = {
 };
 
 export const Container = styled.button<IButtonProps>`
+  max-width: 100%;
+  min-width: 0;
   height: ${({ $size }) =>
     $size === "large" ? "44px" : $size === "medium" ? "38px" : "30px"};
 
@@ -116,6 +118,21 @@ export const Container = styled.button<IButtonProps>`
     cursor: not-allowed;
 
     transform: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 900px), (pointer: coarse) {
+    min-height: 44px;
+    height: auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    span {
+      white-space: normal;
+    }
   }
 
   ${({ $variant }) => variants[$variant]}

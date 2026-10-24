@@ -1,3 +1,4 @@
+import { AdminListFilters } from "../../../components/AdminListFilters";
 import { AdminPagination } from "../../../components/AdminPagination";
 import { useAdminList } from "../../../hooks/useAdminList";
 import { useState } from "react";
@@ -69,18 +70,20 @@ export function AdminSchedule() {
           Novo evento
         </AdminButton>
       </AdminPageHeader>
-      <AdminSearchBar
-        value={search}
-        onChange={(event) => setSearch(event.target.value)}
-        placeholder="Pesquisar por título, subtítulo ou local..."
-      />
+      <AdminListFilters>
+        <AdminSearchBar
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+          placeholder="Pesquisar por título, subtítulo ou local..."
+        />
+      </AdminListFilters>
       {loading ? (
         <AdminLoading text="Carregando agenda..." />
       ) : error ? (
         <AdminError>{error}</AdminError>
       ) : (
         <>
-          <AdminTable>
+          <AdminTable loading={loading}>
             <thead>
               <tr>
                 <th>Título</th>

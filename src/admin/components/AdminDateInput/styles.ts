@@ -6,6 +6,7 @@ interface InputProps {
 
 export const Input = styled.input<InputProps>`
   width: 100%;
+  min-width: 0;
 
   height: 46px;
 

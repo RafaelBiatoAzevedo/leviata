@@ -8,10 +8,15 @@ type AdminSearchBarProps = InputHTMLAttributes<HTMLInputElement>;
 
 export function AdminSearchBar({ ...rest }: AdminSearchBarProps) {
   return (
-    <Container>
-      <FiSearch />
+    <Container data-admin-search>
+      <FiSearch aria-hidden="true" />
 
-      <Input placeholder="Pesquisar..." {...rest} />
+      <Input
+        type="search"
+        aria-label={rest.placeholder || "Pesquisar registros"}
+        placeholder="Pesquisar..."
+        {...rest}
+      />
     </Container>
   );
 }

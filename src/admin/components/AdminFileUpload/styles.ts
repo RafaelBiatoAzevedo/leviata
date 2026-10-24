@@ -5,6 +5,8 @@ interface PreviewProps {
 }
 
 export const Container = styled.div`
+  min-width: 0;
+  max-width: 100%;
   display: flex;
 
   flex-direction: column;
@@ -19,7 +21,9 @@ export const HiddenInput = styled.input`
 `;
 
 export const Preview = styled.div<PreviewProps>`
+  max-width: 100%;
   width: 100%;
+  min-width: 0;
 
   width: 300px;
 
@@ -107,6 +111,7 @@ export const FileType = styled.span`
 `;
 
 export const ChangeButton = styled.button`
+  min-height: 44px;
   display: flex;
 
   align-items: center;

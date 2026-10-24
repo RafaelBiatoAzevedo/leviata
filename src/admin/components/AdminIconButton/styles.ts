@@ -65,6 +65,7 @@ const variants = {
 
 export const Container = styled.button<IContainerProps>`
   width: 38px;
+  flex-shrink: 0;
 
   height: 38px;
 
@@ -84,6 +85,16 @@ export const Container = styled.button<IContainerProps>`
 
   svg {
     font-size: 1.05rem;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 900px), (pointer: coarse) {
+    width: 44px;
+    height: 44px;
   }
 
   &:disabled {

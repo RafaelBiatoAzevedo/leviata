@@ -6,8 +6,8 @@ export const Container = styled.div`
 export const OptionsButton = styled.button`
   display: grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: 10px;
@@ -32,7 +32,7 @@ export const Menu = styled.div`
   top: calc(100% + 12px);
   right: 0;
   width: 250px;
-  max-width: calc(100vw - 100px);
+  max-width: calc(100vw - 32px);
   max-height: calc(100vh - 100px);
   overflow-y: auto;
   padding: 7px;

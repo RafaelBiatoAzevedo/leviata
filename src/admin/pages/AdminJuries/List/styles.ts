@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  width: 100%;
+  min-width: 0;
   display: flex;
 
   flex-direction: column;
@@ -38,14 +40,7 @@ export const CoverPlaceholder = styled.div`
   }
 `;
 
-export const Filters = styled.div`
-  display: flex;
-  flex-direction: row;
-
-  justify-content: space-between;
-
-  gap: 1rem;
-`;
+export { AdminListFilters as Filters } from "../../../components/AdminListFilters";
 
 export const Actions = styled.div`
   display: flex;

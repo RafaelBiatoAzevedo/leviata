@@ -118,7 +118,7 @@ export function AdminUsers() {
       ) : (
         !error && (
           <>
-            <AdminTable>
+            <AdminTable loading={loading}>
               <thead>
                 <tr>
                   <th>Nome</th>

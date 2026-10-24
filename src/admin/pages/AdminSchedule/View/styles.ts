@@ -1,16 +1,14 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  width: 100%;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2rem;
 `;
 
-export const HeaderActions = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-`;
+export { AdminHeaderActions as HeaderActions } from "../../../components/AdminResponsive";
 
 export const Description = styled.p`
   margin: 0;

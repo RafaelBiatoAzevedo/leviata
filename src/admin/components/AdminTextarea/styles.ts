@@ -6,6 +6,7 @@ interface TextareaProps {
 
 export const Textarea = styled.textarea<TextareaProps>`
   width: 100%;
+  min-width: 0;
 
   min-height: 140px;
 

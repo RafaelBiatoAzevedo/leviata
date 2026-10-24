@@ -80,7 +80,7 @@ export function AdminThematics() {
       </Filters>
 
       {error && <AdminError>{error}</AdminError>}
-      <AdminTable>
+      <AdminTable loading={loading}>
         <thead>
           <tr>
             <th>Título</th>

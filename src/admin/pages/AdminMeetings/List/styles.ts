@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  width: 100%;
+  min-width: 0;
   display: flex;
 
   flex-direction: column;
@@ -40,25 +42,7 @@ export const CoverPlaceholder = styled.div`
   }
 `;
 
-export const Filters = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-end;
-
-  justify-content: space-between;
-
-  gap: 1rem;
-
-  > * {
-    flex: 1 1 200px;
-    min-width: 0;
-  }
-
-  > :last-child {
-    flex: 0 1 220px;
-  }
-`;
+export { AdminListFilters as Filters } from "../../../components/AdminListFilters";
 
 export const Actions = styled.div`
   display: flex;

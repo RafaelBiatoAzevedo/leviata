@@ -8,6 +8,7 @@ export const Container = styled.div`
   gap: 0.45rem;
 
   width: 100%;
+  min-width: 0;
 `;
 
 export const Label = styled.span`

@@ -1,9 +1,20 @@
-import styled from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import { NavLink } from "react-router-dom";
 
 interface SidebarProps {
   $collapsed: boolean;
+  $mobileOpen?: boolean;
 }
+
+export const AdminTypography = createGlobalStyle`
+  html:has(#admin-navigation) { font-size: 14px; }
+
+  @media (max-width: 768px) {
+    html:has(#admin-navigation) input,
+    html:has(#admin-navigation) textarea,
+    html:has(#admin-navigation) select { font-size: 16px; }
+  }
+`;
 
 export const Container = styled.div`
   display: flex;
@@ -11,14 +22,29 @@ export const Container = styled.div`
   background: ${({ theme }) => theme.colors.background};
 
   height: 100vh;
+  height: 100dvh;
+  width: 100%;
+  min-width: 0;
   overflow: hidden;
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition: none;
+      scroll-behavior: auto;
+    }
+  }
 `;
 
 export const Sidebar = styled.aside<SidebarProps>`
   flex-shrink: 0;
   width: ${({ $collapsed }) => ($collapsed ? "76px" : "240px")};
 
-  transition: 0.4s;
+  transition:
+    width 0.25s ease,
+    transform 0.25s ease,
+    visibility 0.25s;
 
   background: ${({ theme }) => theme.colors.surface};
 
@@ -34,12 +60,33 @@ export const Sidebar = styled.aside<SidebarProps>`
 
   z-index: 10;
 
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
+
+  @media (max-width: 900px) {
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(280px, calc(100vw - 48px));
+    height: 100dvh;
+    z-index: 50;
+    transform: ${({ $mobileOpen }) =>
+      $mobileOpen ? "translateX(0)" : "translateX(-100%)"};
+    visibility: ${({ $mobileOpen }) => ($mobileOpen ? "visible" : "hidden")};
+  }
+`;
+
+export const Backdrop = styled.button`
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgb(15 23 42 / 45%);
+  backdrop-filter: blur(3px);
 `;
 
 export const Logo = styled.div<SidebarProps>`
   height: 70px;
+  flex-shrink: 0;
+  position: relative;
 
   display: flex;
 
@@ -64,6 +111,26 @@ export const Logo = styled.div<SidebarProps>`
     color: ${({ theme }) => theme.colors.text};
 
     font-size: 13px;
+  }
+`;
+
+export const DrawerClose = styled.button`
+  display: none;
+  @media (max-width: 900px) {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-left: auto;
+    flex-shrink: 0;
+    border-radius: 10px;
+    font-size: 22px;
+    &:hover {
+      background: ${({ theme }) => theme.colors.primary}15;
+    }
+    &:focus-visible {
+      outline: 2px solid ${({ theme }) => theme.colors.primary};
+    }
   }
 `;
 
@@ -171,6 +238,7 @@ export const NavItem = styled(NavLink)`
 export const Main = styled.main`
   flex: 1;
   min-width: 0;
+  min-height: 0;
 
   display: flex;
 
@@ -186,6 +254,7 @@ export const Header = styled.header`
   align-items: center;
 
   justify-content: space-between;
+  gap: 12px;
 
   padding: 0 24px;
 
@@ -197,7 +266,7 @@ export const Header = styled.header`
 
   position: relative;
 
-  z-index: 10;
+  z-index: 20;
 
   @media (max-width: 600px) {
     padding: 0 12px;
@@ -205,9 +274,10 @@ export const Header = styled.header`
 `;
 
 export const ToggleButton = styled.button`
-  width: 42px;
+  width: 44px;
+  flex-shrink: 0;
 
-  height: 42px;
+  height: 44px;
 
   border: none;
 
@@ -228,10 +298,15 @@ export const ToggleButton = styled.button`
 
     color: ${({ theme }) => theme.colors.primary};
   }
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 2px;
+  }
 `;
 
 export const UserArea = styled.div`
   display: flex;
+  min-width: 0;
 
   align-items: center;
 
@@ -250,6 +325,7 @@ export const UserArea = styled.div`
 
 export const UserInfo = styled.div`
   display: flex;
+  min-width: 0;
 
   align-items: center;
 
@@ -282,6 +358,8 @@ export const Avatar = styled.div`
 
 export const UserData = styled.div`
   display: flex;
+  min-width: 0;
+  max-width: 260px;
 
   flex-direction: column;
 
@@ -291,6 +369,9 @@ export const UserData = styled.div`
 `;
 
 export const UserName = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: 0.95rem;
 
   font-weight: 600;
@@ -306,12 +387,16 @@ export const UserRole = styled.span`
   text-transform: capitalize;
 `;
 
-export const Content = styled.main`
+export const Content = styled.div`
   flex: 1;
+  min-width: 0;
+  min-height: 0;
+  container-type: inline-size;
+  container-name: admin-content;
 
   overflow-y: auto;
 
-  padding: 32px;
+  padding: clamp(20px, 2.5vw, 32px);
 
   @media (max-width: 768px) {
     padding: 20px 16px;

@@ -1,6 +1,8 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  width: 100%;
+  min-width: 0;
   display: flex;
 
   flex-direction: column;
@@ -9,6 +11,8 @@ export const Container = styled.div`
 `;
 
 export const Form = styled.form`
+  min-width: 0;
+  width: 100%;
   display: flex;
 
   flex-direction: column;
@@ -45,15 +49,7 @@ export const Empty = styled.p`
   color: ${({ theme }) => theme.colors.textSoft};
 `;
 
-export const BookTopWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-
-  > :first-child {
-    flex: 1;
-  }
-`;
+export { AdminSplitLayout as BookTopWrapper } from "../../../components/AdminResponsive";
 
 export const MemberList = styled.div`
   display: flex;
@@ -107,9 +103,9 @@ export const MemberItem = styled.div`
 
     flex-shrink: 0;
 
-    width: 32px;
+    width: 44px;
 
-    height: 32px;
+    height: 44px;
 
     padding: 0;
 

@@ -10,18 +10,34 @@ export const Container = styled.nav`
   padding: 4px 8px;
   color: ${({ theme }) => theme.colors.secondary};
   font-family: ${({ theme }) => theme.fonts.body};
-  font-size: 12px;
+  font-size: 13px;
+  min-width: 0;
 
   @media (max-width: 600px) {
     gap: 12px 20px;
     padding: 4px 0;
+  }
+
+  @container admin-content (max-width: 540px) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    justify-content: stretch;
+    gap: 12px;
+  }
+
+  @media (max-width: 540px) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    justify-content: stretch;
+    gap: 12px;
   }
 `;
 
 export const RowsField = styled.div`
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 8px;
+  min-width: 0;
   label {
     white-space: nowrap;
   }
@@ -32,7 +48,7 @@ export const SelectWrapper = styled.div`
   select {
     appearance: none;
     width: 60px;
-    min-height: 40px;
+    min-height: 44px;
     padding: 8px 24px 8px 8px;
     border: 0;
     border-bottom: 1px solid ${({ theme }) => theme.colors.textSoft};
@@ -41,6 +57,9 @@ export const SelectWrapper = styled.div`
     background: ${({ theme }) => theme.colors.background};
     font: inherit;
     cursor: pointer;
+    @media (max-width: 900px) {
+      font-size: 16px;
+    }
     &:focus-visible {
       outline: 2px solid ${({ theme }) => theme.colors.primary};
       outline-offset: 3px;
@@ -62,7 +81,7 @@ export const SelectWrapper = styled.div`
 `;
 
 export const Range = styled.span`
-  min-width: 94px;
+  min-width: 0;
   white-space: nowrap;
   text-align: center;
   font-variant-numeric: tabular-nums;
@@ -72,13 +91,23 @@ export const Controls = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
+
+  @container admin-content (max-width: 540px) {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
+
+  @media (max-width: 540px) {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
 `;
 
 export const PageButton = styled.button`
   display: grid;
   place-items: center;
-  width: 36px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: 0;
   border-radius: 6px;

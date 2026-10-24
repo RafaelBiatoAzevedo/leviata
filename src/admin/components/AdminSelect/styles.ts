@@ -6,10 +6,11 @@ interface SelectProps {
 
 export const Select = styled.select<SelectProps>`
   width: 100%;
+  min-width: 0;
 
   height: 46px;
 
-  padding: 0 1rem;
+  padding: 0 36px 0 14px;
 
   border-radius: 0.6rem;
 
@@ -19,7 +20,11 @@ export const Select = styled.select<SelectProps>`
 
   color: ${({ theme }) => theme.colors.text};
 
-  font-size: 0.95rem;
+  font-size: 14px;
+
+  @media (max-width: 768px) {
+    font-size: 16px;
+  }
 
   font-family: inherit;
 

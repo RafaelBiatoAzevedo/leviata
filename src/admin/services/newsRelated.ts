@@ -24,6 +24,7 @@ const resources = {
   BOARD: "boards",
   JURY: "juries",
   MEETING: "meetings",
+  PRESENTED_WORK: "presented-works",
   RESEARCH: "research",
   RESEARCH_INSTRUMENT: "researchInstruments",
   THEMATIC: "thematics",

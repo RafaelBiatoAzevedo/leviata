@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
+  min-width: 0;
 
   display: flex;
 
@@ -16,6 +17,7 @@ export const Label = styled.label`
   align-items: center;
 
   gap: 0.3rem;
+  flex-wrap: wrap;
 
   font-size: 0.9rem;
 

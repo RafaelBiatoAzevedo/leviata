@@ -44,6 +44,7 @@ export const Container = styled.span<IContainerProps>`
   justify-content: center;
 
   min-height: 28px;
+  white-space: nowrap;
 
   padding: 0.25rem 0.75rem;
 

@@ -177,7 +177,7 @@ test("general server and connection failures remain visible below the form", () 
 });
 
 test("internal news saves its related record without requiring an external link", async () => {
-  for (const relatedType of ["MEETING", "RESEARCH"]) {
+  for (const relatedType of ["MEETING", "RESEARCH", "PRESENTED_WORK"]) {
     for (const externalUrl of ["", "link-antigo-invalido"]) {
       const form = createFormControl({
         defaultValues: { ...internal, relatedType, externalUrl },
@@ -272,6 +272,7 @@ test("each relationship category loads actual IDs and titles from its own collec
     ["BOARD", "boards"],
     ["JURY", "juries"],
     ["MEETING", "meetings"],
+    ["PRESENTED_WORK", "presented-works"],
     ["RESEARCH", "research"],
     ["RESEARCH_INSTRUMENT", "researchInstruments"],
     ["THEMATIC", "thematics"],
