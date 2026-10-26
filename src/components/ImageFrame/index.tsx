@@ -9,6 +9,7 @@ interface ImageFrameProps extends Omit<
   alt: string;
   maxWidth?: string;
   maxHeight?: string;
+  aspectRatio?: number;
 }
 
 export function ImageFrame({
@@ -17,6 +18,7 @@ export function ImageFrame({
   className,
   maxWidth = "900px",
   maxHeight = "600px",
+  aspectRatio,
   loading = "lazy",
   decoding = "async",
   ...imageProps
@@ -34,6 +36,7 @@ export function ImageFrame({
           loading={loading}
           decoding={decoding}
           $maxHeight={maxHeight}
+          $aspectRatio={aspectRatio}
         />
       </Mat>
       <Ornament aria-hidden="true" $position="bottom">

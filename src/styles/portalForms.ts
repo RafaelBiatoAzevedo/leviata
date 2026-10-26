@@ -4,7 +4,7 @@ export const portalFieldStyles = css`
   width: 100%;
   min-width: 0;
   padding: 13px 14px;
-  border: 1px solid rgba(17, 24, 39, 0.14);
+  border: 1px solid var(--theme-field-border, rgba(17, 24, 39, 0.14));
   border-radius: 10px;
   background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
@@ -12,10 +12,12 @@ export const portalFieldStyles = css`
   font-weight: 400;
   line-height: 1.5;
   letter-spacing: 0;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 
   &::placeholder {
-    color: #818780;
+    color: var(--theme-muted, #818780);
   }
 
   &:focus {
@@ -24,7 +26,6 @@ export const portalFieldStyles = css`
     box-shadow: 0 0 0 3px ${({ theme }) => theme.colors.accentSoft};
   }
 `;
-
 
 export const portalButtonStyles = css`
   display: inline-flex;
@@ -40,7 +41,9 @@ export const portalButtonStyles = css`
   color: ${({ theme }) => theme.colors.secondary};
   font-size: 12px;
   font-weight: 600;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 
   svg {
     font-size: 17px;
@@ -51,5 +54,4 @@ export const portalButtonStyles = css`
     background: ${({ theme }) => theme.colors.accentHover};
     box-shadow: 0 5px 18px ${({ theme }) => theme.colors.accentGlow};
   }
-
 `;

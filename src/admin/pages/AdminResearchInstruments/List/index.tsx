@@ -15,9 +15,13 @@ import { researchInstrumentsService } from "../../../services/researchInstrument
 import { AdminTable } from "../../../components/AdminTable";
 import { AdminIconButton } from "../../../components/AdminIconButton";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
+import { AdminSelect } from "../../../components/AdminSelect";
+import { researchInstrumentTypeOptions } from "../../../utils/researchInstrument";
+import type { TResearchInstrumentType } from "../../../types/TResearchInstrumentType";
 
 export function AdminResearchInstruments() {
   const [search, setSearch] = useState("");
+  const [type, setType] = useState<TResearchInstrumentType | "">("");
   const navigate = useNavigate();
 
   const { showToast } = useToast();
@@ -26,7 +30,7 @@ export function AdminResearchInstruments() {
 
   const { items, loading, error, load, pagination } = useAdminList(
     researchInstrumentsService.getPage,
-    { search: search.trim() || undefined },
+    { search: search.trim() || undefined, type: type || undefined },
   );
 
   function handleDelete(researchInstrument: ResearchInstrumentResponseDto) {
@@ -78,6 +82,17 @@ export function AdminResearchInstruments() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Pesquisar instrumento de pesquisas..."
+        />
+        <AdminSelect
+          label="Tipo"
+          value={type}
+          onChange={(event) =>
+            setType(event.target.value as TResearchInstrumentType | "")
+          }
+          options={[
+            { value: "", label: "Todos os tipos" },
+            ...researchInstrumentTypeOptions,
+          ]}
         />
       </Filters>
 

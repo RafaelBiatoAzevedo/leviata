@@ -38,7 +38,7 @@ export const Details = styled.dl`
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 12px;
   }
   svg {
@@ -47,7 +47,7 @@ export const Details = styled.dl`
   }
   dd {
     margin: 10px 0 0;
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 15px;
     line-height: 1.7;
     overflow-wrap: anywhere;
@@ -65,7 +65,7 @@ export const Section = styled.section`
   min-width: 0;
 
   > p {
-    color: #626973;
+    color: var(--theme-muted, #626973);
     line-height: 1.8;
   }
 `;
@@ -99,18 +99,18 @@ export const Meeting = styled.article`
     border-radius: 8px;
   }
   span {
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 11px;
   }
   h3 {
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 27px;
     line-height: 1.2;
     letter-spacing: 0;
     overflow-wrap: anywhere;
   }
   p {
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 13px;
     line-height: 1.8;
     white-space: pre-line;
@@ -127,7 +127,7 @@ export const RecordDates = styled.footer`
   gap: 12px 24px;
   padding-top: 20px;
   border-top: 1px solid ${({ theme }) => theme.colors.primary}30;
-  color: #626973;
+  color: var(--theme-muted, #626973);
   font-size: 11px;
   line-height: 1.8;
 `;

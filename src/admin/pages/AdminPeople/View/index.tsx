@@ -24,6 +24,7 @@ import { peopleService } from "../../../services/people";
 import { useToast } from "../../../../hooks/useToast";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminLoading } from "../../../components/AdminLoading";
+import { personCategoryLabels } from "../../../types/TPersonCategory";
 
 export function PersonView() {
   const navigate = useNavigate();
@@ -85,7 +86,9 @@ export function PersonView() {
         <Name>{person.name}</Name>
 
         <Subtitle>
-          {person.academicTitle?.name} • {person.institution?.acronym}
+          {[person.academicTitle?.name, person.institution?.acronym]
+            .filter(Boolean)
+            .join(" • ")}
         </Subtitle>
       </PhotoWrapper>
 
@@ -96,7 +99,10 @@ export function PersonView() {
 
             <AdminDescriptionItem label="Slug" value={person.slug} />
 
-            <AdminDescriptionItem label="Categoria" value={person.category} />
+            <AdminDescriptionItem
+              label="Categoria"
+              value={personCategoryLabels[person.category]}
+            />
 
             <AdminDescriptionItem
               label="Status"

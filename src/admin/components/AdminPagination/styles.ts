@@ -8,7 +8,7 @@ export const Container = styled.nav`
   gap: 24px;
   min-height: 52px;
   padding: 4px 8px;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: 13px;
   min-width: 0;

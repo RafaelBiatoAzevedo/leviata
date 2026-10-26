@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { ImageGallery } from "../../../../components/ImageGallery";
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
@@ -124,7 +125,7 @@ export function PresentedWorkView() {
           {presentedWork.authors.map((author, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${author.academicTitle!.abbreviation} ${author.name} - ${author.institution!.acronym}`}
+              value={formatPersonLabel(author)}
             />
           ))}
         </AdminSection>

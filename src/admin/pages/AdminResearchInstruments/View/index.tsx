@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import {
@@ -138,7 +139,7 @@ export function ResearchInstrumentView() {
           {researchInstrument.people.map((author, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${author.academicTitle!.abbreviation} ${author.name} - ${author.institution!.acronym}`}
+              value={formatPersonLabel(author)}
             />
           ))}
         </AdminSection>

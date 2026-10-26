@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  /* Mantém a capa horizontal também nos cards da tabela no celular. */
+  --admin-table-image-column-width: 104px;
+  --admin-table-image-width: 80px;
+  --admin-table-image-height: 45px;
+
   width: 100%;
   min-width: 0;
   display: flex;
@@ -11,19 +16,23 @@ export const Container = styled.div`
 `;
 
 export const Cover = styled.img`
-  width: 42px;
+  width: 80px;
 
-  height: 42px;
+  height: 45px;
+
+  aspect-ratio: 16 / 9;
 
   border-radius: 2px;
 
-  object-fit: cover;
+  object-fit: contain;
 `;
 
 export const CoverPlaceholder = styled.div`
-  width: 42px;
+  width: 80px;
 
-  height: 42px;
+  height: 45px;
+
+  aspect-ratio: 16 / 9;
 
   border-radius: 2px;
 

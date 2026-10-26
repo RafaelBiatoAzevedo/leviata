@@ -15,7 +15,7 @@ export interface CreatePersonDto {
 
   orcid?: string;
 
-  email: string;
+  email?: string | null;
 
   lattesUrl?: string;
 
@@ -25,9 +25,9 @@ export interface CreatePersonDto {
 
   honorificTitle?: string;
 
-  nationalityId: string;
+  nationalityId?: string | null;
 
-  academicTitleId: string;
+  academicTitleId?: string | null;
 
-  institutionId: string;
+  institutionId?: string | null;
 }

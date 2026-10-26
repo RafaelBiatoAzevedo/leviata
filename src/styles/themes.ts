@@ -1,4 +1,5 @@
 export const lightTheme = {
+  mode: "light" as const,
   colors: {
     background: "#FFFFFF",
     backgroundCard: "#000000",
@@ -10,6 +11,8 @@ export const lightTheme = {
 
     text: "#000000",
     textSoft: "#8B929D",
+    heading: "#111827",
+    onPrimary: "#000000",
 
     border: "#C6A15B",
 
@@ -62,16 +65,21 @@ export const lightTheme = {
 };
 
 export const darkTheme = {
+  ...lightTheme,
+  mode: "dark" as const,
   colors: {
-    background: "#FFFFFF",
-    backgroundCard: " #0485C910",
-    surface: "#111827",
+    ...lightTheme.colors,
+    background: "#10141C",
+    backgroundCard: "#151B25",
+    surface: "#191F2A",
     primary: "#C6A15B",
     secondary: "#111827",
     onSecondary: "#E5E7EB",
-    text: "#000000",
-    textSoft: "#9CA3AF",
-    border: "#1F2937",
+    text: "#ECE7DE",
+    textSoft: "#B2BBCA",
+    heading: "#F2EDE4",
+    onPrimary: "#111827",
+    border: "#465164",
 
     accent: "#C6A15B",
     accentHover: "#D4B06A",
@@ -81,42 +89,28 @@ export const darkTheme = {
 
     feedback: {
       info: {
-        main: "#3B82F6",
-        light: "#EFF6FF",
-        border: "#BFDBFE",
+        main: "#93C5FD",
+        light: "#182B43",
+        border: "#426C9F",
       },
 
       success: {
-        main: "#22C55E",
-        light: "#F0FDF4",
-        border: "#BBF7D0",
+        main: "#86EFAC",
+        light: "#152D24",
+        border: "#397D55",
       },
 
       warning: {
-        main: "#F59E0B",
-        light: "#FFFBEB",
-        border: "#FDE68A",
+        main: "#FCD34D",
+        light: "#362B18",
+        border: "#8B6D35",
       },
 
       danger: {
-        main: "#EF4444",
-        light: "#FEF2F2",
-        border: "#FECACA",
+        main: "#FDA4AF",
+        light: "#361F25",
+        border: "#93534C",
       },
     },
-  },
-
-  breakpoints: {
-    smallMobile: "360px",
-    mobile: "480px",
-    tablet: "768px",
-    laptop: "1024px",
-    desktop: "1280px",
-    fullhd: "1920px",
-  },
-
-  fonts: {
-    title: "'Cormorant Garamond', serif",
-    body: "'Inter', sans-serif",
   },
 };

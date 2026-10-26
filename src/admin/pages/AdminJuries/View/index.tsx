@@ -23,6 +23,7 @@ import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
 import { AdminLoading } from "../../../components/AdminLoading";
 import { formatDate } from "../../../utils/formatDate";
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 
 export function JuryView() {
   const navigate = useNavigate();
@@ -78,7 +79,7 @@ export function JuryView() {
 
       <ContentWrapper>
         <CoverWrapper to={jury.recordingUrl!} target={"_blank"}>
-          <Cover src={jury.coverUrl!} />
+          <Cover src={jury.coverUrl!} alt={jury.title} />
 
           <JuryTitle>{jury.title}</JuryTitle>
 
@@ -137,7 +138,7 @@ export function JuryView() {
           {jury.judges.map((judge, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${judge.academicTitle!.abbreviation} ${judge.name} - ${judge.institution!.acronym}`}
+              value={formatPersonLabel(judge)}
             />
           ))}
         </AdminSection>
@@ -150,7 +151,7 @@ export function JuryView() {
           {jury.jurors.map((juror, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${juror.academicTitle!.abbreviation} ${juror.name} - ${juror.institution!.acronym}`}
+              value={formatPersonLabel(juror)}
             />
           ))}
         </AdminSection>
@@ -163,7 +164,7 @@ export function JuryView() {
           {jury.prosecutors.map((prosecutor, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${prosecutor.academicTitle!.abbreviation} ${prosecutor.name} - ${prosecutor.institution!.acronym}`}
+              value={formatPersonLabel(prosecutor)}
             />
           ))}
         </AdminSection>
@@ -176,7 +177,7 @@ export function JuryView() {
           {jury.defenders.map((defender, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${defender.academicTitle!.abbreviation} ${defender.name} - ${defender.institution!.acronym}`}
+              value={formatPersonLabel(defender)}
             />
           ))}
         </AdminSection>
@@ -189,7 +190,7 @@ export function JuryView() {
           {jury.bailiffs.map((bailiff, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${bailiff.academicTitle!.abbreviation} ${bailiff.name} - ${bailiff.institution!.acronym}`}
+              value={formatPersonLabel(bailiff)}
             />
           ))}
         </AdminSection>

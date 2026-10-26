@@ -8,11 +8,19 @@ import { usePublicRecord } from "../../hooks/usePublicData";
 import { researchInstrumentPeriod } from "../../utils/researchInstruments";
 import { timelineExternalUrl } from "../../utils/timeline";
 import { DocumentViewer } from "../DocumentViewer";
-import { Container, Content, Links, Status } from "../GalleryDetails/styles";
+import {
+  Container,
+  Content,
+  Header,
+  Links,
+  Status,
+} from "../GalleryDetails/styles";
 import { ParagraphText } from "../ParagraphText";
 import { PublicDataState } from "../PublicDataState";
 import { PublicPeople } from "../PublicPeople";
 import { SectionHeader } from "../SectionHeader";
+import { Comments } from "../Comments";
+import { PeriodBadge } from "../YearBadge";
 
 export function ResearchInstrumentDetails({
   type,
@@ -48,16 +56,18 @@ export function ResearchInstrumentDetails({
     );
   const pdf = timelineExternalUrl(data.pdfUrl);
   const external = timelineExternalUrl(data.externalUrl);
+  const period = researchInstrumentPeriod(data.startYear, data.endYear);
   return (
     <Container>
       <Content>
-        <SectionHeader
-          center
-          title={data.title}
-          subtitle={researchInstrumentPeriod(data.startYear, data.endYear)}
-        />
-        {data.content?.trim() && <ParagraphText text={data.content} />}
-        <PublicPeople people={data.people} title="Responsáveis" />
+        <Header>
+          <SectionHeader center title={data.title} />
+          <PeriodBadge period={period} />
+        </Header>
+        {data.content?.trim() && (
+          <ParagraphText text={data.content} linkifyUrls />
+        )}
+        <PublicPeople people={data.people} title="Responsáveis" compact />
         {pdf && <DocumentViewer pdf={pdf} externalLink={external || pdf} />}
         {!pdf && external && (
           <Links>
@@ -69,9 +79,7 @@ export function ResearchInstrumentDetails({
         {!pdf && !external && (
           <p>Nenhum arquivo ou link disponível no momento.</p>
         )}
-        <Links>
-          <Link to={backPath}>Voltar à listagem</Link>
-        </Links>
+        <Comments targetType="RESEARCH_INSTRUMENT" targetId={data.id} />
       </Content>
     </Container>
   );

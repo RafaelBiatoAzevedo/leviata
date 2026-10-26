@@ -95,7 +95,7 @@ export const AuthorItem = styled.div`
     &:hover {
       background: #ef444415;
 
-      color: #ef4444;
+      color: var(--theme-danger-text, #ef4444);
     }
   }
 `;

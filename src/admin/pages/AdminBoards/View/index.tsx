@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { ImageGallery } from "../../../../components/ImageGallery";
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
@@ -88,12 +89,12 @@ export function BoardView() {
           <AdminDescriptionList>
             <AdminDescriptionItem
               label="Candidato"
-              value={`${board.candidate.academicTitle.abbreviation} ${board.candidate.name} - ${board.candidate.institution.acronym}`}
+              value={formatPersonLabel(board.candidate)}
             />
 
             <AdminDescriptionItem
               label="Orientador"
-              value={`${board.advisor.academicTitle.abbreviation} ${board.advisor.name} - ${board.advisor.institution.acronym}`}
+              value={formatPersonLabel(board.advisor)}
             />
           </AdminDescriptionList>
         </AdminSection>
@@ -106,7 +107,7 @@ export function BoardView() {
           {board.members.map((member, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${member.academicTitle!.abbreviation} ${member.name} - ${member.institution!.acronym}`}
+              value={formatPersonLabel(member)}
             />
           ))}
         </AdminSection>

@@ -185,7 +185,7 @@ export const SectionHeading = styled.div`
 
   p {
     margin-top: 6px;
-    color: #6a7079;
+    color: var(--theme-muted, #6a7079);
     font-size: 12px;
     line-height: 1.7;
     letter-spacing: 0;
@@ -202,7 +202,7 @@ export const SectionHeading = styled.div`
     border: 1px solid ${({ theme }) => theme.colors.primary}40;
     border-radius: 50%;
     background: ${({ theme }) => theme.colors.accentSoft};
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 12px;
     font-variant-numeric: tabular-nums;
   }
@@ -221,7 +221,7 @@ export const YearHeader = styled.div`
   gap: 14px;
 
   h3 {
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 25px;
     font-weight: 600;
     line-height: 1;
@@ -229,7 +229,7 @@ export const YearHeader = styled.div`
   }
 
   span {
-    color: #6a7079;
+    color: var(--theme-muted, #6a7079);
     font-size: 11px;
     letter-spacing: 0;
   }
@@ -318,7 +318,7 @@ export const DateStamp = styled.div<{ $past: boolean }>`
   background: ${({ theme, $past }) =>
     $past ? theme.colors.surface : theme.colors.secondary};
   color: ${({ theme, $past }) =>
-    $past ? theme.colors.secondary : theme.colors.primary};
+    $past ? theme.colors.heading : theme.colors.primary};
 
   strong {
     font-family: ${({ theme }) => theme.fonts.title};
@@ -343,7 +343,7 @@ export const DateStamp = styled.div<{ $past: boolean }>`
     border: 0;
     border-radius: 0;
     background: transparent;
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
 
     strong {
       font-family: ${({ theme }) => theme.fonts.body};
@@ -393,7 +393,7 @@ export const DateLabel = styled.time`
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #626973;
+  color: var(--theme-muted, #626973);
   font-size: 11px;
   line-height: 1.7;
 
@@ -416,7 +416,7 @@ export const StatusBadge = styled.span<{ $status: TimelineStatus }>`
   color: ${({ theme, $status }) =>
     $status === "ongoing" || $status === "today"
       ? theme.colors.onSecondary
-      : theme.colors.secondary};
+      : theme.colors.heading};
   font-size: 10px;
   font-weight: 500;
   line-height: 1.4;
@@ -424,7 +424,7 @@ export const StatusBadge = styled.span<{ $status: TimelineStatus }>`
 `;
 
 export const CardTitle = styled.h4`
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-size: clamp(24px, 2.3vw, 31px);
   font-weight: 600;
   line-height: 1.2;
@@ -434,7 +434,7 @@ export const CardTitle = styled.h4`
 `;
 
 export const CardSubtitle = styled.p`
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-size: 14px;
   line-height: 1.7;
   letter-spacing: 0;
@@ -444,7 +444,7 @@ export const Metadata = styled.p`
   display: flex;
   align-items: flex-start;
   gap: 9px;
-  color: #626973;
+  color: var(--theme-muted, #626973);
   font-size: 12px;
   line-height: 1.8;
   letter-spacing: 0;
@@ -464,7 +464,7 @@ export const Metadata = styled.p`
 `;
 
 export const CardDescription = styled.p`
-  color: #626973;
+  color: var(--theme-muted, #626973);
   font-size: 13px;
   line-height: 1.85;
   letter-spacing: 0.1px;
@@ -483,7 +483,7 @@ export const Authors = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 10px;
     font-weight: 500;
     letter-spacing: 0.4px;
@@ -507,7 +507,7 @@ export const AuthorList = styled.ul`
     padding: 7px 10px;
     border: 1px solid ${({ theme }) => theme.colors.primary}30;
     border-radius: 8px;
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 11px;
     line-height: 1.6;
     letter-spacing: 0;
@@ -516,14 +516,14 @@ export const AuthorList = styled.ul`
 
   span {
     margin-right: 5px;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     letter-spacing: 0;
   }
 
   small {
     display: block;
     margin-top: 3px;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 10px;
     letter-spacing: 0;
   }
@@ -550,7 +550,7 @@ export const ExternalAction = styled.a`
   padding: 8px 11px;
   border: 1px solid ${({ theme }) => theme.colors.primary}50;
   border-radius: 8px;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   background: ${({ theme }) => theme.colors.accentSoft};
   font-size: 11px;
   line-height: 1.5;
@@ -579,7 +579,7 @@ export const DetailLink = styled(Link)`
   min-height: 40px;
   margin-left: auto;
   padding: 8px 0 8px 8px;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0;
@@ -618,7 +618,7 @@ export const EmptyState = styled.div<{ $compact?: boolean }>`
   }
 
   h2 {
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 27px;
     font-weight: 600;
     line-height: 1.2;
@@ -627,7 +627,7 @@ export const EmptyState = styled.div<{ $compact?: boolean }>`
 
   p {
     max-width: 58ch;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 13px;
     line-height: 1.8;
     letter-spacing: 0;

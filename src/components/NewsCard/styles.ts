@@ -10,10 +10,10 @@ export const Container = styled.a`
   isolation: isolate;
   overflow: hidden;
 
-  border: 1px solid rgba(17, 24, 39, 0.12);
+  border: 1px solid var(--theme-border, rgba(17, 24, 39, 0.12));
   border-radius: 12px;
-  background: #fcfaf5;
-  color: ${({ theme }) => theme.colors.secondary};
+  background: var(--theme-surface, #fcfaf5);
+  color: ${({ theme }) => theme.colors.heading};
   text-decoration: none;
 
   transition:
@@ -93,17 +93,17 @@ export const CoverImage = styled.img`
 
 export const Category = styled.span`
   position: absolute;
-  top: 18px;
-  left: 18px;
+  top: 8px;
+  left: 8px;
   display: flex;
   align-items: center;
-  gap: 7px;
-  max-width: calc(100% - 36px);
-  padding: 8px 11px;
+  gap: 5px;
+  max-width: calc(100% - 16px);
+  padding: 4px 7px;
   border: 1px solid rgba(198, 161, 91, 0.35);
   border-radius: 3px;
-  background: #fcfaf5;
-  color: ${({ theme }) => theme.colors.secondary};
+  background: var(--theme-surface, #fcfaf5);
+  color: ${({ theme }) => theme.colors.heading};
   font-size: 9px;
   font-weight: 600;
   line-height: 1.2;
@@ -132,10 +132,10 @@ export const DateBadge = styled.div`
   gap: 1px;
   width: 62px;
   height: 70px;
-  border: 1px solid rgba(17, 24, 39, 0.08);
+  border: 1px solid var(--theme-border, rgba(17, 24, 39, 0.08));
   border-top: 3px solid ${({ theme }) => theme.colors.primary};
   border-radius: 3px;
-  background: #fcfaf5;
+  background: var(--theme-surface, #fcfaf5);
   box-shadow: 0 5px 14px rgba(17, 24, 39, 0.12);
 
   strong {
@@ -147,7 +147,7 @@ export const DateBadge = styled.div`
   }
 
   span {
-    color: #6a706b;
+    color: var(--theme-muted, #6a706b);
     font-size: 9px;
     font-weight: 600;
     line-height: 1.5;
@@ -218,7 +218,7 @@ export const Content = styled.div`
 
 export const DateText = styled.time`
   align-self: flex-end;
-  color: #6a706b;
+  color: var(--theme-muted, #6a706b);
   font-size: 9px;
   font-weight: 500;
   line-height: 1.5;
@@ -244,7 +244,7 @@ export const Description = styled.p`
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
-  color: #6a706b;
+  color: var(--theme-muted, #6a706b);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.7;
@@ -259,11 +259,11 @@ export const Footer = styled.div`
   gap: 12px;
   margin-top: auto;
   padding-top: 16px;
-  border-top: 1px solid rgba(17, 24, 39, 0.1);
+  border-top: 1px solid var(--theme-border, rgba(17, 24, 39, 0.1));
 `;
 
 export const Source = styled.span`
-  color: #6a706b;
+  color: var(--theme-muted, #6a706b);
   font-size: 8px;
   font-weight: 500;
   line-height: 1.4;
@@ -300,6 +300,7 @@ export const LinkArrow = styled.span`
   ${Container}:hover &,
   ${Container}:focus-visible & {
     background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.secondary};
 
     svg {
       transform: translateX(2px);

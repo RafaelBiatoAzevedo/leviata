@@ -9,10 +9,10 @@ export const Container = styled.a`
   isolation: isolate;
   overflow: hidden;
 
-  border: 1px solid rgba(17, 24, 39, 0.12);
+  border: 1px solid var(--theme-border, rgba(17, 24, 39, 0.12));
   border-radius: 12px;
-  background: #fcfaf5;
-  color: ${({ theme }) => theme.colors.secondary};
+  background: var(--theme-surface, #fcfaf5);
+  color: ${({ theme }) => theme.colors.heading};
   text-decoration: none;
 
   transition:
@@ -143,7 +143,7 @@ export const Book = styled.div`
     background: repeating-linear-gradient(
       90deg,
       #e8e1d2 0 1px,
-      #fcfaf5 1px 2px
+      var(--theme-surface, #fcfaf5) 1px 2px
     );
   }
 
@@ -248,7 +248,7 @@ export const Publisher = styled.span`
   overflow: hidden;
   padding-left: 10px;
   border-left: 2px solid ${({ theme }) => theme.colors.primary};
-  color: #6a706b;
+  color: var(--theme-muted, #6a706b);
   font-size: 9px;
   font-weight: 600;
   line-height: 1.6;
@@ -284,7 +284,7 @@ export const Subtitle = styled.p`
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
-  color: #6a706b;
+  color: var(--theme-muted, #6a706b);
   font-size: 12px;
   line-height: 1.5;
   letter-spacing: 0.1px;
@@ -316,7 +316,7 @@ export const Footer = styled.div`
   gap: 12px;
   margin-top: auto;
   padding-top: 16px;
-  border-top: 1px solid rgba(17, 24, 39, 0.1);
+  border-top: 1px solid var(--theme-border, rgba(17, 24, 39, 0.1));
 `;
 
 export const Year = styled.span`
@@ -328,7 +328,7 @@ export const Year = styled.span`
   font-variant-numeric: tabular-nums;
 
   span {
-    color: #6a706b;
+    color: var(--theme-muted, #6a706b);
     font-size: 8px;
     font-weight: 500;
     letter-spacing: 1.3px;
@@ -354,7 +354,7 @@ export const LinkArrow = styled.span`
   height: 30px;
   border: 1px solid ${({ theme }) => theme.colors.primary};
   border-radius: 50%;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-size: 17px;
   transition: background 0.25s ease;
 
@@ -365,6 +365,7 @@ export const LinkArrow = styled.span`
   ${Container}:hover &,
   ${Container}:focus-visible & {
     background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.secondary};
 
     svg {
       transform: translate(1px, -1px);

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Container, ContainerLoading, Content, Description } from "./styles";
 import { Loading } from "../../components/Loading";
+import { Comments } from "../../components/Comments";
 import { SectionHeader } from "../../components/SectionHeader";
 import { HistoryDivider } from "../../components/HistotyDivider";
 import {
@@ -88,6 +89,7 @@ function ThematicContent({ identifier }: { identifier?: string }) {
           title="Pesquisas vinculadas"
           subtitle="Acompanhe as pesquisas vinculadas à temática."
         />
+        <Comments targetType="THEMATIC" targetId={thematic.id} />
       </Content>
     </Container>
   );

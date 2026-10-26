@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
 import { AdminButton } from "../../../components/AdminButton";
 import { Container, Header, HeaderActions, Title } from "./styles";
@@ -81,7 +82,7 @@ export function VideoView() {
           {video.people.map((person, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${person.academicTitle!.abbreviation} ${person.name} - ${person.institution!.acronym}`}
+              value={formatPersonLabel(person)}
             />
           ))}
         </AdminSection>

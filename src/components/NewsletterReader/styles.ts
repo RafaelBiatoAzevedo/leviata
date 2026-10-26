@@ -53,7 +53,7 @@ export const ReaderHeading = styled.div`
   }
 
   h2 {
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 24px;
     font-weight: 600;
     line-height: 1.2;
@@ -70,7 +70,7 @@ export const CloseButton = styled.button`
   height: 44px;
   border: 1px solid ${({ theme }) => theme.colors.primary}50;
   border-radius: 10px;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-size: 22px;
 
   &:hover,

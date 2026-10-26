@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.div<{ $wide?: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
   gap: clamp(10px, 2.5vw, 18px);
-  width: min(100%, 270px);
+  width: min(100%, ${({ $wide }) => ($wide ? "420px" : "270px")});
 
   &::before,
   &::after {
@@ -18,6 +18,8 @@ export const Container = styled.div`
 `;
 
 export const Stamp = styled.time`
+  min-width: 0;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,11 +41,12 @@ export const Label = styled.span`
 `;
 
 export const Year = styled.span`
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-family: ${({ theme }) => theme.fonts.title};
   font-size: clamp(1.75rem, 1.5rem + 0.75vw, 2.125rem);
   font-weight: 600;
   font-variant-numeric: lining-nums tabular-nums;
   line-height: 1;
   letter-spacing: 0.03em;
+  text-align: center;
 `;

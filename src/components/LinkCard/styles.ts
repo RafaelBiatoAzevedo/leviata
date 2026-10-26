@@ -76,7 +76,7 @@ export const IconWrapper = styled.div`
 
   font-size: 1.4rem;
 
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.onPrimary};
 
   background: ${({ theme }) => theme.colors.primary};
 
@@ -124,7 +124,10 @@ export const ReadMore = styled.span`
   opacity: 0;
   visibility: hidden;
   transform: translateY(5px);
-  transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    visibility 0.2s ease,
+    transform 0.2s ease;
 
   svg {
     width: 16px;

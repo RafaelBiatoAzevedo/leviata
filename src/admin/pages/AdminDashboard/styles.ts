@@ -44,7 +44,7 @@ export const Title = styled.h1`
   font-weight: 600;
   line-height: 1.05;
   letter-spacing: -0.035em;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
 `;
 export const Subtitle = styled.p`
   margin: 9px 0 0;
@@ -82,7 +82,7 @@ export const ActionLink = styled(Link)<{ $variant?: "gold" | "ghost" }>`
   text-decoration: none;
   border: 1px solid
     color-mix(in srgb, ${({ theme }) => theme.colors.textSoft} 22%, transparent);
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   background: ${({ theme }) => theme.colors.background};
   transition:
     background 0.2s,
@@ -363,7 +363,7 @@ export const IconTile = styled.div`
 `;
 export const StatValue = styled.strong`
   display: block;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-size: 28px;
   font-weight: 600;
   margin: 15px 0 5px;
@@ -402,7 +402,7 @@ export const PanelHeader = styled.div`
 `;
 export const SectionHeading = styled.h2`
   margin: 0;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-family: ${({ theme }) => theme.fonts.title};
   font-size: 27px;
   font-weight: 600;
@@ -470,7 +470,7 @@ export const DateTile = styled.div`
   border-radius: 10px;
   background: ${({ theme }) => theme.colors.accentSoft};
   border: 1px solid ${({ theme }) => theme.colors.accentGlow};
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   strong {
     font-size: 22px;
     font-weight: 600;
@@ -490,7 +490,7 @@ export const EventDetails = styled.div`
     font-size: 11px;
   }
   h3 {
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 14px;
     line-height: 1.5;
     font-weight: 500;
@@ -561,7 +561,7 @@ export const EmptyState = styled.div`
   h3 {
     font-size: 14px;
     font-weight: 500;
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     margin: 0 0 8px;
   }
   p {
@@ -623,7 +623,7 @@ export const Shortcut = styled(Link)`
     font-size: 22px;
   }
   h3 {
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     margin: 16px 0 7px;
     font-size: 14px;
     font-weight: 600;

@@ -231,7 +231,7 @@ export const NavItem = styled(NavLink)`
   &.active {
     background: ${({ theme }) => theme.colors.primary};
 
-    color: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.colors.onPrimary};
   }
 `;
 
@@ -347,7 +347,7 @@ export const Avatar = styled.div`
 
   background: ${({ theme }) => theme.colors.primary};
 
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.onPrimary};
 
   font-weight: 700;
 

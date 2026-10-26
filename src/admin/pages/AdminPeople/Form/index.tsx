@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { FiUser } from "react-icons/fi";
 
@@ -29,6 +29,7 @@ import {
   mapPersonToForm,
 } from "../../../mappers/person.mapper";
 import { personCategoryOptions } from "../../../utils/personCategory";
+import { PersonCategory } from "../../../types/TPersonCategory";
 import { useToast } from "../../../../hooks/useToast";
 import { personDefaultValues } from "./defaultValues";
 import { useAdminData } from "../../../hooks/useAdminData";
@@ -57,10 +58,10 @@ export function PersonForm() {
   const academicTitleOptions = toSelectOptions(academicTitles);
 
   const {
+    control,
     register,
     handleSubmit,
     reset,
-    // watch,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<
@@ -71,6 +72,9 @@ export function PersonForm() {
     resolver: zodResolver(personSchema),
     defaultValues: personDefaultValues,
   });
+
+  const category = useWatch({ control, name: "category" });
+  const isExternal = category === PersonCategory.EXTERNO;
 
   const loadPerson = useCallback(async () => {
     if (!slug) return;
@@ -109,12 +113,14 @@ export function PersonForm() {
         type: "success",
       });
 
-      return;
+      return response.data.url;
     }
 
     setImageFile(file);
 
-    setImagePreview(URL.createObjectURL(file));
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+    return previewUrl;
   }
 
   async function onSubmit(data: PersonFormData) {
@@ -190,6 +196,11 @@ export function PersonForm() {
                 <AdminSelect
                   options={personCategoryOptions}
                   label="Categoria"
+                  description={
+                    isExternal
+                      ? "Pode participar de júris e outras atividades, sem aparecer na página de pesquisadores do LEVIATA. Dados acadêmicos e de contato são opcionais."
+                      : "Para pessoas sem vínculo com o grupo, escolha Participante externo."
+                  }
                   required
                   error={errors.category?.message}
                   {...register("category")}
@@ -215,9 +226,17 @@ export function PersonForm() {
 
               <AdminSelect
                 label="Nacionalidade"
-                options={countryOptions}
+                options={[
+                  {
+                    value: "",
+                    label: isExternal
+                      ? "Não informada"
+                      : "Selecione uma nacionalidade",
+                  },
+                  ...countryOptions,
+                ]}
                 error={errors.nationalityId?.message}
-                required
+                required={!isExternal}
                 {...register("nationalityId")}
               />
             </AdminFormGrid>
@@ -229,8 +248,16 @@ export function PersonForm() {
             <AdminFormGrid>
               <AdminSelect
                 label="Título Acadêmico"
-                options={academicTitleOptions}
-                required
+                options={[
+                  {
+                    value: "",
+                    label: isExternal
+                      ? "Sem título acadêmico informado"
+                      : "Selecione um título acadêmico",
+                  },
+                  ...academicTitleOptions,
+                ]}
+                required={!isExternal}
                 error={errors.academicTitleId?.message}
                 {...register("academicTitleId")}
               />
@@ -243,9 +270,17 @@ export function PersonForm() {
 
               <AdminSelect
                 label="Instituição"
-                options={institutionOptions}
+                options={[
+                  {
+                    value: "",
+                    label: isExternal
+                      ? "Sem vínculo institucional informado"
+                      : "Selecione uma instituição",
+                  },
+                  ...institutionOptions,
+                ]}
                 error={errors.institutionId?.message}
-                required
+                required={!isExternal}
                 {...register("institutionId")}
               />
             </AdminFormGrid>
@@ -258,7 +293,7 @@ export function PersonForm() {
               <AdminInput
                 label="E-mail"
                 type="email"
-                required
+                required={!isExternal}
                 placeholder="email@exemplo.com"
                 error={errors.email?.message}
                 {...register("email")}

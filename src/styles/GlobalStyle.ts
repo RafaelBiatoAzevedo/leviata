@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { darkThemeVariables } from "./darkThemeVariables";
 
 import "@fontsource/inter/300.css";
 import "@fontsource/inter/400.css";
@@ -18,6 +19,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   html {
+    color-scheme: ${({ theme }) => theme.mode};
     font-size: 14px;
     scroll-behavior: smooth;
   }
@@ -72,5 +74,12 @@ export const GlobalStyle = createGlobalStyle`
     html {
       font-size: 9px;
     }
+  }
+
+  ${({ theme }) => theme.mode === "dark" && darkThemeVariables}
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    body { transition: none; }
   }
 `;

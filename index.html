@@ -1,9 +1,27 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/leviataFavicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#FFFFFF" />
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      :root[data-theme="dark"] {
+        color-scheme: dark;
+        background: #10141c;
+      }
+    </style>
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem("portfolio-theme") === "dark" ? "dark" : "light";
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
     <title>Leviatã e o Cativeiro</title>
   </head>
   <body>

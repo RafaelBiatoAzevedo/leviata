@@ -11,13 +11,13 @@ import { ImageFrame } from "../../components/ImageFrame";
 import { YearBadge } from "../../components/YearBadge";
 import { HistoryDivider } from "../../components/HistotyDivider";
 import { ImageGallery } from "../../components/ImageGallery";
+import { Comments } from "../../components/Comments";
 import {
   AccessLinks,
   AccessSection,
   Container,
   Content,
   Header,
-  Links,
   Status,
 } from "../../components/GalleryDetails/styles";
 import { timelineExternalUrl } from "../../utils/timeline";
@@ -62,7 +62,9 @@ export function NewsDetails() {
             }}
           />
         )}
-        {data.description?.trim() && <ParagraphText text={data.description} />}
+        {data.description?.trim() && (
+          <ParagraphText text={data.description} linkifyUrls />
+        )}
         {!!data.images?.length && (
           <>
             <HistoryDivider />
@@ -98,9 +100,7 @@ export function NewsDetails() {
             </AccessSection>
           </>
         )}
-        <Links>
-          <Link to="/noticias">Voltar às notícias</Link>
-        </Links>
+        <Comments targetType="NEWS" targetId={data.id} />
       </Content>
     </Container>
   );

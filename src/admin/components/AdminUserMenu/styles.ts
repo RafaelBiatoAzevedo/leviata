@@ -58,7 +58,7 @@ export const MenuHeading = styled.div`
   }
   strong {
     font-size: 12px;
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-weight: 500;
     overflow-wrap: anywhere;
   }
@@ -74,7 +74,7 @@ export const MenuItem = styled.button<{ $danger?: boolean }>`
   border-radius: 8px;
   background: transparent;
   color: ${({ theme, $danger }) =>
-    $danger ? theme.colors.feedback.danger.main : theme.colors.secondary};
+    $danger ? theme.colors.feedback.danger.main : theme.colors.heading};
   font-family: ${({ theme }) => theme.fonts.body};
   font-size: 12px;
   text-align: left;

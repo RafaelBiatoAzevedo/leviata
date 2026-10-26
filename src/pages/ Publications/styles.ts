@@ -23,9 +23,9 @@ export const Tabs = styled.div`
   width: 100%;
   max-width: 1040px;
   padding: 8px;
-  border: 1px solid rgba(17, 24, 39, 0.1);
+  border: 1px solid var(--theme-border, rgba(17, 24, 39, 0.1));
   border-radius: 16px;
-  background: #fcfaf5;
+  background: var(--theme-surface, #fcfaf5);
   box-shadow: 0 8px 30px rgba(17, 24, 39, 0.03);
 
   @media (max-width: 900px) {
@@ -48,7 +48,7 @@ export const TabButton = styled.button<{
   background: ${({ theme, $active }) =>
     $active ? theme.colors.secondary : "transparent"};
   color: ${({ theme, $active }) =>
-    $active ? theme.colors.onSecondary : theme.colors.secondary};
+    $active ? theme.colors.onSecondary : theme.colors.heading};
   text-align: left;
   cursor: pointer;
 

@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { useCallback, useEffect, useState } from "react";
 import type { ArticleResponseDto } from "../../../dtos/articles/ArticleResponseDto";
 import {
@@ -123,7 +124,7 @@ export function ArticleView() {
           {article.authors.map((author, index) => (
             <AdminDescriptionItem
               key={index}
-              value={`${author.academicTitle!.abbreviation} ${author.name} - ${author.institution!.acronym}`}
+              value={formatPersonLabel(author)}
             />
           ))}
         </AdminSection>

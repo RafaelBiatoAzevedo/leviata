@@ -55,7 +55,7 @@ export const TitleColumn = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
 
   p {
     margin: 0;
@@ -68,7 +68,7 @@ export const TitleColumn = styled.div`
 
   p:nth-child(2) {
     margin-block: 2px;
-    color: #6a7079;
+    color: var(--theme-muted, #6a7079);
     font-size: 10px;
     font-weight: 400;
     font-style: italic;
@@ -108,7 +108,7 @@ export const Menu = styled.ul`
   padding: 5px;
   border: 1px solid ${({ theme }) => theme.colors.primary}25;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.55);
+  background: var(--theme-elevated, rgba(255, 255, 255, 0.55));
   list-style: none;
 `;
 
@@ -135,7 +135,7 @@ export const MenuItem = styled(Link)<{ $active?: boolean }>`
   min-height: 46px;
   padding: 0 10px;
   border-radius: 8px;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
@@ -170,7 +170,7 @@ export const DropdownArrow = styled.button<{ $expanded: boolean }>`
   min-height: 46px;
   margin-right: 3px;
   border-radius: 7px;
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
 
   svg {
     width: 15px;
@@ -232,7 +232,7 @@ export const DropdownHeading = styled.div`
   border-bottom: 1px solid ${({ theme }) => theme.colors.primary}30;
 
   strong {
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-family: ${({ theme }) => theme.fonts.title};
     font-size: 23px;
     font-weight: 600;
@@ -241,7 +241,7 @@ export const DropdownHeading = styled.div`
   }
 
   span {
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 11px;
     line-height: 1.7;
     letter-spacing: 0;
@@ -271,7 +271,7 @@ export const SubmenuItem = styled(Link)<{ $active: boolean }>`
   border-radius: 10px;
   background: ${({ theme, $active }) =>
     $active ? theme.colors.accentSoft : "transparent"};
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   text-decoration: none;
   transition:
     background 0.2s ease,
@@ -318,7 +318,7 @@ export const SubmenuCopy = styled.span`
   > span {
     display: block;
     margin-top: 3px;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 11px;
     line-height: 1.6;
     letter-spacing: 0;
@@ -336,9 +336,11 @@ export const MobileOnly = styled.div`
   grid-column: 2;
   justify-self: end;
   display: none;
+  align-items: center;
+  gap: 8px;
 
   @media (max-width: 1200px) {
-    display: block;
+    display: flex;
   }
 `;
 
@@ -350,7 +352,7 @@ export const MenuToggle = styled.button<{ $open: boolean }>`
   border: 1px solid ${({ theme }) => theme.colors.primary}55;
   border-radius: 11px;
   color: ${({ theme, $open }) =>
-    $open ? theme.colors.primary : theme.colors.secondary};
+    $open ? theme.colors.primary : theme.colors.heading};
   background: ${({ theme, $open }) =>
     $open ? theme.colors.secondary : theme.colors.accentSoft};
   transition:
@@ -420,7 +422,7 @@ export const MobileIntro = styled.div`
   margin-inline: auto;
 
   > span {
-    color: #7b622f;
+    color: var(--theme-accent-text, #7b622f);
     font-size: 10px;
     font-weight: 500;
     letter-spacing: 1.5px;
@@ -429,7 +431,7 @@ export const MobileIntro = styled.div`
 
   h2 {
     margin-top: 7px;
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 29px;
     font-weight: 600;
     line-height: 1.1;
@@ -438,7 +440,7 @@ export const MobileIntro = styled.div`
 
   p {
     margin-top: 7px;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 12px;
     line-height: 1.7;
     letter-spacing: 0;
@@ -498,7 +500,7 @@ export const MobileCategoryCopy = styled.span`
 
   strong {
     display: block;
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-family: ${({ theme }) => theme.fonts.title};
     font-size: 22px;
     font-weight: 600;
@@ -509,7 +511,7 @@ export const MobileCategoryCopy = styled.span`
   > span {
     display: block;
     margin-top: 5px;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 11px;
     font-weight: 400;
     line-height: 1.5;
@@ -548,38 +550,70 @@ export const FooterMenuMobile = styled.div`
 `;
 
 export const Copy = styled.p`
-  color: #626973;
+  color: var(--theme-muted, #626973);
   font-size: 10px;
   line-height: 1.6;
   letter-spacing: 0;
   text-align: center;
 `;
 
-// Reserved controls for the theme and language options.
+// The theme controls reuse the original switch structure.
 export const ThemeSwitch = styled.button`
   position: relative;
-  display: flex;
+  display: block;
+  flex-shrink: 0;
   align-items: center;
-  width: 52px;
-  height: 26px;
-  border: none;
-  border-radius: 20px;
-  background: ${({ theme }) => theme.colors.border};
+  width: 60px;
+  height: 44px;
+  border: 1px solid ${({ theme }) => theme.colors.primary}55;
+  border-radius: 11px;
+  background: ${({ theme }) => theme.colors.accentSoft};
   cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 9px 5px;
+    border-radius: 20px;
+    background: ${({ theme }) => theme.colors.background};
+  }
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    &,
+    * {
+      transition: none;
+    }
+  }
 `;
 
-export const SwitchCircle = styled.span<{ themeMode: string }>`
+export const SwitchCircle = styled.span<{ $themeMode: "light" | "dark" }>`
   position: absolute;
-  top: 2px;
-  left: ${({ themeMode }) => (themeMode === "dark" ? "2px" : "28px")};
+  top: 10px;
+  left: 6px;
+  transform: translateX(
+    ${({ $themeMode }) => ($themeMode === "dark" ? "24px" : "0px")}
+  );
   display: grid;
   place-items: center;
   width: 22px;
   height: 22px;
   border-radius: 50%;
   background: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.onPrimary};
   font-size: 12px;
-  transition: left 0.3s ease;
+  transition: transform 0.25s ease;
+  svg {
+    width: 14px;
+    height: 14px;
+  }
 `;
 
 export const LanguageButton = styled.button`

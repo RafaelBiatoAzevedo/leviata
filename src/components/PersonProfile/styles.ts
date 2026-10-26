@@ -12,7 +12,7 @@ export const Profile = styled.article`
   background: ${({ theme }) => theme.colors.surface};
 
   > p {
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 13px;
     line-height: 1.85;
     white-space: pre-line;
@@ -37,7 +37,7 @@ export const ProfileHeader = styled.div`
   }
   p {
     margin-top: 6px;
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 12px;
     line-height: 1.7;
     overflow-wrap: anywhere;
@@ -45,7 +45,7 @@ export const ProfileHeader = styled.div`
   small {
     display: block;
     margin-top: 7px;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 11px;
   }
 
@@ -90,7 +90,7 @@ export const ResourceLinks = styled.div`
     padding: 10px 14px;
     border: 1px solid ${({ theme }) => theme.colors.primary}60;
     border-radius: 8px;
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 12px;
     line-height: 1.6;
     text-decoration: none;

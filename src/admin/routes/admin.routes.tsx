@@ -51,17 +51,22 @@ import { AdminUsers } from "../pages/AdminUsers/List";
 import { UserForm } from "../pages/AdminUsers/Form";
 import { UserView } from "../pages/AdminUsers/View";
 import { SuperAdminRoute } from "./superAdmin.routes";
+import { NotificationsProvider } from "../contexts/NotificationsContext";
+import { AdminNotifications } from "../pages/AdminNotifications";
 
 export const adminRoutes = (
   <Route
     path="/admin"
     element={
       <AdminDataProvider>
-        <AdminLayout />
+        <NotificationsProvider>
+          <AdminLayout />
+        </NotificationsProvider>
       </AdminDataProvider>
     }
   >
     <Route index element={<AdminDashboard />} />
+    <Route path="notificacoes" element={<AdminNotifications />} />
     <Route path="minha-conta" element={<UserForm account />} />
     <Route element={<SuperAdminRoute />}>
       <Route path="usuarios" element={<AdminUsers />} />

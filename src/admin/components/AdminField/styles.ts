@@ -27,7 +27,7 @@ export const Label = styled.label`
 `;
 
 export const Required = styled.span`
-  color: #ef4444;
+  color: var(--theme-danger-text, #ef4444);
 
   font-size: 0.9rem;
 `;
@@ -50,7 +50,7 @@ export const Description = styled.span`
 export const Error = styled.span`
   font-size: 0.8rem;
 
-  color: #ef4444;
+  color: var(--theme-danger-text, #ef4444);
 
   font-weight: 500;
 `;

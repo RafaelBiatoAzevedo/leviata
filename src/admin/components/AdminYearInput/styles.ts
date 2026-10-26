@@ -12,7 +12,10 @@ export const Input = styled.input<InputProps>`
   padding: 10px 12px;
 
   border: 1px solid
-    ${({ theme, $hasError }) => ($hasError ? "#ef4444" : theme.colors.border)};
+    ${({ theme, $hasError }) =>
+      $hasError
+        ? "#ef4444"
+        : `var(--theme-field-border, ${theme.colors.border})`};
 
   border-radius: 0.6rem;
 

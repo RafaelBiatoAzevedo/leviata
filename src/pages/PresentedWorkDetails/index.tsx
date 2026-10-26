@@ -1,6 +1,5 @@
 import { Link, useParams } from "react-router-dom";
 import {
-  FiArrowLeft,
   FiArrowUpRight,
   FiCalendar,
   FiMapPin,
@@ -8,6 +7,7 @@ import {
 import type { PresentedWorkResponseDto } from "../../admin/dtos/presentedWorks/PresentedWorkResponseDto";
 import { meetingTypeLabels } from "../../admin/types/TMeetingType";
 import { ImageGallery } from "../../components/ImageGallery";
+import { Comments } from "../../components/Comments";
 import { Loading } from "../../components/Loading";
 import { PersonProfile } from "../../components/PersonProfile";
 import { SectionHeader } from "../../components/SectionHeader";
@@ -198,13 +198,8 @@ export function PresentedWorkDetails() {
               )}
             </RecordDates>
           )}
-          <ResourceLinks>
-            <Link to="/atividades/apresentacoes-trabalhos">
-              <FiArrowLeft aria-hidden="true" />
-              Voltar às apresentações
-            </Link>
-          </ResourceLinks>
         </Body>
+        <Comments targetType="PRESENTED_WORK" targetId={data.id} />
       </Content>
     </Container>
   );

@@ -1,5 +1,17 @@
 import { Container, Label, Stamp, Year } from "./styles";
 
+export function PeriodBadge({ period }: { period: string }) {
+  if (!period.trim()) return null;
+  return (
+    <Container $wide>
+      <Stamp as="div" aria-label={`Período: ${period}`}>
+        <Label>Período</Label>
+        <Year>{period}</Year>
+      </Stamp>
+    </Container>
+  );
+}
+
 export function YearBadge({ date }: { date?: string | null }) {
   if (!date) return null;
   const parsedDate = new Date(date);

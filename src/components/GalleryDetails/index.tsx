@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   FiArrowUpRight,
@@ -21,6 +22,8 @@ import { HistoryDivider } from "../HistotyDivider";
 import { PublicPeople } from "../PublicPeople";
 import { YearBadge } from "../YearBadge";
 import { timelineExternalUrl } from "../../utils/timeline";
+import { Comments } from "../Comments";
+import type { CommentTarget } from "../../services/comments";
 import {
   AccessLinks,
   AccessSection,
@@ -33,6 +36,7 @@ import {
 } from "./styles";
 
 interface GalleryRecord {
+  id: string;
   title: string;
   type?: TMeetingType;
   date?: string;
@@ -95,10 +99,9 @@ export function GalleryDetails({
     dateOptions.minute = "2-digit";
   }
   const parsedDate = data.date ? new Date(data.date) : null;
+  const usesMeetingLayout = ["meetings", "juries", "boards"].includes(resource);
   const formattedDate =
-    parsedDate &&
-    Number.isFinite(parsedDate.getTime()) &&
-    resource !== "meetings"
+    parsedDate && Number.isFinite(parsedDate.getTime()) && !usesMeetingLayout
       ? new Intl.DateTimeFormat("pt-BR", dateOptions).format(parsedDate)
       : undefined;
 
@@ -153,7 +156,9 @@ export function GalleryDetails({
                 {
                   title: "Pesquisadores",
                   people: data.people?.filter(
-                    (person) => person.category !== PersonCategory.DISCENTE,
+                    (person) =>
+                      person.category !== PersonCategory.DISCENTE &&
+                      person.category !== PersonCategory.EXTERNO,
                   ),
                 },
                 {
@@ -162,27 +167,52 @@ export function GalleryDetails({
                     (person) => person.category === PersonCategory.DISCENTE,
                   ),
                 },
+                {
+                  title: "Participantes externos",
+                  people: data.people?.filter(
+                    (person) => person.category === PersonCategory.EXTERNO,
+                  ),
+                },
               ]
             : [{ title: "Pesquisadores", people: data.people }];
+  const visibleGroups = groups.filter((group) =>
+    group.people?.some((person) => person?.name?.trim()),
+  );
+  const commentTargets: Partial<Record<GalleryResource, CommentTarget>> = {
+    boards: "BOARD",
+    juries: "JURY",
+    meetings: "MEETING",
+    research: "RESEARCH",
+    "presented-works": "PRESENTED_WORK",
+    news: "NEWS",
+  };
+  const commentTarget = commentTargets[resource];
 
   return (
     <Container>
       <Content>
         <Header>
           <SectionHeader center title={data.title} subtitle={formattedDate} />
-          {resource === "meetings" && <YearBadge date={data.date} />}
+          {usesMeetingLayout && <YearBadge date={data.date} />}
         </Header>
         {data.coverUrl &&
-          (resource === "meetings" ? (
-            <ImageFrame src={data.coverUrl} alt={data.title} />
+          (usesMeetingLayout ? (
+            <ImageFrame
+              src={data.coverUrl}
+              alt={data.title}
+              aspectRatio={resource === "juries" ? 16 / 9 : undefined}
+            />
           ) : (
             <Cover src={data.coverUrl} alt={data.title} />
           ))}
         {data.location && <p>{data.location}</p>}
         {(data.description || data.content) && (
-          <ParagraphText text={data.description || data.content || ""} />
+          <ParagraphText
+            text={data.description || data.content || ""}
+            linkifyUrls={resource === "juries"}
+          />
         )}
-        {resource === "meetings" && links.length > 0 && (
+        {usesMeetingLayout && links.length > 0 && (
           <>
             <HistoryDivider />
             <AccessSection>
@@ -202,22 +232,26 @@ export function GalleryDetails({
                 ))}
               </AccessLinks>
             </AccessSection>
-            {(data.speakers?.some((person) => person?.name?.trim()) ||
+            {(visibleGroups.length > 0 ||
               !!data.images?.length ||
               !!data.supports?.length ||
               !!data.presentedWorks?.length) && <HistoryDivider />}
           </>
         )}
-        {groups.map((group) => (
-          <PublicPeople
-            key={group.title}
-            title={group.title}
-            people={group.people}
-            compact={resource === "meetings" || resource === "research"}
-            showAcademicAbbreviation={resource !== "research"}
-          />
+        {visibleGroups.map((group, index) => (
+          <Fragment key={group.title}>
+            {(resource === "juries" || resource === "boards") && index > 0 && (
+              <HistoryDivider />
+            )}
+            <PublicPeople
+              title={group.title}
+              people={group.people}
+              compact={usesMeetingLayout || resource === "research"}
+              showAcademicAbbreviation={resource !== "research"}
+            />
+          </Fragment>
         ))}
-        {resource !== "meetings" && links.length > 0 && (
+        {!usesMeetingLayout && links.length > 0 && (
           <Links>
             {links.map((link) => (
               <a
@@ -257,6 +291,9 @@ export function GalleryDetails({
               ))}
             </Links>
           </>
+        )}
+        {commentTarget && (
+          <Comments targetType={commentTarget} targetId={data.id} />
         )}
       </Content>
     </Container>

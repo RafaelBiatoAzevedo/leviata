@@ -28,6 +28,7 @@ import { useModal } from "../../../../hooks/useModal";
 
 import { AdminSelect } from "../../../components/AdminSelect";
 import { personCategoryOptions } from "../../../utils/personCategory";
+import { personCategoryLabels } from "../../../types/TPersonCategory";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
 
@@ -149,7 +150,7 @@ export function AdminPeople() {
 
                 <td>{person.institution?.acronym}</td>
 
-                <td>{person.category}</td>
+                <td>{personCategoryLabels[person.category]}</td>
 
                 <td>
                   <AdminBadge variant={person.isActive ? "success" : "danger"}>

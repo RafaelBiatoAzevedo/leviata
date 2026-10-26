@@ -157,7 +157,7 @@ export const SectionHeading = styled.div`
   }
 
   h2 {
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: clamp(27px, 2.5vw, 32px);
     font-weight: 600;
     line-height: 1.15;
@@ -166,7 +166,7 @@ export const SectionHeading = styled.div`
 
   p {
     margin-top: 6px;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 12px;
     line-height: 1.7;
     letter-spacing: 0;
@@ -186,7 +186,7 @@ export const YearHeading = styled.div`
   gap: 14px;
 
   h3 {
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 25px;
     font-weight: 600;
     line-height: 1;
@@ -194,7 +194,7 @@ export const YearHeading = styled.div`
   }
 
   span {
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 11px;
     letter-spacing: 0;
   }
@@ -328,7 +328,7 @@ export const StatusBadge = styled.span<{ $status: NewsletterEditionStatus }>`
   border: 1px solid ${({ theme }) => theme.colors.primary}40;
   border-radius: 20px;
   color: ${({ theme, $status }) =>
-    $status === "published" ? theme.colors.primary : theme.colors.secondary};
+    $status === "published" ? theme.colors.primary : theme.colors.heading};
   background: ${({ theme, $status }) =>
     $status === "published" ? theme.colors.secondary : theme.colors.accentSoft};
   font-size: 10px;
@@ -341,7 +341,7 @@ export const EditionDate = styled.time`
   display: flex;
   align-items: center;
   gap: 7px;
-  color: #626973;
+  color: var(--theme-muted, #626973);
   font-size: 11px;
   line-height: 1.7;
   letter-spacing: 0;
@@ -354,7 +354,7 @@ export const EditionDate = styled.time`
 `;
 
 export const EditionTitle = styled.h3<{ $featured: boolean }>`
-  color: ${({ theme }) => theme.colors.secondary};
+  color: ${({ theme }) => theme.colors.heading};
   font-size: ${({ $featured }) =>
     $featured ? "clamp(27px, 2.5vw, 34px)" : "25px"};
   font-weight: 600;
@@ -365,7 +365,7 @@ export const EditionTitle = styled.h3<{ $featured: boolean }>`
 `;
 
 export const EditionSubject = styled.p`
-  color: #626973;
+  color: var(--theme-muted, #626973);
   font-size: 13px;
   line-height: 1.85;
   letter-spacing: 0.1px;
@@ -430,8 +430,12 @@ export const ReadButton = styled.button`
 
 export const ActionLink = styled.a<{ $primary?: boolean; $onDark?: boolean }>`
   ${actionStyles}
-  color: ${({ theme, $primary }) =>
-    $primary ? theme.colors.onSecondary : theme.colors.secondary};
+  color: ${({ theme, $primary, $onDark }) =>
+    $primary
+      ? theme.colors.onSecondary
+      : $onDark
+        ? theme.colors.secondary
+        : theme.colors.heading};
   background: ${({ theme, $primary, $onDark }) =>
     $primary
       ? theme.colors.secondary
@@ -452,7 +456,7 @@ export const Availability = styled.p`
   gap: 8px;
   margin-top: auto;
   padding-top: 8px;
-  color: #626973;
+  color: var(--theme-muted, #626973);
   font-size: 11px;
   line-height: 1.8;
   letter-spacing: 0;
@@ -484,7 +488,7 @@ export const EmptyState = styled.div`
 
   h2 {
     max-width: 36ch;
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 27px;
     font-weight: 600;
     line-height: 1.2;
@@ -493,7 +497,7 @@ export const EmptyState = styled.div`
 
   p {
     max-width: 58ch;
-    color: #626973;
+    color: var(--theme-muted, #626973);
     font-size: 13px;
     line-height: 1.8;
     letter-spacing: 0;

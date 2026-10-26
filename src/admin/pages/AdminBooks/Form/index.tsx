@@ -191,7 +191,10 @@ export function BookForm() {
           type: "success",
         });
       } else {
-        await booksService.create(mapBookToCreateDto(data), coverFile ?? undefined);
+        await booksService.create(
+          mapBookToCreateDto(data),
+          coverFile ?? undefined,
+        );
 
         showToast({
           title: "Livro criado",
@@ -205,7 +208,11 @@ export function BookForm() {
       const { message, fieldErrors } = bookErrorDetails(error);
 
       fieldErrors.forEach(({ field, message }, index) => {
-        setError(field, { type: "server", message }, { shouldFocus: index === 0 });
+        setError(
+          field,
+          { type: "server", message },
+          { shouldFocus: index === 0 },
+        );
       });
       setError("root.server", { type: "server", message });
 
@@ -233,12 +240,14 @@ export function BookForm() {
         type: "success",
       });
 
-      return;
+      return response.data.url;
     }
 
     setCoverFile(file);
 
-    setCoverPreview(URL.createObjectURL(file));
+    const previewUrl = URL.createObjectURL(file);
+    setCoverPreview(previewUrl);
+    return previewUrl;
   }
 
   return (

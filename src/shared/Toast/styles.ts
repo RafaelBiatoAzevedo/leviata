@@ -115,7 +115,7 @@ export const IconContainer = styled.div<ContainerProps>`
 
   background: ${({ theme, $type }) => theme.colors.feedback[$type].main};
 
-  color: white;
+  color: var(--theme-on-primary, white);
 
   font-size: 1.4rem;
 `;

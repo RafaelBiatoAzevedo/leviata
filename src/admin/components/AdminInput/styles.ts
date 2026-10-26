@@ -14,7 +14,8 @@ export const Input = styled.input<InputProps>`
 
   border-radius: 0.6rem;
 
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid
+    var(--theme-field-border, ${({ theme }) => theme.colors.border});
 
   background: ${({ theme }) => theme.colors.surface};
 

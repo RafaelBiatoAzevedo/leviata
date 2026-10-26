@@ -60,11 +60,15 @@ export const Mat = styled.div`
   background: ${({ theme }) => theme.colors.background};
 `;
 
-export const Picture = styled.img<{ $maxHeight: string }>`
+export const Picture = styled.img<{
+  $maxHeight: string;
+  $aspectRatio?: number;
+}>`
   display: block;
   width: 100%;
   max-width: 100%;
   height: auto;
+  aspect-ratio: ${({ $aspectRatio }) => $aspectRatio};
   max-height: ${({ $maxHeight }) => $maxHeight};
   object-fit: contain;
   border-radius: 0;

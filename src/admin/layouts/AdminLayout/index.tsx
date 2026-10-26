@@ -18,6 +18,7 @@ import {
   FiMonitor,
   FiClipboard,
   FiX,
+  FiBell,
 } from "react-icons/fi";
 
 import { TbDoorEnter, TbFolderSearch } from "react-icons/tb";
@@ -52,6 +53,8 @@ import { AdminButton } from "../../components/AdminButton";
 import { GiInjustice } from "react-icons/gi";
 import { AdminUserMenu } from "../../components/AdminUserMenu";
 import { formatUserRole } from "../../utils/users";
+import { NotificationBell } from "../../components/NotificationBell";
+import { ThemeToggle } from "../../../components/ThemeToggle";
 
 export function AdminLayout() {
   const navigate = useNavigate();
@@ -191,6 +194,11 @@ export function AdminLayout() {
             {!compact && <span>Dashboard</span>}
           </NavItem>
 
+          <NavItem to="/admin/notificacoes" title="Notificações">
+            <FiBell />
+            {!compact && <span>Notificações</span>}
+          </NavItem>
+
           <NavItem to="/admin/pessoas" title="Pessoas">
             <FiUsers />
 
@@ -323,6 +331,8 @@ export function AdminLayout() {
           </ToggleButton>
 
           <UserArea>
+            <ThemeToggle />
+            <NotificationBell />
             <UserInfo>
               <Avatar>{initials}</Avatar>
 

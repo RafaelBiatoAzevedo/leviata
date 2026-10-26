@@ -1,10 +1,12 @@
 import { usePublicList } from "../../hooks/usePublicData";
 import type { SearchResponseDto } from "../../admin/dtos/research/SearchResponseDto";
 import { ImageGallery } from "../../components/ImageGallery";
+import { Comments } from "../../components/Comments";
 import { ParagraphText } from "../../components/ParagraphText";
 import { SectionHeader } from "../../components/SectionHeader";
 import { PublicDataState } from "../../components/PublicDataState";
 import { PublicPeople } from "../../components/PublicPeople";
+import { PersonCategory } from "../../admin/types/TPersonCategory";
 import { Container, Content } from "./styles";
 
 export function ResearchCenter() {
@@ -59,13 +61,26 @@ export function ResearchCenter() {
             ),
         )}
         <PublicPeople
-          people={people.filter((person) => person.category !== "DISCENTE")}
+          people={people.filter(
+            (person) =>
+              person.category !== PersonCategory.DISCENTE &&
+              person.category !== PersonCategory.EXTERNO,
+          )}
           title="Pesquisadores"
           showAcademicAbbreviation={false}
         />
         <PublicPeople
-          people={people.filter((person) => person.category === "DISCENTE")}
+          people={people.filter(
+            (person) => person.category === PersonCategory.DISCENTE,
+          )}
           title="Discentes"
+          showAcademicAbbreviation={false}
+        />
+        <PublicPeople
+          people={people.filter(
+            (person) => person.category === PersonCategory.EXTERNO,
+          )}
+          title="Participantes externos"
           showAcademicAbbreviation={false}
         />
         {supports.length > 0 && (
@@ -80,6 +95,15 @@ export function ResearchCenter() {
             <ImageGallery images={images} />
           </>
         )}
+        {!loading &&
+          !error &&
+          research.map((record) => (
+            <Comments
+              key={record.id}
+              targetType="RESEARCH"
+              targetId={record.id}
+            />
+          ))}
       </Content>
     </Container>
   );

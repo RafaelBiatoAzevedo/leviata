@@ -9,10 +9,10 @@ export const Container = styled(Link)`
   height: 100%;
   isolation: isolate;
   overflow: hidden;
-  border: 1px solid rgba(17, 24, 39, 0.12);
+  border: 1px solid var(--theme-border, rgba(17, 24, 39, 0.12));
   border-radius: 12px;
-  background: #fcfaf5;
-  color: ${({ theme }) => theme.colors.secondary};
+  background: var(--theme-surface, #fcfaf5);
+  color: ${({ theme }) => theme.colors.heading};
   text-decoration: none;
   transition:
     transform 0.35s ease,
@@ -162,7 +162,7 @@ export const Period = styled.div`
   border-left: 2px solid ${({ theme }) => theme.colors.primary};
 
   span {
-    color: #6a706b;
+    color: var(--theme-muted, #6a706b);
     font-size: 8px;
     font-weight: 500;
     letter-spacing: 1.3px;
@@ -184,7 +184,7 @@ export const Footer = styled.div`
   gap: 12px;
   margin-top: auto;
   padding-top: 16px;
-  border-top: 1px solid rgba(17, 24, 39, 0.1);
+  border-top: 1px solid var(--theme-border, rgba(17, 24, 39, 0.1));
 `;
 
 export const ReadMore = styled.span`
@@ -211,6 +211,7 @@ export const LinkArrow = styled.span`
   ${Container}:hover &,
   ${Container}:focus-visible & {
     background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.secondary};
 
     svg {
       transform: translateX(2px);

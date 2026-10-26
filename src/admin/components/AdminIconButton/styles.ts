@@ -18,13 +18,13 @@ const variants = {
 
     &:hover {
       background: ${({ theme }) => theme.colors.primary};
-      color: #fff;
+      color: var(--theme-on-primary, #fff);
     }
   `,
 
   secondary: css`
     background: rgba(120, 120, 120, 0.12);
-    color: #666;
+    color: var(--theme-muted, #666);
 
     &:hover {
       background: #666;
@@ -34,7 +34,7 @@ const variants = {
 
   success: css`
     background: rgba(34, 197, 94, 0.12);
-    color: #16a34a;
+    color: var(--theme-success-text, #16a34a);
 
     &:hover {
       background: #16a34a;
@@ -44,7 +44,7 @@ const variants = {
 
   warning: css`
     background: rgba(245, 158, 11, 0.12);
-    color: #d97706;
+    color: var(--theme-warning-text, #d97706);
 
     &:hover {
       background: #d97706;
@@ -54,7 +54,7 @@ const variants = {
 
   danger: css`
     background: rgba(239, 68, 68, 0.12);
-    color: #dc2626;
+    color: var(--theme-danger-text, #dc2626);
 
     &:hover {
       background: #dc2626;

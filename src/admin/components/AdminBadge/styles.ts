@@ -12,27 +12,27 @@ const variants = {
 
   success: css`
     background: rgba(34, 197, 94, 0.12);
-    color: #16a34a;
+    color: var(--theme-success-text, #16a34a);
   `,
 
   warning: css`
     background: rgba(245, 158, 11, 0.12);
-    color: #d97706;
+    color: var(--theme-warning-text, #d97706);
   `,
 
   danger: css`
     background: rgba(239, 68, 68, 0.12);
-    color: #dc2626;
+    color: var(--theme-danger-text, #dc2626);
   `,
 
   info: css`
     background: rgba(59, 130, 246, 0.12);
-    color: #2563eb;
+    color: var(--theme-info-text, #2563eb);
   `,
 
   secondary: css`
     background: rgba(107, 114, 128, 0.12);
-    color: #4b5563;
+    color: var(--theme-muted, #4b5563);
   `,
 };
 

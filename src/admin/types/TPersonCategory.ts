@@ -5,6 +5,7 @@ export const PersonCategory = {
   PESQUISADOR: "PESQUISADOR",
   SUB_COORDENADOR: "SUB_COORDENADOR",
   COORDENADOR: "COORDENADOR",
+  EXTERNO: "EXTERNO",
 } as const;
 
 export type TPersonCategory =
@@ -17,4 +18,5 @@ export const personCategoryLabels: Record<TPersonCategory, string> = {
   PESQUISADOR: "Pesquisador",
   SUB_COORDENADOR: "Subcoordenador",
   COORDENADOR: "Coordenador",
+  EXTERNO: "Participante externo",
 };

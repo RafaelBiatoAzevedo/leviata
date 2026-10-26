@@ -473,7 +473,7 @@ test("logo keeps the home action and the existing triple-click admin shortcut", 
   assert.equal(env.timers.size, 0);
 });
 
-test("rendered navigation marks nested routes, hides the mobile menu and retains the theme placeholder", () => {
+test("rendered navigation marks nested routes, hides the mobile menu and exposes the theme switch", () => {
   const { Navbar } = req("./src/components/NavBar/index.tsx");
   for (const pathname of [
     "/",
@@ -502,7 +502,11 @@ test("rendered navigation marks nested routes, hides the mobile menu and retains
         html,
         /id="portal-mobile-menu"[^>]*inert=""[^>]*aria-hidden="true"/,
       );
-      assert.match(html, /style="display:none"/);
+      assert.match(
+        html,
+        /role="switch"[^>]*aria-checked="false"[^>]*aria-label="Tema escuro"/,
+      );
+      assert.ok(!html.includes('style="display:none"'));
       const ids = new Set(
         [...html.matchAll(/\sid="([^"]+)"/g)].map((match) => match[1]),
       );

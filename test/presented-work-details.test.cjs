@@ -73,6 +73,13 @@ const fixture = {
 };
 let response;
 const hookFile = resolve(__dirname, "../src/hooks/usePublicData.ts");
+const commentsFile = resolve(__dirname, "../src/services/comments.ts");
+require.cache[commentsFile] = {
+  id: commentsFile,
+  filename: commentsFile,
+  loaded: true,
+  exports: { commentsService: {} },
+};
 require.cache[hookFile] = {
   id: hookFile,
   filename: hookFile,

@@ -68,7 +68,7 @@ export const HeaderCopy = styled.div`
   }
 
   p {
-    color: #6a706b;
+    color: var(--theme-muted, #6a706b);
     font-size: 12px;
     line-height: 1.7;
     letter-spacing: 0.1px;
@@ -142,7 +142,7 @@ export const SubmitButton = styled.button`
 `;
 
 export const Note = styled.p`
-  color: #6a706b;
+  color: var(--theme-muted, #6a706b);
   font-size: 11px;
   font-weight: 400;
   line-height: 1.7;
@@ -150,7 +150,7 @@ export const Note = styled.p`
 `;
 
 export const FieldError = styled.span`
-  color: #b91c1c;
+  color: var(--theme-danger-text, #b91c1c);
   font-size: 11px;
   font-weight: 400;
   line-height: 1.5;
@@ -161,10 +161,20 @@ export const StatusMessage = styled.p<{ $error?: boolean }>`
   align-items: flex-start;
   gap: 8px;
   padding: 12px 14px;
-  border: 1px solid ${({ $error }) => ($error ? "#fecaca" : "#bbf7d0")};
+  border: 1px solid
+    ${({ $error }) =>
+      $error
+        ? "var(--theme-danger-border, #fecaca)"
+        : "var(--theme-success-border, #bbf7d0)"};
   border-radius: 10px;
-  background: ${({ $error }) => ($error ? "#fef2f2" : "#f0fdf4")};
-  color: ${({ $error }) => ($error ? "#991b1b" : "#166534")};
+  background: ${({ $error }) =>
+    $error
+      ? "var(--theme-danger-bg, #fef2f2)"
+      : "var(--theme-success-bg, #f0fdf4)"};
+  color: ${({ $error }) =>
+    $error
+      ? "var(--theme-danger-text, #991b1b)"
+      : "var(--theme-success-text, #166534)"};
   font-size: 12px;
   line-height: 1.6;
   letter-spacing: 0;

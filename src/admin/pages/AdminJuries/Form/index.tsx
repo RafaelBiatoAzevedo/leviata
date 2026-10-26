@@ -27,6 +27,7 @@ import { AdminInput } from "../../../components/AdminInput";
 import { FiPlus, FiTrash2 } from "react-icons/fi";
 
 import { peopleService } from "../../../services/people";
+import { personCategoryLabels } from "../../../types/TPersonCategory";
 import type { PersonResponseDto } from "../../../dtos/people/PersonResponseDto";
 import { AdminButton } from "../../../components/AdminButton";
 import { useModal } from "../../../../hooks/useModal";
@@ -171,6 +172,7 @@ export function JuryForm() {
           <br />
 
           <AdminSelect
+            description="Inclui integrantes do grupo e participantes externos cadastrados em Pessoas."
             options={[
               {
                 value: "",
@@ -181,7 +183,7 @@ export function JuryForm() {
                 .filter((person) => !selectedIds.includes(person.id))
                 .map((person) => ({
                   value: person.id,
-                  label: person.name,
+                  label: `${person.name} (${personCategoryLabels[person.category]})`,
                 })),
             ]}
             onChange={(event) => {
@@ -294,12 +296,14 @@ export function JuryForm() {
         type: "success",
       });
 
-      return;
+      return response.data.url;
     }
 
     setCoverFile(file);
 
-    setCoverPreview(URL.createObjectURL(file));
+    const previewUrl = URL.createObjectURL(file);
+    setCoverPreview(previewUrl);
+    return previewUrl;
   }
 
   return (
@@ -315,7 +319,8 @@ export function JuryForm() {
             <AdminImageUpload
               icon={<GiInjustice size={42} />}
               label="Capa"
-              variant="square"
+              description="Imagem principal horizontal (16:9)."
+              variant="landscape"
               imageUrl={coverPreview}
               onChange={handleUploadCover}
             />

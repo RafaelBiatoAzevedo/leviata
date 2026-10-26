@@ -39,7 +39,9 @@ api.interceptors.response.use(
 
         return api(originalRequest);
       } catch {
-        localStorage.clear();
+        authStorage.removeToken();
+        authStorage.removeRefreshToken();
+        authStorage.removeUser();
 
         if (window.location.pathname.startsWith("/admin")) {
           window.location.href = "/admin/login";

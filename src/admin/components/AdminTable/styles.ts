@@ -40,7 +40,7 @@ const cards = css`
     overflow: hidden;
   }
   tbody tr[data-has-image="true"] {
-    grid-template-columns: 68px minmax(0, 1fr);
+    grid-template-columns: var(--admin-table-image-column-width, 68px) minmax(0, 1fr);
   }
   tbody tr:hover {
     background: ${({ theme }) => theme.colors.surface};
@@ -93,8 +93,8 @@ const cards = css`
     padding: 18px 0 16px 16px;
     img,
     ${CellValue} > div {
-      width: 44px;
-      height: 52px;
+      width: var(--admin-table-image-width, 44px);
+      height: var(--admin-table-image-height, 52px);
     }
   }
   td[data-kind="field"] {

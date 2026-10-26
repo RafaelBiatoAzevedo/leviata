@@ -2,6 +2,7 @@ import "styled-components";
 
 declare module "styled-components" {
   export interface DefaultTheme {
+    mode: "light" | "dark";
     colors: {
       background: string;
       backgroundCard: string;
@@ -11,6 +12,8 @@ declare module "styled-components" {
       onSecondary: string;
       text: string;
       textSoft: string;
+      heading: string;
+      onPrimary: string;
       border: string;
 
       accent: string;

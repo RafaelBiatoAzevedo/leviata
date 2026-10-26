@@ -245,12 +245,14 @@ export function MeetingForm() {
         type: "success",
       });
 
-      return;
+      return response.data.url;
     }
 
     setCoverFile(file);
 
-    setCoverPreview(URL.createObjectURL(file));
+    const previewUrl = URL.createObjectURL(file);
+    setCoverPreview(previewUrl);
+    return previewUrl;
   }
 
   return (

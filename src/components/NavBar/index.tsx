@@ -39,8 +39,8 @@ import {
   SubmenuItem,
   SubmenuList,
   TitleColumn,
-  // LanguageButton, SwitchCircle, ThemeSwitch,
 } from "./styles";
+import { ThemeToggle } from "../ThemeToggle";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -367,19 +367,13 @@ export const Navbar = () => {
       </DesktopOnly>
 
       <DesktopOnly $actions>
-        <ActionsWrapper style={{ display: "none" }}>
-          {/* <ThemeSwitch onClick={toggleTheme}>
-            <SwitchCircle themeMode={theme}>
-              {theme === "dark" ? "🌙" : "☀️"}
-            </SwitchCircle>
-          </ThemeSwitch>
-          <LanguageButton onClick={toggleLanguage}>
-            {i18n.language === "pt" ? "🇧🇷 PT" : "🇺🇸 EN"}
-          </LanguageButton> */}
+        <ActionsWrapper>
+          <ThemeToggle />
         </ActionsWrapper>
       </DesktopOnly>
 
       <MobileOnly>
+        <ThemeToggle />
         <MenuToggle
           ref={toggleRef}
           type="button"

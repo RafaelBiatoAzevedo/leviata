@@ -66,7 +66,7 @@ export const AccessLinks = styled.div`
     border-left: 3px solid ${({ theme }) => theme.colors.primary};
     border-radius: 2px;
     background: ${({ theme }) => theme.colors.surface};
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     font-size: 14px;
     line-height: 1.5;
     text-decoration: none;

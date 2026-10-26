@@ -93,7 +93,7 @@ export const FeaturedLinkCard = styled(LinkCard).attrs({ showReadMore: true })`
   }
 
   ${CardDescription} {
-    color: #6a706b;
+    color: var(--theme-muted, #6a706b);
     font-size: 13px;
     line-height: 1.8;
     letter-spacing: 0.1px;
@@ -194,7 +194,7 @@ export const DatedLinkCard = styled(FeaturedLinkCard).attrs({
     border: 1px solid ${({ theme }) => theme.colors.primary}55;
     border-radius: 10px;
     background: ${({ theme }) => theme.colors.accentSoft};
-    color: ${({ theme }) => theme.colors.secondary};
+    color: ${({ theme }) => theme.colors.heading};
     text-align: center;
     font-weight: 500;
     font-variant-numeric: tabular-nums;

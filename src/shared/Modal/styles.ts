@@ -168,19 +168,19 @@ const variants = {
   primary: css`
     background: ${({ theme }) => theme.colors.primary};
 
-    color: white;
+    color: var(--theme-on-primary, white);
   `,
 
   success: css`
     background: ${({ theme }) => theme.colors.feedback.success.main};
 
-    color: white;
+    color: var(--theme-on-primary, white);
   `,
 
   danger: css`
     background: ${({ theme }) => theme.colors.feedback.danger.main};
 
-    color: white;
+    color: var(--theme-on-primary, white);
   `,
 };
 

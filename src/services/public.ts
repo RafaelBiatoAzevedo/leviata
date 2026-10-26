@@ -1,6 +1,7 @@
 import type { GalleryResource } from "../admin/services/gallery";
 import { loadAllPages } from "../utils/loadAllPages";
 import { api } from "./api";
+import type { TPersonCategory } from "../admin/types/TPersonCategory";
 
 export type PublicResource =
   | GalleryResource
@@ -21,6 +22,7 @@ export interface PublicListQuery {
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   search?: string;
+  excludeCategory?: TPersonCategory;
 }
 
 export function publicRecordPath(resource: PublicResource, identifier: string) {

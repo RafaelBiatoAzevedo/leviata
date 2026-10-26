@@ -8,7 +8,7 @@ const ts = require("typescript");
 function loadTypeScript(relativePath, dependencies = {}) {
   const filename = resolve(__dirname, relativePath);
   const loaded = new Module(filename, module);
-  const actualRequire = loaded.require.bind(loaded);
+  const actualRequire = Module.createRequire(filename);
   loaded.require = (request) =>
     Object.hasOwn(dependencies, request)
       ? dependencies[request]
@@ -26,6 +26,49 @@ const api = { get() {} };
 const { peopleService } = loadTypeScript("../src/admin/services/people.ts", {
   "../../services/api": { api },
   "../../utils/loadAllPages": { loadAllPages },
+});
+
+const { PersonCategory } = loadTypeScript("../src/admin/types/TPersonCategory.ts");
+const { personSchema } = loadTypeScript("../src/admin/validations/person.schema.ts", {
+  "../types/TPersonCategory": { PersonCategory },
+});
+const { formatPersonLabel } = loadTypeScript("../src/admin/utils/formatPersonLabel.ts");
+
+test("external participants can be registered without academic credentials or contact details", () => {
+  const person = {
+    name: "Ana Convidada",
+    category: PersonCategory.EXTERNO,
+    isActive: true,
+    displayOrder: 0,
+    email: "",
+    nationalityId: "",
+    academicTitleId: "",
+    institutionId: "",
+  };
+  assert.equal(personSchema.safeParse(person).success, true);
+  const internal = personSchema.safeParse({ ...person, category: PersonCategory.PESQUISADOR });
+  assert.equal(internal.success, false);
+  assert.deepEqual(
+    internal.error.issues.map((issue) => issue.path[0]).sort(),
+    ["academicTitleId", "email", "institutionId", "nationalityId"],
+  );
+  assert.equal(personSchema.safeParse({ ...person, email: "invalid" }).success, false);
+});
+
+test("person labels preserve names without assuming academic or institutional credentials", () => {
+  assert.equal(formatPersonLabel({ name: "Ana Convidada", academicTitle: null, institution: null }), "Ana Convidada");
+  assert.equal(formatPersonLabel({ name: "Maria", academicTitle: { abbreviation: "Dra." }, institution: { acronym: "USP" } }), "Dra. Maria - USP");
+});
+
+test("jury selectors include external people and preserve alphabetical ordering", async (context) => {
+  const external = { id: "external", name: "Ana Convidada", category: PersonCategory.EXTERNO };
+  const member = { id: "member", name: "Maria Pesquisadora", category: PersonCategory.PESQUISADOR };
+  context.mock.method(api, "get", async (_url, { params }) => {
+    assert.equal(params.category, undefined);
+    assert.equal(params.excludeCategory, undefined);
+    return { data: [member, external] };
+  });
+  assert.deepEqual(await peopleService.getForSelect(), [external, member]);
 });
 
 test("loads every person for the portal and selectors beyond the first 100 records", async (context) => {

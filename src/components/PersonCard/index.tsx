@@ -20,10 +20,10 @@ import {
 interface PersonCardProps {
   imageUrl?: string;
   name: string;
-  academicTitle?: AcademicTitleResponseDto;
+  academicTitle?: AcademicTitleResponseDto | null;
   showAcademicAbbreviation?: boolean;
   category?: TPersonCategory;
-  institution?: InstitutionResponseDto;
+  institution?: InstitutionResponseDto | null;
   bio?: string;
   lattesUrl?: string;
 }

@@ -22,7 +22,7 @@ export const Container = styled.button<IContainerProps>`
 
   background: ${({ theme }) => theme.colors.primary};
 
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.onPrimary};
 
   font-weight: 600;
 
@@ -48,7 +48,7 @@ export const LinkContainer = styled(Link)`
 
   background: ${({ theme }) => theme.colors.primary};
 
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.onPrimary};
 
   font-weight: 600;
 

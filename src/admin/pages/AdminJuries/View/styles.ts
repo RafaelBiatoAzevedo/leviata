@@ -36,6 +36,7 @@ export const Title = styled.h1`
 export const CoverWrapper = styled(Link)`
   min-width: 0;
   max-width: 100%;
+  width: 500px;
   overflow-wrap: anywhere;
   display: flex;
 
@@ -47,7 +48,7 @@ export const CoverWrapper = styled(Link)`
 
   gap: 1rem;
 
-  padding: 2rem;
+  padding: clamp(16px, 2.5vw, 28px);
 
   border-radius: 16px;
 
@@ -60,14 +61,14 @@ export const CoverWrapper = styled(Link)`
 
 export const Cover = styled.img`
   max-width: 100%;
-  width: 220px;
+  width: 100%;
 
   height: auto;
-  max-height: 360px;
+  aspect-ratio: 16 / 9;
 
   border-radius: 4px;
 
-  object-fit: cover;
+  object-fit: contain;
 
   border: 2px solid ${({ theme }) => theme.colors.primary};
 `;

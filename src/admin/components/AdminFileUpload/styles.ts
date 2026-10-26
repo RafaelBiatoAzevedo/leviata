@@ -107,7 +107,7 @@ export const FileType = styled.span`
 
   background: ${({ theme }) => theme.colors.primary};
 
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.onPrimary};
 `;
 
 export const ChangeButton = styled.button`
@@ -126,7 +126,7 @@ export const ChangeButton = styled.button`
 
   background: ${({ theme }) => theme.colors.primary};
 
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.onPrimary};
 
   cursor: pointer;
 

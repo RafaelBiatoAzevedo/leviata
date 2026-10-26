@@ -14,12 +14,15 @@ export function Researchers() {
     error,
   } = usePublicList<PersonResponseDto>("people", {
     isActive: "true",
+    excludeCategory: PersonCategory.EXTERNO,
     sortBy: "displayOrder",
     sortOrder: "asc",
   });
   const activeResearchers = people.filter(
     (person) =>
-      person.isActive === true && person.category !== PersonCategory.DISCENTE,
+      person.isActive === true &&
+      person.category !== PersonCategory.DISCENTE &&
+      person.category !== PersonCategory.EXTERNO,
   );
   const nationalsResearchers = activeResearchers.filter(
     (person) => person.nationality?.code === "BR",

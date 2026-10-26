@@ -8,10 +8,10 @@ export const Container = styled.a`
   height: 100%;
   isolation: isolate;
   overflow: hidden;
-  border: 1px solid rgba(17, 24, 39, 0.12);
+  border: 1px solid var(--theme-border, rgba(17, 24, 39, 0.12));
   border-radius: 12px;
-  background: #fcfaf5;
-  color: ${({ theme }) => theme.colors.secondary};
+  background: var(--theme-surface, #fcfaf5);
+  color: ${({ theme }) => theme.colors.heading};
   text-decoration: none;
   transition:
     transform 0.35s ease,
@@ -107,7 +107,7 @@ export const Issue = styled.div`
     content: "";
     position: absolute;
     z-index: -1;
-    border: 1px solid rgba(17, 24, 39, 0.12);
+    border: 1px solid var(--theme-border, rgba(17, 24, 39, 0.12));
     background: #e8e1d2;
     pointer-events: none;
   }
@@ -130,7 +130,7 @@ export const Issue = styled.div`
     max-width: min(100%, 244px);
     max-height: 190px;
     padding: 3px;
-    background: #fcfaf5;
+    background: var(--theme-surface, #fcfaf5);
     box-shadow: 8px 12px 22px rgba(0, 0, 0, 0.3);
   }
 
@@ -161,7 +161,7 @@ export const FallbackCover = styled.div`
   height: 178px;
   padding: 22px;
   border-left: 3px solid ${({ theme }) => theme.colors.primary};
-  background: #fcfaf5;
+  background: var(--theme-surface, #fcfaf5);
   box-shadow: 8px 12px 22px rgba(0, 0, 0, 0.3);
 
   svg {
@@ -200,7 +200,7 @@ export const Journal = styled.span`
   -webkit-line-clamp: 2;
   padding-left: 10px;
   border-left: 2px solid ${({ theme }) => theme.colors.primary};
-  color: #6a706b;
+  color: var(--theme-muted, #6a706b);
   font-size: 9px;
   font-weight: 600;
   line-height: 1.6;
@@ -246,7 +246,7 @@ export const Footer = styled.div`
   gap: 12px;
   margin-top: auto;
   padding-top: 16px;
-  border-top: 1px solid rgba(17, 24, 39, 0.1);
+  border-top: 1px solid var(--theme-border, rgba(17, 24, 39, 0.1));
 `;
 
 export const Year = styled.span`
@@ -258,7 +258,7 @@ export const Year = styled.span`
   font-variant-numeric: tabular-nums;
 
   span {
-    color: #6a706b;
+    color: var(--theme-muted, #6a706b);
     font-size: 8px;
     font-weight: 500;
     letter-spacing: 1.3px;
@@ -295,6 +295,7 @@ export const LinkArrow = styled.span`
   ${Container}:hover &,
   ${Container}:focus-visible & {
     background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.secondary};
 
     svg {
       transform: translate(1px, -1px);

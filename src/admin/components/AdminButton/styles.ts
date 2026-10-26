@@ -17,7 +17,7 @@ interface IButtonProps {
 const variants = {
   primary: css`
     background: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.text};
+    color: ${({ theme }) => theme.colors.onPrimary};
     border: 1px solid ${({ theme }) => theme.colors.primary};
 
     &:hover {
@@ -37,13 +37,13 @@ const variants = {
 
   danger: css`
     background: ${({ theme }) => theme.colors.feedback.danger.main};
-    color: #fff;
+    color: var(--theme-on-primary, #fff);
     border: 1px solid ${({ theme }) => theme.colors.feedback.danger.main};
   `,
 
   success: css`
     background: ${({ theme }) => theme.colors.feedback.success.main};
-    color: #fff;
+    color: var(--theme-on-primary, #fff);
     border: 1px solid ${({ theme }) => theme.colors.feedback.success.main};
   `,
 
@@ -84,7 +84,7 @@ export const Container = styled.button<IButtonProps>`
 
   background: ${({ theme }) => theme.colors.primary};
 
-  color: ${({ theme }) => theme.colors.text};
+  color: ${({ theme }) => theme.colors.onPrimary};
 
   font-size: 0.95rem;
 

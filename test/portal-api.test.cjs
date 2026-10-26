@@ -56,6 +56,7 @@ const { publicService, publicRecordPath } = load("../src/services/public.ts", {
   "./api": { api },
   "../utils/loadAllPages": { loadAllPages },
 });
+const { splitTextLinks } = load("../src/utils/textLinks.ts");
 
 test("public lists retain their filters and ordering while loading all 241 records", async (context) => {
   const people = Array.from({ length: 241 }, (_, index) => ({
@@ -220,6 +221,9 @@ const { MeetingView } = load(
     react: { ...React, useState: () => [records.meetings || null, () => {}] },
   },
 );
+const { JuryView } = load("../src/admin/pages/AdminJuries/View/index.tsx", {
+  react: { ...React, useState: () => [records.juries || null, () => {}] },
+});
 const { NewsView } = load("../src/admin/pages/AdminNews/View/index.tsx", {
   react: {
     ...React,
@@ -335,17 +339,30 @@ test("instrument details show API content, people and PDF, and handle external-o
   });
   let html = render(ResearchInstrumentDetails, { type: "DOSSIER" });
   assert.ok(html.includes("1998 — 2023"));
+  assert.ok(html.includes('aria-label="Período: 1998 — 2023"'));
   assert.ok(html.includes("Responsável cadastrado"));
   assert.ok(html.includes("Conteúdo do cadastro"));
   assert.ok(html.includes('href="https://example.org/arquivo-api.pdf"'));
   assert.equal(requests[0].identifier, "registro-real");
   records.researchInstruments = instrument("CATALOG", {
     externalUrl: "https://example.org/catalogo",
+    startYear: 1900,
+    endYear: 2000,
+    content: "Consulte https://example.org/catalogo?ano=2026.",
   });
   html = render(ResearchInstrumentDetails, { type: "CATALOG" });
   assert.ok(html.includes('href="https://example.org/catalogo"'));
+  assert.ok(html.includes('aria-label="Período: 1900 — 2000"'));
+  assert.ok(html.includes('href="https://example.org/catalogo?ano=2026" target="_blank" rel="noopener noreferrer"'));
   assert.ok(!html.includes("data-pdf-viewer"));
-  records.researchInstruments = instrument("DATABASE");
+  records.researchInstruments = instrument("DATABASE", {
+    startYear: 2024,
+    endYear: 2024,
+    content: "Material disponível em http://example.org/acervo.",
+  });
+  html = render(ResearchInstrumentDetails);
+  assert.ok(html.includes('aria-label="Período: 2024"'));
+  assert.ok(html.includes('href="http://example.org/acervo" target="_blank" rel="noopener noreferrer"'));
   assert.match(
     render(ResearchInstrumentDetails),
     /Nenhum arquivo ou link disponível/,
@@ -616,10 +633,88 @@ test("gallery details expose researchers, speakers, jury roles and board partici
     const html = render(GalleryDetails, { resource, label: "o registro" });
     for (const value of Object.values(relations).flat())
       assert.ok(html.includes(value.name), value.name);
-    if (resource === "meetings") {
+    if (["meetings", "juries", "boards"].includes(resource)) {
       assert.ok(html.includes('aria-label="Ano: 2026"'));
       assert.ok(!html.includes("22/10/2026"));
-    } else if (resource !== "research") assert.ok(html.includes("22/10/2026"));
+    }
+  }
+});
+
+test("external jury participants remain visible in the portal and admin without academic credentials", () => {
+  reset();
+  const external = person("external", "Ana Convidada", {
+    category: "EXTERNO",
+    academicTitle: null,
+    institution: null,
+    nationality: null,
+    email: null,
+  });
+  records.juries = {
+    title: "Júri com convidados",
+    date: "2026-10-25T00:00:00Z",
+    images: [],
+    judges: [],
+    jurors: [external],
+    prosecutors: [],
+    defenders: [],
+    bailiffs: [],
+  };
+  const portal = render(GalleryDetails, { resource: "juries", label: "o júri" });
+  assert.ok(portal.includes("Jurados"));
+  assert.ok(portal.includes("Ana Convidada"));
+  assert.ok(portal.includes("Participante externo"));
+  assert.ok(!portal.includes("Pesquisador"));
+  const admin = render(JuryView);
+  assert.ok(admin.includes("Ana Convidada"));
+  assert.ok(!admin.includes("undefined"));
+});
+
+test("external people linked to research appear as participants rather than researchers", () => {
+  reset();
+  const external = person("external", "Convidado da pesquisa", { category: "EXTERNO" });
+  records.research = { title: "Pesquisa com convidado", images: [], people: [external] };
+  const details = render(GalleryDetails, { resource: "research", label: "a pesquisa" });
+  assert.ok(details.includes("Participantes externos"));
+  assert.ok(details.includes(external.name));
+  assert.ok(!details.includes("Pesquisadores"));
+  lists.research = [{ ...records.research, id: "research", slug: "costas-negras", title: "Em costas negras" }];
+  const center = render(ResearchCenter);
+  assert.ok(center.includes("Participantes externos"));
+  assert.ok(center.includes(external.name));
+  assert.ok(!center.includes("Pesquisadores"));
+});
+
+test("jury and board details use the meeting year, profiles, section dividers and access actions", () => {
+  for (const resource of ["juries", "boards"]) {
+    reset();
+    const participant = person("p", "Participante cadastrado", {
+      bio: "Biografia que não deve aparecer no perfil compacto",
+    });
+    records[resource] = {
+      title: "Detalhe com o padrão de encontro",
+      date: "2026-10-22T00:00:00Z",
+      coverUrl: "https://example.org/capa-horizontal.jpg",
+      images: [],
+      meetingUrl: "https://example.org/reuniao",
+      recordingUrl: "https://example.org/gravacao",
+      registrationUrl: "https://example.org/inscricao",
+      documentUrl: "https://example.org/documento",
+      ...(resource === "juries"
+        ? { judges: [participant], jurors: [participant], prosecutors: [participant], defenders: [participant], bailiffs: [participant] }
+        : { candidate: participant, advisor: participant, members: [participant] }),
+    };
+    const html = render(GalleryDetails, { resource, label: "o registro" });
+    assert.ok(html.includes('aria-label="Ano: 2026"'));
+    assert.ok(!html.includes("22/10/2026"));
+    assert.equal((html.match(/❧/g) || []).length, 2);
+    assert.ok(html.includes("Acessos e materiais"));
+    for (const field of ["meetingUrl", "recordingUrl", "registrationUrl", "documentUrl"])
+      assert.ok(html.includes(`href="${records[resource][field]}" target="_blank" rel="noopener noreferrer"`));
+    assert.ok(!html.includes(participant.bio));
+    assert.ok(!html.includes("Ver biografia"));
+    assert.equal((html.match(/✠/g) || []).length, resource === "juries" ? 6 : 4);
+    records[resource].meetingUrl = "javascript:alert(1)";
+    assert.ok(!render(GalleryDetails, { resource, label: "o registro" }).includes("javascript:"));
   }
 });
 
@@ -1081,6 +1176,124 @@ test("news gallery captions appear in portal and admin views, and photo cards op
   assert.ok(render(NewsView).includes("Nenhuma imagem adicionada."));
 });
 
+test("internal and external news render comments for the news record after its content", () => {
+  const commentTargets = [];
+  const { NewsDetails: NewsWithComments } = load(
+    "../src/pages/NewsDetails/index.tsx",
+    {
+      "../../components/Comments": {
+        Comments: (props) => {
+          commentTargets.push(props);
+          return React.createElement("section", {
+            "data-news-comments": props.targetId,
+          });
+        },
+      },
+    },
+  );
+  for (const [index, isInternal] of [true, false].entries()) {
+    reset();
+    const newsId = `550e8400-e29b-41d4-a716-44665544000${index}`;
+    records.news = {
+      id: newsId,
+      slug: `noticia-${index}`,
+      title: "Notícia com comentários",
+      description: "Conteúdo próprio da notícia.",
+      date: "2026-10-25",
+      category: "RESEARCH",
+      isInternal,
+      relatedType: "RESEARCH",
+      relatedId: "68c2af74-c459-4a33-8d98-d4a62d2152c9",
+      images: [],
+    };
+    const html = render(NewsWithComments);
+    assert.deepEqual(commentTargets.at(-1), {
+      targetType: "NEWS",
+      targetId: newsId,
+    });
+    assert.ok(
+      html.indexOf("Conteúdo próprio da notícia.") <
+        html.indexOf(`data-news-comments="${newsId}"`),
+    );
+    assert.ok(!html.includes("Voltar às notícias"));
+  }
+  commentTargets.length = 0;
+  for (const status of [{ loading: true }, { error: true }, {}]) {
+    reset();
+    state = status;
+    render(NewsWithComments);
+    assert.equal(commentTargets.length, 0);
+  }
+});
+
+test("recognizes complete HTTP links while preserving surrounding punctuation and balanced parentheses", () => {
+  const text =
+    "Consulte https://example.org/artigo_(2026)?idioma=pt#texto, e (http://example.org/material). Também: “https://example.org/noticia”.";
+  const parts = splitTextLinks(text);
+  assert.deepEqual(
+    parts.filter((part) => part.href).map((part) => part.href),
+    [
+      "https://example.org/artigo_(2026)?idioma=pt#texto",
+      "http://example.org/material",
+      "https://example.org/noticia",
+    ],
+  );
+  assert.equal(parts.map((part) => part.text).join(""), text);
+});
+
+test("keeps malformed URLs and non-HTTP protocols as plain text", () => {
+  for (const text of [
+    "Sem links neste texto.",
+    "Endereço incompleto https:// e porta inválida https://example.org:porta/.",
+    "javascript:alert(1) data:text/html,<script>alert(1)</script>",
+    "ftp://example.org/arquivo",
+  ]) {
+    const parts = splitTextLinks(text);
+    assert.equal(
+      parts.some((part) => part.href),
+      false,
+    );
+    assert.equal(parts.map((part) => part.text).join(""), text);
+  }
+});
+
+test("news descriptions automatically render safe external hyperlinks while keeping paragraphs and text", () => {
+  reset();
+  records.news = {
+    id: "news-with-links",
+    slug: "noticia-com-links",
+    title: "Notícia com materiais",
+    date: "2026-10-24",
+    category: "RESEARCH",
+    description:
+      'Veja https://example.org/pesquisa?ano=2026&idioma=pt.\n\nMaterial (https://example.org/artigo_(2026)). <script>alert("teste")</script>',
+    images: [],
+  };
+  const html = render(NewsDetails);
+  for (const href of [
+    "https://example.org/pesquisa?ano=2026&amp;idioma=pt",
+    "https://example.org/artigo_(2026)",
+  ]) {
+    assert.ok(
+      html.includes(`href="${href}" target="_blank" rel="noopener noreferrer"`),
+    );
+  }
+  assert.ok(html.includes("(abre em nova aba)"));
+  assert.ok(html.includes("&lt;script&gt;"));
+  assert.ok(!html.includes("<script>"));
+  const firstLink = html.indexOf('href="https://example.org/pesquisa');
+  const nextLink = html.indexOf('href="https://example.org/artigo_');
+  assert.ok(
+    firstLink < html.indexOf("</p>", firstLink) &&
+      html.indexOf("</p>", firstLink) < nextLink,
+  );
+
+  lists.news = [records.news];
+  const cardHtml = render(News);
+  assert.ok(cardHtml.includes('href="/noticias/noticia-com-links"'));
+  assert.ok(!cardHtml.includes('href="https://example.org/'));
+});
+
 test("internal news have a real detail view and valid related destinations", () => {
   reset();
   const uuid = "68c2af74-c459-4a33-8d98-d4a62d2152c9";
@@ -1332,7 +1545,7 @@ test("publication tabs retain descending years, put missing years last and keep 
   assert.ok(!html.includes("Artigo recente"));
 });
 
-test("the researchers page hides students and inactive people of every nationality while preserving display order", () => {
+test("the researchers page hides external people, students and inactive people of every nationality while preserving display order", () => {
   reset();
   lists.people = [
     person("b", "Primeira ativa", {
@@ -1365,6 +1578,15 @@ test("the researchers page hides students and inactive people of every nationali
       isActive: true,
       category: "DISCENTE",
     }),
+    person("external-br", "Convidada brasileira", {
+      category: "EXTERNO", isActive: true, nationality: { code: "BR" },
+    }),
+    person("external-pt", "Convidado internacional", {
+      category: "EXTERNO", isActive: true, nationality: { code: "PT" },
+    }),
+    person("external-unknown", "Convidado sem nacionalidade", {
+      category: "EXTERNO", isActive: true, nationality: null,
+    }),
   ];
   const html = render(Researchers);
   assert.ok(html.indexOf("Primeira ativa") < html.indexOf("Segunda ativa"));
@@ -1373,6 +1595,10 @@ test("the researchers page hides students and inactive people of every nationali
   assert.ok(!html.includes("Inativa internacional"));
   assert.ok(!html.includes("Discente brasileira"));
   assert.ok(!html.includes("Discente internacional"));
+  assert.ok(!html.includes("Convidada brasileira"));
+  assert.ok(!html.includes("Convidado internacional"));
+  assert.ok(!html.includes("Convidado sem nacionalidade"));
+  assert.equal(requests[0].query.excludeCategory, "EXTERNO");
   assert.equal(requests[0].query.isActive, "true");
   assert.equal(requests[0].query.sortBy, "displayOrder");
   lists.people = lists.people.filter(

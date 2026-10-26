@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiEdit2, FiEye, FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiEye, FiPlus, FiSend, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../../../hooks/useModal";
 import { useToast } from "../../../../hooks/useToast";
@@ -97,6 +97,14 @@ export function AdminNewsletters() {
                 <td>{formatDate(item.sentAt)}</td>
                 <td>
                   <Actions>
+                    <AdminIconButton
+                      title="Enviar e acompanhar entregas"
+                      onClick={() =>
+                        navigate(`/admin/newsletter/${item.slug}#envio`)
+                      }
+                    >
+                      <FiSend />
+                    </AdminIconButton>
                     <AdminIconButton
                       title="Visualizar"
                       onClick={() => navigate(`/admin/newsletter/${item.slug}`)}
