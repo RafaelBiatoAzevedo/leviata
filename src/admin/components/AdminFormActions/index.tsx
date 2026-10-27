@@ -1,11 +1,20 @@
 import { FiArrowLeft, FiSave } from "react-icons/fi";
+import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Actions } from "./styles";
 import { AdminButton } from "../AdminButton";
 import Spinner from "../Spinner";
 
-const AdminFormActions = ({ isSubmitting = false }) => {
+interface AdminFormActionsProps {
+  isSubmitting?: boolean;
+  children?: ReactNode;
+}
+
+const AdminFormActions = ({
+  isSubmitting = false,
+  children,
+}: AdminFormActionsProps) => {
   const navigate = useNavigate();
 
   return (
@@ -19,6 +28,8 @@ const AdminFormActions = ({ isSubmitting = false }) => {
         <FiArrowLeft />
         Cancelar
       </AdminButton>
+
+      {children}
 
       <AdminButton type="submit" disabled={isSubmitting}>
         {isSubmitting ? (

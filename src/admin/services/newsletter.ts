@@ -9,15 +9,31 @@ import type { UpdateNewsletterRequestDto } from "../dtos/newsletter/UpdateNewsle
 import type { ImageUploadResponseDto } from "../dtos/ImageUploadResponseDto";
 
 export const newsletterService = {
+  pdf(id: string) {
+    return api.get<Blob>(`/newsletter/${encodeURIComponent(id)}/pdf`, {
+      responseType: "blob",
+    });
+  },
   create(data: CreateNewsletterRequestDto, cover?: File) {
     if (!cover) return api.post<NewsletterResponseDto>("/newsletter", data);
     const form = new FormData();
     for (const [key, value] of Object.entries(data)) {
       if (value !== undefined && value !== null && value !== "")
-        form.append(key, value);
+        form.append(
+          key,
+          typeof value === "object" ? JSON.stringify(value) : value,
+        );
     }
     form.append("cover", cover);
     return api.post<NewsletterResponseDto>("/newsletter", form);
+  },
+  preview(data: Partial<CreateNewsletterRequestDto>) {
+    return api.post<{ htmlContent: string }>("/newsletter/preview", data);
+  },
+  uploadContentImage(image: File) {
+    const form = new FormData();
+    form.append("image", image);
+    return api.post<ImageUploadResponseDto>("/newsletter/images", form);
   },
   updateCover(slug: string, cover: File) {
     const form = new FormData();

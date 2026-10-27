@@ -10,15 +10,17 @@ import {
 } from "react";
 import {
   FiCamera,
+  FiCheck,
   FiCrop,
   FiImage,
   FiLoader,
   FiUploadCloud,
 } from "react-icons/fi";
 import { AdminField } from "../AdminField";
-import type {
-  ImageCropSettings,
-  ImageVariant,
+import {
+  imageVariants,
+  type ImageCropSettings,
+  type ImageVariant,
 } from "../AdminImageEditor/types";
 import {
   Actions,
@@ -31,6 +33,12 @@ import {
   EditButton,
   PreviewOverlay,
   DropHint,
+  FormatSelector,
+  FormatOptions,
+  FormatOption,
+  FormatShape,
+  FormatHint,
+  PreviewColumn,
 } from "./styles";
 
 const ImageEditor = lazy(() =>
@@ -46,19 +54,29 @@ interface AdminImageUploadProps {
   imageUrl?: string;
   accept?: string;
   variant?: ImageVariant;
+  allowVariantSelection?: boolean;
+  formatPlacement?: "top" | "left";
   icon?: ReactNode;
   onChange?: (file: File | null) => Promise<string | void>;
 }
 interface EditSource {
   id: string;
   file: File;
+  variant: ImageVariant;
   settings?: ImageCropSettings;
 }
 interface AppliedSource {
   file: File;
   settings: ImageCropSettings;
   imageUrl: string;
+  variant: ImageVariant;
 }
+
+const formatOptions = [
+  { variant: "square", label: "Quadrada" },
+  { variant: "landscape", label: "Horizontal" },
+  { variant: "portrait", label: "Vertical" },
+] satisfies { variant: ImageVariant; label: string }[];
 
 export function AdminImageUpload({
   label = "Imagem",
@@ -67,6 +85,8 @@ export function AdminImageUpload({
   imageUrl,
   accept = "image/*",
   variant = "square",
+  allowVariantSelection = false,
+  formatPlacement = "top",
   icon,
   onChange,
 }: AdminImageUploadProps) {
@@ -79,6 +99,9 @@ export function AdminImageUpload({
   const [opening, setOpening] = useState(false);
   const [dragging, setDragging] = useState(false);
   const [localError, setLocalError] = useState("");
+  const [selectedVariant, setSelectedVariant] = useState(variant);
+  const activeVariant = allowVariantSelection ? selectedVariant : variant;
+  const formatSide = allowVariantSelection && formatPlacement === "left";
 
   useEffect(() => {
     mounted.current = true;
@@ -106,7 +129,7 @@ export function AdminImageUpload({
       return;
     }
     setLocalError("");
-    setEditor({ id: crypto.randomUUID(), file });
+    setEditor({ id: crypto.randomUUID(), file, variant: activeVariant });
   }
 
   function handleFile(event: ChangeEvent<HTMLInputElement>) {
@@ -115,14 +138,16 @@ export function AdminImageUpload({
     if (file) openFile(file);
   }
 
-  async function editImage() {
-    if (!imageUrl || opening) return;
+  async function editImage(nextVariant = activeVariant) {
+    if (!imageUrl || opening || editor) return;
     setLocalError("");
     if (applied?.imageUrl === imageUrl) {
       setEditor({
         id: crypto.randomUUID(),
         file: applied.file,
-        settings: applied.settings,
+        variant: nextVariant,
+        settings:
+          applied.variant === nextVariant ? applied.settings : undefined,
       });
       return;
     }
@@ -141,6 +166,7 @@ export function AdminImageUpload({
       setEditor({
         id: crypto.randomUUID(),
         file: new File([blob], name, { type: blob.type }),
+        variant: nextVariant,
       });
     } catch {
       if (!request.signal.aborted)
@@ -161,9 +187,35 @@ export function AdminImageUpload({
     }
     if (nextUrl) {
       if (nextUrl.startsWith("blob:")) previewUrls.current.add(nextUrl);
-      setApplied({ file: editor.file, settings, imageUrl: nextUrl });
+      setApplied({
+        file: editor.file,
+        settings,
+        imageUrl: nextUrl,
+        variant: editor.variant,
+      });
     }
+    setSelectedVariant(editor.variant);
     setEditor(null);
+  }
+
+  function chooseVariant(nextVariant: ImageVariant) {
+    if (opening || editor || nextVariant === activeVariant) return;
+    if (imageUrl) void editImage(nextVariant);
+    else setSelectedVariant(nextVariant);
+  }
+
+  function detectVariant(image: HTMLImageElement) {
+    if (!allowVariantSelection || applied?.imageUrl === imageUrl || editor)
+      return;
+    if (!image.naturalWidth || !image.naturalHeight) return;
+    const aspect = image.naturalWidth / image.naturalHeight;
+    const closest = formatOptions.reduce((best, option) =>
+      Math.abs(Math.log(aspect / imageVariants[option.variant].aspect)) <
+      Math.abs(Math.log(aspect / imageVariants[best.variant].aspect))
+        ? option
+        : best,
+    );
+    setSelectedVariant(closest.variant);
   }
 
   function dropFile(event: DragEvent<HTMLButtonElement>) {
@@ -175,95 +227,139 @@ export function AdminImageUpload({
 
   return (
     <AdminField description={description} error={localError || error}>
-      <Container>
-        <HiddenInput
-          ref={inputRef}
-          type="file"
-          accept={accept}
-          onChange={handleFile}
-        />
-        <Preview
-          type="button"
-          $variant={variant}
-          $dragging={dragging}
-          disabled={opening}
-          aria-label={
-            imageUrl
-              ? `Ajustar ${label.toLocaleLowerCase("pt-BR")}`
-              : `Selecionar ${label.toLocaleLowerCase("pt-BR")}`
-          }
-          aria-haspopup="dialog"
-          onClick={() =>
-            imageUrl ? void editImage() : inputRef.current?.click()
-          }
-          onDragOver={(event) => {
-            event.preventDefault();
-            if (event.dataTransfer.types.includes("Files")) setDragging(true);
-          }}
-          onDragLeave={(event) => {
-            if (
-              !event.currentTarget.contains(event.relatedTarget as Node | null)
-            )
-              setDragging(false);
-          }}
-          onDrop={dropFile}
-        >
-          {imageUrl ? (
-            <>
-              <PreviewImage src={imageUrl} alt={label} />
-              <PreviewOverlay>
-                <FiCrop aria-hidden="true" />
-                Ajustar recorte
-              </PreviewOverlay>
-            </>
-          ) : (
-            <Placeholder>
-              {icon ?? <FiImage size={42} />}
-              <span>{`Selecionar ${label}`}</span>
-            </Placeholder>
-          )}
-          {dragging && (
-            <DropHint>
-              <FiUploadCloud aria-hidden="true" />
-              Solte a imagem aqui
-            </DropHint>
-          )}
-        </Preview>
-        <Actions
-          $hasImage={!!imageUrl}
-          role={imageUrl ? "group" : undefined}
-          aria-label={imageUrl ? "Ações da imagem" : undefined}
-        >
-          <ChangeButton
+      <Container $formatSide={formatSide}>
+        {allowVariantSelection && (
+          <FormatSelector
+            $side={formatSide}
+            disabled={opening || !!editor}
+            aria-label={`Formato da ${label.toLocaleLowerCase("pt-BR")}`}
+          >
+            <legend>
+              {formatSide
+                ? "Formato"
+                : `Formato da ${label.toLocaleLowerCase("pt-BR")}`}
+            </legend>
+            <FormatOptions $side={formatSide}>
+              {formatOptions.map((option) => (
+                <FormatOption
+                  key={option.variant}
+                  type="button"
+                  $side={formatSide}
+                  aria-pressed={activeVariant === option.variant}
+                  onClick={() => chooseVariant(option.variant)}
+                >
+                  {activeVariant === option.variant && (
+                    <FiCheck aria-hidden="true" />
+                  )}
+                  <FormatShape $variant={option.variant} aria-hidden="true" />
+                  <strong>{option.label}</strong>
+                  <span>{imageVariants[option.variant].ratio}</span>
+                </FormatOption>
+              ))}
+            </FormatOptions>
+            <FormatHint>
+              {imageUrl
+                ? "Troque o formato para ajustar o enquadramento."
+                : "Escolha o formato e selecione uma imagem para recortar."}
+            </FormatHint>
+          </FormatSelector>
+        )}
+        <PreviewColumn>
+          <HiddenInput
+            ref={inputRef}
+            type="file"
+            accept={accept}
+            onChange={handleFile}
+          />
+          <Preview
             type="button"
+            $variant={activeVariant}
+            $dragging={dragging}
             disabled={opening}
             aria-label={
               imageUrl
-                ? `Trocar ${label.toLocaleLowerCase("pt-BR")}`
-                : `Selecionar ${label}`
+                ? `Ajustar ${label.toLocaleLowerCase("pt-BR")}`
+                : `Selecionar ${label.toLocaleLowerCase("pt-BR")}`
             }
-            onClick={() => inputRef.current?.click()}
+            aria-haspopup="dialog"
+            onClick={() =>
+              imageUrl ? void editImage() : inputRef.current?.click()
+            }
+            onDragOver={(event) => {
+              event.preventDefault();
+              if (event.dataTransfer.types.includes("Files")) setDragging(true);
+            }}
+            onDragLeave={(event) => {
+              if (
+                !event.currentTarget.contains(
+                  event.relatedTarget as Node | null,
+                )
+              )
+                setDragging(false);
+            }}
+            onDrop={dropFile}
           >
-            <FiCamera aria-hidden="true" />
-            {imageUrl ? "Trocar" : `Selecionar ${label}`}
-          </ChangeButton>
-          {imageUrl && (
-            <EditButton
+            {imageUrl ? (
+              <>
+                <PreviewImage
+                  src={imageUrl}
+                  alt={label}
+                  onLoad={(event) => detectVariant(event.currentTarget)}
+                />
+                <PreviewOverlay>
+                  <FiCrop aria-hidden="true" />
+                  Ajustar recorte
+                </PreviewOverlay>
+              </>
+            ) : (
+              <Placeholder>
+                {icon ?? <FiImage size={42} />}
+                <span>{`Selecionar ${label}`}</span>
+              </Placeholder>
+            )}
+            {dragging && (
+              <DropHint>
+                <FiUploadCloud aria-hidden="true" />
+                Solte a imagem aqui
+              </DropHint>
+            )}
+          </Preview>
+          <Actions
+            $hasImage={!!imageUrl}
+            role={imageUrl ? "group" : undefined}
+            aria-label={imageUrl ? "Ações da imagem" : undefined}
+          >
+            <ChangeButton
               type="button"
               disabled={opening}
-              aria-label={`Ajustar ${label.toLocaleLowerCase("pt-BR")}`}
-              aria-haspopup="dialog"
-              onClick={() => void editImage()}
+              aria-label={
+                imageUrl
+                  ? `Trocar ${label.toLocaleLowerCase("pt-BR")}`
+                  : `Selecionar ${label}`
+              }
+              onClick={() => inputRef.current?.click()}
             >
-              {opening ? (
-                <FiLoader aria-hidden="true" />
-              ) : (
-                <FiCrop aria-hidden="true" />
-              )}
-              {opening ? "Abrindo..." : "Ajustar"}
-            </EditButton>
-          )}
-        </Actions>
+              <FiCamera aria-hidden="true" />
+              {imageUrl ? "Trocar" : `Selecionar ${label}`}
+            </ChangeButton>
+            {imageUrl && (
+              <EditButton
+                type="button"
+                disabled={opening}
+                aria-label={`Ajustar ${label.toLocaleLowerCase("pt-BR")}`}
+                aria-haspopup="dialog"
+                onClick={() => void editImage()}
+              >
+                {opening ? (
+                  <FiLoader aria-hidden="true" />
+                ) : (
+                  <FiCrop aria-hidden="true" />
+                )}
+                {opening ? "Abrindo..." : "Ajustar"}
+              </EditButton>
+            )}
+          </Actions>
+        </PreviewColumn>
       </Container>
       {editor && (
         <Suspense
@@ -273,7 +369,7 @@ export function AdminImageUpload({
             key={editor.id}
             file={editor.file}
             label={label}
-            variant={variant}
+            variant={editor.variant}
             initialSettings={editor.settings}
             onCancel={() => setEditor(null)}
             onApply={applyImage}

@@ -136,7 +136,6 @@ const values = {
   publishedAt: "2020-01-01",
   sentAt: "",
   coverUrl: "",
-  pdfUrl: "",
 };
 const { newsletterSendAvailability } = load(
   "../src/admin/utils/newsletterDelivery.ts",
@@ -145,6 +144,7 @@ const { newsletterSendAvailability } = load(
 function formHarness(options = {}) {
   const state = hooks(),
     calls = [],
+    previews = [],
     notices = [],
     navigation = [],
     fieldErrors = [];
@@ -152,13 +152,20 @@ function formHarness(options = {}) {
   const form = {
     register: () => ({}),
     handleSubmit: (fn) => fn,
-    reset() {},
-    setValue() {},
+    reset(data) { Object.assign(formValues, data); },
+    setValue(name, value) { formValues[name] = value; },
+    getValues: () => ({ ...formValues }),
     setError: (...args) => fieldErrors.push(args),
     control: {},
     formState: { errors: {}, isSubmitting: false },
   };
   const service = {
+    async preview(data) {
+      previews.push(data);
+      if (options.previewFailure) throw options.previewFailure;
+      return { data: { htmlContent: options.renderedHtml ?? data.htmlContent } };
+    },
+    async getBySlug() { return { data: options.loaded }; },
     async create(data) {
       calls.push(["create", data]);
       if (options.save) return options.save(data);
@@ -178,7 +185,7 @@ function formHarness(options = {}) {
       },
       "react-router-dom": {
         useNavigate: () => (path) => navigation.push(path),
-        useParams: () => ({}),
+        useParams: () => options.slug ? { slug: options.slug } : {},
       },
       "../../../../hooks/useToast": {
         useToast: () => ({ showToast: (notice) => notices.push(notice) }),
@@ -201,6 +208,10 @@ function formHarness(options = {}) {
         default: "form-actions",
       },
       "../../../components/AdminDateInput": { AdminDateInput: "date-input" },
+      "../../../components/AdminNewsletterPreview": {
+        AdminNewsletterPreview: "newsletter-preview",
+      },
+      "../../../components/NewsletterComposer": { NewsletterComposer: "newsletter-composer" },
       "../../../components/AdminFormCard": { AdminFormCard: "card" },
       "../../../components/AdminFormGrid": { AdminFormGrid: "grid" },
       "../../../components/AdminImageUpload": {
@@ -212,12 +223,13 @@ function formHarness(options = {}) {
       "../../../components/AdminSwitch": { AdminSwitch: "send-switch" },
       "../../../components/AdminTextarea": { AdminTextarea: "textarea" },
       "../../../components/AdminResponsive": { AdminSplitLayout: "split" },
-      "./styles": { Container: "div", Form: "form" },
+      "./styles": { Container: "div", Form: "form", Advanced: "details", ModeNotice: "div" },
     },
   );
   const render = () => state.render(() => NewsletterForm());
   return {
     calls,
+    previews,
     notices,
     navigation,
     fieldErrors,
@@ -229,6 +241,29 @@ function formHarness(options = {}) {
     },
     choose() {
       this.switch().props.onChange({ target: { checked: true } });
+    },
+    setDraft(patch) {
+      Object.assign(formValues, patch);
+    },
+    elements() { return nodes(render()); },
+    async clickText(text) {
+      const button = nodes(render()).find(node => typeof node.props.onClick === "function" && content(node.props.children).trim() === text);
+      assert.ok(button, `missing button: ${text}`);
+      button.props.onClick();
+      await state.settle(() => NewsletterForm());
+    },
+    async openPreview() {
+      const button = nodes(render()).find((node) => node.props["aria-haspopup"] === "dialog");
+      assert.equal(button.props.type, "button");
+      button.props.onClick();
+      await state.settle(() => NewsletterForm());
+      return this.preview();
+    },
+    preview() {
+      return nodes(render()).find((node) => node.type === "newsletter-preview");
+    },
+    cover(file) {
+      return nodes(render()).find((node) => node.type === "image-upload").props.onChange(file);
     },
     submit() {
       return nodes(render())
@@ -253,6 +288,121 @@ test("creation keeps sending optional and does not overwrite the real sentAt", a
   assert.equal(Object.hasOwn(form.calls[0][1], "sentAt"), false);
   assert.deepEqual(form.navigation, ["/admin/newsletter/edicao-cadastrada"]);
   form.unmount();
+});
+
+test("preview reads unsaved form values and closing it preserves the draft without saving or sending", async () => {
+  const form = formHarness();
+  await form.mount();
+  form.choose();
+  form.setDraft({ title: "Título ainda não salvo", htmlContent: "<h1>Conteúdo novo</h1>" });
+  const preview = await form.openPreview();
+  assert.equal(preview.props.data.title, "Título ainda não salvo");
+  assert.equal(preview.props.data.htmlContent, "<h1>Conteúdo novo</h1>");
+  assert.deepEqual(form.calls, []);
+  assert.deepEqual(form.navigation, []);
+  preview.props.onClose();
+  assert.equal(form.preview(), undefined);
+  assert.equal(form.switch().props.checked, true);
+  form.setDraft({ subject: "Assunto revisado" });
+  assert.equal((await form.openPreview()).props.data.subject, "Assunto revisado");
+  assert.equal(form.preview().props.data.title, "Título ainda não salvo");
+  assert.deepEqual(form.calls, []);
+  form.unmount();
+});
+
+test("preview includes the cropped local cover before the newsletter has been saved", async () => {
+  const form = formHarness();
+  await form.mount();
+  const url = await form.cover(new File(["cropped image"], "capa-recorte.png", { type: "image/png" }));
+  try {
+    assert.equal((await form.openPreview()).props.data.coverUrl, url);
+    assert.match(url, /^blob:/);
+    assert.deepEqual(form.calls, []);
+  } finally {
+    URL.revokeObjectURL(url);
+    form.unmount();
+  }
+});
+
+const { defaultNewsletterContent } = load("../src/admin/utils/newsletterComposer.ts");
+
+test("saving a visual edition submits the structured fields for automatic server generation", async () => {
+  const contentData = defaultNewsletterContent();
+  contentData.sections[0].items[0].text = "Texto preenchido por uma pessoa sem HTML.";
+  const form = formHarness({ values: { contentData, htmlContent: "" } });
+  await form.mount();
+  await form.submit();
+  assert.deepEqual(form.calls[0][1].contentData, contentData);
+  assert.equal(Object.hasOwn(form.calls[0][1], "htmlContent"), false);
+  form.unmount();
+});
+
+test("legacy editions reopen with their HTML preserved instead of being overwritten by the visual template", async () => {
+  const html = "<h1>Edição antiga</h1><p>Texto original completo.</p>";
+  const form = formHarness({ slug: "antiga", loaded: { ...edition, htmlContent: html, coverUrl: null, pdfUrl: null, contentData: null } });
+  await form.mount();
+  const code = form.elements().find(node => node.props.label === "Código HTML");
+  assert.equal(code.props.value, html);
+  assert.equal(form.elements().some(node => node.type === "newsletter-composer"), false);
+  form.unmount();
+});
+
+test("advanced editing starts with generated code and keeps the structured content for later visual editing", async () => {
+  const contentData = defaultNewsletterContent();
+  contentData.sections[0].items[0].title = "Notícia que precisa ser guardada";
+  const form = formHarness({ values: { contentData, htmlContent: "" }, renderedHtml: '<h1>Gerado</h1><img src="{{newsletterCover}}">' });
+  await form.mount();
+  await form.clickText("Editar código HTML");
+  const code = form.elements().find(node => node.props.label === "Código HTML");
+  assert.match(code.props.value, /Gerado/);
+  assert.equal(form.previews[0].coverUrl, "{{newsletterCover}}");
+  code.props.onChange({ target: { value: "<h1>Personalizado</h1>" } });
+  await form.submit();
+  const saved = form.calls[0][1].contentData;
+  assert.equal(saved.mode, "html");
+  assert.equal(saved.customHtml, "<h1>Personalizado</h1>");
+  assert.equal(saved.sections[0].items[0].title, "Notícia que precisa ser guardada");
+  form.unmount();
+});
+
+const { AdminNewsletterPreview } = load(
+  "../src/admin/components/AdminNewsletterPreview/index.tsx",
+  { "../../../components/NewsletterReader": { NewsletterReader: "newsletter-reader" } },
+);
+
+test("preview keeps HTML in the existing reader and shows cover, subject and publication from the draft", () => {
+  const html = "<!doctype html><html><head><style>p{color:blue}</style></head><body><p>Texto formatado</p></body></html>";
+  const view = AdminNewsletterPreview({
+    data: {
+      ...values,
+      coverUrl: "blob:local-cropped-cover",
+      htmlContent: html,
+    },
+    onClose() {},
+  });
+  assert.equal(view.type, "newsletter-reader");
+  assert.equal(view.props.edition.htmlContent, html);
+  assert.equal(view.props.edition.title, values.title);
+  const summary = nodes(view.props.children);
+  assert.equal(summary.find((node) => node.type === "img").props.src, "blob:local-cropped-cover");
+  assert.equal(summary.some((node) => node.type === "a"), false);
+  assert.match(content(view.props.children), /Assunto/);
+  assert.match(content(view.props.children), /1 de janeiro de 2020/);
+});
+
+test("preview supports incomplete drafts and ignores invalid cover and PDF URLs", () => {
+  const view = AdminNewsletterPreview({
+    data: {
+      ...values, title: "  ", subject: "", htmlContent: "", publishedAt: "invalid",
+      coverUrl: "javascript:alert(1)", pdfUrl: "javascript:alert(1)",
+    },
+    onClose() {},
+  });
+  assert.equal(view.props.edition.title, "Newsletter sem título");
+  assert.match(view.props.edition.htmlContent, /conteúdo da newsletter aparecerá aqui/);
+  assert.match(content(view.props.children), /Sem assunto/);
+  assert.match(content(view.props.children), /Sem data de publicação/);
+  assert.equal(nodes(view.props.children).some((node) => node.type === "img" || node.type === "a"), false);
 });
 
 test("choosing send after save queues the saved newsletter ID and opens delivery tracking", async () => {

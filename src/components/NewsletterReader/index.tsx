@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, type ReactNode } from "react";
 import { FiFileText, FiX } from "react-icons/fi";
 import type { NewsletterResponseDto } from "../../admin/dtos/newsletter/NewsletterResponseDto";
 import { newsletterReaderDocument } from "../../utils/newsletterEditions";
@@ -13,9 +13,13 @@ import {
 export function NewsletterReader({
   edition,
   onClose,
+  heading,
+  children,
 }: {
-  edition: NewsletterResponseDto;
+  edition: Pick<NewsletterResponseDto, "title" | "htmlContent">;
   onClose: () => void;
+  heading?: string;
+  children?: ReactNode;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -57,7 +61,7 @@ export function NewsletterReader({
       <ReaderToolbar>
         <ReaderHeading>
           <FiFileText aria-hidden="true" />
-          <h2 id={titleId}>{edition.title}</h2>
+          <h2 id={titleId}>{heading ?? edition.title}</h2>
         </ReaderHeading>
         <CloseButton
           type="button"
@@ -68,6 +72,7 @@ export function NewsletterReader({
           <FiX aria-hidden="true" />
         </CloseButton>
       </ReaderToolbar>
+      {children}
       <Frame
         title={`Conteúdo da newsletter: ${edition.title}`}
         srcDoc={newsletterReaderDocument(edition.htmlContent)}

@@ -21,6 +21,8 @@ import {
   type NewsletterEditionStatus,
 } from "../../utils/newsletterEditions";
 import { timelineExternalUrl } from "../../utils/timeline";
+import { newsletterPdfUrl } from "../../utils/newsletterPdf";
+import { api } from "../../services/api";
 import {
   ActionLink,
   Availability,
@@ -66,7 +68,7 @@ function EditionCard({
 }) {
   const [coverFailed, setCoverFailed] = useState(false);
   const coverUrl = timelineExternalUrl(edition.coverUrl);
-  const pdfUrl = timelineExternalUrl(edition.pdfUrl);
+  const pdfUrl = newsletterPdfUrl(edition.pdfUrl, api.defaults.baseURL);
   const available = status === "published";
   const hasHtml = !!edition.htmlContent.trim();
 

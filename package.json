@@ -16,6 +16,7 @@
     "test:books": "node --test --test-isolation=none test/books.test.mjs",
     "test:newsletter": "node --test --test-isolation=none test/newsletter.test.cjs",
     "test:newsletter-delivery": "node --test --test-isolation=none test/newsletter-delivery.test.cjs",
+    "test:newsletter-composer": "node --test --test-isolation=none test/newsletter-composer.test.cjs",
     "test:timeline": "node --test --test-isolation=none test/timeline.test.cjs",
     "test:presented-works": "node --test --test-isolation=none test/presented-works.test.cjs test/presented-work-details.test.cjs",
     "test:navigation": "node --test --test-isolation=none test/navigation.test.cjs",

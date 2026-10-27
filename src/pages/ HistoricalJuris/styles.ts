@@ -29,4 +29,4 @@ export const Grid = styled.div`
   ${portalGrid}
 `;
 
-export { DatedLinkCard as JuryCard } from "../../components/LinkCard/FeaturedLinkCard";
+export { CompactDatedLinkCard as JuryCard } from "../../components/LinkCard/FeaturedLinkCard";

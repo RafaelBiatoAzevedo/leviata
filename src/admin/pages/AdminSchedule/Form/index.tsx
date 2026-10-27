@@ -152,7 +152,7 @@ export function ScheduleForm() {
               <AdminInput
                 type="datetime-local"
                 label="Data e hora final"
-                description="Opcional. Informe para eventos com duração ou vários dias."
+                labelHint="Opcional. Informe para eventos com duração ou vários dias."
                 error={errors.endDate?.message}
                 {...register("endDate")}
               />

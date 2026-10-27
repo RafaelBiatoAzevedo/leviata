@@ -2,8 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
+import { FiCode, FiEye, FiFileText, FiLoader } from "react-icons/fi";
 import { useToast } from "../../../../hooks/useToast";
 import { AdminDateInput } from "../../../components/AdminDateInput";
+import { AdminButton } from "../../../components/AdminButton";
+import { AdminNewsletterPreview } from "../../../components/AdminNewsletterPreview";
+import { NewsletterComposer } from "../../../components/NewsletterComposer";
+import { AdminError } from "../../../components/AdminError";
+import { defaultNewsletterContent } from "../../../utils/newsletterComposer";
+import type { NewsletterContentDto } from "../../../dtos/newsletter/NewsletterContentDto";
 import AdminFormActions from "../../../components/AdminFormActions";
 import { AdminFormCard } from "../../../components/AdminFormCard";
 import { AdminFormGrid } from "../../../components/AdminFormGrid";
@@ -26,16 +33,16 @@ import {
   newsletterSchema,
   type NewsletterFormData,
 } from "../../../validations/newsletter.schema";
-import { Container, Form } from "./styles";
+import { Advanced, Container, Form, ModeNotice, PdfNotice } from "./styles";
 
 const defaultValues: NewsletterFormData = {
   title: "",
   subject: "",
   htmlContent: "",
   coverUrl: "",
-  pdfUrl: "",
   publishedAt: "",
   sentAt: "",
+  contentData: defaultNewsletterContent(),
 };
 const dateValue = (value: string | null) => (value ? value.slice(0, 10) : "");
 
@@ -46,6 +53,9 @@ export function NewsletterForm() {
   const isEdit = Boolean(slug);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState("");
+  const [preview, setPreview] = useState<NewsletterFormData | null>(null);
+  const [previewing, setPreviewing] = useState(false);
+  const [switchingMode, setSwitchingMode] = useState(false);
   const [sendAfterSave, setSendAfterSave] = useState(false);
   const [mailSettings, setMailSettings] =
     useState<NewsletterMailSettings | null>();
@@ -57,6 +67,7 @@ export function NewsletterForm() {
     setValue,
     setError,
     control,
+    getValues,
     formState: { errors, isSubmitting },
   } = useForm<NewsletterFormData>({
     resolver: zodResolver(newsletterSchema),
@@ -65,6 +76,9 @@ export function NewsletterForm() {
   const coverUrl = useWatch({ control, name: "coverUrl" });
   const publishedAt = useWatch({ control, name: "publishedAt" });
   const sentAt = useWatch({ control, name: "sentAt" });
+  const contentData =
+    useWatch({ control, name: "contentData" }) ?? defaultValues.contentData!;
+  const htmlContent = useWatch({ control, name: "htmlContent" });
   const mailUnavailable = newsletterSendAvailability(
     mailSettings,
     "2000-01-01",
@@ -99,9 +113,13 @@ export function NewsletterForm() {
         reset({
           title: data.title,
           subject: data.subject,
-          htmlContent: data.htmlContent,
+          htmlContent: data.contentData?.customHtml ?? data.htmlContent,
+          contentData: data.contentData ?? {
+            ...defaultNewsletterContent(),
+            mode: "html",
+            customHtml: data.htmlContent,
+          },
           coverUrl: data.coverUrl ?? "",
-          pdfUrl: data.pdfUrl ?? "",
           publishedAt: dateValue(data.publishedAt),
           sentAt: dateValue(data.sentAt),
         });
@@ -143,6 +161,79 @@ export function NewsletterForm() {
     setCoverPreview(url);
     setValue("coverUrl", "", { shouldDirty: true, shouldValidate: true });
     return url;
+  }
+
+  function updateContent(
+    update: (current: NewsletterContentDto) => NewsletterContentDto,
+  ) {
+    setValue(
+      "contentData",
+      update(getValues().contentData ?? defaultNewsletterContent()),
+      { shouldDirty: true },
+    );
+  }
+
+  async function openPreview() {
+    if (previewing) return;
+    setPreviewing(true);
+    const current = getValues();
+    const draft = {
+      ...current,
+      coverUrl: coverPreview || current.coverUrl || "",
+    };
+    try {
+      const { data } = await newsletterService.preview(draft);
+      setPreview({ ...draft, htmlContent: data.htmlContent });
+    } catch {
+      showToast({
+        title: "Não foi possível abrir a prévia",
+        description:
+          "Confira a conexão e os links das imagens e tente novamente.",
+        type: "danger",
+      });
+    } finally {
+      setPreviewing(false);
+    }
+  }
+
+  async function enableHtml(regenerate = false) {
+    const previous = getValues().contentData?.customHtml;
+    if (previous && !regenerate) {
+      setValue("htmlContent", previous, { shouldDirty: true });
+      updateContent((current) => ({ ...current, mode: "html" }));
+      return;
+    }
+    setSwitchingMode(true);
+    try {
+      const { data } = await newsletterService.preview({
+        ...getValues(),
+        coverUrl: "{{newsletterCover}}",
+      });
+      setValue("htmlContent", data.htmlContent, { shouldDirty: true });
+      updateContent((current) => ({
+        ...current,
+        mode: "html",
+        customHtml: data.htmlContent,
+      }));
+    } catch {
+      showToast({
+        title: "Não foi possível gerar o código",
+        description: "Tente novamente em instantes.",
+        type: "danger",
+      });
+    } finally {
+      setSwitchingMode(false);
+    }
+  }
+
+  function enableVisual() {
+    if (
+      !window.confirm(
+        "O editor visual usará os campos das seções para gerar a edição. As alterações feitas diretamente no HTML ficarão guardadas no modo avançado. Continuar?",
+      )
+    )
+      return;
+    updateContent((current) => ({ ...current, mode: "visual" }));
   }
 
   async function onSubmit(form: NewsletterFormData) {
@@ -213,6 +304,8 @@ export function NewsletterForm() {
             <AdminImageUpload
               label="Capa"
               variant="portrait"
+              allowVariantSelection
+              formatPlacement="left"
               imageUrl={coverPreview || coverUrl || ""}
               onChange={handleUploadCover}
               error={errors.coverUrl?.message}
@@ -234,6 +327,7 @@ export function NewsletterForm() {
                 />
                 <AdminInput
                   label="Assunto"
+                  labelHint="Título do e-mail recebido pelos inscritos"
                   required
                   error={errors.subject?.message}
                   {...register("subject")}
@@ -249,11 +343,13 @@ export function NewsletterForm() {
                     },
                   })}
                 />
-                <AdminInput
-                  label="URL do PDF"
-                  error={errors.pdfUrl?.message}
-                  {...register("pdfUrl")}
-                />
+                <PdfNotice>
+                  <FiFileText aria-hidden="true" />
+                  <p>
+                    O PDF será gerado automaticamente ao salvar, com o mesmo
+                    conteúdo da edição, e acompanhará o e-mail como anexo.
+                  </p>
+                </PdfNotice>
               </AdminFormGrid>
             </AdminSection>
           </AdminFormCard>
@@ -269,21 +365,98 @@ export function NewsletterForm() {
               <AdminInput
                 label="Último envio"
                 value={sentAt || "Ainda não enviado"}
-                description="Atualizado automaticamente quando o envio aos inscritos é concluído."
+                labelHint="Atualizado automaticamente quando o envio aos inscritos é concluído."
                 readOnly
               />
             </AdminFormGrid>
           </AdminSection>
         </AdminFormCard>
-        <AdminFormCard>
-          <AdminSection title="Conteúdo HTML">
-            <AdminTextarea
-              placeholder="Insira o conteúdo HTML da newsletter"
-              error={errors.htmlContent?.message}
-              {...register("htmlContent")}
-            />
-          </AdminSection>
-        </AdminFormCard>
+        <AdminError>
+          {errors.contentData
+            ? "Revise os campos do conteúdo: use links completos e respeite os limites de texto."
+            : errors.htmlContent?.message}
+        </AdminError>
+        {contentData.mode === "visual" ? (
+          <NewsletterComposer
+            value={contentData}
+            onChange={updateContent}
+            errors={errors.contentData}
+            disabled={isSubmitting || switchingMode}
+          />
+        ) : (
+          <AdminFormCard>
+            <AdminSection title="Código HTML da edição">
+              <ModeNotice>
+                <FiCode aria-hidden="true" />
+                <div>
+                  <strong>Edição avançada</strong>
+                  <p>
+                    O código desta edição está preservado. Para criar com campos
+                    simples, use o editor visual.
+                  </p>
+                </div>
+                <AdminButton
+                  type="button"
+                  variant="outline"
+                  onClick={enableVisual}
+                >
+                  Usar editor visual
+                </AdminButton>
+              </ModeNotice>
+              <AdminTextarea
+                id="newsletter-html-source"
+                label="Código HTML"
+                value={htmlContent ?? ""}
+                spellCheck={false}
+                rows={18}
+                error={errors.htmlContent?.message}
+                onChange={(event) => {
+                  setValue("htmlContent", event.target.value, {
+                    shouldDirty: true,
+                  });
+                  updateContent((current) => ({
+                    ...current,
+                    customHtml: event.target.value,
+                  }));
+                }}
+              />
+            </AdminSection>
+          </AdminFormCard>
+        )}
+        {contentData.mode === "visual" && (
+          <Advanced>
+            <summary>
+              <FiCode aria-hidden="true" /> Avançado · editar código HTML
+            </summary>
+            <p>
+              O HTML é gerado automaticamente. Use esta opção se precisar
+              personalizar o código; os campos da edição continuarão guardados.
+            </p>
+            <AdminButton
+              type="button"
+              variant="outline"
+              disabled={isSubmitting || switchingMode}
+              onClick={() => void enableHtml()}
+            >
+              <FiCode aria-hidden="true" />
+              {switchingMode
+                ? "Gerando código…"
+                : contentData.customHtml
+                  ? "Retomar código guardado"
+                  : "Editar código HTML"}
+            </AdminButton>
+            {contentData.customHtml && (
+              <AdminButton
+                type="button"
+                variant="outline"
+                disabled={isSubmitting || switchingMode}
+                onClick={() => void enableHtml(true)}
+              >
+                Gerar código com a versão visual atual
+              </AdminButton>
+            )}
+          </Advanced>
+        )}
         {!isEdit && (
           <AdminFormCard>
             <AdminSection title="Envio aos inscritos">
@@ -302,8 +475,29 @@ export function NewsletterForm() {
             </AdminSection>
           </AdminFormCard>
         )}
-        <AdminFormActions isSubmitting={isSubmitting} />
+        <AdminFormActions isSubmitting={isSubmitting}>
+          <AdminButton
+            type="button"
+            variant="outline"
+            disabled={isSubmitting || previewing || switchingMode}
+            aria-haspopup="dialog"
+            onClick={() => void openPreview()}
+          >
+            {previewing ? (
+              <FiLoader aria-hidden="true" />
+            ) : (
+              <FiEye aria-hidden="true" />
+            )}
+            {previewing ? "Abrindo prévia…" : "Prévia"}
+          </AdminButton>
+        </AdminFormActions>
       </Form>
+      {preview && (
+        <AdminNewsletterPreview
+          data={preview}
+          onClose={() => setPreview(null)}
+        />
+      )}
     </Container>
   );
 }

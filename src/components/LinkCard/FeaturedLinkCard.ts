@@ -128,15 +128,16 @@ export const FeaturedLinkCard = styled(LinkCard).attrs({ showReadMore: true })`
 `;
 
 export const CompactLinkCard = styled(FeaturedLinkCard)`
-  min-height: 200px;
-  gap: 12px;
-  padding: 18px 24px 44px;
+  min-height: 184px;
+  gap: 10px;
+  padding: 16px 24px 40px;
 
   &::after {
     left: 24px;
   }
 
   ${CardHeader} {
+    justify-content: flex-start;
     gap: 12px;
   }
 
@@ -144,14 +145,16 @@ export const CompactLinkCard = styled(FeaturedLinkCard)`
     width: 44px;
     height: 44px;
     border-radius: 11px;
-    font-size: 20px;
+    font-size: 22px;
   }
 
   ${CardTitle} {
+    text-align: left;
     font-size: 24px;
   }
 
   ${CardDescription} {
+    text-align: left;
     line-height: 1.6;
   }
 
@@ -161,8 +164,8 @@ export const CompactLinkCard = styled(FeaturedLinkCard)`
   }
 
   @media (max-width: 640px) {
-    min-height: 184px;
-    padding: 16px 20px 42px;
+    min-height: 168px;
+    padding: 14px 20px 38px;
 
     &::after {
       left: 20px;
@@ -208,5 +211,59 @@ export const DatedLinkCard = styled(FeaturedLinkCard).attrs({
 
   @media (max-width: 640px) {
     min-height: 240px;
+  }
+`;
+
+export const CompactDatedLinkCard = styled(DatedLinkCard)`
+  min-height: 184px;
+  gap: 12px;
+  padding: 20px 24px 48px;
+
+  &::after {
+    left: 24px;
+  }
+
+  ${CardHeader} {
+    justify-content: flex-start;
+    gap: 12px;
+  }
+
+  ${IconWrapper} {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    font-size: 22px;
+  }
+
+  ${CardTitle} {
+    text-align: left;
+    font-size: 24px;
+  }
+
+  ${CardDescription} {
+    align-self: flex-start;
+    padding: 6px 10px;
+  }
+
+  ${ReadMore} {
+    right: 24px;
+    bottom: 14px;
+  }
+
+  @media (max-width: 640px) {
+    min-height: 168px;
+    padding: 16px 20px 42px;
+
+    &::after {
+      left: 20px;
+    }
+
+    ${CardTitle} {
+      font-size: 22px;
+    }
+
+    ${ReadMore} {
+      right: 20px;
+    }
   }
 `;

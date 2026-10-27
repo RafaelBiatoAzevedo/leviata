@@ -17,8 +17,11 @@ export const Title = styled.h1`
   font-size: 2rem;
   color: ${({ theme }) => theme.colors.text};
 `;
-export const HtmlPreview = styled.div`
-  padding: 1rem;
+export const HtmlPreview = styled.iframe`
+  display: block;
+  width: 100%;
+  height: min(780px, 80dvh);
+  min-height: 360px;
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 8px;
   overflow: auto;

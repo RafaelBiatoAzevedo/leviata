@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import type { ImageVariant } from "../AdminImageEditor/types";
+import { imageVariants, type ImageVariant } from "../AdminImageEditor/types";
 
 interface PreviewProps {
   $variant: ImageVariant;
@@ -13,7 +13,7 @@ const compactWidth = ({ $variant }: PreviewProps) =>
       ? "360px"
       : "180px";
 
-export const Container = styled.div`
+export const Container = styled.div<{ $formatSide?: boolean }>`
   min-width: 0;
   max-width: 100%;
   display: flex;
@@ -23,10 +23,167 @@ export const Container = styled.div`
   align-items: center;
 
   gap: 1rem;
+
+  ${({ $formatSide }) =>
+    $formatSide &&
+    css`
+      display: grid;
+      grid-template-columns: 104px minmax(0, 1fr);
+      align-items: start;
+      gap: 18px;
+      width: 100%;
+
+      @media (max-width: 480px) {
+        display: flex;
+        align-items: stretch;
+      }
+    `}
+`;
+
+export const PreviewColumn = styled.div`
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 `;
 
 export const HiddenInput = styled.input`
   display: none;
+`;
+
+export const FormatSelector = styled.fieldset<{ $side?: boolean }>`
+  width: ${({ $side }) => ($side ? "104px" : "340px")};
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  legend {
+    margin-bottom: 10px;
+    padding: 0;
+    color: ${({ theme }) => theme.colors.text};
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  @media (max-width: 480px) {
+    width: 340px;
+  }
+`;
+
+export const FormatOptions = styled.div<{ $side?: boolean }>`
+  display: grid;
+  grid-template-columns: ${({ $side }) =>
+    $side ? "minmax(0, 1fr)" : "repeat(3, minmax(0, 1fr))"};
+  gap: 6px;
+  @media (max-width: 480px) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+`;
+
+export const FormatOption = styled.button<{ $side?: boolean }>`
+  position: relative;
+  min-width: 0;
+  min-height: ${({ $side }) => ($side ? "88px" : "108px")};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  padding: 16px 5px 10px;
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 12px;
+  background: ${({ theme }) => theme.colors.surface};
+  color: ${({ theme }) => theme.colors.textSoft};
+  font-family: inherit;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+
+  strong {
+    color: ${({ theme }) => theme.colors.heading};
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  > span:last-child {
+    font-size: 10px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.3;
+  }
+
+  > svg {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    width: 12px;
+    height: 12px;
+    color: ${({ theme }) => theme.colors.heading};
+  }
+
+  &[aria-pressed="true"] {
+    border-color: ${({ theme }) => theme.colors.primary};
+    background: ${({ theme }) => theme.colors.accentSoft};
+    color: ${({ theme }) => theme.colors.primary};
+    box-shadow: inset 0 0 0 1px ${({ theme }) => theme.colors.primary};
+  }
+
+  &:hover:not(:disabled) {
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+
+  &:focus-visible {
+    outline: 3px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    cursor: progress;
+    opacity: 0.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+`;
+
+export const FormatShape = styled.span<{ $variant: ImageVariant }>`
+  display: block;
+  flex-shrink: 0;
+  width: ${({ $variant }) =>
+    $variant === "landscape"
+      ? "44px"
+      : $variant === "square"
+        ? "30px"
+        : "20px"};
+  aspect-ratio: ${({ $variant }) => imageVariants[$variant].aspect};
+  margin-block: auto 5px;
+  border: 1.5px solid currentColor;
+  border-radius: 4px;
+  background:
+    linear-gradient(
+      145deg,
+      transparent 45%,
+      currentColor 46% 49%,
+      transparent 50%
+    ),
+    linear-gradient(
+      35deg,
+      transparent 50%,
+      currentColor 51% 54%,
+      transparent 55%
+    );
+`;
+
+export const FormatHint = styled.p`
+  margin-top: 8px;
+  color: ${({ theme }) => theme.colors.textSoft};
+  font-size: 11px;
+  line-height: 1.5;
 `;
 
 export const Preview = styled.button<PreviewProps>`

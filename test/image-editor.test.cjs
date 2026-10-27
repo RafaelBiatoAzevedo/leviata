@@ -37,6 +37,10 @@ function harness(initial={}) {
     select(file){const input=render().find(node=>node.props.type==="file");const target={files:file?[file]:[],value:"selected"};input.props.onChange({target});assert.equal(target.value,"");return render().find(node=>node.type===Editor);},
     editor(){return render().find(node=>node.type===Editor);},
     edit(){const button=render().find(node=>node.type===styles.EditButton);assert.ok(button);button.props.onClick();return this.editor();},
+    choose(variant){const button=render().find(node=>node.type===styles.FormatOption&&node.key===variant);assert.ok(button);button.props.onClick();return this.editor();},
+    selected(){return render().find(node=>node.type===styles.FormatOption&&node.props["aria-pressed"])?.key;},
+    previewVariant(){return render().find(node=>node.type===styles.Preview).props.$variant;},
+    imageLoaded(width,height){render().find(node=>node.type===styles.PreviewImage).props.onLoad({currentTarget:{naturalWidth:width,naturalHeight:height}});},
     unmount(){for(const value of slots)value?.cleanup?.();},
   };
 }
@@ -86,4 +90,79 @@ test("temporary preview URLs are released when the upload component unmounts",as
   context.mock.method(URL,"revokeObjectURL",value=>revoked.push(value));
   const form=harness({onChange:async()=>url});await form.select(original()).props.onApply(file,settings);
   form.update({imageUrl:url});assert.deepEqual(revoked,[]);form.unmount();assert.deepEqual(revoked,[url]);
+});
+
+test("each cover format opens the crop editor immediately with the chosen aspect before any upload", () => {
+  for (const variant of ["square", "landscape", "portrait"]) {
+    const uploads = [];
+    const form = harness({
+      allowVariantSelection: true,
+      onChange: async (file) => uploads.push(file),
+    });
+    form.choose(variant);
+    assert.equal(form.selected(), variant);
+    assert.equal(form.previewVariant(), variant);
+    assert.equal(form.select(original()).props.variant, variant);
+    assert.deepEqual(uploads, []);
+    form.unmount();
+  }
+});
+
+test("changing an applied cover format reuses the full original and cancellation preserves the previous crop", async () => {
+  const url = "https://example.org/capa.jpg", source = original();
+  const form = harness({ allowVariantSelection: true, onChange: async () => url });
+  await form.select(source).props.onApply(cropped(), settings);
+  form.update({ imageUrl: url });
+  const editor = form.choose("landscape");
+  assert.equal(editor.props.file, source);
+  assert.equal(editor.props.variant, "landscape");
+  assert.equal(editor.props.initialSettings, undefined);
+  editor.props.onCancel();
+  assert.equal(form.selected(), "portrait");
+  assert.equal(form.previewVariant(), "portrait");
+  assert.deepEqual(form.edit().props.initialSettings, settings);
+  form.unmount();
+});
+
+test("confirming a new format commits it and subsequent adjustments restore its own crop", async () => {
+  const url = "https://example.org/capa.jpg", source = original();
+  const uploads = [];
+  const form = harness({
+    allowVariantSelection: true,
+    onChange: async (file) => { uploads.push(file); return url; },
+  });
+  await form.select(source).props.onApply(cropped(), settings);
+  form.update({ imageUrl: url });
+  const nextSettings = { area: { x: 0, y: 10, width: 100, height: 40 }, rotation: 0 };
+  await form.choose("landscape").props.onApply(cropped(), nextSettings);
+  assert.equal(form.selected(), "landscape");
+  assert.equal(form.previewVariant(), "landscape");
+  assert.equal(uploads.length, 2);
+  const editor = form.edit();
+  assert.equal(editor.props.file, source);
+  assert.equal(editor.props.variant, "landscape");
+  assert.deepEqual(editor.props.initialSettings, nextSettings);
+  form.unmount();
+});
+
+test("previously saved covers select their format from the loaded image dimensions", () => {
+  for (const [width, height, variant] of [
+    [1200, 1200, "square"], [1600, 900, "landscape"], [800, 1200, "portrait"],
+  ]) {
+    const form = harness({ allowVariantSelection: true, imageUrl: "https://example.org/capa.jpg" });
+    form.imageLoaded(width, height);
+    assert.equal(form.selected(), variant);
+    assert.equal(form.previewVariant(), variant);
+    form.unmount();
+  }
+});
+
+test("fixed-format upload fields retain their configured crop and do not offer format selection", () => {
+  for (const variant of ["square", "landscape", "portrait"]) {
+    const form = harness({ variant });
+    assert.equal(form.selected(), undefined);
+    assert.equal(form.previewVariant(), variant);
+    assert.equal(form.select(original()).props.variant, variant);
+    form.unmount();
+  }
 });
