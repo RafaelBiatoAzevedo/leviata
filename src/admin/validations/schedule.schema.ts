@@ -23,16 +23,30 @@ export const scheduleSchema = z
         "Informe uma data válida.",
       ),
     location: z.string().trim().max(255, "Use até 255 caracteres."),
-    externalUrl: z.union([
-      z.literal(""),
-      z
-        .string()
-        .url("Informe uma URL válida.")
-        .refine(
-          (value) => /^https?:\/\//i.test(value),
-          "Use uma URL http ou https.",
-        ),
-    ]),
+    destination: z.enum(["EXTERNAL", "MEETING"]),
+    externalUrl: z.string().trim(),
+    meetingId: z.string(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.destination === "MEETING") {
+      if (!z.uuid().safeParse(data.meetingId).success) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["meetingId"],
+          message: "Selecione um evento cadastrado.",
+        });
+      }
+    } else if (data.externalUrl) {
+      const valid =
+        z.url().safeParse(data.externalUrl).success &&
+        /^https?:\/\//i.test(data.externalUrl);
+      if (!valid)
+        ctx.addIssue({
+          code: "custom",
+          path: ["externalUrl"],
+          message: "Informe uma URL válida com http ou https.",
+        });
+    }
   })
   .refine(
     (data) => !data.endDate || new Date(data.endDate) >= new Date(data.date),

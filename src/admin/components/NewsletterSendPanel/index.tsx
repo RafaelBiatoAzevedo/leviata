@@ -11,6 +11,9 @@ import type {
   NewsletterMailSettings,
   NewsletterRecipient,
   NewsletterRecipientStatus,
+  NewsletterSendMode,
+  NewsletterSendRequest,
+  NewsletterSubscriberOption,
 } from "../../dtos/newsletter/NewsletterMailDto";
 import { newsletterMailService } from "../../services/newsletterMail";
 import {
@@ -21,6 +24,7 @@ import { AdminBadge, type TAdminBadgeVariant } from "../AdminBadge";
 import { AdminButton } from "../AdminButton";
 import { AdminPagination } from "../AdminPagination";
 import { AdminTable } from "../AdminTable";
+import { NewsletterAudiencePicker } from "../NewsletterAudiencePicker";
 import {
   Controls,
   History,
@@ -28,6 +32,7 @@ import {
   Notice,
   Panel,
   Summary,
+  ConfirmationRecipients,
 } from "./styles";
 
 interface Snapshot {
@@ -82,6 +87,10 @@ export function NewsletterSendPanel({
   }>({ key: "" });
   const [busy, setBusy] = useState(false);
   const [actionError, setActionError] = useState("");
+  const [sendMode, setSendMode] = useState<NewsletterSendMode>("ALL");
+  const [selectedSubscribers, setSelectedSubscribers] = useState<
+    NewsletterSubscriberOption[]
+  >([]);
   const inFlight = useRef(false);
   const mounted = useRef(true);
   const requestKey = JSON.stringify({
@@ -175,17 +184,30 @@ export function NewsletterSendPanel({
     !!data &&
     !availability &&
     data.campaign.status === "NOT_QUEUED" &&
-    data.audience.eligible > 0;
+    data.audience.eligible > 0 &&
+    (sendMode === "ALL" || selectedSubscribers.length > 0);
 
   function confirm(action: "send" | "retry" | "cancel") {
     if (!data || busy || loading || inFlight.current) return;
+    if (action === "send" && !canSend) return;
+    const selection: NewsletterSendRequest =
+      sendMode === "ALL"
+        ? { mode: "ALL" }
+        : {
+            mode: "SELECTED",
+            subscriberIds: selectedSubscribers.map(
+              (subscriber) => subscriber.id,
+            ),
+          };
     showModal({
       title:
         action === "cancel"
           ? "Cancelar os envios pendentes?"
           : action === "retry"
             ? "Tentar novamente as entregas com falha?"
-            : "Enviar newsletter para todos os inscritos?",
+            : sendMode === "ALL"
+              ? "Enviar newsletter para todos os inscritos?"
+              : `Enviar newsletter para ${selectedSubscribers.length} ${selectedSubscribers.length === 1 ? "inscrito selecionado" : "inscritos selecionados"}?`,
       content: (
         <div>
           <p>
@@ -199,8 +221,20 @@ export function NewsletterSendPanel({
               ? "Os destinatários que ainda aguardam na fila não receberão esta edição. Uma mensagem cujo envio já começou pode ser concluída."
               : action === "retry"
                 ? "Somente as entregas com falha confirmada serão tentadas novamente. Mensagens já enviadas ou que precisam de conferência não serão repetidas."
-                : `${data.audience.eligible} inscritos estão aptos a receber esta edição neste momento. Todos os cadastros ativos que autorizaram e-mail serão considerados ao iniciar o envio.`}
+                : sendMode === "ALL"
+                  ? `${data.audience.eligible} inscritos estão aptos a receber esta edição neste momento. Todos os cadastros ativos que autorizaram e-mail serão considerados ao iniciar o envio.`
+                  : "Esta edição será enviada somente aos inscritos selecionados abaixo. A autorização de recebimento será conferida novamente ao iniciar o envio."}
           </p>
+          {action === "send" && sendMode === "SELECTED" && (
+            <ConfirmationRecipients>
+              {selectedSubscribers.map((subscriber) => (
+                <li key={subscriber.id}>
+                  {subscriber.name && <strong>{subscriber.name} — </strong>}
+                  {subscriber.email}
+                </li>
+              ))}
+            </ConfirmationRecipients>
+          )}
         </div>
       ),
       confirmText: action === "cancel" ? "Cancelar envios" : "Confirmar envio",
@@ -213,9 +247,10 @@ export function NewsletterSendPanel({
         setActionError("");
         updateModal({ confirmDisabled: true, confirmText: "Processando…" });
         try {
-          const { data: campaign } = await newsletterMailService[action](
-            newsletter.id,
-          );
+          const { data: campaign } =
+            action === "send"
+              ? await newsletterMailService.send(newsletter.id, selection)
+              : await newsletterMailService[action](newsletter.id);
           if (!mounted.current) return;
           showToast({
             title: action === "cancel" ? "Envios cancelados" : "Envio iniciado",
@@ -288,6 +323,16 @@ export function NewsletterSendPanel({
                 estão aptos a receber esta edição. Cadastros inativos, sem
                 autorização ou que já receberam esta edição ficam de fora.
               </p>
+              <NewsletterAudiencePicker
+                newsletterId={newsletter.id}
+                eligible={data.audience.eligible}
+                mode={sendMode}
+                selected={selectedSubscribers}
+                onModeChange={setSendMode}
+                onSelectionChange={setSelectedSubscribers}
+                revision={revision}
+                disabled={busy || loading}
+              />
               <Controls>
                 <AdminButton
                   type="button"
@@ -295,7 +340,9 @@ export function NewsletterSendPanel({
                   onClick={() => confirm("send")}
                 >
                   <FiSend aria-hidden="true" />
-                  Enviar para todos os inscritos
+                  {sendMode === "ALL"
+                    ? "Enviar para todos os inscritos"
+                    : `Enviar para selecionados (${selectedSubscribers.length})`}
                 </AdminButton>
               </Controls>
             </>
@@ -360,7 +407,7 @@ export function NewsletterSendPanel({
                   setPage(1);
                 }}
               >
-                Destinatários
+                Fila de envio
               </button>
               <button
                 type="button"
@@ -379,76 +426,82 @@ export function NewsletterSendPanel({
                 aceitação da mensagem.
               </p>
             )}
-            <AdminTable
-              loading={loading}
-              label={
-                historyMode === "records"
-                  ? "Envios realizados da newsletter"
-                  : "Destinatários da newsletter"
-              }
-            >
-              <thead>
-                <tr>
-                  <th>Destinatário</th>
-                  {historyMode === "queue" && <th>Status</th>}
-                  {historyMode === "queue" && <th>Tentativas</th>}
-                  <th>Enviado em</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.history.items.map((item) => {
-                  const record = "subscriber" in item;
-                  const status = !record ? deliveryLabels[item.status] : null;
-                  return (
-                    <tr key={item.id}>
-                      <td>
-                        <strong>
-                          {record ? item.subscriber.email : item.email}
-                        </strong>
-                        {record && item.subscriber.name && (
-                          <>
-                            <br />
-                            <small>{item.subscriber.name}</small>
-                          </>
-                        )}
-                      </td>
-                      {historyMode === "queue" && (
+            {(loading || data.history.items.length > 0) && (
+              <AdminTable
+                loading={loading}
+                label={
+                  historyMode === "records"
+                    ? "Envios realizados da newsletter"
+                    : "Destinatários da newsletter"
+                }
+              >
+                <thead>
+                  <tr>
+                    <th>Destinatário</th>
+                    {historyMode === "queue" && <th>Status</th>}
+                    {historyMode === "queue" && <th>Tentativas</th>}
+                    <th>Enviado em</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.history.items.map((item) => {
+                    const record = "subscriber" in item;
+                    const status = !record ? deliveryLabels[item.status] : null;
+                    return (
+                      <tr key={item.id}>
                         <td>
-                          {status && (
-                            <AdminBadge variant={status.variant}>
-                              {status.label}
-                            </AdminBadge>
+                          <strong>
+                            {record ? item.subscriber.email : item.email}
+                          </strong>
+                          {record && item.subscriber.name && (
+                            <>
+                              <br />
+                              <small>{item.subscriber.name}</small>
+                            </>
                           )}
                         </td>
-                      )}
-                      {historyMode === "queue" && (
-                        <td>{!record ? item.attempts : "—"}</td>
-                      )}
-                      <td>{date(item.sentAt)}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </AdminTable>
+                        {historyMode === "queue" && (
+                          <td>
+                            {status && (
+                              <AdminBadge variant={status.variant}>
+                                {status.label}
+                              </AdminBadge>
+                            )}
+                          </td>
+                        )}
+                        {historyMode === "queue" && (
+                          <td>{!record ? item.attempts : "—"}</td>
+                        )}
+                        <td>{date(item.sentAt)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </AdminTable>
+            )}
             {!loading && !data.history.items.length && (
               <Notice role="status">
                 {historyMode === "records"
                   ? "Nenhum envio realizado ainda."
-                  : "Nenhum destinatário na fila ainda."}
+                  : data.campaign.status === "NOT_QUEUED"
+                    ? "O envio ainda não foi iniciado. Os destinatários aparecerão na fila após a confirmação do envio."
+                    : "Nenhum destinatário encontrado nesta página da fila."}
               </Notice>
             )}
-            <AdminPagination
-              page={page}
-              rowsPerPage={limit}
-              total={data.history.total}
-              loading={loading}
-              disabled={busy}
-              onPageChange={setPage}
-              onRowsPerPageChange={(value) => {
-                setLimit(value);
-                setPage(1);
-              }}
-            />
+            {(loading || data.history.total > 0) && (
+              <AdminPagination
+                page={page}
+                rowsPerPage={limit}
+                total={data.history.total}
+                loading={loading}
+                disabled={busy}
+                onPageChange={setPage}
+                onRowsPerPageChange={(value) => {
+                  setLimit(value);
+                  setPage(1);
+                }}
+              />
+            )}
           </History>
         </>
       )}

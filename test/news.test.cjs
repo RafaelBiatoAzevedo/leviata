@@ -327,6 +327,11 @@ test("news can link both internal and external meetings without a visibility fil
   ]);
 });
 
+test("symposia are available as linked news and agenda destinations, including external events", async (context) => {
+  context.mock.method(api, "get", async () => ({ data: [{ id: uuid, title: "Simpósio de História", type: "SYMPOSIUM", isInternal: false }] }));
+  assert.deepEqual(await loadNewsRelatedOptions("MEETING"), [{ value: uuid, label: "Simpósio — Simpósio de História (externo)" }]);
+});
+
 test("documentary screenings are available as linked news destinations", async (context) => {
   context.mock.method(api, "get", async () => ({
     data: [

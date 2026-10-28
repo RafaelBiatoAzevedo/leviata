@@ -119,3 +119,15 @@ export const HistoryChoice = styled.div`
     }
   }
 `;
+
+export const ConfirmationRecipients = styled.ul`
+  max-height: 240px;
+  overflow: auto;
+  padding: 0 0 0 20px;
+  margin: 16px 0;
+  li {
+    margin-bottom: 10px;
+    overflow-wrap: anywhere;
+    line-height: 1.6;
+  }
+`;

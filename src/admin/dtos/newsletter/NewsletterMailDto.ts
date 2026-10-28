@@ -13,6 +13,17 @@ export interface NewsletterAudience {
   excluded: number;
 }
 
+export type NewsletterSendMode = "ALL" | "SELECTED";
+export interface NewsletterSendRequest {
+  mode: NewsletterSendMode;
+  subscriberIds?: string[];
+}
+export interface NewsletterSubscriberOption {
+  id: string;
+  name: string | null;
+  email: string;
+}
+
 export type NewsletterRecipientStatus =
   | "PENDING"
   | "SENDING"

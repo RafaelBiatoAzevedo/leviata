@@ -30,7 +30,7 @@ export const Container = styled.nav`
     pointer-events: none;
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1320px) {
     grid-template-columns: minmax(0, 1fr) auto;
   }
 `;
@@ -94,7 +94,7 @@ export const DesktopOnly = styled.div<{ $actions?: boolean }>`
   justify-self: ${({ $actions }) => ($actions ? "end" : "center")};
   min-width: 0;
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1320px) {
     display: none;
   }
 `;
@@ -103,9 +103,9 @@ export const Menu = styled.ul`
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(2px, 0.35vw, 8px);
+  gap: clamp(2.2px, 0.385vw, 8.8px);
   margin: 0;
-  padding: 5px;
+  padding: 5.5px;
   border: 1px solid ${({ theme }) => theme.colors.primary}25;
   border-radius: 14px;
   background: var(--theme-elevated, rgba(255, 255, 255, 0.55));
@@ -132,11 +132,11 @@ export const MenuItem = styled(Link)<{ $active?: boolean }>`
   display: flex;
   align-items: center;
   min-width: 0;
-  min-height: 46px;
-  padding: 0 10px;
+  min-height: 50.6px;
+  padding: 0 11px;
   border-radius: 8px;
   color: ${({ theme }) => theme.colors.heading};
-  font-size: 14px;
+  font-size: 15.4px;
   font-weight: 500;
   line-height: 1.4;
   letter-spacing: 0;
@@ -166,15 +166,15 @@ export const DropdownArrow = styled.button<{ $expanded: boolean }>`
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 28px;
-  min-height: 46px;
+  width: 30.8px;
+  min-height: 50.6px;
   margin-right: 3px;
   border-radius: 7px;
   color: ${({ theme }) => theme.colors.heading};
 
   svg {
-    width: 15px;
-    height: 15px;
+    width: 16.5px;
+    height: 16.5px;
     transform: rotate(${({ $expanded }) => ($expanded ? "180deg" : "0deg")});
     transition: transform 0.2s ease;
   }
@@ -195,9 +195,9 @@ export const DropdownContent = styled.div`
   top: 100%;
   left: 50%;
   z-index: 20;
-  width: 360px;
+  width: 396px;
   max-width: calc(100vw - 32px);
-  padding-top: 12px;
+  padding-top: 13.2px;
   transform: translateX(-50%);
   animation: ${dropdownReveal} 0.18s ease;
 
@@ -216,7 +216,7 @@ export const DropdownPanel = styled.div`
   max-height: calc(100dvh - var(--portal-header-height, 70px) - 28px);
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 10px;
+  padding: 11px;
   border: 1px solid ${({ theme }) => theme.colors.primary}50;
   border-radius: 16px;
   background: ${({ theme }) => theme.colors.surface};
@@ -226,15 +226,15 @@ export const DropdownPanel = styled.div`
 export const DropdownHeading = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin: 0 6px 8px;
-  padding: 10px 5px 14px;
+  gap: 6.6px;
+  margin: 0 6.6px 8.8px;
+  padding: 11px 5.5px 15.4px;
   border-bottom: 1px solid ${({ theme }) => theme.colors.primary}30;
 
   strong {
     color: ${({ theme }) => theme.colors.heading};
     font-family: ${({ theme }) => theme.fonts.title};
-    font-size: 23px;
+    font-size: 25.3px;
     font-weight: 600;
     line-height: 1.15;
     letter-spacing: 0;
@@ -242,7 +242,7 @@ export const DropdownHeading = styled.div`
 
   span {
     color: var(--theme-muted, #626973);
-    font-size: 11px;
+    font-size: 12.1px;
     line-height: 1.7;
     letter-spacing: 0;
   }
@@ -251,7 +251,7 @@ export const DropdownHeading = styled.div`
 export const SubmenuList = styled.ul`
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 4.4px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -259,12 +259,12 @@ export const SubmenuList = styled.ul`
 
 export const SubmenuItem = styled(Link)<{ $active: boolean }>`
   display: grid;
-  grid-template-columns: 34px minmax(0, 1fr) 14px;
+  grid-template-columns: 37.4px minmax(0, 1fr) 15.4px;
   align-items: center;
-  gap: 11px;
+  gap: 12.1px;
   min-width: 0;
-  min-height: 44px;
-  padding: 11px;
+  min-height: 48.4px;
+  padding: 12.1px;
   border: 1px solid
     ${({ theme, $active }) =>
       $active ? `${theme.colors.primary}45` : "transparent"};
@@ -279,7 +279,7 @@ export const SubmenuItem = styled(Link)<{ $active: boolean }>`
 
   > svg:last-child {
     color: ${({ theme }) => theme.colors.primary};
-    font-size: 14px;
+    font-size: 15.4px;
     opacity: 0.8;
   }
 
@@ -293,13 +293,13 @@ export const SubmenuItem = styled(Link)<{ $active: boolean }>`
 export const SubmenuIcon = styled.span`
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 37.4px;
+  height: 37.4px;
   border: 1px solid ${({ theme }) => theme.colors.primary}35;
   border-radius: 9px;
   background: rgba(17, 24, 39, 0.025);
   color: ${({ theme }) => theme.colors.primary};
-  font-size: 17px;
+  font-size: 18.7px;
 `;
 
 export const SubmenuCopy = styled.span`
@@ -308,7 +308,7 @@ export const SubmenuCopy = styled.span`
 
   strong {
     display: block;
-    font-size: 12px;
+    font-size: 13.2px;
     font-weight: 500;
     line-height: 1.5;
     letter-spacing: 0;
@@ -319,7 +319,7 @@ export const SubmenuCopy = styled.span`
     display: block;
     margin-top: 3px;
     color: var(--theme-muted, #626973);
-    font-size: 11px;
+    font-size: 12.1px;
     line-height: 1.6;
     letter-spacing: 0;
     overflow-wrap: anywhere;
@@ -339,7 +339,7 @@ export const MobileOnly = styled.div`
   align-items: center;
   gap: 8px;
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1320px) {
     display: flex;
   }
 `;
@@ -347,8 +347,8 @@ export const MobileOnly = styled.div`
 export const MenuToggle = styled.button<{ $open: boolean }>`
   display: grid;
   place-items: center;
-  width: 44px;
-  height: 44px;
+  width: 48.4px;
+  height: 48.4px;
   border: 1px solid ${({ theme }) => theme.colors.primary}55;
   border-radius: 11px;
   color: ${({ theme, $open }) =>
@@ -360,8 +360,8 @@ export const MenuToggle = styled.button<{ $open: boolean }>`
     color 0.2s ease;
 
   svg {
-    width: 22px;
-    height: 22px;
+    width: 24.2px;
+    height: 24.2px;
   }
 `;
 
@@ -372,7 +372,7 @@ export const MobileMenu = styled.div<{ $open: boolean }>`
   z-index: 10;
   display: none;
   flex-direction: column;
-  gap: 24px;
+  gap: 26.4px;
   width: 100%;
   height: calc(100dvh - var(--portal-header-height, 70px));
   overflow-y: auto;
@@ -388,9 +388,9 @@ export const MobileMenu = styled.div<{ $open: boolean }>`
 
   ${MenuItem} {
     flex: 1;
-    gap: 12px;
-    min-height: 62px;
-    padding: 8px;
+    gap: 13.2px;
+    min-height: 68.2px;
+    padding: 8.8px;
     white-space: normal;
 
     &::after {
@@ -399,19 +399,19 @@ export const MobileMenu = styled.div<{ $open: boolean }>`
   }
 
   ${DropdownArrow} {
-    width: 44px;
-    height: 44px;
+    width: 48.4px;
+    height: 48.4px;
     margin-right: 4px;
     border: 1px solid ${({ theme }) => theme.colors.primary}35;
     background: ${({ theme }) => theme.colors.accentSoft};
 
     svg {
-      width: 16px;
-      height: 16px;
+      width: 17.6px;
+      height: 17.6px;
     }
   }
 
-  @media (max-width: 1200px) {
+  @media (max-width: 1320px) {
     display: flex;
   }
 `;
@@ -423,7 +423,7 @@ export const MobileIntro = styled.div`
 
   > span {
     color: var(--theme-accent-text, #7b622f);
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 500;
     letter-spacing: 1.5px;
     text-transform: uppercase;
@@ -432,7 +432,7 @@ export const MobileIntro = styled.div`
   h2 {
     margin-top: 7px;
     color: ${({ theme }) => theme.colors.heading};
-    font-size: 29px;
+    font-size: 31.9px;
     font-weight: 600;
     line-height: 1.1;
     letter-spacing: -0.3px;
@@ -441,7 +441,7 @@ export const MobileIntro = styled.div`
   p {
     margin-top: 7px;
     color: var(--theme-muted, #626973);
-    font-size: 12px;
+    font-size: 13.2px;
     line-height: 1.7;
     letter-spacing: 0;
   }
@@ -451,20 +451,20 @@ export const MenuWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
-  gap: 14px;
+  gap: 15.4px;
   width: 100%;
   max-width: 900px;
   margin-inline: auto;
 
   @media (max-width: 640px) {
     grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
+    gap: 11px;
   }
 `;
 
 export const MobileGroup = styled.div<{ $active: boolean }>`
   min-width: 0;
-  padding: 5px;
+  padding: 5.5px;
   border: 1px solid
     ${({ theme, $active }) =>
       $active ? theme.colors.primary : `${theme.colors.primary}35`};
@@ -477,7 +477,7 @@ export const MobileGroup = styled.div<{ $active: boolean }>`
 export const MobileGroupHeader = styled.div`
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 4.4px;
   min-width: 0;
 `;
 
@@ -485,13 +485,13 @@ export const MobileCategoryIcon = styled.span`
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 38px;
-  height: 38px;
+  width: 41.8px;
+  height: 41.8px;
   border: 1px solid ${({ theme }) => theme.colors.primary}45;
   border-radius: 11px;
   background: ${({ theme }) => theme.colors.secondary};
   color: ${({ theme }) => theme.colors.primary};
-  font-size: 18px;
+  font-size: 19.8px;
 `;
 
 export const MobileCategoryCopy = styled.span`
@@ -502,7 +502,7 @@ export const MobileCategoryCopy = styled.span`
     display: block;
     color: ${({ theme }) => theme.colors.heading};
     font-family: ${({ theme }) => theme.fonts.title};
-    font-size: 22px;
+    font-size: 24.2px;
     font-weight: 600;
     line-height: 1.1;
     letter-spacing: 0;
@@ -512,7 +512,7 @@ export const MobileCategoryCopy = styled.span`
     display: block;
     margin-top: 5px;
     color: var(--theme-muted, #626973);
-    font-size: 11px;
+    font-size: 12.1px;
     font-weight: 400;
     line-height: 1.5;
     letter-spacing: 0;

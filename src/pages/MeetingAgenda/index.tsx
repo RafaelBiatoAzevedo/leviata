@@ -19,6 +19,12 @@ const sections = {
       "Conheça os próximos debates e revisite os seminários já realizados pelo grupo.",
     kind: "seminars",
   },
+  SYMPOSIUM: {
+    title: "Simpósios",
+    subtitle:
+      "Acompanhe os próximos simpósios e revisite os encontros de pesquisa já realizados pelo grupo.",
+    kind: "symposia",
+  },
   DOCUMENTARY: {
     title: "Mostra de documentários",
     subtitle:

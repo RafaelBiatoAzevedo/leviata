@@ -20,8 +20,8 @@ export const scheduleService = {
     );
   },
 
-  getAll(params: ScheduleQueryDto = {}) {
-    return api.get<ScheduleResponseDto[]>("/schedule", { params });
+  getAll(params: ScheduleQueryDto = {}, signal?: AbortSignal) {
+    return api.get<ScheduleResponseDto[]>("/schedule", { params, signal });
   },
 
   getById(id: string) {

@@ -20,6 +20,8 @@ export function mapScheduleToForm(
     endDate: toLocalDateTime(schedule.endDate),
     location: schedule.location ?? "",
     externalUrl: schedule.externalUrl ?? "",
+    destination: schedule.meetingId ? "MEETING" : "EXTERNAL",
+    meetingId: schedule.meetingId ?? "",
   };
 }
 
@@ -33,6 +35,8 @@ export function mapScheduleToCreateDto(
     date: new Date(data.date).toISOString(),
     endDate: data.endDate ? new Date(data.endDate).toISOString() : null,
     location: data.location.trim() || null,
-    externalUrl: data.externalUrl || null,
+    externalUrl:
+      data.destination === "EXTERNAL" ? data.externalUrl.trim() || null : null,
+    meetingId: data.destination === "MEETING" ? data.meetingId : null,
   };
 }

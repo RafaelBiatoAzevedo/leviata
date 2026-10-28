@@ -206,8 +206,8 @@ test("meeting create and edit mappings preserve explicit internal and external c
   );
 });
 
-test("meeting forms accept and round-trip all three event types", () => {
-  for (const type of ["MEETING", "SEMINAR", "DOCUMENTARY"]) {
+test("meeting forms accept and round-trip all four event types", () => {
+  for (const type of ["MEETING", "SEMINAR", "DOCUMENTARY", "SYMPOSIUM"]) {
     const form = meetingSchema.parse(
       mapMeetingToForm({
         title: "Atividade cadastrada",

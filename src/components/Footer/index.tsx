@@ -11,6 +11,7 @@ import { SocialLinks } from "../../components/SocialLinks";
 import { FiArrowUp } from "react-icons/fi";
 import leviataLogo from "../../assets/images/leviataLogo.png";
 import { NewsletterForm } from "../NewsletterForm";
+import { AppVersion } from "../AppVersion";
 
 export const Footer = () => {
   const scrollToTop = () => {
@@ -42,7 +43,10 @@ export const Footer = () => {
         </Content>
 
         <SocialLinks />
-        <Copy>© {new Date().getFullYear()} Leviatã e o Cativeiro</Copy>
+        <Copy>
+          <span>© {new Date().getFullYear()} Leviatã e o Cativeiro</span>
+          <AppVersion />
+        </Copy>
       </ContentWrapper>
     </Container>
   );

@@ -279,6 +279,10 @@ test("prepares HTML fragments and full newsletter documents for the isolated res
   assert.match(fragment, /name="viewport"/);
   assert.match(fragment, /<base target="_blank">/);
   assert.match(fragment, /<h1>Leitura<\/h1><p>Texto completo\.<\/p>/);
+  assert.doesNotMatch(fragment, /img, video, table\s*\{[^}]*!important/);
+  const constrained = newsletterReaderDocument('<html><head></head><body><table class="nl-document" style="width:100%;max-width:640px"><tr><td>Texto</td></tr></table></body></html>');
+  assert.match(constrained, /max-width:640px/);
+  assert.doesNotMatch(constrained, /(?:^|[},])\s*table\s*\{[^}]*!important/);
   for (const source of [
     "<!doctype html><html><head><style>p{color:blue}</style></head><body>Conteúdo original</body></html>",
     '<html lang="pt-BR"><body>Conteúdo original</body></html>',

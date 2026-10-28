@@ -89,7 +89,8 @@ export function newsletterReaderDocument(html: string) {
   const head = `<meta name="viewport" content="width=device-width, initial-scale=1"><base target="_blank"><style>
     html { color-scheme: light; }
     body { margin: 0; padding: 24px; color: #111827; background: #fff; font-family: Georgia, serif; line-height: 1.8; overflow-wrap: anywhere; }
-    img, video, table { max-width: 100% !important; }
+    img, video { max-width: 100% !important; }
+    table { max-width: 100%; }
     img, video { height: auto; }
     a { color: #7b5b20; }
     @media (max-width: 480px) { body { padding: 16px; } }

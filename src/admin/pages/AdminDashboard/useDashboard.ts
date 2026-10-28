@@ -20,18 +20,29 @@ export function useDashboard() {
 
   useEffect(() => {
     let active = true;
+    let pending = false;
+    const controller = new AbortController();
     async function load() {
+      if (pending) return;
+      pending = true;
       const [summaryResult, eventsResult, newsResult] =
         await Promise.allSettled([
-          reportsService.getSummary(),
-          scheduleService.getAll({
-            dateFrom: new Date().toISOString(),
-            limit: 4,
-            sortBy: "date",
-            sortOrder: "asc",
-          }),
-          newsService.getAll({ limit: 4, sortBy: "date", sortOrder: "desc" }),
+          reportsService.getSummary(controller.signal),
+          scheduleService.getAll(
+            {
+              dateFrom: new Date().toISOString(),
+              limit: 4,
+              sortBy: "date",
+              sortOrder: "asc",
+            },
+            controller.signal,
+          ),
+          newsService.getAll(
+            { limit: 4, sortBy: "date", sortOrder: "desc" },
+            controller.signal,
+          ),
         ]);
+      pending = false;
       if (!active) return;
       setSummary(
         summaryResult.status === "fulfilled" ? summaryResult.value.data : null,
@@ -47,9 +58,19 @@ export function useDashboard() {
       });
       setLoading(false);
     }
+    function refreshVisible() {
+      if (document.visibilityState === "visible") void load();
+    }
     void load();
+    const timer = window.setInterval(refreshVisible, 30_000);
+    window.addEventListener("focus", refreshVisible);
+    document.addEventListener("visibilitychange", refreshVisible);
     return () => {
       active = false;
+      controller.abort();
+      window.clearInterval(timer);
+      window.removeEventListener("focus", refreshVisible);
+      document.removeEventListener("visibilitychange", refreshVisible);
     };
   }, [revision]);
 

@@ -53,7 +53,7 @@ export function AdminMeetings() {
 
   function handleDelete(meeting: MeetingResponseDto) {
     showModal({
-      title: "Excluir encontro",
+      title: "Excluir evento",
 
       content: <AdminDeleteContent title={meeting.title} />,
 
@@ -67,7 +67,7 @@ export function AdminMeetings() {
         await meetingsService.removeBySlug(meeting.slug);
 
         showToast({
-          title: "Encontro excluída",
+          title: "Evento excluído",
           description: `${meeting.title.toUpperCase()}`,
           type: "success",
         });
@@ -84,12 +84,12 @@ export function AdminMeetings() {
   return (
     <Container>
       <AdminPageHeader
-        title="Encontros"
-        subtitle="Gerencie encontros, seminários e mostras de documentários."
+        title="Eventos"
+        subtitle="Gerencie encontros, seminários, simpósios e mostras de documentários."
       >
         <AdminButton onClick={() => navigate("/admin/encontros/novo")}>
           <FiPlus />
-          Novo Encontro
+          Novo evento
         </AdminButton>
       </AdminPageHeader>
 
@@ -97,7 +97,7 @@ export function AdminMeetings() {
         <AdminSearchBar
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pesquisar encontros..."
+          placeholder="Pesquisar eventos..."
         />
         <AdminSelect
           label="Tipo"
@@ -206,7 +206,7 @@ export function AdminMeetings() {
       <AdminPagination {...pagination} />
 
       {!loading && !error && items.length === 0 && (
-        <Empty>Nenhum encontro encontrado.</Empty>
+        <Empty>Nenhum evento encontrado.</Empty>
       )}
     </Container>
   );

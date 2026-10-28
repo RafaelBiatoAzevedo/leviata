@@ -6,4 +6,5 @@ export interface CreateScheduleRequestDto {
   endDate?: string | null;
   location?: string | null;
   externalUrl?: string | null;
+  meetingId?: string | null;
 }

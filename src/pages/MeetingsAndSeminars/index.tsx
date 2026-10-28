@@ -22,6 +22,13 @@ const sections = {
     empty: "Nenhum seminário disponível.",
     Icon: FiMic,
   },
+  SYMPOSIUM: {
+    title: "Simpósios",
+    subtitle:
+      "Pesquisa e conhecimento em diálogo. Conheça os simpósios do grupo e seus registros.",
+    empty: "Nenhum simpósio disponível.",
+    Icon: FiMic,
+  },
   DOCUMENTARY: {
     title: "Mostra de documentários",
     subtitle:
@@ -35,10 +42,10 @@ export function MeetingsAndSeminars({ type }: { type?: TMeetingType }) {
   const section = type
     ? sections[type]
     : {
-        title: "Encontros, Seminários e Documentários",
+        title: "Eventos",
         subtitle:
-          "Explore os encontros, seminários e mostras de documentários do grupo.",
-        empty: "Nenhum encontro disponível.",
+          "Explore os encontros, seminários, simpósios e mostras de documentários do grupo.",
+        empty: "Nenhum evento disponível.",
       };
   const { data, loading, error } = usePublicList<MeetingResponseDto>(
     "meetings",

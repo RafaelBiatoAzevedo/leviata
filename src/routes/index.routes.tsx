@@ -111,6 +111,14 @@ export function Router() {
           element={<MeetingsAndSeminars type="SEMINAR" />}
         />
         <Route
+          path="/atividades/simposios"
+          element={<MeetingsAndSeminars type="SYMPOSIUM" />}
+        />
+        <Route
+          path="/atividades/simposios/:id"
+          element={<GalleryDetails resource="meetings" label="o simpósio" />}
+        />
+        <Route
           path="/atividades/mostra-de-documentarios"
           element={<MeetingsAndSeminars type="DOCUMENTARY" />}
         />
@@ -165,6 +173,10 @@ export function Router() {
         <Route
           path="/agenda/encontros"
           element={<MeetingAgenda type="MEETING" />}
+        />
+        <Route
+          path="/agenda/simposios"
+          element={<MeetingAgenda type="SYMPOSIUM" />}
         />
         <Route
           path="/agenda/mostra-de-documentarios"

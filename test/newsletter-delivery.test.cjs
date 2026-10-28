@@ -290,6 +290,25 @@ test("creation keeps sending optional and does not overwrite the real sentAt", a
   form.unmount();
 });
 
+test("preview requests omit the automatic send date without modifying the draft", async () => {
+  const requests = [];
+  const { newsletterService } = load("../src/admin/services/newsletter.ts", {
+    "../../services/api": { api: { async post(path, data) { requests.push([path, data]); return { data: { htmlContent: "<h1>Prévia</h1>" } }; } } },
+  });
+  for (const sentAt of ["", "2026-10-28T12:00:00.000Z"]) {
+    const draft = { ...values, title: "Rascunho", subject: "", sentAt };
+    const before = structuredClone(draft);
+    const response = await newsletterService.preview(draft);
+    assert.equal(response.data.htmlContent, "<h1>Prévia</h1>");
+    const [path, request] = requests.at(-1);
+    assert.equal(path, "/newsletter/preview");
+    assert.equal(Object.hasOwn(request, "sentAt"), false);
+    assert.equal(request.subject, "");
+    assert.equal(request.publishedAt, values.publishedAt);
+    assert.deepEqual(draft, before);
+  }
+});
+
 test("preview reads unsaved form values and closing it preserves the draft without saving or sending", async () => {
   const form = formHarness();
   await form.mount();
@@ -311,17 +330,32 @@ test("preview reads unsaved form values and closing it preserves the draft witho
 });
 
 test("preview includes the cropped local cover before the newsletter has been saved", async () => {
-  const form = formHarness();
+  const form = formHarness({ renderedHtml: '<h1>Leviatã News</h1><img class="nl-cover" src="{{newsletterCover}}">' });
   await form.mount();
   const url = await form.cover(new File(["cropped image"], "capa-recorte.png", { type: "image/png" }));
   try {
-    assert.equal((await form.openPreview()).props.data.coverUrl, url);
+    const preview = await form.openPreview();
+    assert.equal(preview.props.data.coverUrl, url);
+    assert.equal(form.previews[0].coverUrl, "{{newsletterCover}}");
+    assert.ok(!JSON.stringify(form.previews[0]).includes("data:image/"));
+    assert.match(preview.props.data.htmlContent, /src="data:image\/png;base64,/);
+    assert.ok(!preview.props.data.htmlContent.includes("blob:"));
+    const encoded = preview.props.data.htmlContent.match(/base64,([^"]+)/)[1];
+    assert.equal(Buffer.from(encoded, "base64").toString(), "cropped image");
     assert.match(url, /^blob:/);
     assert.deepEqual(form.calls, []);
   } finally {
     URL.revokeObjectURL(url);
     form.unmount();
   }
+});
+
+test("local preview embedding preserves large image bytes and rejects executable image formats", async () => {
+  const { newsletterCoverDataUrl } = load("../src/admin/utils/newsletterPreview.ts");
+  const bytes = Buffer.alloc(100000, 153);
+  const image = await newsletterCoverDataUrl(new File([bytes], "capa.webp", { type: "image/webp" }));
+  assert.deepEqual(Buffer.from(image.split(",")[1], "base64"), bytes);
+  await assert.rejects(newsletterCoverDataUrl(new File(["<svg></svg>"], "capa.svg", { type: "image/svg+xml" })));
 });
 
 const { defaultNewsletterContent } = load("../src/admin/utils/newsletterComposer.ts");
@@ -509,7 +543,7 @@ function panelHarness(context, options = {}) {
       return { data: campaign };
     },
     async audience() {
-      return { data: { registered: 5, eligible: 3, excluded: 2 } };
+      return { data: options.audience || { registered: 5, eligible: 3, excluded: 2 } };
     },
     async deliveries(id, page, limit) {
       calls.push(["deliveries", id, page, limit]);
@@ -531,8 +565,8 @@ function panelHarness(context, options = {}) {
         },
       };
     },
-    async send(id) {
-      calls.push(["send", id]);
+    async send(id, payload) {
+      calls.push(["send", id, payload]);
       campaign = {
         status: "PROCESSING",
         campaign: { id: "campaign", completedAt: null },
@@ -573,6 +607,7 @@ function panelHarness(context, options = {}) {
       "../AdminButton": { AdminButton: "button" },
       "../AdminPagination": { AdminPagination: "pagination" },
       "../AdminTable": { AdminTable: "table" },
+      "../NewsletterAudiencePicker": { NewsletterAudiencePicker: "audience-picker" },
       "./styles": {
         Controls: "controls",
         History: "history",
@@ -580,6 +615,7 @@ function panelHarness(context, options = {}) {
         Notice: "aside",
         Panel: "section",
         Summary: "dl",
+        ConfirmationRecipients: "ul",
       },
     },
   );
@@ -617,7 +653,7 @@ test("the later send button previews the audience and queues only after explicit
   await Promise.all([panel.modal[0].onConfirm(), panel.modal[0].onConfirm()]);
   assert.deepEqual(
     panel.calls.filter((call) => call[0] === "send"),
-    [["send", edition.id]],
+    [["send", edition.id, { mode: "ALL" }]],
   );
   await panel.settle();
   assert.equal(
@@ -639,6 +675,124 @@ test("the admin reads real successful delivery records independently of queue en
   const text = content(panel.render());
   assert.match(text, /ana@example.test/);
   assert.match(text, /Ana Silva/);
+});
+
+test("sending a selection confirms the chosen names and sends only their IDs", async (context) => {
+  const panel = panelHarness(context);
+  await panel.settle();
+  const picker = () => nodes(panel.render()).find((node) => node.type === "audience-picker");
+  picker().props.onModeChange("SELECTED");
+  assert.equal(panel.button("Enviar para selecionados (0)").props.disabled, true);
+  const selected = [{ id: "550e8400-e29b-41d4-a716-446655440000", name: "Ana Silva", email: "ana@example.test" }];
+  picker().props.onSelectionChange(selected);
+  assert.equal(panel.button("Enviar para selecionados (1)").props.disabled, false);
+  panel.button("Enviar para selecionados (1)").props.onClick();
+  assert.match(panel.modal[0].title, /1 inscrito selecionado/);
+  assert.match(content(panel.modal[0].content), /Ana Silva/);
+  assert.match(content(panel.modal[0].content), /ana@example.test/);
+  assert.doesNotMatch(content(panel.modal[0].content), /Todos os cadastros/);
+  assert.equal(panel.calls.some((call) => call[0] === "send"), false);
+  await panel.modal[0].onConfirm();
+  assert.deepEqual(panel.calls.filter((call) => call[0] === "send"), [["send", edition.id, { mode: "SELECTED", subscriberIds: [selected[0].id] }]]);
+});
+
+test("recipient selection remains available before SMTP setup and switching to ALL is explicit", async (context) => {
+  const panel = panelHarness(context, { settings: { ...settings, ready: false } });
+  await panel.settle();
+  const picker = () => nodes(panel.render()).find((node) => node.type === "audience-picker");
+  assert.equal(picker().props.disabled, false);
+  picker().props.onModeChange("SELECTED");
+  picker().props.onSelectionChange([{ id: "chosen", name: null, email: "chosen@example.test" }]);
+  assert.equal(panel.button("Enviar para selecionados (1)").props.disabled, true);
+  picker().props.onModeChange("ALL");
+  assert.equal(picker().props.selected.length, 1);
+  assert.equal(panel.button("Enviar para todos os inscritos").props.disabled, true);
+});
+
+function audienceHarness(context, options = {}) {
+  const state = hooks(), requests = [];
+  let mode = options.mode || "ALL", selected = [], revision = 0, failure = options.failure;
+  const records = options.records || Array.from({ length: 32 }, (_, index) => ({ id: `subscriber-${index}`, name: `Pessoa ${index}`, email: `pessoa${index}@example.test` }));
+  const { NewsletterAudiencePicker } = load("../src/admin/components/NewsletterAudiencePicker/index.tsx", {
+    react: { ...state.react, useId: () => "audience-test" },
+    "../../services/newsletterMail": { newsletterMailService: { async subscribers(id, params, signal) {
+      requests.push({ id, params, signal });
+      if (failure) throw new Error("Unavailable");
+      const filtered = records.filter((item) => !params.search || `${item.name || ""} ${item.email}`.toLowerCase().includes(params.search.toLowerCase()));
+      return { data: { items: filtered.slice((params.page - 1) * params.limit, params.page * params.limit), total: filtered.length, page: params.page, limit: params.limit } };
+    } } },
+    "../AdminButton": { AdminButton: "button" },
+    "../AdminPagination": { AdminPagination: "pagination" },
+    "../AdminSearchBar": { AdminSearchBar: "search" },
+    "../AdminTable": { AdminTable: "table" },
+    "./styles": { Actions: "actions", Choice: "label", Choices: "choices", Container: "fieldset", Selection: "status", Status: "notice", Subscriber: "label" },
+  });
+  const component = () => NewsletterAudiencePicker({ newsletterId: edition.id, eligible: records.length, mode, selected, revision, onModeChange: (value) => { mode = value; }, onSelectionChange: (value) => { selected = value; } });
+  context.after(() => state.unmount());
+  return {
+    requests,
+    selected: () => selected,
+    render: () => state.render(component),
+    settle: () => state.settle(component),
+    nodes() { return nodes(this.render()); },
+    choose(value) { this.nodes().find((node) => node.type === "input" && node.props.type === "radio" && node.props.value === value).props.onChange(); },
+    row(id) { return this.nodes().find((node) => node.type === "tr" && node.key === id); },
+    checkbox(id) { return nodes(this.row(id)).find((node) => node.type === "input"); },
+    page(value) { this.nodes().find((node) => node.type === "pagination").props.onPageChange(value); },
+    search(value) { this.nodes().find((node) => node.type === "search").props.onChange({ target: { value } }); },
+    button(text) { return this.nodes().find((node) => node.type === "button" && content(node.props.children).includes(text)); },
+    recover() { failure = false; this.button("Tentar novamente").props.onClick(); },
+  };
+}
+
+test("the picker preserves selections across pages and search without silently selecting everyone", async (context) => {
+  const picker = audienceHarness(context);
+  await picker.settle();
+  assert.equal(picker.checkbox("subscriber-0").props.checked, true);
+  assert.equal(picker.checkbox("subscriber-0").props.disabled, true);
+  picker.choose("SELECTED");
+  assert.equal(picker.checkbox("subscriber-0").props.checked, false);
+  picker.checkbox("subscriber-0").props.onChange();
+  picker.page(2);
+  await picker.settle();
+  assert.equal(picker.selected().length, 1);
+  picker.checkbox("subscriber-15").props.onChange();
+  picker.search("pessoa31@");
+  await picker.settle();
+  assert.equal(picker.requests.at(-1).params.page, 1);
+  picker.checkbox("subscriber-31").props.onChange();
+  assert.deepEqual(picker.selected().map((item) => item.id), ["subscriber-0", "subscriber-15", "subscriber-31"]);
+  picker.search("");
+  await picker.settle();
+  assert.equal(picker.checkbox("subscriber-0").props.checked, true);
+  assert.equal(picker.checkbox("subscriber-1").props.checked, false);
+  picker.choose("ALL");
+  assert.match(content(picker.render()), /Todos os 32 inscritos aptos/);
+  assert.equal(picker.selected().length, 3);
+});
+
+test("selecting the current page adds without duplicates and clearing resets the selection", async (context) => {
+  const picker = audienceHarness(context, { mode: "SELECTED" });
+  await picker.settle();
+  picker.button("Selecionar esta página").props.onClick();
+  picker.button("Selecionar esta página").props.onClick();
+  assert.equal(picker.selected().length, 15);
+  picker.checkbox("subscriber-0").props.onChange();
+  assert.equal(picker.selected().length, 14);
+  picker.button("Limpar seleção").props.onClick();
+  assert.equal(picker.selected().length, 0);
+});
+
+test("the picker exposes load errors with retry and handles empty searches accurately", async (context) => {
+  const picker = audienceHarness(context, { failure: true });
+  await picker.settle();
+  assert.match(content(picker.render()), /Não foi possível carregar a lista/);
+  picker.recover();
+  await picker.settle();
+  assert.ok(picker.checkbox("subscriber-0"));
+  picker.search("sem-resultados");
+  await picker.settle();
+  assert.match(content(picker.render()), /Nenhum inscrito encontrado para esta busca/);
 });
 
 test("mail configuration prevents unintended sends", async (context) => {

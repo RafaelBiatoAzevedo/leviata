@@ -53,7 +53,7 @@ export function MeetingView() {
       setMeeting(response.data);
     } catch (error) {
       showToast({
-        title: "Ops! Não foi possível carregar o encontro",
+        title: "Ops! Não foi possível carregar o evento",
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });
@@ -69,7 +69,7 @@ export function MeetingView() {
   }, [meeting, loadMeeting]);
 
   if (!meeting) {
-    return <AdminLoading text="Carregando encontro..." />;
+    return <AdminLoading text="Carregando evento..." />;
   }
   const coverHref =
     timelineExternalUrl(meeting.registrationUrl) ||
@@ -93,7 +93,7 @@ export function MeetingView() {
           </AdminButton>
         </HeaderActions>
 
-        <Title>Encontro</Title>
+        <Title>Evento</Title>
       </Header>
 
       <ContentWrapper>
@@ -128,7 +128,7 @@ export function MeetingView() {
                 value={
                   meeting.isInternal
                     ? "Interno — exibido nas listas"
-                    : "Externo — acesso pelas notícias"
+                    : "Externo — acesso por notícia ou agenda"
                 }
               />
             </AdminDescriptionList>

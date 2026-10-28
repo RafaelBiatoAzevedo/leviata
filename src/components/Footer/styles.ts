@@ -76,6 +76,11 @@ export const Logo = styled.img`
 `;
 
 export const Copy = styled.p`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
   text-align: center;
   margin-top: 32px;
   font-size: 12px;

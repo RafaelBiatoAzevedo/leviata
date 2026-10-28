@@ -3,32 +3,17 @@ import { Outlet, useNavigate } from "react-router-dom";
 
 import {
   FiMenu,
-  FiHome,
-  FiUsers,
-  FiBook,
-  FiFolder,
-  FiCalendar,
-  FiVideo,
-  FiMail,
-  FiUserCheck,
-  FiAward,
-  FiMic,
-  FiLayers,
-  FiFileText,
-  FiMonitor,
-  FiClipboard,
+  FiArrowUpRight,
+  FiChevronsLeft,
+  FiChevronsRight,
+  FiGlobe,
   FiX,
-  FiBell,
 } from "react-icons/fi";
-
-import { TbDoorEnter, TbFolderSearch } from "react-icons/tb";
 
 import {
   Container,
   Sidebar,
   Logo,
-  Navigation,
-  NavItem,
   Main,
   Header,
   ToggleButton,
@@ -41,7 +26,8 @@ import {
   Avatar,
   UserData,
   UserRole,
-  BackWebSiteWrapper,
+  SidebarFooter,
+  PortalLink,
   AdminTypography,
   Backdrop,
   DrawerClose,
@@ -49,12 +35,12 @@ import {
 
 import leviataLogo from "../../../assets/images/leviataLogo.png";
 import { useAuth } from "../../hooks/useAuth";
-import { AdminButton } from "../../components/AdminButton";
-import { GiInjustice } from "react-icons/gi";
+import { AdminSidebarMenu } from "../../components/AdminSidebarMenu";
 import { AdminUserMenu } from "../../components/AdminUserMenu";
 import { formatUserRole } from "../../utils/users";
 import { NotificationBell } from "../../components/NotificationBell";
 import { ThemeToggle } from "../../../components/ThemeToggle";
+import { AppVersion } from "../../../components/AppVersion";
 
 export function AdminLayout() {
   const navigate = useNavigate();
@@ -90,7 +76,9 @@ export function AdminLayout() {
   useEffect(() => {
     if (!isMobile || !mobileOpen) return;
     const frame = requestAnimationFrame(() => {
-      sidebar.current?.querySelector<HTMLElement>("button, a[href]")?.focus();
+      sidebar.current
+        ?.querySelector<HTMLElement>("[data-drawer-close]")
+        ?.focus();
     });
     function handleKeys(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -100,7 +88,7 @@ export function AdminLayout() {
       if (event.key !== "Tab") return;
       const items = Array.from(
         sidebar.current?.querySelectorAll<HTMLElement>(
-          "button:not(:disabled), a[href]",
+          "button:not(:disabled), a[href], input:not(:disabled)",
         ) ?? [],
       );
       const first = items[0];
@@ -161,18 +149,22 @@ export function AdminLayout() {
         aria-label="Menu administrativo"
       >
         <Logo $collapsed={compact}>
-          <LogoWrapper>
+          <LogoWrapper
+            to="/admin"
+            aria-label="Leviatã, início da administração"
+            title="Início da administração"
+            onClick={() => setMobileOpen(false)}
+          >
             <LogoImage src={leviataLogo} alt="Leviata e o cativeiro" />
+            {!compact && (
+              <div>
+                <strong>Leviatã</strong>
+                <span>Administração</span>
+              </div>
+            )}
           </LogoWrapper>
-
-          {!compact && (
-            <div>
-              <strong>Leviatã</strong>
-
-              <span>Admin</span>
-            </div>
-          )}
           <DrawerClose
+            data-drawer-close
             type="button"
             aria-label="Fechar menu"
             onClick={() => setMobileOpen(false)}
@@ -181,130 +173,29 @@ export function AdminLayout() {
           </DrawerClose>
         </Logo>
 
-        <Navigation
-          aria-label="Navegação administrativa"
-          onClick={(event) => {
-            if ((event.target as HTMLElement).closest("a"))
-              setMobileOpen(false);
-          }}
-        >
-          <NavItem to="/admin" end title="Dashboard">
-            <FiHome />
+        <AdminSidebarMenu
+          compact={compact}
+          role={user?.role}
+          onNavigate={() => setMobileOpen(false)}
+        />
 
-            {!compact && <span>Dashboard</span>}
-          </NavItem>
-
-          <NavItem to="/admin/notificacoes" title="Notificações">
-            <FiBell />
-            {!compact && <span>Notificações</span>}
-          </NavItem>
-
-          <NavItem to="/admin/pessoas" title="Pessoas">
-            <FiUsers />
-
-            {!compact && <span>Pessoas</span>}
-          </NavItem>
-
-          <NavItem to="/admin/livros" title="Livros">
-            <FiBook />
-
-            {!compact && <span>Livros</span>}
-          </NavItem>
-          <NavItem to="/admin/videos" title="Videos">
-            <FiVideo />
-
-            {!compact && <span>Videos</span>}
-          </NavItem>
-
-          <NavItem to="/admin/newsletter" title="Newsletter">
-            <FiMail />
-
-            {!compact && <span>Newsletter</span>}
-          </NavItem>
-
-          <NavItem to="/admin/artigos" title="Artigos / Dossiês">
-            <FiFolder />
-
-            {!compact && <span>Artigos / Dossiês</span>}
-          </NavItem>
-
-          <NavItem
-            to="/admin/apresentacoes-trabalhos"
-            title="Apresentações de Trabalhos"
+        <SidebarFooter $collapsed={compact}>
+          <PortalLink
+            to="/"
+            $collapsed={compact}
+            aria-label="Voltar ao site público"
+            title={compact ? "Voltar ao site" : undefined}
           >
-            <FiMonitor />
-
-            {!compact && <span>Apres. de Trabalhos</span>}
-          </NavItem>
-
-          <NavItem
-            to="/admin/instrumentos-pesquisa"
-            title="Instrumentos de pesquisa"
-          >
-            <FiClipboard />
-
-            {!compact && <span>Instr. de Pesquisas</span>}
-          </NavItem>
-
-          <NavItem to="/admin/pesquisas" title="Pesquisas">
-            <TbFolderSearch />
-
-            {!compact && <span>Pesquisas</span>}
-          </NavItem>
-
-          <NavItem to="/admin/juris" title="Juris">
-            <GiInjustice />
-
-            {!compact && <span>Juris</span>}
-          </NavItem>
-
-          <NavItem to="/admin/encontros" title="Encontros">
-            <FiMic />
-
-            {!compact && <span>Encontros</span>}
-          </NavItem>
-
-          <NavItem to="/admin/bancas" title="Bancas">
-            <FiAward />
-
-            {!compact && <span>Bancas</span>}
-          </NavItem>
-
-          <NavItem to="/admin/tematicas" title="Temáicas">
-            <FiLayers />
-
-            {!compact && <span>Temáicas</span>}
-          </NavItem>
-
-          <NavItem to="/admin/noticias" title="Notícias">
-            <FiFileText />
-            {!compact && <span>Notícias</span>}
-          </NavItem>
-
-          <NavItem to="/admin/agenda" title="Agenda">
-            <FiCalendar />
-
-            {!compact && <span>Agenda</span>}
-          </NavItem>
-          {user?.role === "SUPER_ADMIN" && (
-            <NavItem to="/admin/usuarios" title="Usuários">
-              <FiUserCheck />
-              {!compact && <span>Usuários</span>}
-            </NavItem>
-          )}
-        </Navigation>
-
-        <BackWebSiteWrapper>
-          <AdminButton
-            size="small"
-            variant="outline"
-            onClick={() => navigate("/")}
-          >
-            <TbDoorEnter size={"1.2rem"} />
-
-            {!compact && <span>Voltar ao site</span>}
-          </AdminButton>
-        </BackWebSiteWrapper>
+            <FiGlobe aria-hidden="true" />
+            {!compact && (
+              <>
+                <span>Voltar ao site</span>
+                <FiArrowUpRight aria-hidden="true" />
+              </>
+            )}
+          </PortalLink>
+          <AppVersion />
+        </SidebarFooter>
       </Sidebar>
 
       <Main inert={isMobile && mobileOpen}>
@@ -327,7 +218,13 @@ export function AdminLayout() {
                 : setCollapsed((value) => !value)
             }
           >
-            <FiMenu />
+            {isMobile ? (
+              <FiMenu />
+            ) : collapsed ? (
+              <FiChevronsRight />
+            ) : (
+              <FiChevronsLeft />
+            )}
           </ToggleButton>
 
           <UserArea>

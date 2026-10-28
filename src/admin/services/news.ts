@@ -58,8 +58,9 @@ export const newsService = {
       sortBy?: "date" | "createdAt";
       sortOrder?: "asc" | "desc";
     } = {},
+    signal?: AbortSignal,
   ) {
-    return api.get<NewsResponseDto[]>("/news", { params });
+    return api.get<NewsResponseDto[]>("/news", { params, signal });
   },
 
   getById(id: string) {

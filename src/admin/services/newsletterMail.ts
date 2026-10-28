@@ -6,6 +6,8 @@ import type {
   NewsletterAudience,
   NewsletterRecipient,
   NewsletterDeliveryRecord,
+  NewsletterSubscriberOption,
+  NewsletterSendRequest,
 } from "../dtos/newsletter/NewsletterMailDto";
 
 export const newsletterMailService = {
@@ -22,6 +24,16 @@ export const newsletterMailService = {
       signal,
     });
   },
+  subscribers(
+    id: string,
+    params: { page: number; limit: number; search?: string },
+    signal?: AbortSignal,
+  ) {
+    return api.get<PaginatedResponseDto<NewsletterSubscriberOption>>(
+      `/mail/newsletters/${id}/subscribers`,
+      { params, signal },
+    );
+  },
   deliveries(id: string, page: number, limit: number, signal?: AbortSignal) {
     return api.get<PaginatedResponseDto<NewsletterRecipient>>(
       `/mail/newsletters/${id}/deliveries`,
@@ -34,8 +46,11 @@ export const newsletterMailService = {
       { params: { page, limit }, signal },
     );
   },
-  send(id: string) {
-    return api.post<NewsletterMailCampaign>(`/mail/newsletters/${id}/send`);
+  send(id: string, data: NewsletterSendRequest = { mode: "ALL" }) {
+    return api.post<NewsletterMailCampaign>(
+      `/mail/newsletters/${id}/send`,
+      data,
+    );
   },
   retry(id: string) {
     return api.post<NewsletterMailCampaign>(`/mail/newsletters/${id}/retry`);

@@ -203,14 +203,14 @@ export function MeetingForm() {
 
       if (isEdit) {
         showToast({
-          title: "Encontro atualizado",
+          title: "Evento atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
         showToast({
-          title: "Encontro criado",
-          description: "O encontro foi cadastrado com sucesso.",
+          title: "Evento criado",
+          description: "O evento foi cadastrado com sucesso.",
           type: "success",
         });
       }
@@ -221,7 +221,7 @@ export function MeetingForm() {
         error instanceof Error ? error.message : "Erro desconhecido";
 
       showToast({
-        title: isEdit ? "Erro ao atualizar encontro" : "Erro ao criar encontro",
+        title: isEdit ? "Erro ao atualizar evento" : "Erro ao criar evento",
         description:
           message ?? "Não foi possível salvar os dados. Tente novamente.",
         type: "danger",
@@ -241,7 +241,7 @@ export function MeetingForm() {
 
       showToast({
         title: "Capa atualizada com sucesso",
-        description: "A Capa do encontro foi atualizada.",
+        description: "A capa do evento foi atualizada.",
         type: "success",
       });
 
@@ -258,8 +258,8 @@ export function MeetingForm() {
   return (
     <Container>
       <AdminPageHeader
-        title={isEdit ? "Editar encontro" : "Novo encontro"}
-        subtitle="Cadastre ou atualize encontros, seminários e mostras de documentários."
+        title={isEdit ? "Editar evento" : "Novo evento"}
+        subtitle="Cadastre ou atualize encontros, seminários, simpósios e mostras de documentários."
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -279,7 +279,7 @@ export function MeetingForm() {
               <AdminFormGrid>
                 <AdminInput
                   label="Título"
-                  placeholder="Título do encontro"
+                  placeholder="Título do evento"
                   required
                   error={errors.title?.message}
                   {...register("title")}
@@ -292,7 +292,7 @@ export function MeetingForm() {
                 />
 
                 <AdminDateInput
-                  label="Data do encontro"
+                  label="Data do evento"
                   placeholder="02/10/2025"
                   required
                   {...register("date")}
@@ -321,8 +321,8 @@ export function MeetingForm() {
           <AdminSection title="Exibição no portal">
             <AdminSwitch
               label="Interno"
-              text="Exibir nas listas de atividades e na agenda"
-              description="Internos aparecem nas listas do portal. Externos ficam disponíveis para divulgação por uma notícia vinculada."
+              text="Exibir nas listas de atividades e agendas por tipo"
+              description="Ativado: evento interno, visível nas listas do portal. Desativado: evento externo, acessível por uma notícia ou item da agenda geral vinculado."
               error={errors.isInternal?.message}
               {...register("isInternal")}
             />

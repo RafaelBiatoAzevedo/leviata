@@ -81,7 +81,7 @@ export const Navbar = () => {
       mobileRef.current?.querySelector<HTMLAnchorElement>("a[href]")?.focus(),
     );
 
-    const desktop = window.matchMedia("(min-width: 1201px)");
+    const desktop = window.matchMedia("(min-width: 1321px)");
     const closeOnDesktop = () => {
       if (desktop.matches) {
         setIsOpen(false);

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { FiArrowLeft, FiEdit2 } from "react-icons/fi";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { meetingDetailPath } from "../../../../utils/meetings";
+import { meetingTypeLabels } from "../../../types/TMeetingType";
 import { AdminButton } from "../../../components/AdminButton";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
@@ -89,6 +91,26 @@ export function ScheduleView() {
               value={formatScheduleDate(item.endDate)}
             />
             <AdminDescriptionItem label="Local" value={item.location} />
+            <AdminDescriptionItem
+              label="Evento vinculado"
+              value={
+                item.meeting ? (
+                  <Link
+                    to={meetingDetailPath(
+                      item.meeting.type,
+                      item.meeting.slug || item.meeting.id,
+                    )}
+                    target="_blank"
+                  >
+                    {item.meeting.title} —{" "}
+                    {meetingTypeLabels[item.meeting.type]} (
+                    {item.meeting.isInternal ? "interno" : "externo"})
+                  </Link>
+                ) : item.meetingId ? (
+                  "Evento excluído ou indisponível. Edite a agenda para substituir o vínculo."
+                ) : null
+              }
+            />
             <AdminDescriptionItem
               label="Link do evento"
               value={

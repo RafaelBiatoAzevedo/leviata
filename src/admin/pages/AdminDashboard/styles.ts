@@ -291,22 +291,113 @@ export const BannerNumber = styled.div`
   color: ${({ theme }) => theme.colors.onSecondary};
   margin: 6px 0;
 `;
-export const StatGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 14px;
-  @media (max-width: 1150px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+export const OverviewSection = styled.section`
+  min-width: 0;
+`;
+export const OverviewHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+  p:last-child {
+    margin: 8px 0 0;
+    color: ${({ theme }) => theme.colors.text};
+    opacity: 0.65;
+    font-size: 12px;
+    line-height: 1.6;
   }
-  @media (max-width: 480px) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+`;
+export const MetricFilters = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 16px;
+`;
+export const MetricFilter = styled.button`
+  min-height: 38px;
+  padding: 8px 14px;
+  border: 1px solid ${({ theme }) => theme.colors.border}60;
+  border-radius: 9px;
+  color: ${({ theme }) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.background};
+  font-size: 12px;
+  font-weight: 500;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+  &[aria-pressed="true"] {
+    border-color: ${({ theme }) => theme.colors.primary};
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.onPrimary};
+  }
+  ${focus}
+  @media (pointer: coarse) {
+    min-height: 44px;
+  }
+`;
+export const CarouselControls = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+export const CarouselRange = styled.span`
+  min-width: 80px;
+  margin-right: 8px;
+  color: ${({ theme }) => theme.colors.heading};
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  > span {
+    font-weight: 400;
+  }
+`;
+export const CarouselButton = styled.button`
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid ${({ theme }) => theme.colors.border}70;
+  border-radius: 10px;
+  color: ${({ theme }) => theme.colors.text};
+  background: ${({ theme }) => theme.colors.background};
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+  &:hover:not(:disabled) {
+    background: ${({ theme }) => theme.colors.accentSoft};
+  }
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  ${focus}
+  @media (pointer: coarse) {
+    width: 44px;
+    height: 44px;
+  }
+`;
+export const OverviewCarousel = styled.div`
+  min-width: 0;
+  .swiper {
+    padding: 4px 2px 14px;
+  }
+  .swiper-slide {
+    display: flex;
+    height: auto;
   }
 `;
 export const StatCard = styled(Link)`
   display: flex;
   flex-direction: column;
   min-width: 0;
+  width: 100%;
+  min-height: 216px;
   text-decoration: none;
   border: 1px solid
     color-mix(in srgb, ${({ theme }) => theme.colors.textSoft} 22%, transparent);
@@ -324,8 +415,10 @@ export const StatCard = styled(Link)`
     transform 0.2s,
     box-shadow 0.2s;
   > span {
-    color: ${({ theme }) => theme.colors.textSoft};
-    font-size: 12px;
+    min-height: 38px;
+    color: ${({ theme }) => theme.colors.heading};
+    font-size: 13px;
+    font-weight: 500;
     line-height: 1.5;
   }
   &:hover {
@@ -339,6 +432,18 @@ export const StatCard = styled(Link)`
       );
   }
   ${focus}
+  &:focus-visible {
+    outline-offset: -3px;
+  }
+`;
+export const StatDescription = styled.small`
+  margin-top: auto;
+  padding-top: 9px;
+  color: ${({ theme }) => theme.colors.text};
+  opacity: 0.65;
+  font-size: 11px;
+  line-height: 1.6;
+  letter-spacing: 0;
 `;
 export const StatTop = styled.div`
   display: flex;

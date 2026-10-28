@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle } from "styled-components";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface SidebarProps {
   $collapsed: boolean;
@@ -39,7 +39,7 @@ export const Container = styled.div`
 
 export const Sidebar = styled.aside<SidebarProps>`
   flex-shrink: 0;
-  width: ${({ $collapsed }) => ($collapsed ? "76px" : "240px")};
+  width: ${({ $collapsed }) => ($collapsed ? "80px" : "280px")};
 
   transition:
     width 0.25s ease,
@@ -48,13 +48,13 @@ export const Sidebar = styled.aside<SidebarProps>`
 
   background: ${({ theme }) => theme.colors.surface};
 
-  border-right: 2px solid ${({ theme }) => theme.colors.border};
+  border-right: 1px solid ${({ theme }) => theme.colors.border}65;
 
   display: flex;
 
   flex-direction: column;
 
-  box-shadow: 4px 0 8px rgba(0, 0, 0, 0.08);
+  box-shadow: 4px 0 24px rgb(0 0 0 / 3%);
 
   position: relative;
 
@@ -66,7 +66,7 @@ export const Sidebar = styled.aside<SidebarProps>`
   @media (max-width: 900px) {
     position: fixed;
     inset: 0 auto 0 0;
-    width: min(280px, calc(100vw - 48px));
+    width: min(300px, calc(100vw - 40px));
     height: 100dvh;
     z-index: 50;
     transform: ${({ $mobileOpen }) =>
@@ -79,6 +79,7 @@ export const Backdrop = styled.button`
   position: fixed;
   inset: 0;
   z-index: 40;
+  border: 0;
   background: rgb(15 23 42 / 45%);
   backdrop-filter: blur(3px);
 `;
@@ -95,22 +96,30 @@ export const Logo = styled.div<SidebarProps>`
   justify-content: ${({ $collapsed }) =>
     $collapsed ? "center" : "flex-start"};
 
-  gap: 15px;
+  gap: 8px;
 
-  padding: ${({ $collapsed }) => ($collapsed ? "0" : "0 24px")};
+  padding: ${({ $collapsed }) => ($collapsed ? "0" : "0 20px")};
 
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.border}45;
 
   strong {
     display: block;
 
-    font-size: 18px;
+    color: ${({ theme }) => theme.colors.heading};
+    font-family: ${({ theme }) => theme.fonts.title};
+    font-size: 27px;
+    font-weight: 600;
+    line-height: 1;
   }
 
   span {
-    color: ${({ theme }) => theme.colors.text};
-
-    font-size: 13px;
+    display: block;
+    margin-top: 5px;
+    color: ${({ theme }) => theme.colors.textSoft};
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
   }
 `;
 
@@ -134,31 +143,23 @@ export const DrawerClose = styled.button`
   }
 `;
 
-export const LogoWrapper = styled.div`
+export const LogoWrapper = styled(Link)`
   display: flex;
-  justify-content: center;
-
-  position: relative;
-
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  border-radius: 8px;
   text-decoration: none;
-
-  transition:
-    transform 0.3s ease,
-    filter 0.3s ease;
-
-  filter: drop-shadow(0 0 12px ${({ theme }) => theme.colors.primary}40);
-
-  &:hover {
-    transform: scale(1.03);
-
-    filter: drop-shadow(0 0 18px ${({ theme }) => theme.colors.primary}70)
-      drop-shadow(0 0 32px ${({ theme }) => theme.colors.primary}30);
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 5px;
   }
 `;
 
 export const LogoImage = styled.img`
   width: 40px;
   height: 40px;
+  flex-shrink: 0;
   border-radius: 100%;
   padding: 1px;
   border: solid ${({ theme }) => theme.colors.primary} 1px;
@@ -166,72 +167,6 @@ export const LogoImage = styled.img`
   @media (max-width: ${({ theme }) => theme.breakpoints.mobile}) {
     width: 36px;
     height: 36px;
-  }
-`;
-
-export const Navigation = styled.nav`
-  padding: 20px 10px;
-
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 8px;
-
-  flex: 1;
-  min-height: 0;
-
-  scroll-behavior: smooth;
-
-  overflow-y: auto;
-
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-`;
-
-export const NavItem = styled(NavLink)`
-  height: 48px;
-  flex: 0 0 auto;
-
-  border-radius: 0.6rem;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 16px;
-
-  padding: 0 16px;
-
-  color: ${({ theme }) => theme.colors.text};
-
-  text-decoration: none;
-
-  transition: 0.2s;
-
-  svg {
-    min-width: 22px;
-
-    font-size: 22px;
-  }
-
-  span {
-    white-space: nowrap;
-  }
-
-  &:hover {
-    background: ${({ theme }) => theme.colors.primary}15;
-
-    color: ${({ theme }) => theme.colors.primary};
-  }
-
-  &.active {
-    background: ${({ theme }) => theme.colors.primary};
-
-    color: ${({ theme }) => theme.colors.onPrimary};
   }
 `;
 
@@ -403,9 +338,48 @@ export const Content = styled.div`
   }
 `;
 
-export const BackWebSiteWrapper = styled.div`
+export const SidebarFooter = styled.div<{ $collapsed: boolean }>`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  padding: ${({ $collapsed }) => ($collapsed ? "12px" : "14px 16px")};
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+  border-top: 1px solid ${({ theme }) => theme.colors.border}45;
+  background: ${({ theme }) => theme.colors.surface};
+`;
+
+export const PortalLink = styled(Link)<{ $collapsed: boolean }>`
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
+  justify-content: ${({ $collapsed }) =>
+    $collapsed ? "center" : "flex-start"};
+  gap: 10px;
+  min-height: 42px;
+  padding: 10px;
+  border: 1px solid ${({ theme }) => theme.colors.border}60;
+  border-radius: 10px;
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
+  font-size: 12px;
+  text-decoration: none;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+  span {
+    flex: 1;
+  }
+  svg {
+    flex-shrink: 0;
+    width: 17px;
+    height: 17px;
+  }
+  &:hover {
+    background: ${({ theme }) => theme.colors.accentSoft};
+    border-color: ${({ theme }) => theme.colors.primary};
+  }
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.primary};
+    outline-offset: 3px;
+  }
 `;

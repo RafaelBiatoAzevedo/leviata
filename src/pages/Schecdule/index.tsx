@@ -2,6 +2,7 @@ import type { ScheduleResponseDto } from "../../admin/dtos/schedule/ScheduleResp
 import { EventTimeline } from "../../components/EventTimeline";
 import { SectionHeader } from "../../components/SectionHeader";
 import { usePublicList } from "../../hooks/usePublicData";
+import { meetingDetailPath } from "../../utils/meetings";
 import { Container, Content } from "./styles";
 
 export function Schedule() {
@@ -27,11 +28,18 @@ export function Schedule() {
             date: event.date,
             endDate: event.endDate,
             location: event.location,
+            detailsTo: event.meeting
+              ? meetingDetailPath(
+                  event.meeting.type,
+                  event.meeting.slug || event.meeting.id,
+                )
+              : undefined,
+            detailsLabel: "Ver evento",
             actions: [
               {
                 kind: "external",
                 label: "Sobre o evento",
-                url: event.externalUrl,
+                url: event.meetingId ? null : event.externalUrl,
               },
             ],
           }))}

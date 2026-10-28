@@ -8,4 +8,6 @@ export const scheduleDefaultValues: ScheduleFormData = {
   endDate: "",
   location: "",
   externalUrl: "",
+  destination: "EXTERNAL",
+  meetingId: "",
 };

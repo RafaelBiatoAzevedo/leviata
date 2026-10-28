@@ -10,6 +10,7 @@ import { AdminNewsletterPreview } from "../../../components/AdminNewsletterPrevi
 import { NewsletterComposer } from "../../../components/NewsletterComposer";
 import { AdminError } from "../../../components/AdminError";
 import { defaultNewsletterContent } from "../../../utils/newsletterComposer";
+import { newsletterCoverDataUrl } from "../../../utils/newsletterPreview";
 import type { NewsletterContentDto } from "../../../dtos/newsletter/NewsletterContentDto";
 import AdminFormActions from "../../../components/AdminFormActions";
 import { AdminFormCard } from "../../../components/AdminFormCard";
@@ -182,8 +183,21 @@ export function NewsletterForm() {
       coverUrl: coverPreview || current.coverUrl || "",
     };
     try {
-      const { data } = await newsletterService.preview(draft);
-      setPreview({ ...draft, htmlContent: data.htmlContent });
+      // A sandboxed reader cannot resolve the editor's temporary blob URL.
+      // Render a placeholder on the API, then embed the local crop in the preview only.
+      const localCover = coverFile
+        ? await newsletterCoverDataUrl(coverFile)
+        : null;
+      const { data } = await newsletterService.preview({
+        ...draft,
+        coverUrl: localCover ? "{{newsletterCover}}" : draft.coverUrl,
+      });
+      setPreview({
+        ...draft,
+        htmlContent: localCover
+          ? data.htmlContent.replaceAll("{{newsletterCover}}", localCover)
+          : data.htmlContent,
+      });
     } catch {
       showToast({
         title: "Não foi possível abrir a prévia",

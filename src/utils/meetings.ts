@@ -4,6 +4,7 @@ const activityPaths: Record<TMeetingType, string> = {
   MEETING: "/atividades/encontros",
   SEMINAR: "/atividades/seminarios",
   DOCUMENTARY: "/atividades/mostra-de-documentarios",
+  SYMPOSIUM: "/atividades/simposios",
 };
 
 export function meetingDetailPath(type: TMeetingType, identifier: string) {

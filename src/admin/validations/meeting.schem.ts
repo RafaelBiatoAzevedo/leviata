@@ -9,7 +9,7 @@ export const meetingSchema = z.object({
 
   title: z.string().min(1, "Informe o título."),
 
-  type: z.enum(["MEETING", "SEMINAR", "DOCUMENTARY"], {
+  type: z.enum(["MEETING", "SEMINAR", "DOCUMENTARY", "SYMPOSIUM"], {
     message: "Informe o tipo da atividade.",
   }),
 

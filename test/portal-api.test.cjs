@@ -197,6 +197,7 @@ const {
 } = require("../src/pages/MeetingsAndSeminars/index.tsx");
 const { Seminars } = require("../src/pages/Seminars/index.tsx");
 const { MeetingAgenda } = require("../src/pages/MeetingAgenda/index.tsx");
+const { Schedule } = require("../src/pages/Schecdule/index.tsx");
 const { Home } = require("../src/pages/Home/index.tsx");
 const { Researchers } = require("../src/pages/ Researchers/index.tsx");
 const { Publications } = load("../src/pages/ Publications/index.tsx", {
@@ -1002,7 +1003,7 @@ test("portal meeting cards and seminar timelines only list internal events", () 
 
   lists.meetings = lists.meetings.filter((event) => !event.isInternal);
   assert.ok(
-    render(MeetingsAndSeminars).includes("Nenhum encontro disponível."),
+    render(MeetingsAndSeminars).includes("Nenhum evento disponível."),
   );
   assert.ok(!render(Seminars).includes("Evento seminario-externo"));
 });
@@ -1011,6 +1012,7 @@ test("each event category has its own cards and agenda without mixing types or e
   const types = [
     ["MEETING", "encontros", "Próximos encontros", "Encontros realizados"],
     ["SEMINAR", "seminarios", "Próximos seminários", "Seminários realizados"],
+    ["SYMPOSIUM", "simposios", "Próximos simpósios", "Simpósios realizados"],
     [
       "DOCUMENTARY",
       "mostra-de-documentarios",
@@ -1073,6 +1075,28 @@ test("each event category has its own cards and agenda without mixing types or e
   }
 });
 
+test("general agenda replaces registration with the linked event, including external symposia", () => {
+  reset();
+  const event = { id: "agenda-id", title: "Simpósio convidado", date: "2000-10-15T12:00:00Z", externalUrl: "https://example.com/inscricao", meetingId: null, meeting: null };
+  lists.schedule = [event];
+  assert.ok(render(Schedule).includes('href="https://example.com/inscricao"'));
+  for (const [type, path] of [["MEETING", "encontros"], ["SEMINAR", "seminarios"], ["DOCUMENTARY", "mostra-de-documentarios"], ["SYMPOSIUM", "simposios"]]) {
+    event.meetingId = "linked-id";
+    event.meeting = { id: "linked-id", slug: "evento-vinculado", type, title: "Registro", isInternal: false };
+    const html = render(Schedule);
+    assert.ok(html.includes(`href="/atividades/${path}/evento-vinculado"`));
+    assert.ok(html.includes("Ver evento"));
+    assert.ok(!html.includes('href="https://example.com/inscricao"'));
+  }
+  event.meeting = null;
+  const unavailable = render(Schedule);
+  assert.ok(!unavailable.includes("Ver evento"));
+  assert.ok(!unavailable.includes('href="https://example.com/inscricao"'));
+  event.meetingId = null;
+  event.externalUrl = null;
+  assert.ok(!render(Schedule).includes('href="null"'));
+});
+
 test("external meetings remain accessible through linked news and their detail pages", () => {
   reset();
   const id = "68c2af74-c459-4a33-8d98-d4a62d2152c9";
@@ -1111,7 +1135,7 @@ test("external meetings remain accessible through linked news and their detail p
   assert.ok(details.includes("Evento externo vinculado"));
   assert.ok(details.includes("Descrição do encontro externo"));
   assert.ok(details.includes('href="https://example.org/inscricoes"'));
-  assert.ok(render(MeetingView).includes("Externo — acesso pelas notícias"));
+  assert.ok(render(MeetingView).includes("Externo — acesso por notícia ou agenda"));
   records.meetings.isInternal = true;
   assert.ok(render(MeetingView).includes("Interno — exibido nas listas"));
 });

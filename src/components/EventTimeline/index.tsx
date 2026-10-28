@@ -187,7 +187,8 @@ export function EventTimeline({
             })}
             {entry.detailsTo && (
               <DetailLink to={entry.detailsTo}>
-                Ver detalhes <FiArrowUpRight aria-hidden="true" />
+                {entry.detailsLabel || "Ver detalhes"}{" "}
+                <FiArrowUpRight aria-hidden="true" />
               </DetailLink>
             )}
           </Actions>

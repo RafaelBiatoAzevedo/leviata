@@ -128,6 +128,31 @@ export const timelineContent = {
     participantsPast: "Participantes",
     participantsUpcoming: "Participantes",
   },
+  symposia: {
+    Icon: FiMic,
+    singular: "simpósio",
+    plural: "simpósios",
+    loading: "os simpósios",
+    error: "os simpósios",
+    overviewLabel: "Conhecimento em diálogo",
+    overviewText:
+      "Os próximos simpósios e a memória das pesquisas compartilhadas pelo grupo.",
+    showTimes: false,
+    upcomingTitle: "Próximos simpósios",
+    upcomingText: "Os próximos simpósios, em ordem de realização.",
+    upcomingEmpty: "Nenhum simpósio previsto no momento.",
+    pastTitle: "Simpósios realizados",
+    pastText: "Revisite os simpósios, dos mais recentes aos anteriores.",
+    pastEmpty:
+      "Os simpósios realizados aparecerão aqui após a data cadastrada.",
+    pastStat: "Realizados",
+    pastStatus: "Realizado",
+    emptyTitle: "Nenhum simpósio disponível",
+    emptyText:
+      "Acompanhe este espaço para conferir os próximos simpósios e seus registros.",
+    participantsPast: "Participantes",
+    participantsUpcoming: "Participantes",
+  },
   documentaries: {
     Icon: FiFilm,
     singular: "mostra",

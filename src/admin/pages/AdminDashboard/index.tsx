@@ -1,22 +1,20 @@
 import {
   FiArrowRight,
   FiArrowUpRight,
-  FiBook,
   FiBookOpen,
   FiCalendar,
   FiClock,
   FiCompass,
   FiExternalLink,
   FiFileText,
-  FiLayers,
   FiMail,
   FiMapPin,
   FiMic,
   FiPlus,
-  FiUsers,
 } from "react-icons/fi";
 import { newsCategoryLabels } from "../../types/TNewsCategory";
 import { useDashboard } from "./useDashboard";
+import { DashboardOverview } from "./Overview";
 import {
   ActionLink,
   Banner,
@@ -38,7 +36,6 @@ import {
   Footer,
   Header,
   HeaderActions,
-  IconTile,
   NewsDetails,
   NewsItem,
   NewsList,
@@ -51,52 +48,9 @@ import {
   Shortcut,
   ShortcutGrid,
   Skeleton,
-  StatCard,
-  StatGrid,
-  StatTop,
-  StatValue,
   Subtitle,
   Title,
 } from "./styles";
-
-const metrics = [
-  {
-    key: "people",
-    label: "Pesquisadores ativos",
-    to: "/admin/pessoas",
-    icon: FiUsers,
-  },
-  {
-    key: "books",
-    label: "Livros",
-    to: "/admin/livros",
-    icon: FiBook,
-  },
-  {
-    key: "articles",
-    label: "Artigos",
-    to: "/admin/artigos",
-    icon: FiFileText,
-  },
-  {
-    key: "dossiers",
-    label: "Dossiês",
-    to: "/admin/artigos",
-    icon: FiLayers,
-  },
-  {
-    key: "news",
-    label: "Notícias",
-    to: "/admin/noticias",
-    icon: FiCompass,
-  },
-  {
-    key: "meetings",
-    label: "Encontros e seminários",
-    to: "/admin/encontros",
-    icon: FiMic,
-  },
-] as const;
 
 const shortcuts = [
   {
@@ -206,7 +160,11 @@ export function AdminDashboard() {
               "—"
             )}
           </BannerNumber>
-          <p>registros nas seis categorias abaixo</p>
+          <p>
+            {summary
+              ? `registros em ${summary.items.length} áreas de conteúdo`
+              : "registros de conteúdo do portal"}
+          </p>
           <small>
             <FiClock aria-hidden="true" />
             {summary
@@ -218,45 +176,12 @@ export function AdminDashboard() {
         </BannerSummary>
       </Banner>
 
-      <section aria-label="Panorama dos conteúdos" aria-busy={loading}>
-        {errors.summary && (
-          <ErrorState role="alert">
-            Não foi possível carregar os indicadores.
-            <button type="button" disabled={loading} onClick={retry}>
-              Tentar novamente
-            </button>
-          </ErrorState>
-        )}
-        <StatGrid>
-          {metrics.map(({ key, label, to, icon: Icon }) => {
-            const total = summary?.items.find(
-              (item) => item.key === key,
-            )?.total;
-            return (
-              <StatCard key={key} to={to}>
-                <StatTop>
-                  <IconTile>
-                    <Icon aria-hidden="true" />
-                  </IconTile>
-                  <FiArrowUpRight aria-hidden="true" />
-                </StatTop>
-                <StatValue>
-                  {loading ? (
-                    <Skeleton
-                      $height="34px"
-                      $width="55px"
-                      aria-label="Carregando"
-                    />
-                  ) : (
-                    (total?.toLocaleString("pt-BR") ?? "—")
-                  )}
-                </StatValue>
-                <span>{label}</span>
-              </StatCard>
-            );
-          })}
-        </StatGrid>
-      </section>
+      <DashboardOverview
+        summary={summary}
+        loading={loading}
+        error={errors.summary}
+        onRetry={retry}
+      />
 
       <PanelGrid>
         <Panel aria-labelledby="dashboard-events-title" aria-busy={loading}>

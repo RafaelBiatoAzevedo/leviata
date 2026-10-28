@@ -268,6 +268,7 @@ test("activities and agenda have one destination for each event category", () =>
     for (const [label, path] of [
       ["Encontros", "encontros"],
       ["Seminários", "seminarios"],
+      ["Simpósios", "simposios"],
       ["Mostra de documentários", "mostra-de-documentarios"],
     ]) {
       const matching = links.filter((link) => link.label === label);

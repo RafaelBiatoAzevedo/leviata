@@ -36,6 +36,7 @@ export interface TimelineEntry {
     url: string | null | undefined;
   }[];
   detailsTo?: string;
+  detailsLabel?: string;
 }
 
 export interface TimelineYearGroup {

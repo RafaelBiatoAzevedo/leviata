@@ -28,7 +28,11 @@ export const newsletterService = {
     return api.post<NewsletterResponseDto>("/newsletter", form);
   },
   preview(data: Partial<CreateNewsletterRequestDto>) {
-    return api.post<{ htmlContent: string }>("/newsletter/preview", data);
+    // sentAt is maintained by delivery processing and is not part of the draft preview.
+    const draft = Object.fromEntries(
+      Object.entries(data).filter(([key]) => key !== "sentAt"),
+    );
+    return api.post<{ htmlContent: string }>("/newsletter/preview", draft);
   },
   uploadContentImage(image: File) {
     const form = new FormData();

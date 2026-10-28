@@ -15,7 +15,7 @@ export type TNewsRelatedType =
 export const newsRelatedTypeLabels: Record<TNewsRelatedType, string> = {
   BOARD: "Banca",
   JURY: "Júri",
-  MEETING: "Encontro, seminário ou documentário",
+  MEETING: "Evento (encontro, seminário, simpósio ou mostra)",
   PRESENTED_WORK: "Apresentação de trabalhos",
   PUBLICATION: "Publicação",
   RESEARCH: "Pesquisa",

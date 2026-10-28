@@ -16,8 +16,21 @@ preenche esse campo quando o processamento termina sem pendências ou falhas.
 ## Enviar depois
 
 Na listagem, o ícone **Enviar e acompanhar entregas** abre o painel da edição.
-O botão **Enviar para todos os inscritos** mostra o assunto e a quantidade atual
-de destinatários elegíveis antes de confirmar a operação.
+O painel oferece duas opções antes de iniciar a campanha:
+
+- **Todos os inscritos aptos:** considera todos os elegíveis, inclusive em outras
+  páginas. A busca filtra apenas a lista exibida.
+- **Selecionar destinatários:** permite marcar nomes/e-mails individualmente,
+  pesquisar, selecionar a página atual e limpar a seleção. Os escolhidos são
+  mantidos ao pesquisar ou trocar de página. O botão mostra a quantidade escolhida
+  e a confirmação apresenta a lista de destinatários.
+
+A lista fica disponível mesmo antes de configurar o remetente. O envio permanece
+condicionado à publicação da edição e à disponibilidade do serviço de e-mail.
+No modo individual, uma seleção vazia nunca é interpretada como envio para todos.
+Se algum escolhido cancelar o recebimento antes da confirmação, a API solicita
+a atualização da seleção. Defina o público antes de iniciar: a campanha preserva
+os destinatários e o conteúdo escolhidos, inclusive em solicitações repetidas.
 
 O envio considera cadastros ativos, não excluídos e com autorização para e-mail.
 Cadastros que já receberam a mesma edição são excluídos. A API revalida o
@@ -31,7 +44,7 @@ falhas confirmadas. Entregas cujo resultado é incerto são identificadas como
 
 ## Consultar registros
 
-- **Destinatários** mostra a fila, o status, o número de tentativas e a data de envio.
+- **Fila de envio** mostra os destinatários da campanha, o status, o número de tentativas e a data de envio.
 - **Envios realizados** consulta os registros de `NewsletterDelivery`, incluindo
   os históricos anteriores à fila. Mostra nome, e-mail e data de aceitação pelo SMTP.
 
@@ -48,7 +61,11 @@ indisponíveis com uma explicação; o cadastro continua funcionando normalmente
 O frontend utiliza as rotas protegidas do módulo `mail`, incluindo:
 
 - `GET /mail/newsletters/:id/audience` para conferir os totais elegíveis.
-- `POST /mail/newsletters/:id/send` para iniciar o envio.
+- `GET /mail/newsletters/:id/subscribers?page=1&limit=15&search=...` para listar
+  nome, e-mail e ID dos elegíveis, com paginação e busca protegidas por login admin.
+- `POST /mail/newsletters/:id/send` com `{ "mode": "ALL" }` ou
+  `{ "mode": "SELECTED", "subscriberIds": ["UUID"] }` para iniciar o envio.
+  Requisições antigas sem corpo continuam usando todos os inscritos aptos.
 - `GET /mail/newsletters/:id/status` e `/deliveries` para o acompanhamento.
 - `GET /mail/newsletters/:id/delivery-records` para consultar `NewsletterDelivery`.
 

@@ -4,6 +4,7 @@ import App from "./App";
 import "./i18n";
 
 import "swiper/css";
+import "swiper/css/a11y";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 

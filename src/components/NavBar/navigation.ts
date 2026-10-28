@@ -113,6 +113,12 @@ export const menus: NavigationSection[] = [
         Icon: FiMic,
       },
       {
+        label: "Simpósios",
+        path: "/atividades/simposios",
+        description: "Encontros de pesquisa e troca de conhecimentos.",
+        Icon: FiMic,
+      },
+      {
         label: "Mostra de documentários",
         path: "/atividades/mostra-de-documentarios",
         description: "Sessões de cinema, história e memória.",
@@ -142,6 +148,12 @@ export const menus: NavigationSection[] = [
         label: "Seminários",
         path: "/agenda/seminarios",
         description: "Próximos debates e encontros realizados.",
+        Icon: FiMic,
+      },
+      {
+        label: "Simpósios",
+        path: "/agenda/simposios",
+        description: "Próximos simpósios e registros dos já realizados.",
         Icon: FiMic,
       },
       {
