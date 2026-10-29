@@ -27,9 +27,9 @@ export function AdminField({
         <Label htmlFor={htmlFor}>
           {label}
 
-          {labelHint && <LabelHint>({labelHint})</LabelHint>}
-
           {required && <Required>*</Required>}
+
+          {labelHint && <LabelHint>({labelHint})</LabelHint>}
         </Label>
       )}
 

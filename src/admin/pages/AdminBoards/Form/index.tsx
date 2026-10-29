@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { AdminGallery } from "../../../components/AdminGallery";
 import { useGallery } from "../../../hooks/useGallery";
 import { useNavigate, useParams } from "react-router-dom";
@@ -332,7 +333,7 @@ export function BoardForm() {
 
                 return (
                   <MemberItem key={member.id}>
-                    <span>{`${member.academicTitle?.abbreviation} ${member.name} - ${member.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(member)}</span>
 
                     <button
                       type="button"

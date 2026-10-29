@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import { MemberItem, MemberList, Container, Form } from "./styles";
@@ -258,7 +259,7 @@ export function VideoForm() {
 
                 return (
                   <MemberItem key={member.id}>
-                    <span>{`${member.academicTitle?.abbreviation} ${member.name} - ${member.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(member)}</span>
 
                     <button
                       type="button"

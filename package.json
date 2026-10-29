@@ -12,6 +12,8 @@
     "test:document-viewer": "node --test --test-isolation=none test/document-viewer.test.cjs",
     "test:pagination": "node --test --test-isolation=none test/pagination.test.cjs",
     "test:admin": "node --test --test-isolation=none test/admin-responsive.test.cjs test/admin-sidebar.test.cjs test/admin-login.test.cjs test/admin-dashboard.test.cjs",
+    "test:analytics": "node --test --test-isolation=none test/analytics.test.cjs",
+    "test:analytics:browser": "node test/analytics-browser.cjs",
     "test:people": "node --test --test-isolation=none test/people.test.cjs",
     "test:books": "node --test --test-isolation=none test/books.test.mjs",
     "test:newsletter": "node --test --test-isolation=none test/newsletter.test.cjs",

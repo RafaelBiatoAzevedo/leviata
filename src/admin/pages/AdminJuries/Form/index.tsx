@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { AdminGallery } from "../../../components/AdminGallery";
 import { useGallery } from "../../../hooks/useGallery";
 import { useNavigate, useParams } from "react-router-dom";
@@ -431,7 +432,7 @@ export function JuryForm() {
 
                 return (
                   <MemberItem key={judge.id}>
-                    <span>{`${judge.academicTitle?.abbreviation} ${judge.name} - ${judge.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(judge)}</span>
 
                     <button
                       type="button"
@@ -478,7 +479,7 @@ export function JuryForm() {
 
                 return (
                   <MemberItem key={juror.id}>
-                    <span>{`${juror.academicTitle?.abbreviation} ${juror.name} - ${juror.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(juror)}</span>
 
                     <button
                       type="button"
@@ -527,7 +528,7 @@ export function JuryForm() {
 
                 return (
                   <MemberItem key={prosecutor.id}>
-                    <span>{`${prosecutor.academicTitle?.abbreviation} ${prosecutor.name} - ${prosecutor.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(prosecutor)}</span>
 
                     <button
                       type="button"
@@ -580,7 +581,7 @@ export function JuryForm() {
 
                 return (
                   <MemberItem key={defender.id}>
-                    <span>{`${defender.academicTitle?.abbreviation} ${defender.name} - ${defender.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(defender)}</span>
 
                     <button
                       type="button"
@@ -633,7 +634,7 @@ export function JuryForm() {
 
                 return (
                   <MemberItem key={bailiff.id}>
-                    <span>{`${bailiff.academicTitle?.abbreviation} ${bailiff.name} - ${bailiff.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(bailiff)}</span>
 
                     <button
                       type="button"

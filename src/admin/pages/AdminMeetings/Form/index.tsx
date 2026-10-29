@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { AdminGallery } from "../../../components/AdminGallery";
 import { useGallery } from "../../../hooks/useGallery";
 import { useNavigate, useParams } from "react-router-dom";
@@ -381,7 +382,7 @@ export function MeetingForm() {
 
                 return (
                   <AuthorItem key={speaker.id}>
-                    <span>{`${speaker.academicTitle?.abbreviation} ${speaker.name} - ${speaker.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(speaker)}</span>
 
                     <button
                       type="button"

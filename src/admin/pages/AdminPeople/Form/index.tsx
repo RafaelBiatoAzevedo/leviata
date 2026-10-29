@@ -196,11 +196,7 @@ export function PersonForm() {
                 <AdminSelect
                   options={personCategoryOptions}
                   label="Categoria"
-                  description={
-                    isExternal
-                      ? "Pode participar de júris e outras atividades, sem aparecer na página de pesquisadores do LEVIATA. Dados acadêmicos e de contato são opcionais."
-                      : "Para pessoas sem vínculo com o grupo, escolha Participante externo."
-                  }
+                  labelHint="Sem vínculo: Participante externo"
                   required
                   error={errors.category?.message}
                   {...register("category")}

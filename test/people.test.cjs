@@ -14,7 +14,12 @@ function loadTypeScript(relativePath, dependencies = {}) {
       ? dependencies[request]
       : actualRequire(request);
   const { outputText } = ts.transpileModule(readFileSync(filename, "utf8"), {
-    compilerOptions: { module: ts.ModuleKind.CommonJS },
+    compilerOptions: {
+      module: ts.ModuleKind.CommonJS,
+      jsx: ts.JsxEmit.ReactJSX,
+      esModuleInterop: true,
+      target: ts.ScriptTarget.ES2022,
+    },
     fileName: filename,
   });
   loaded._compile(outputText, filename);
@@ -58,6 +63,63 @@ test("external participants can be registered without academic credentials or co
 test("person labels preserve names without assuming academic or institutional credentials", () => {
   assert.equal(formatPersonLabel({ name: "Ana Convidada", academicTitle: null, institution: null }), "Ana Convidada");
   assert.equal(formatPersonLabel({ name: "Maria", academicTitle: { abbreviation: "Dra." }, institution: { acronym: "USP" } }), "Dra. Maria - USP");
+});
+
+test("jury form renders every participant role without undefined values or dangling separators", () => {
+  const React = require("react");
+  const participants = [
+    { id: "external", name: "Convidado externo", academicTitle: null, institution: null },
+    { id: "missing", name: "Participante - História" },
+    { id: "title", name: "Docente sem instituição", academicTitle: { abbreviation: "Dr." } },
+    { id: "institution", name: "Pessoa sem título", institution: { acronym: "USP" } },
+    { id: "institution-name", name: "Outra participante", institution: { name: "Museu Histórico" } },
+  ];
+  const expected = [
+    "Convidado externo", "Participante - História", "Dr. Docente sem instituição",
+    "Pessoa sem título - USP", "Outra participante - Museu Histórico",
+  ];
+  const roles = ["judges", "jurors", "prosecutors", "defenders", "bailiffs"];
+  const ids = participants.map(person => person.id);
+  const changes = [];
+  const noop = () => {};
+  const mocks = {
+    react: { ...React, useState: initial => [Array.isArray(initial) ? participants : initial, noop], useRef: initial => ({ current: initial }), useCallback: callback => callback, useEffect: noop },
+    "react-router-dom": { useNavigate: () => noop, useParams: () => ({}) },
+    "react-hook-form": {
+      useWatch: ({ name }) => { assert.ok(roles.includes(name)); return ids; },
+      useForm: () => ({ control: {}, register: () => ({}), handleSubmit: () => noop, reset: noop, setValue: (...args) => changes.push(args), formState: { errors: {}, isSubmitting: false } }),
+    },
+    "@hookform/resolvers/zod": { zodResolver: noop },
+    "../../../../hooks/useToast": { useToast: () => ({ showToast: noop }) },
+    "../../../../hooks/useModal": { useModal: () => ({ showModal: noop, updateModal: noop }) },
+    "../../../hooks/useGallery": { useGallery: () => ({ load: noop, save: noop, images: [] }) },
+    "../../../services/juries": { juriesService: {} },
+    "../../../services/people": { peopleService: {} },
+    "../../../types/TPersonCategory": { personCategoryLabels: {} },
+    "../../../validations/jury.schema": { jurySchema: {} },
+    "../../../mappers/jury.mapper": {},
+    "../../../utils/formatPersonLabel": { formatPersonLabel },
+    "./defaultValues": { juryDefaultValues: {} },
+    "./styles": { Container: "container", Form: "form", JuryTopWrapper: "top", MemberList: "members", MemberItem: "member" },
+  };
+  for (const name of ["AdminGallery", "AdminPageHeader", "AdminFormGrid", "AdminImageUpload", "AdminFormCard", "AdminSection", "AdminInput", "AdminButton", "AdminSelect", "AdminError", "AdminDateInput", "AdminTextarea"])
+    mocks[`../../../components/${name}`] = { [name]: name };
+  mocks["../../../components/AdminFormActions"] = "actions";
+  const { JuryForm } = loadTypeScript("../src/admin/pages/AdminJuries/Form/index.tsx", mocks);
+  const nodes = [];
+  function visit(node) {
+    React.Children.forEach(node, child => {
+      if (React.isValidElement(child)) { nodes.push(child); visit(child.props.children); }
+    });
+  }
+  visit(JuryForm());
+  const rows = nodes.filter(node => node.type === "member");
+  assert.equal(rows.length, roles.length * participants.length);
+  const labels = rows.map(row => row.props.children[0].props.children);
+  assert.deepEqual(labels, roles.flatMap(() => expected));
+  assert.ok(labels.every(label => !/undefined|null|^\s*-|[- ]+$/.test(label)));
+  rows[0].props.children[1].props.onClick();
+  assert.deepEqual(changes[0], ["judges", ids.slice(1), { shouldValidate: true, shouldDirty: true }]);
 });
 
 test("jury selectors include external people and preserve alphabetical ordering", async (context) => {

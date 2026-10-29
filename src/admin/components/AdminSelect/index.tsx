@@ -15,6 +15,7 @@ interface AdminSelectProps extends Omit<
   "children"
 > {
   label?: string;
+  labelHint?: string;
   description?: string;
   error?: string;
   required?: boolean;
@@ -24,6 +25,7 @@ interface AdminSelectProps extends Omit<
 
 export function AdminSelect({
   label,
+  labelHint,
   description,
   error,
   required = false,
@@ -36,6 +38,7 @@ export function AdminSelect({
   return (
     <AdminField
       label={label}
+      labelHint={labelHint}
       description={description}
       error={error}
       required={required}

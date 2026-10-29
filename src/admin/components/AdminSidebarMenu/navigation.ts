@@ -1,6 +1,7 @@
 import type { IconType } from "react-icons";
 import {
   FiAward,
+  FiBarChart2,
   FiBell,
   FiBook,
   FiCalendar,
@@ -40,7 +41,20 @@ const groups: MenuGroup[] = [
     label: "Visão geral",
     items: [
       { to: "/admin", label: "Dashboard", icon: FiHome, end: true },
+      {
+        to: "/admin/observatorio",
+        label: "Observatório",
+        icon: FiBarChart2,
+        keywords: "analytics estatísticas acessos audiência",
+      },
       { to: "/admin/notificacoes", label: "Notificações", icon: FiBell },
+      {
+        to: "/admin/documentacao",
+        label: "Documentação",
+        icon: FiBook,
+        keywords:
+          "manual ajuda guias documentação completa html arquitetura api",
+      },
     ],
   },
   {

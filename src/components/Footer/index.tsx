@@ -12,6 +12,7 @@ import { FiArrowUp } from "react-icons/fi";
 import leviataLogo from "../../assets/images/leviataLogo.png";
 import { NewsletterForm } from "../NewsletterForm";
 import { AppVersion } from "../AppVersion";
+import { AnalyticsPrivacy } from "../../analytics/AnalyticsPrivacy";
 
 export const Footer = () => {
   const scrollToTop = () => {
@@ -43,6 +44,7 @@ export const Footer = () => {
         </Content>
 
         <SocialLinks />
+        <AnalyticsPrivacy />
         <Copy>
           <span>© {new Date().getFullYear()} Leviatã e o Cativeiro</span>
           <AppVersion />

@@ -143,7 +143,15 @@ function harness(initial = {}) {
 test("the panorama covers every content area in the sidebar exactly once, separating editorial dossiers", () => {
   const destinations = adminMenuGroups("ADMIN")
     .flatMap((group) => group.items.map((item) => item.to))
-    .filter((to) => !["/admin", "/admin/notificacoes"].includes(to));
+    .filter(
+      (to) =>
+        ![
+          "/admin",
+          "/admin/notificacoes",
+          "/admin/observatorio",
+          "/admin/documentacao",
+        ].includes(to),
+    );
   assert.deepEqual(
     new Set(dashboardMetrics.map((metric) => metric.to)),
     new Set(destinations),

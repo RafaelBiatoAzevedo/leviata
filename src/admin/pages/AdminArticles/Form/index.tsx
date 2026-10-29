@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { articlesService } from "../../../services/articles";
 import { useForm, useWatch } from "react-hook-form";
@@ -355,7 +356,7 @@ export function ArticleForm() {
 
                 return (
                   <AuthorItem key={author.id}>
-                    <span>{`${author.academicTitle?.abbreviation} ${author.name} - ${author.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(author)}</span>
 
                     <button
                       type="button"

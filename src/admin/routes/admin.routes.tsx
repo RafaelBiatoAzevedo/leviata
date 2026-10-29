@@ -3,6 +3,8 @@ import { AdminDataProvider } from "../contexts/AdminDataContext";
 import { AdminLayout } from "../layouts/AdminLayout";
 
 import { AdminDashboard } from "../pages/AdminDashboard";
+import { AdminAnalyticsRoute } from "../pages/AdminAnalytics/LazyAnalytics";
+import { AdminDocumentation } from "../pages/AdminDocumentation";
 
 import { AdminPeople } from "../pages/AdminPeople/List";
 import { PersonForm } from "../pages/AdminPeople/Form";
@@ -66,6 +68,8 @@ export const adminRoutes = (
     }
   >
     <Route index element={<AdminDashboard />} />
+    <Route path="observatorio" element={<AdminAnalyticsRoute />} />
+    <Route path="documentacao" element={<AdminDocumentation />} />
     <Route path="notificacoes" element={<AdminNotifications />} />
     <Route path="minha-conta" element={<UserForm account />} />
     <Route element={<SuperAdminRoute />}>

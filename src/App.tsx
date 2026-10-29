@@ -4,6 +4,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { ToastProvider } from "./shared/Toast/ToastProvider";
 import { ModalProvider } from "./shared/Modal/ModalProvider";
 import { AppearanceProvider } from "./contexts/ThemeContext";
+import { PortalAnalytics } from "./analytics/PortalAnalytics";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
           <ToastProvider>
             <GlobalStyle />
 
+            <PortalAnalytics />
             <Router />
           </ToastProvider>
         </ModalProvider>

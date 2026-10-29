@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { AdminGallery } from "../../../components/AdminGallery";
 import { useGallery } from "../../../hooks/useGallery";
 import { useNavigate, useParams } from "react-router-dom";
@@ -306,7 +307,7 @@ export function PresentedWorkForm() {
 
                 return (
                   <AuthorItem key={author.id}>
-                    <span>{`${author.academicTitle?.abbreviation} ${author.name} - ${author.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(author)}</span>
 
                     <button
                       type="button"

@@ -1,3 +1,4 @@
+import { formatPersonLabel } from "../../../utils/formatPersonLabel";
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
 import {
@@ -357,7 +358,7 @@ export function BookForm() {
 
                 return (
                   <AuthorItem key={author.id}>
-                    <span>{`${author.academicTitle?.abbreviation} ${author.name} - ${author.institution?.acronym} `}</span>
+                    <span>{formatPersonLabel(author)}</span>
 
                     <button
                       type="button"
