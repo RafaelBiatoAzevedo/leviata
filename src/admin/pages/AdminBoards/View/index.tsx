@@ -13,7 +13,8 @@ import { AdminSection } from "../../../components/AdminSection";
 import { AdminDescriptionList } from "../../../components/AdminDescriptionList";
 import { AdminDescriptionItem } from "../../../components/AdminDescriptionItem";
 import { AdminLoading } from "../../../components/AdminLoading";
-import { formatDate } from "../../../utils/formatDate";
+import { formatDateTime } from "../../../utils/dateTime";
+import { BoardTypeBadge } from "../../../../components/BoardTypeBadge";
 
 export function BoardView() {
   const navigate = useNavigate();
@@ -74,7 +75,16 @@ export function BoardView() {
 
             <AdminDescriptionItem label="Slug" value={board.slug} />
 
-            <AdminDescriptionItem label="Data" value={formatDate(board.date)} />
+            <AdminDescriptionItem
+              label="Tipo de banca"
+              value={board.type ? <BoardTypeBadge type={board.type} /> : null}
+              emptyText="Não informado"
+            />
+
+            <AdminDescriptionItem
+              label="Data e hora"
+              value={formatDateTime(board.date)}
+            />
 
             <AdminDescriptionItem
               label="Link da banca"

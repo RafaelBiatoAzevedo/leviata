@@ -127,6 +127,7 @@ Para entrar no admin, use uma conta cadastrada na API. O frontend não cria uma 
 | `npm run lint` | Análise estática com ESLint |
 | `npm run test:admin` | Dashboard, login, menu e responsividade do admin |
 | `npm run test:people` | Pessoas e participantes externos |
+| `npm run test:boards` | Bancas com data, hora e tipo: qualificação ou defesa |
 | `npm run test:portal` | Consumo da API e apresentação do portal |
 | `npm run test:navigation` | Navegação e menus |
 | `npm run test:theme` | Temas e preferências |

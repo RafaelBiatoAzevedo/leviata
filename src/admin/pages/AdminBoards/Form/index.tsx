@@ -3,7 +3,14 @@ import { AdminGallery } from "../../../components/AdminGallery";
 import { useGallery } from "../../../hooks/useGallery";
 import { useNavigate, useParams } from "react-router-dom";
 import { AdminPageHeader } from "../../../components/AdminPageHeader";
-import { MemberItem, MemberList, Container, Form } from "./styles";
+import {
+  MemberItem,
+  MemberList,
+  Container,
+  Form,
+  FullWidth,
+  TypeDescription,
+} from "./styles";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, useWatch } from "react-hook-form";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -22,6 +29,7 @@ import { AdminError } from "../../../components/AdminError";
 import {
   boardSchema,
   type BoardFormData,
+  type BoardSubmitData,
 } from "../../../validations/board.schema";
 import { boardsService } from "../../../services/boards";
 import {
@@ -29,8 +37,12 @@ import {
   mapBoardToForm,
 } from "../../../mappers/board.mapper";
 import { boardDefaultValues } from "./defaultValues";
-import { AdminDateInput } from "../../../components/AdminDateInput";
 import AdminFormActions from "../../../components/AdminFormActions";
+import {
+  boardTypeDescriptions,
+  boardTypeLabels,
+  isBoardType,
+} from "../../../types/TBoardType";
 
 export function BoardForm() {
   const navigate = useNavigate();
@@ -57,7 +69,7 @@ export function BoardForm() {
     reset,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<BoardFormData>({
+  } = useForm<BoardFormData, unknown, BoardSubmitData>({
     resolver: zodResolver(boardSchema),
     defaultValues: boardDefaultValues,
   });
@@ -66,6 +78,8 @@ export function BoardForm() {
     control,
     name: "members",
   });
+
+  const boardType = useWatch({ control, name: "type" });
 
   const candidateId = useWatch({
     control,
@@ -213,7 +227,7 @@ export function BoardForm() {
       })),
   ];
 
-  async function onSubmit(data: BoardFormData) {
+  async function onSubmit(data: BoardSubmitData) {
     try {
       if (isEdit && !recordId)
         throw new Error("Aguarde o carregamento do registro antes de salvar.");
@@ -276,22 +290,44 @@ export function BoardForm() {
                 disabled
               />
 
-              <AdminDateInput
-                label="Data"
-                placeholder="10/02/2025"
+              <AdminInput
+                type="datetime-local"
+                label="Data e hora"
+                labelHint="Horário local"
                 required
                 {...register("date")}
                 error={errors.date?.message}
               />
 
-              <AdminInput
-                label="Link da banca"
-                placeholder="Url da banca"
+              <AdminSelect
+                label="Tipo de banca"
                 required
-                error={errors.meetingUrl?.message}
-                {...register("meetingUrl")}
+                error={errors.type?.message}
+                {...register("type")}
+                options={[
+                  { value: "", label: "Selecione o tipo de banca" },
+                  ...Object.entries(boardTypeLabels).map(([value, label]) => ({
+                    value,
+                    label,
+                  })),
+                ]}
               />
+
+              <FullWidth>
+                <AdminInput
+                  label="Link da banca"
+                  placeholder="Url da banca"
+                  required
+                  error={errors.meetingUrl?.message}
+                  {...register("meetingUrl")}
+                />
+              </FullWidth>
             </AdminFormGrid>
+            {isBoardType(boardType) && (
+              <TypeDescription>
+                {boardTypeDescriptions[boardType]}
+              </TypeDescription>
+            )}
           </AdminSection>
         </AdminFormCard>
 

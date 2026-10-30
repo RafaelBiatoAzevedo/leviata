@@ -16,7 +16,7 @@ export const timelineContent = {
     overviewLabel: "Percursos de formação",
     overviewText:
       "Das próximas bancas às qualificações e defesas já realizadas.",
-    showTimes: false,
+    showTimes: true,
     upcomingTitle: "Próximas bancas",
     upcomingText: "Qualificações e defesas, da data mais próxima às seguintes.",
     upcomingEmpty: "Nenhuma banca prevista no momento.",

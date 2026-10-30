@@ -1,5 +1,5 @@
 import { portalContent } from "../../styles/portal";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Container = styled.div`
   width: 100%;
@@ -14,13 +14,26 @@ export const Content = styled.div`
   ${portalContent}
 `;
 
-export const Header = styled.header`
+export const Header = styled.header<{ $wideTitle?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
   width: 100%;
   min-width: 0;
+
+  ${({ $wideTitle }) =>
+    $wideTitle &&
+    css`
+      h1 {
+        width: 100%;
+        max-width: 1080px;
+        font-size: clamp(1.8rem, 1.4rem + 1.5vw, 2.5rem);
+        line-height: 1.28;
+        letter-spacing: -0.01em;
+        text-wrap: pretty;
+      }
+    `}
 `;
 
 export const Cover = styled.img`

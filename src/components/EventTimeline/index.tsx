@@ -25,6 +25,7 @@ import {
 } from "../../utils/timeline";
 import { Loading } from "../Loading";
 import { ImageGallery } from "../ImageGallery";
+import { BoardTypeBadge } from "../BoardTypeBadge";
 import { timelineContent } from "./content";
 import {
   Actions,
@@ -90,7 +91,7 @@ export function EventTimeline({
 
   function renderPeople(people: TimelinePerson[]) {
     return (
-      <AuthorList>
+      <AuthorList $column={kind !== "presentations"}>
         {people.map((person) => (
           <li key={person.id}>
             {person.abbreviation && <span>{person.abbreviation}</span>}
@@ -128,6 +129,7 @@ export function EventTimeline({
             </DateLabel>
             <StatusBadge $status={status}>{label}</StatusBadge>
           </GroupHeader>
+          {kind === "boards" && <BoardTypeBadge type={entry.boardType} />}
           <CardTitle as={status === "undated" ? "h3" : "h4"}>
             {entry.title}
           </CardTitle>

@@ -26,7 +26,7 @@ export default function Painels() {
             id: board.id,
             title: board.title,
             date: board.date,
-            dateOnly: true,
+            boardType: board.type,
             participantGroups: [
               { label: "Candidato", people: [board.candidate] },
               { label: "Orientador", people: [board.advisor] },

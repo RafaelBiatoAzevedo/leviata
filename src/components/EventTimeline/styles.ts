@@ -496,8 +496,10 @@ export const Authors = styled.div`
   }
 `;
 
-export const AuthorList = styled.ul`
+export const AuthorList = styled.ul<{ $column?: boolean }>`
   display: flex;
+  flex-direction: ${({ $column }) => ($column ? "column" : "row")};
+  align-items: ${({ $column }) => ($column ? "flex-start" : "stretch")};
   flex-wrap: wrap;
   gap: 8px;
   padding: 0;

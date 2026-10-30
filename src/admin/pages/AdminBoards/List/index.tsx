@@ -14,11 +14,15 @@ import { AdminTable } from "../../../components/AdminTable";
 import { AdminIconButton } from "../../../components/AdminIconButton";
 import { AdminDeleteContent } from "../../../components/AdminDeleteContent";
 import type { BoardResponseDto } from "../../../dtos/boards/BoardResponseDto";
-import { formatDate } from "../../../utils/formatDate";
+import { formatDateTime } from "../../../utils/dateTime";
 import { boardsService } from "../../../services/boards";
+import { AdminSelect } from "../../../components/AdminSelect";
+import { BoardTypeBadge } from "../../../../components/BoardTypeBadge";
+import { boardTypeLabels } from "../../../types/TBoardType";
 
 export function AdminBoards() {
   const [search, setSearch] = useState("");
+  const [type, setType] = useState("");
   const navigate = useNavigate();
 
   const { showToast } = useToast();
@@ -27,7 +31,7 @@ export function AdminBoards() {
 
   const { items, loading, error, load, pagination } = useAdminList(
     boardsService.getPage,
-    { search: search.trim() || undefined },
+    { search: search.trim() || undefined, type: type || undefined },
   );
 
   function handleDelete(board: BoardResponseDto) {
@@ -78,6 +82,18 @@ export function AdminBoards() {
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Pesquisar bancas..."
         />
+        <AdminSelect
+          label="Tipo de banca"
+          value={type}
+          onChange={(event) => setType(event.target.value)}
+          options={[
+            { value: "", label: "Todos os tipos" },
+            ...Object.entries(boardTypeLabels).map(([value, label]) => ({
+              value,
+              label,
+            })),
+          ]}
+        />
       </Filters>
 
       {error && <AdminError>{error}</AdminError>}
@@ -85,7 +101,8 @@ export function AdminBoards() {
         <thead>
           <tr>
             <th>Título</th>
-            <th>Data</th>
+            <th>Tipo</th>
+            <th>Data e hora</th>
             <th>Candidato</th>
             <th>Orientador</th>
             <th>N° Participantes</th>
@@ -104,7 +121,14 @@ export function AdminBoards() {
 
                   <small>{board.slug}</small>
                 </td>
-                <td>{formatDate(board.date)}</td>
+                <td>
+                  {board.type ? (
+                    <BoardTypeBadge type={board.type} />
+                  ) : (
+                    "Não informado"
+                  )}
+                </td>
+                <td>{formatDateTime(board.date)}</td>
 
                 <td>{board.candidate.name}</td>
 

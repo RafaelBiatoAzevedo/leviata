@@ -198,6 +198,7 @@ const {
 const { Seminars } = require("../src/pages/Seminars/index.tsx");
 const { MeetingAgenda } = require("../src/pages/MeetingAgenda/index.tsx");
 const { Schedule } = require("../src/pages/Schecdule/index.tsx");
+const { default: Painels } = require("../src/pages/Painels/index.tsx");
 const { Home } = require("../src/pages/Home/index.tsx");
 const { Researchers } = require("../src/pages/ Researchers/index.tsx");
 const { Publications } = load("../src/pages/ Publications/index.tsx", {
@@ -416,7 +417,8 @@ test("the research center uses registered content, people and galleries without 
     html.indexOf("Pesquisadora cadastrada") < html.indexOf("Discentes"),
   );
   assert.ok(html.indexOf("Discentes") < html.indexOf("Discente cadastrado"));
-  assert.ok(!html.includes("Dra."));
+  assert.ok(html.includes("Dra. Pesquisadora cadastrada"));
+  assert.ok(!html.includes("Dra. Discente cadastrado"));
   assert.ok(!html.includes("Rafaela Cia Vieira"));
 });
 
@@ -634,7 +636,7 @@ test("gallery details expose researchers, speakers, jury roles and board partici
     const html = render(GalleryDetails, { resource, label: "o registro" });
     for (const value of Object.values(relations).flat())
       assert.ok(html.includes(value.name), value.name);
-    if (["meetings", "juries", "boards"].includes(resource)) {
+    if (["meetings", "juries"].includes(resource)) {
       assert.ok(html.includes('aria-label="Ano: 2026"'));
       assert.ok(!html.includes("22/10/2026"));
     }
@@ -676,16 +678,16 @@ test("external people linked to research appear as participants rather than rese
   records.research = { title: "Pesquisa com convidado", images: [], people: [external] };
   const details = render(GalleryDetails, { resource: "research", label: "a pesquisa" });
   assert.ok(details.includes("Participantes externos"));
-  assert.ok(details.includes(external.name));
+  assert.ok(details.includes(`Dra. ${external.name}`));
   assert.ok(!details.includes("Pesquisadores"));
   lists.research = [{ ...records.research, id: "research", slug: "costas-negras", title: "Em costas negras" }];
   const center = render(ResearchCenter);
   assert.ok(center.includes("Participantes externos"));
-  assert.ok(center.includes(external.name));
+  assert.ok(center.includes(`Dra. ${external.name}`));
   assert.ok(!center.includes("Pesquisadores"));
 });
 
-test("jury and board details use the meeting year, profiles, section dividers and access actions", () => {
+test("jury and board details keep profiles, section dividers and access actions", () => {
   for (const resource of ["juries", "boards"]) {
     reset();
     const participant = person("p", "Participante cadastrado", {
@@ -705,7 +707,13 @@ test("jury and board details use the meeting year, profiles, section dividers an
         : { candidate: participant, advisor: participant, members: [participant] }),
     };
     const html = render(GalleryDetails, { resource, label: "o registro" });
-    assert.ok(html.includes('aria-label="Ano: 2026"'));
+    if (resource === "juries")
+      assert.ok(html.includes('aria-label="Ano: 2026"'));
+    else {
+      assert.ok(html.includes("21 de outubro de 2026 às 21:00"));
+      assert.ok(html.includes("horário de Brasília"));
+      assert.ok(!html.includes('aria-label="Ano:'));
+    }
     assert.ok(!html.includes("22/10/2026"));
     assert.equal((html.match(/❧/g) || []).length, 2);
     assert.ok(html.includes("Acessos e materiais"));
@@ -716,6 +724,75 @@ test("jury and board details use the meeting year, profiles, section dividers an
     assert.equal((html.match(/✠/g) || []).length, resource === "juries" ? 6 : 4);
     records[resource].meetingUrl = "javascript:alert(1)";
     assert.ok(!render(GalleryDetails, { resource, label: "o registro" }).includes("javascript:"));
+  }
+});
+
+test("board timeline and details show the same date and hour in Brasília across midnight and New Year", () => {
+  for (const [date, label] of [
+    ["2026-10-30T17:35:00.000Z", "30 de outubro de 2026 às 14:35"],
+    ["2027-01-01T01:15:00.000Z", "31 de dezembro de 2026 às 22:15"],
+  ]) {
+    reset();
+    const board = {
+      id: "board",
+      slug: "defesa-cadastrada",
+      title: "Defesa cadastrada",
+      date,
+      candidate: person("candidate", "Pessoa candidata"),
+      advisor: person("advisor", "Pessoa orientadora"),
+      members: [person("member", "Integrante da banca")],
+      images: [],
+      meetingUrl: "https://example.org/banca",
+    };
+    lists.boards = [board];
+    records.boards = board;
+    const timeline = render(Painels);
+    const details = render(GalleryDetails, { resource: "boards", label: "a banca" });
+    for (const html of [timeline, details]) {
+      assert.ok(html.includes(label), label);
+      assert.ok(html.toLowerCase().includes("horário"));
+      assert.ok(html.includes('href="https://example.org/banca"'));
+      assert.ok(html.includes("Pessoa candidata"));
+    }
+    assert.ok(timeline.includes("Horários de Brasília"));
+    assert.ok(timeline.includes(`dateTime="${date}"`));
+    assert.ok(timeline.includes('href="/agenda/bancas/defesa-cadastrada"'));
+    assert.ok(!details.includes('aria-label="Ano:'));
+  }
+  records.boards.date = "invalid";
+  assert.ok(render(GalleryDetails, { resource: "boards", label: "a banca" }).includes("Data a confirmar"));
+});
+
+test("board flags distinguish qualification and defense in the timeline and details without guessing legacy types", () => {
+  for (const [type, label] of [
+    ["QUALIFICATION", "Banca de Qualificação"],
+    ["DEFENSE", "Banca de Defesa"],
+    [null, null],
+    [undefined, null],
+  ]) {
+    reset();
+    const board = {
+      id: "board",
+      slug: "banca-cadastrada",
+      title: "Banca cadastrada",
+      type,
+      date: "2026-10-30T17:35:00.000Z",
+      candidate: person("candidate", "Pessoa candidata"),
+      advisor: person("advisor", "Pessoa orientadora"),
+      members: [],
+      images: [],
+    };
+    lists.boards = [board];
+    records.boards = board;
+    for (const html of [
+      render(Painels),
+      render(GalleryDetails, { resource: "boards", label: "a banca" }),
+    ]) {
+      assert.ok(html.includes("30 de outubro de 2026 às 14:35"));
+      assert.ok(html.includes("Pessoa candidata"));
+      for (const possible of ["Banca de Qualificação", "Banca de Defesa"])
+        assert.equal(html.includes(possible), possible === label, possible);
+    }
   }
 });
 
@@ -781,8 +858,7 @@ test("meeting speakers and research participants use profile details without bio
     assert.ok(researchHtml.includes(`href="${speaker[field]}"`), field);
   assert.ok(!researchHtml.includes(speaker.bio));
   assert.ok(!researchHtml.includes("Ver biografia"));
-  assert.ok(!researchHtml.includes("Dra."));
-  assert.ok(researchHtml.includes("Profa."));
+  assert.ok(researchHtml.includes("Profa. Dra. Maria Palestrante"));
 });
 
 test("research details separate students below researchers using the same compact profiles", () => {
@@ -813,7 +889,8 @@ test("research details separate students below researchers using the same compac
   assert.ok(html.indexOf("Ana Estudante") < html.indexOf("João Estudante"));
   assert.ok(html.includes("Graduanda"));
   assert.ok(!html.includes("Grad."));
-  assert.ok(!html.includes("Dra."));
+  assert.ok(html.includes("Dra. Maria Pesquisadora"));
+  assert.ok(!html.includes("Dra. João Estudante"));
   assert.ok(html.includes("Universidade da pesquisa"));
   assert.ok(html.includes('href="https://example.org/lattes-discente"'));
   assert.ok(!html.includes(student.bio));

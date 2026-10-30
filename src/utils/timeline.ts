@@ -1,3 +1,5 @@
+import type { TBoardType } from "../admin/types/TBoardType";
+
 export type TimelineStatus =
   | "upcoming"
   | "today"
@@ -18,6 +20,7 @@ export interface TimelineEntry {
   date: string;
   endDate?: string | null;
   dateOnly?: boolean;
+  boardType?: TBoardType | null;
   subtitle?: string | null;
   description?: string | null;
   location?: string | null;

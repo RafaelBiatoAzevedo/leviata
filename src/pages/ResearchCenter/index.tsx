@@ -67,7 +67,6 @@ export function ResearchCenter() {
               person.category !== PersonCategory.EXTERNO,
           )}
           title="Pesquisadores"
-          showAcademicAbbreviation={false}
         />
         <PublicPeople
           people={people.filter(
@@ -81,7 +80,6 @@ export function ResearchCenter() {
             (person) => person.category === PersonCategory.EXTERNO,
           )}
           title="Participantes externos"
-          showAcademicAbbreviation={false}
         />
         {supports.length > 0 && (
           <>

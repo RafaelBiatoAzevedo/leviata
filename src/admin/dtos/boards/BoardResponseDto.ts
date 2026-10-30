@@ -1,5 +1,6 @@
 import type { ImageResponseDto } from "../ImageResponseDto";
 import type { PersonResponseDto } from "../people/PersonResponseDto";
+import type { TBoardType } from "../../types/TBoardType";
 
 export interface BoardResponseDto {
   id: string;
@@ -7,6 +8,8 @@ export interface BoardResponseDto {
   slug: string;
 
   title: string;
+
+  type?: TBoardType | null;
 
   candidateId: string;
 

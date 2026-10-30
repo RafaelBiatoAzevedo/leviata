@@ -1,12 +1,15 @@
 import type { BoardResponseDto } from "../dtos/boards/BoardResponseDto";
 import type { CreateBoardRequestDto } from "../dtos/boards/CreateBoardRequestDto";
 import type { BoardFormData } from "../validations/board.schema";
+import { toLocalDateTime } from "../utils/dateTime";
 
 export function mapBoardToForm(board: BoardResponseDto): BoardFormData {
   return {
     title: board.title,
 
-    date: board.date ? new Date(board.date).toISOString().split("T")[0] : "",
+    type: board.type ?? "",
+
+    date: toLocalDateTime(board.date),
 
     members: board.members.map((member) => member.id!),
 
@@ -21,8 +24,11 @@ export function mapBoardToForm(board: BoardResponseDto): BoardFormData {
 export function mapBoardToCreateDto(
   data: BoardFormData,
 ): CreateBoardRequestDto {
+  if (!data.type) throw new Error("Selecione o tipo de banca.");
   return {
     title: data.title,
+
+    type: data.type,
 
     candidateId: data.candidateId,
 
@@ -30,7 +36,7 @@ export function mapBoardToCreateDto(
 
     members: data.members,
 
-    date: data.date,
+    date: new Date(data.date).toISOString(),
 
     meetingUrl: data.meetingUrl,
   };

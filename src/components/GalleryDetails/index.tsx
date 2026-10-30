@@ -21,7 +21,9 @@ import { ImageFrame } from "../ImageFrame";
 import { HistoryDivider } from "../HistotyDivider";
 import { PublicPeople } from "../PublicPeople";
 import { YearBadge } from "../YearBadge";
-import { timelineExternalUrl } from "../../utils/timeline";
+import { BoardTypeBadge } from "../BoardTypeBadge";
+import { isBoardType, type TBoardType } from "../../admin/types/TBoardType";
+import { timelineDateLabel, timelineExternalUrl } from "../../utils/timeline";
 import { Comments } from "../Comments";
 import type { CommentTarget } from "../../services/comments";
 import {
@@ -38,7 +40,7 @@ import {
 interface GalleryRecord {
   id: string;
   title: string;
-  type?: TMeetingType;
+  type?: TMeetingType | TBoardType | null;
   date?: string;
   coverUrl?: string | null;
   description?: string | null;
@@ -61,6 +63,12 @@ interface GalleryRecord {
   candidate?: Partial<PersonResponseDto>;
   advisor?: Partial<PersonResponseDto>;
   members?: Partial<PersonResponseDto>[];
+}
+
+interface PeopleGroup {
+  title: string;
+  people?: Partial<PersonResponseDto>[];
+  showAcademicAbbreviation?: boolean;
 }
 
 export function GalleryDetails({
@@ -101,9 +109,15 @@ export function GalleryDetails({
   const parsedDate = data.date ? new Date(data.date) : null;
   const usesMeetingLayout = ["meetings", "juries", "boards"].includes(resource);
   const formattedDate =
-    parsedDate && Number.isFinite(parsedDate.getTime()) && !usesMeetingLayout
-      ? new Intl.DateTimeFormat("pt-BR", dateOptions).format(parsedDate)
-      : undefined;
+    resource === "boards"
+      ? `${timelineDateLabel({
+          id: data.id,
+          title: data.title,
+          date: data.date || "",
+        })} (horário de Brasília)`
+      : parsedDate && Number.isFinite(parsedDate.getTime()) && !usesMeetingLayout
+        ? new Intl.DateTimeFormat("pt-BR", dateOptions).format(parsedDate)
+        : undefined;
 
   const links = [
     { label: "Inscrições", url: data.registrationUrl, Icon: FiEdit3 },
@@ -123,7 +137,7 @@ export function GalleryDetails({
     const url = timelineExternalUrl(link.url);
     return url ? [{ ...link, url }] : [];
   });
-  const groups =
+  const groups: PeopleGroup[] =
     resource === "juries"
       ? [
           { title: "Juízes", people: data.judges },
@@ -163,6 +177,7 @@ export function GalleryDetails({
                 },
                 {
                   title: "Discentes",
+                  showAcademicAbbreviation: false,
                   people: data.people?.filter(
                     (person) => person.category === PersonCategory.DISCENTE,
                   ),
@@ -191,9 +206,14 @@ export function GalleryDetails({
   return (
     <Container>
       <Content>
-        <Header>
+        <Header $wideTitle={resource === "boards"}>
           <SectionHeader center title={data.title} subtitle={formattedDate} />
-          {usesMeetingLayout && <YearBadge date={data.date} />}
+          {resource === "boards" && isBoardType(data.type) && (
+            <BoardTypeBadge type={data.type} />
+          )}
+          {usesMeetingLayout && resource !== "boards" && (
+            <YearBadge date={data.date} />
+          )}
         </Header>
         {data.coverUrl &&
           (usesMeetingLayout ? (
@@ -247,7 +267,7 @@ export function GalleryDetails({
               title={group.title}
               people={group.people}
               compact={usesMeetingLayout || resource === "research"}
-              showAcademicAbbreviation={resource !== "research"}
+              showAcademicAbbreviation={group.showAcademicAbbreviation}
             />
           </Fragment>
         ))}

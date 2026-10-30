@@ -15,6 +15,7 @@
     "test:analytics": "node --test --test-isolation=none test/analytics.test.cjs",
     "test:analytics:browser": "node test/analytics-browser.cjs",
     "test:people": "node --test --test-isolation=none test/people.test.cjs",
+    "test:boards": "node --test --test-isolation=none test/boards.test.cjs",
     "test:books": "node --test --test-isolation=none test/books.test.mjs",
     "test:newsletter": "node --test --test-isolation=none test/newsletter.test.cjs",
     "test:newsletter-delivery": "node --test --test-isolation=none test/newsletter-delivery.test.cjs",

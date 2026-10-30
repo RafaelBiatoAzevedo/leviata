@@ -20,6 +20,18 @@ export const Form = styled.form`
   gap: 2rem;
 `;
 
+export const FullWidth = styled.div`
+  min-width: 0;
+  grid-column: 1 / -1;
+`;
+
+export const TypeDescription = styled.p`
+  margin-top: 16px;
+  color: ${({ theme }) => theme.colors.heading};
+  font-size: 13px;
+  line-height: 1.6;
+`;
+
 export { AdminSplitLayout as BookTopWrapper } from "../../../components/AdminResponsive";
 
 export const MemberList = styled.div`
