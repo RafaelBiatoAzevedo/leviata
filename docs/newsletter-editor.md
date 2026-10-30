@@ -12,6 +12,16 @@ o documento HTML usado na prévia, no portal e no envio aos inscritos.
 Trocar o modelo mantém os textos, as imagens e a ordem das seções. Fundo
 (papel marfim, claro ou grafite) e moldura (dupla, fina ou ausente) são independentes.
 
+Nos três modelos, os parágrafos de abertura, matérias, chamadas e mensagem de
+rodapé são justificados, com a última linha alinhada ao início. Esse alinhamento
+é o mesmo nos campos de texto do editor, na prévia, na leitura do portal, no HTML
+do e-mail e no PDF. Títulos, dados de data/local, imagens e botões mantêm sua
+diagramação.
+
+Edições visuais já salvas usam o gerador atual ao abrir, sem alterar seus textos
+ou sua estrutura. O PDF anterior é renovado no próximo download ou envio quando
+o hash do HTML muda. Edições com HTML personalizado conservam o código fornecido.
+
 ## Como montar uma edição
 
 1. Preencha título, assunto do e-mail, publicação e, opcionalmente, capa.

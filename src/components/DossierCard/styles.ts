@@ -4,7 +4,7 @@ import styled from "styled-components";
 export const Container = styled(Link)`
   display: flex;
   flex-direction: column;
-  width: 300px;
+  width: 360px;
   max-width: 100%;
   height: 100%;
   isolation: isolate;

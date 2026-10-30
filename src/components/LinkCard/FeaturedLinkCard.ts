@@ -1,6 +1,6 @@
 import { createElement } from "react";
 import { FiCalendar } from "react-icons/fi";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { LinkCard } from "./index";
 import {
   CardDescription,
@@ -8,7 +8,46 @@ import {
   CardTitle,
   IconWrapper,
   ReadMore,
+  ReadMoreArrow,
 } from "./styles";
+
+export const detailsFooterStyles = css`
+  ${ReadMore} {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--theme-border, rgba(17, 24, 39, 0.1));
+    color: ${({ theme }) => theme.colors.heading};
+    font-size: 11px;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+
+  &:hover ${ReadMoreArrow}, &:focus-visible ${ReadMoreArrow} {
+    background: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.secondary};
+
+    svg {
+      transform: translateX(2px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    ${ReadMoreArrow}, ${ReadMoreArrow} svg {
+      transition: none;
+    }
+
+    &:hover ${ReadMoreArrow} svg, &:focus-visible ${ReadMoreArrow} svg {
+      transform: none;
+    }
+  }
+`;
 
 export const FeaturedLinkCard = styled(LinkCard).attrs({ showReadMore: true })`
   width: 100%;
@@ -182,6 +221,7 @@ export const CompactLinkCard = styled(FeaturedLinkCard)`
 `;
 
 export const DatedLinkCard = styled(FeaturedLinkCard).attrs({
+  descriptionLabel: "Data",
   descriptionIcon: createElement(FiCalendar, { "aria-hidden": true }),
 })`
   min-height: 260px;
@@ -189,18 +229,38 @@ export const DatedLinkCard = styled(FeaturedLinkCard).attrs({
   ${CardDescription} {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    align-self: center;
+    justify-content: flex-start;
+    align-self: flex-start;
     gap: 9px;
     max-width: 100%;
-    padding: 8px 14px;
-    border: 1px solid ${({ theme }) => theme.colors.primary}55;
-    border-radius: 10px;
-    background: ${({ theme }) => theme.colors.accentSoft};
+    padding: 0 0 0 11px;
+    border-left: 2px solid ${({ theme }) => theme.colors.primary};
     color: ${({ theme }) => theme.colors.heading};
-    text-align: center;
+    text-align: left;
+    line-height: 1.6;
     font-weight: 500;
     font-variant-numeric: tabular-nums;
+
+    > span {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    small {
+      color: var(--theme-muted, #6a706b);
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+    }
+
+    strong {
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
 
     svg {
       flex-shrink: 0;
@@ -214,10 +274,14 @@ export const DatedLinkCard = styled(FeaturedLinkCard).attrs({
   }
 `;
 
-export const CompactDatedLinkCard = styled(DatedLinkCard)`
+export const CompactDatedLinkCard = styled(DatedLinkCard).attrs({
+  detailsFooter: true,
+})`
   min-height: 184px;
   gap: 12px;
-  padding: 20px 24px 48px;
+  padding: 20px 24px 22px;
+
+  ${detailsFooterStyles}
 
   &::after {
     left: 24px;
@@ -240,19 +304,9 @@ export const CompactDatedLinkCard = styled(DatedLinkCard)`
     font-size: 24px;
   }
 
-  ${CardDescription} {
-    align-self: flex-start;
-    padding: 6px 10px;
-  }
-
-  ${ReadMore} {
-    right: 24px;
-    bottom: 14px;
-  }
-
   @media (max-width: 640px) {
     min-height: 168px;
-    padding: 16px 20px 42px;
+    padding: 16px 20px 20px;
 
     &::after {
       left: 20px;
@@ -262,8 +316,5 @@ export const CompactDatedLinkCard = styled(DatedLinkCard)`
       font-size: 22px;
     }
 
-    ${ReadMore} {
-      right: 20px;
-    }
   }
 `;

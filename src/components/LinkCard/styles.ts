@@ -152,3 +152,19 @@ export const ReadMore = styled.span`
     transform: none;
   }
 `;
+
+export const ReadMoreArrow = styled.span`
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid ${({ theme }) => theme.colors.primary};
+  border-radius: 50%;
+  font-size: 16px;
+  transition: background 0.25s ease;
+
+  svg {
+    transition: transform 0.25s ease;
+  }
+`;

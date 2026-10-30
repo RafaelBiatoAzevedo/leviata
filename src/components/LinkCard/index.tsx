@@ -1,4 +1,4 @@
-import { FiArrowUpRight } from "react-icons/fi";
+import { FiArrowRight, FiArrowUpRight } from "react-icons/fi";
 import {
   CardDescription,
   CardHeader,
@@ -6,6 +6,7 @@ import {
   Container,
   IconWrapper,
   ReadMore,
+  ReadMoreArrow,
 } from "./styles";
 import type { JSX } from "react";
 
@@ -15,8 +16,10 @@ interface ILinkCardProps {
   icon: JSX.Element;
   title: string;
   description: string;
+  descriptionLabel?: string;
   descriptionIcon?: JSX.Element;
   showReadMore?: boolean;
+  detailsFooter?: boolean;
 }
 
 export function LinkCard({
@@ -25,8 +28,10 @@ export function LinkCard({
   icon: Icon,
   title,
   description,
+  descriptionLabel,
   descriptionIcon,
   showReadMore = false,
+  detailsFooter = false,
 }: ILinkCardProps) {
   return (
     <Container to={to} className={className} $showReadMore={showReadMore}>
@@ -37,13 +42,26 @@ export function LinkCard({
 
       <CardDescription>
         {descriptionIcon}
-        {description}
+        {descriptionLabel ? (
+          <span>
+            <small>{descriptionLabel}</small>
+            <strong>{description}</strong>
+          </span>
+        ) : (
+          description
+        )}
       </CardDescription>
 
       {showReadMore && (
         <ReadMore aria-hidden="true">
-          Ver mais
-          <FiArrowUpRight />
+          {detailsFooter ? "Ver detalhes" : "Ver mais"}
+          {detailsFooter ? (
+            <ReadMoreArrow>
+              <FiArrowRight />
+            </ReadMoreArrow>
+          ) : (
+            <FiArrowUpRight />
+          )}
         </ReadMore>
       )}
     </Container>

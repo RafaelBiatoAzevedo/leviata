@@ -1,5 +1,9 @@
 import { portalContent, portalGrid } from "../../styles/portal";
 import styled from "styled-components";
+import {
+  CompactLinkCard,
+  detailsFooterStyles,
+} from "../../components/LinkCard/FeaturedLinkCard";
 
 export const Container = styled.div`
   width: 100%;
@@ -19,4 +23,11 @@ export const Grid = styled.div`
   ${portalGrid}
 `;
 
-export { CompactLinkCard as ActivityCard } from "../../components/LinkCard/FeaturedLinkCard";
+export const ActivityCard = styled(CompactLinkCard).attrs({ detailsFooter: true })`
+  padding-bottom: 22px;
+  ${detailsFooterStyles}
+
+  @media (max-width: 640px) {
+    padding-bottom: 20px;
+  }
+`;

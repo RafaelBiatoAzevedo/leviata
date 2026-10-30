@@ -10,6 +10,11 @@ export const Container = styled.fieldset`
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  textarea {
+    text-align: justify;
+    text-align-last: start;
+  }
 `;
 export const Hero = styled.div`
   display: flex;
