@@ -126,7 +126,7 @@ export function MeetingForm() {
             options={[
               {
                 value: "",
-                label: "Participentes",
+                label: "Participantes",
               },
               ...people
                 .filter((person) => !speakers.includes(person.id))
