@@ -91,20 +91,31 @@ test("news gallery saves files, clears optional captions and removes photos usin
   ]);
 });
 
-test("blank links block saving and expose the required error under the link field", async () => {
+test("external news saves without a link and clears an existing link when editing", async (context) => {
+  context.mock.method(api, "post", async (url, data) => {
+    assert.equal(url, "/news");
+    assert.equal(data.has("externalUrl"), false);
+    return { data: {} };
+  });
+  context.mock.method(api, "patch", async (url, data) => {
+    assert.equal(url, "/news/slug/noticia");
+    assert.equal(data.externalUrl, null);
+    return { data: {} };
+  });
   for (const externalUrl of ["", "   ", "\t\n"]) {
     const form = createFormControl({
       defaultValues: { ...valid, externalUrl },
       resolver: zodResolver(newsSchema),
       shouldFocusError: false,
     });
-    let submissions = 0;
-    await form.handleSubmit(() => submissions++)();
-    assert.equal(submissions, 0);
-    assert.equal(
-      form.getFieldState("externalUrl").error.message,
-      "Informe o link da notícia.",
-    );
+    let submitted;
+    await form.handleSubmit((data) => {
+      submitted = mapNewsToCreateDto(data);
+    })();
+    assert.equal(submitted.externalUrl, null);
+    assert.equal(form.getFieldState("externalUrl").error, undefined);
+    await newsService.create(submitted);
+    await newsService.updateBySlug("noticia", submitted);
   }
 });
 
@@ -127,11 +138,11 @@ test("malformed links expose URL validation errors before a request is sent", as
 
 test("a corrected link clears its validation error and submits the trimmed URL", async () => {
   const form = createFormControl({
-    defaultValues: { ...valid, externalUrl: "" },
+    defaultValues: { ...valid, externalUrl: "link-invalido" },
     resolver: zodResolver(newsSchema),
     shouldFocusError: false,
   });
-  await form.handleSubmit(() => assert.fail("A blank link was submitted"))();
+  await form.handleSubmit(() => assert.fail("An invalid link was submitted"))();
   form.setValue("externalUrl", ` ${valid.externalUrl} `);
   let submitted;
   await form.handleSubmit((data) => {

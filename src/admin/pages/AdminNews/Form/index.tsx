@@ -374,11 +374,10 @@ export function NewsForm() {
               </>
             ) : (
               <AdminInput
-                label="Link"
+                label="Link (opcional)"
                 type="url"
                 inputMode="url"
                 placeholder="https://exemplo.com/noticia"
-                required
                 aria-invalid={!!errors.externalUrl}
                 error={errors.externalUrl?.message}
                 {...register("externalUrl")}

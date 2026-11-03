@@ -68,15 +68,13 @@ export const newsSchema = z
           message: "Selecione um item relacionado válido.",
         });
     } else if (
-      !data.externalUrl ||
+      data.externalUrl &&
       !z.string().url().safeParse(data.externalUrl).success
     ) {
       context.addIssue({
         code: "custom",
         path: ["externalUrl"],
-        message: data.externalUrl
-          ? "Informe uma URL válida."
-          : "Informe o link da notícia.",
+        message: "Informe uma URL válida.",
       });
     }
   });

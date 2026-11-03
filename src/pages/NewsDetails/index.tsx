@@ -81,7 +81,7 @@ export function NewsDetails() {
                 {external && (
                   <a href={external} target="_blank" rel="noopener noreferrer">
                     <FiExternalLink aria-hidden="true" />
-                    <span>Acessar fonte original</span>
+                    <span>Acessar conteúdo</span>
                     <FiArrowUpRight aria-hidden="true" />
                   </a>
                 )}

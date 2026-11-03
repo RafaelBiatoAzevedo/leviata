@@ -29,7 +29,7 @@ export function mapNewsToCreateDto(data: NewsFormData): CreateNewsRequestDto {
     date: data.date,
     category: data.category,
     isInternal: data.isInternal,
-    externalUrl: data.isInternal ? null : data.externalUrl.trim(),
+    externalUrl: data.isInternal ? null : data.externalUrl.trim() || null,
     relatedType: data.isInternal ? data.relatedType || null : null,
     relatedId: data.isInternal ? data.relatedId?.trim() || null : null,
   };
