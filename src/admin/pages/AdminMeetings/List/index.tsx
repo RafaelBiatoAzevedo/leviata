@@ -193,6 +193,7 @@ export function AdminMeetings() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(meeting)}
                     >
                       <FiTrash2 />

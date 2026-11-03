@@ -3,6 +3,30 @@ import {
   type TNewsRelatedType,
 } from "../admin/types/TNewsRelatedType";
 
+export function groupNewsByYear<T extends { date: string }>(news: T[]) {
+  const years = new Map<number | null, T[]>();
+
+  for (const item of news) {
+    const date = new Date(item.date);
+    const year = Number.isNaN(date.getTime()) ? null : date.getUTCFullYear();
+    const items = years.get(year) ?? [];
+    items.push(item);
+    years.set(year, items);
+  }
+
+  return Array.from(years, ([year, items]) => ({
+    year,
+    items: items.sort(
+      (left, right) =>
+        new Date(right.date).getTime() - new Date(left.date).getTime(),
+    ),
+  })).sort((left, right) => {
+    if (left.year === null) return 1;
+    if (right.year === null) return -1;
+    return right.year - left.year;
+  });
+}
+
 export function newsRelatedPath(
   type?: TNewsRelatedType | null,
   identifier?: string | null,

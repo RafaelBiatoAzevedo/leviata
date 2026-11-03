@@ -155,7 +155,7 @@ export function AdminLayout() {
             title="Início da administração"
             onClick={() => setMobileOpen(false)}
           >
-            <LogoImage src={leviataLogo} alt="Leviata e o cativeiro" />
+            <LogoImage src={leviataLogo} alt="Leviatã e o Cativeiro" />
             {!compact && (
               <div>
                 <strong>Leviatã</strong>

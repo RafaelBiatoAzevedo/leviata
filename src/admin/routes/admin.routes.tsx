@@ -55,6 +55,9 @@ import { UserView } from "../pages/AdminUsers/View";
 import { SuperAdminRoute } from "./superAdmin.routes";
 import { NotificationsProvider } from "../contexts/NotificationsContext";
 import { AdminNotifications } from "../pages/AdminNotifications";
+import { AdminInstitutions } from "../pages/AdminInstitutions/List";
+import { InstitutionForm } from "../pages/AdminInstitutions/Form";
+import { InstitutionView } from "../pages/AdminInstitutions/View";
 
 export const adminRoutes = (
   <Route
@@ -72,6 +75,10 @@ export const adminRoutes = (
     <Route path="documentacao" element={<AdminDocumentation />} />
     <Route path="notificacoes" element={<AdminNotifications />} />
     <Route path="minha-conta" element={<UserForm account />} />
+    <Route path="instituicoes" element={<AdminInstitutions />} />
+    <Route path="instituicoes/novo" element={<InstitutionForm />} />
+    <Route path="instituicoes/:id" element={<InstitutionView />} />
+    <Route path="instituicoes/:id/editar" element={<InstitutionForm />} />
     <Route element={<SuperAdminRoute />}>
       <Route path="usuarios" element={<AdminUsers />} />
       <Route path="usuarios/novo" element={<UserForm />} />

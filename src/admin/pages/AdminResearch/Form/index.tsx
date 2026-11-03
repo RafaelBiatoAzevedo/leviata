@@ -201,14 +201,14 @@ export function SearchForm() {
 
       if (isEdit) {
         showToast({
-          title: "Pesquisa atualizado",
+          title: "Pesquisa atualizada",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
       } else {
         showToast({
-          title: "Pesquisa criado",
-          description: "O pesquisa foi cadastrado com sucesso.",
+          title: "Pesquisa criada",
+          description: "A pesquisa foi cadastrada com sucesso.",
           type: "success",
         });
       }
@@ -239,7 +239,7 @@ export function SearchForm() {
 
       showToast({
         title: "Capa atualizada com sucesso",
-        description: "A Capa do pesquisa foi atualizada.",
+        description: "A capa da pesquisa foi atualizada.",
         type: "success",
       });
 
@@ -277,14 +277,14 @@ export function SearchForm() {
               <AdminFormGrid>
                 <AdminInput
                   label="Título"
-                  placeholder="Título do pesquisa"
+                  placeholder="Título da pesquisa"
                   required
                   error={errors.title?.message}
                   {...register("title")}
                 />
 
                 <AdminInput
-                  label="Slug (Gerado automaticamente)"
+                  label="Slug (gerado automaticamente)"
                   value={slug ?? ""}
                   disabled
                 />

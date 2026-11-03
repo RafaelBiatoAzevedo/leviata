@@ -38,7 +38,7 @@ export function SearchView() {
       setSearch(response.data);
     } catch (error) {
       showToast({
-        title: "Ops! Não foi possível carregar o pesquisa",
+        title: "Ops! Não foi possível carregar a pesquisa",
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });

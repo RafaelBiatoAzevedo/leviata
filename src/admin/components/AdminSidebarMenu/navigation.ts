@@ -9,6 +9,7 @@ import {
   FiFileText,
   FiFolder,
   FiHome,
+  FiGlobe,
   FiLayers,
   FiMail,
   FiMic,
@@ -106,6 +107,12 @@ const groups: MenuGroup[] = [
     id: "administration",
     label: "Administração",
     items: [
+      {
+        to: "/admin/instituicoes",
+        label: "Instituições",
+        icon: FiGlobe,
+        keywords: "universidades faculdades siglas países",
+      },
       {
         to: "/admin/usuarios",
         label: "Usuários",

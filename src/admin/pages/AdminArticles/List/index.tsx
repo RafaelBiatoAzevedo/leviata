@@ -82,7 +82,7 @@ export function AdminArticles() {
     <Container>
       <AdminPageHeader
         title="Artigos e Dossiês"
-        subtitle="Gerencie os Artigos e Dossiês cadastrados."
+        subtitle="Gerencie os artigos e dossiês cadastrados."
       >
         <AdminButton onClick={() => navigate("/admin/artigos/novo")}>
           <FiPlus />
@@ -94,7 +94,7 @@ export function AdminArticles() {
         <AdminSearchBar
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pesquisar Artigos e dossiẽs..."
+          placeholder="Pesquisar artigos e dossiês..."
         />
 
         <SelectWrapper>
@@ -169,6 +169,7 @@ export function AdminArticles() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(article)}
                     >
                       <FiTrash2 />

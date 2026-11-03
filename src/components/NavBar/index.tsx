@@ -41,6 +41,7 @@ import {
   TitleColumn,
 } from "./styles";
 import { ThemeToggle } from "../ThemeToggle";
+import { useActivities } from "../../contexts/activities-context";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -55,6 +56,12 @@ export const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const mobileMenuId = "portal-mobile-menu";
+  const { activities } = useActivities();
+  const visibleMenus = menus.map((menu) =>
+    menu.path === "/atividades"
+      ? { ...menu, children: activities.length ? activities : undefined }
+      : menu,
+  );
 
   function submenuId(menu: NavigationSection, mode: "desktop" | "mobile") {
     return `${navId}-${mode}-${menu.path.slice(1)}`;
@@ -179,7 +186,7 @@ export const Navbar = () => {
     if (isOpen) closeMenus();
     else {
       setOpenDropdown(
-        menus.find(
+        visibleMenus.find(
           (menu) =>
             menu.children && isNavigationActive(location.pathname, menu.path),
         )?.path ?? null,
@@ -256,7 +263,7 @@ export const Navbar = () => {
 
       <DesktopOnly>
         <Menu>
-          {menus.map((menu) => {
+          {visibleMenus.map((menu) => {
             const active = isNavigationActive(location.pathname, menu.path);
             const expanded = openDropdown === menu.path;
             return (
@@ -400,7 +407,7 @@ export const Navbar = () => {
           <p>Pesquisas, produções e atividades do grupo.</p>
         </MobileIntro>
         <MenuWrapper>
-          {menus.map((menu) => {
+          {visibleMenus.map((menu) => {
             const active = isNavigationActive(location.pathname, menu.path);
             const expanded = openDropdown === menu.path;
             const Icon = menu.Icon;

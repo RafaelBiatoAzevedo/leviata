@@ -93,7 +93,7 @@ export function BookView() {
 
               <AdminDescriptionItem label="Subtítulo" value={book.subtitle} />
 
-              <AdminDescriptionItem label="Isbn" value={book.isbn} />
+              <AdminDescriptionItem label="ISBN" value={book.isbn} />
 
               <AdminDescriptionItem label="Ano" value={book.year} />
 

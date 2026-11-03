@@ -35,7 +35,7 @@ export function ResearchInstrumentView() {
       setResearchInstrument(response.data);
     } catch (error) {
       showToast({
-        title: "Ops! Não foi possível carregar o livro",
+        title: "Ops! Não foi possível carregar o instrumento de pesquisa",
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });
@@ -51,7 +51,7 @@ export function ResearchInstrumentView() {
   }, [researchInstrument, loadResearchInstrument]);
 
   if (!researchInstrument) {
-    return <AdminLoading text="Carregando livro..." />;
+    return <AdminLoading text="Carregando instrumento de pesquisa..." />;
   }
 
   return (
@@ -69,7 +69,7 @@ export function ResearchInstrumentView() {
           </AdminButton>
         </HeaderActions>
 
-        <Title>Livro</Title>
+        <Title>Instrumento de pesquisa</Title>
       </Header>
 
       <ContentWrapper>

@@ -31,7 +31,7 @@ export function AdminVideos() {
 
   function handleDelete(video: VideoResponseDto) {
     showModal({
-      title: "Excluir video",
+      title: "Excluir vídeo",
 
       content: <AdminDeleteContent title={video.title} />,
 
@@ -45,7 +45,7 @@ export function AdminVideos() {
         await videosService.removeBySlug(video.slug);
 
         showToast({
-          title: "Video excluído",
+          title: "Vídeo excluído",
           description: `${video.title.toUpperCase()}`,
           type: "success",
         });
@@ -62,12 +62,12 @@ export function AdminVideos() {
   return (
     <Container>
       <AdminPageHeader
-        title="Videos"
-        subtitle="Gerencie as videos cadastradas."
+        title="Vídeos"
+        subtitle="Gerencie os vídeos cadastrados."
       >
         <AdminButton onClick={() => navigate("/admin/videos/novo")}>
           <FiPlus />
-          Nova Video
+          Novo vídeo
         </AdminButton>
       </AdminPageHeader>
 
@@ -75,7 +75,7 @@ export function AdminVideos() {
         <AdminSearchBar
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pesquisar videos..."
+          placeholder="Pesquisar vídeos..."
         />
       </Filters>
 
@@ -85,7 +85,7 @@ export function AdminVideos() {
           <tr>
             <th>Título</th>
             <th>Descrição</th>
-            <th>N° Participantes</th>
+            <th>Nº de participantes</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -126,6 +126,7 @@ export function AdminVideos() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(video)}
                     >
                       <FiTrash2 />
@@ -139,7 +140,7 @@ export function AdminVideos() {
       <AdminPagination {...pagination} />
 
       {!loading && !error && items.length === 0 && (
-        <Empty>Nenhum video encontrada.</Empty>
+        <Empty>Nenhum vídeo encontrado.</Empty>
       )}
     </Container>
   );

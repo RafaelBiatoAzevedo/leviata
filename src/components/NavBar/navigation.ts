@@ -16,7 +16,7 @@ import {
   FiUsers,
   FiVideo,
 } from "react-icons/fi";
-import { GiInjustice } from "react-icons/gi";
+import { activityCategories } from "../../utils/activities";
 
 export interface NavigationLink {
   label: string;
@@ -63,7 +63,7 @@ export const menus: NavigationSection[] = [
     Icon: FiSearch,
     children: [
       {
-        label: "Planilhas Biblio-Temáticas",
+        label: "Planilhas Bibliotemáticas",
         path: "/instrumentos/planilhas-biblio-tematicas",
         description: "Levantamentos para apoiar a pesquisa.",
         Icon: FiGrid,
@@ -87,44 +87,7 @@ export const menus: NavigationSection[] = [
     path: "/atividades",
     description: "Projetos, encontros e experiências.",
     Icon: FiActivity,
-    children: [
-      {
-        label: "Pesquisas",
-        path: "/atividades/pesquisas",
-        description: "Projetos e registros de investigação.",
-        Icon: FiSearch,
-      },
-      {
-        label: "Júris Históricos",
-        path: "/atividades/juris-historicos",
-        description: "Diálogos entre história, direito e justiça.",
-        Icon: GiInjustice,
-      },
-      {
-        label: "Encontros",
-        path: "/atividades/encontros",
-        description: "Conversas e registros de nossos encontros.",
-        Icon: FiVideo,
-      },
-      {
-        label: "Seminários",
-        path: "/atividades/seminarios",
-        description: "Debates e pesquisas compartilhadas pelo grupo.",
-        Icon: FiMic,
-      },
-      {
-        label: "Simpósios",
-        path: "/atividades/simposios",
-        description: "Encontros de pesquisa e troca de conhecimentos.",
-        Icon: FiMic,
-      },
-      {
-        label: "Mostra de documentários",
-        path: "/atividades/mostra-de-documentarios",
-        description: "Sessões de cinema, história e memória.",
-        Icon: FiFilm,
-      },
-    ],
+    children: activityCategories,
   },
   {
     label: "Agenda",

@@ -185,7 +185,7 @@ export function JuryView() {
 
       <AdminFormCard>
         <AdminSection
-          title={`${jury.bailiffs.length > 1 ? "Oficiais de justiça" : "Ofical de justiça"}`}
+          title={`${jury.bailiffs.length > 1 ? "Oficiais de justiça" : "Oficial de justiça"}`}
         >
           {jury.bailiffs.map((bailiff, index) => (
             <AdminDescriptionItem

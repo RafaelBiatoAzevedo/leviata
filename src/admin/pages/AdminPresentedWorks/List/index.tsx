@@ -32,7 +32,7 @@ export function AdminPresentedWorks() {
 
   function handleDelete(presentedWork: PresentedWorkResponseDto) {
     showModal({
-      title: "Exclur apresentação",
+      title: "Excluir apresentação",
 
       content: <AdminDeleteContent title={presentedWork.title} />,
 
@@ -46,7 +46,7 @@ export function AdminPresentedWorks() {
         await presentedWorksService.removeBySlug(presentedWork.slug);
 
         showToast({
-          title: "Banca excluído",
+          title: "Apresentação excluída",
           description: `${presentedWork.title.toUpperCase()}`,
           type: "success",
         });
@@ -134,6 +134,7 @@ export function AdminPresentedWorks() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(presentedWork)}
                     >
                       <FiTrash2 />
@@ -147,7 +148,7 @@ export function AdminPresentedWorks() {
       <AdminPagination {...pagination} />
 
       {!loading && !error && items.length === 0 && (
-        <Empty>Nenhum banca encontrada.</Empty>
+        <Empty>Nenhuma apresentação encontrada.</Empty>
       )}
     </Container>
   );

@@ -178,6 +178,7 @@ export function AdminNews() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(news)}
                     >
                       <FiTrash2 />
@@ -191,7 +192,7 @@ export function AdminNews() {
       <AdminPagination {...pagination} />
 
       {!loading && !error && items.length === 0 && (
-        <Empty>Nenhuma notícia encontrado.</Empty>
+        <Empty>Nenhuma notícia encontrada.</Empty>
       )}
     </Container>
   );

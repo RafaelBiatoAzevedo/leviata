@@ -138,7 +138,7 @@ export function NewsView() {
             <AdminDescriptionItem label="Link" value={news.externalUrl} />
 
             <AdminDescriptionItem
-              label="Tipo Relacionamento"
+              label="Tipo de relacionamento"
               value={
                 news.relatedType ? newsRelatedTypeLabels[news.relatedType] : "-"
               }

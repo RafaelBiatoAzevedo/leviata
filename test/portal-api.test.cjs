@@ -200,6 +200,11 @@ const { MeetingAgenda } = require("../src/pages/MeetingAgenda/index.tsx");
 const { Schedule } = require("../src/pages/Schecdule/index.tsx");
 const { default: Painels } = require("../src/pages/Painels/index.tsx");
 const { Home } = require("../src/pages/Home/index.tsx");
+const { Activities } = require("../src/pages/Activities/index.tsx");
+const { Navbar } = require("../src/components/NavBar/index.tsx");
+const {
+  ActivitiesProvider,
+} = require("../src/contexts/ActivitiesContext.tsx");
 const { Researchers } = require("../src/pages/ Researchers/index.tsx");
 const { Publications } = load("../src/pages/ Publications/index.tsx", {
   react: { ...React, useState: () => [activeTab, () => {}] },
@@ -294,6 +299,108 @@ const {
   researchInstrumentPath,
 } = require("../src/utils/researchInstruments.ts");
 const { newsRelatedPath } = require("../src/utils/news.ts");
+
+function renderActivityNavigation() {
+  const html = render(() =>
+    React.createElement(
+      ActivitiesProvider,
+      null,
+      React.createElement(Navbar),
+      React.createElement("main", null, React.createElement(Activities)),
+    ),
+  );
+  const main = html.indexOf("<main>");
+  const activityPaths = (markup) =>
+    [...markup.matchAll(/href="(\/atividades\/[^"#]+)"/g)].map(
+      (match) => match[1],
+    );
+  return {
+    html,
+    cards: activityPaths(html.slice(main)),
+    menu: activityPaths(html.slice(0, main)),
+  };
+}
+
+test("activity cards and both menus share exactly the categories with internal content, including symposia", () => {
+  reset();
+  lists.research = [{ id: "research" }];
+  lists.juries = [{ id: "jury" }];
+  lists.meetings = [
+    { id: "internal-meeting", type: "MEETING", isInternal: true },
+    { id: "internal-symposium", type: "SYMPOSIUM", isInternal: true },
+    { id: "external-seminar", type: "SEMINAR", isInternal: false },
+    { id: "external-documentary", type: "DOCUMENTARY", isInternal: false },
+    { id: "unclassified-seminar", type: "SEMINAR" },
+  ];
+  const { cards, menu } = renderActivityNavigation();
+  assert.deepEqual(cards, [
+    "/atividades/pesquisas",
+    "/atividades/juris-historicos",
+    "/atividades/encontros",
+    "/atividades/simposios",
+  ]);
+  assert.deepEqual(menu, [...cards, ...cards]);
+  assert.deepEqual(requests, [
+    { resource: "research", query: {} },
+    { resource: "juries", query: {} },
+    { resource: "meetings", query: { isInternal: "true" } },
+  ]);
+});
+
+test("empty or external-only activity categories have neither cards nor submenu entries", () => {
+  for (const meetings of [
+    [],
+    ["MEETING", "SEMINAR", "SYMPOSIUM", "DOCUMENTARY"].map((type) => ({
+      type,
+      isInternal: false,
+    })),
+  ]) {
+    reset();
+    lists.meetings = meetings;
+    const { html, cards, menu } = renderActivityNavigation();
+    assert.deepEqual(cards, []);
+    assert.deepEqual(menu, []);
+    assert.ok(!html.includes('aria-label="Submenu de Atividades"'));
+    assert.ok(html.includes("Nenhum registro disponível no momento."));
+  }
+});
+
+test("every internal event category appears exactly once in the activity cards and once in each menu", () => {
+  reset();
+  lists.meetings = ["MEETING", "SEMINAR", "SYMPOSIUM", "DOCUMENTARY"].flatMap(
+    (type) => [
+      { type, isInternal: true },
+      { type, isInternal: true },
+      { type, isInternal: false },
+    ],
+  );
+  const { cards, menu } = renderActivityNavigation();
+  assert.deepEqual(cards, [
+    "/atividades/encontros",
+    "/atividades/seminarios",
+    "/atividades/simposios",
+    "/atividades/mostra-de-documentarios",
+  ]);
+  assert.deepEqual(menu, [...cards, ...cards]);
+});
+
+test("loading and failed activity requests keep unconfirmed categories out of cards and menus", () => {
+  for (const pendingState of [
+    { loading: true },
+    { error: true },
+  ]) {
+    reset();
+    lists.research = [{ id: "research" }];
+    lists.juries = [{ id: "jury" }];
+    lists.meetings = [{ type: "MEETING", isInternal: true }];
+    state = pendingState;
+    const { html, cards, menu } = renderActivityNavigation();
+    assert.deepEqual(cards, []);
+    assert.deepEqual(menu, []);
+    assert.ok(html.includes(pendingState.loading ? 'role="status"' : 'role="alert"'));
+  }
+  reset();
+});
 
 test("each instrument page uses its API type and links to the real slug without fake periods", () => {
   for (const [Component, type] of [

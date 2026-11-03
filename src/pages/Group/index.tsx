@@ -16,7 +16,7 @@ const text = `Criado em 2019, o grupo de pesquisa “Leviatã e o Cativeiro” r
           escravidão. Ao considerar um largo arco temporal, que vai do século
           XVI ao XIX, nossas pesquisas procuram analisar, com base em diferentes
           corpus documentais, a relação entre as diversas instituições
-          luso-brasileiras – Inquisição, família, polícia, Imprensa – e a
+          luso-brasileiras – Inquisição, família, polícia, imprensa – e a
           escravidão de africanos e descendentes. Centradas fundamentalmente no
           espaço que conecta Brasil e Portugal, durante o período colonial e o
           período imperial, nossas investigações perpassam indagações e

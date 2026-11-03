@@ -73,7 +73,7 @@ export function AdminResearch() {
     <Container>
       <AdminPageHeader
         title="Pesquisas"
-        subtitle="Gerencie as pesquisas cadastrados."
+        subtitle="Gerencie as pesquisas cadastradas."
       >
         <AdminButton onClick={() => navigate("/admin/pesquisas/novo")}>
           <FiPlus />
@@ -96,7 +96,7 @@ export function AdminResearch() {
             <th>Capa</th>
             <th>Título</th>
             <th>Descrição</th>
-            <th>N° Participantes</th>
+            <th>Nº de participantes</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -150,6 +150,7 @@ export function AdminResearch() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(search)}
                     >
                       <FiTrash2 />
@@ -163,7 +164,7 @@ export function AdminResearch() {
       <AdminPagination {...pagination} />
 
       {!loading && !error && items.length === 0 && (
-        <Empty>Nenhum pesquisa encontrada.</Empty>
+        <Empty>Nenhuma pesquisa encontrada.</Empty>
       )}
     </Container>
   );

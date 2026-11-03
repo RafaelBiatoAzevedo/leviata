@@ -285,7 +285,7 @@ export function BoardForm() {
               />
 
               <AdminInput
-                label="Slug (Gerado automaticamente)"
+                label="Slug (gerado automaticamente)"
                 value={slug ?? ""}
                 disabled
               />
@@ -316,7 +316,7 @@ export function BoardForm() {
               <FullWidth>
                 <AdminInput
                   label="Link da banca"
-                  placeholder="Url da banca"
+                  placeholder="URL da banca"
                   required
                   error={errors.meetingUrl?.message}
                   {...register("meetingUrl")}

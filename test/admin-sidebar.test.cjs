@@ -134,7 +134,9 @@ test("user management stays exclusive to superadmins even through search", () =>
       superLinks.filter((to) => to !== "/admin/usuarios"),
     );
     assert.deepEqual(adminMenuGroups(role, "usuarios"), []);
-    assert.deepEqual(adminMenuGroups(role, "administração"), []);
+    assert.deepEqual(destinations(adminMenuGroups(role, "administração")), [
+      "/admin/instituicoes",
+    ]);
   }
   assert.deepEqual(destinations(adminMenuGroups("SUPER_ADMIN", "usuarios")), [
     "/admin/usuarios",
@@ -148,6 +150,8 @@ test("menu search accepts accents, case, multiple words and group names", () => 
     ["simpósios", ["/admin/encontros"]],
     ["seminarios", ["/admin/encontros"]],
     ["linhas TEMÁTICAS", ["/admin/tematicas"]],
+    ["instituições", ["/admin/instituicoes"]],
+    ["países", ["/admin/instituicoes"]],
     ["comunicacao", ["/admin/noticias", "/admin/agenda", "/admin/newsletter"]],
     ["nenhuma seção assim", []],
   ])

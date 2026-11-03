@@ -61,7 +61,7 @@ export function Home() {
           escravidão. Ao considerar um largo arco temporal, que vai do século
           XVI ao XIX, nossas pesquisas procuram analisar a relação entre as
           diversas instituições luso-brasileiras – Inquisição, família, polícia,
-          Imprensa – e a escravidão de africanos e descendentes.
+          imprensa – e a escravidão de africanos e descendentes.
         </h1>
         <ButtonLink to="/grupo/" title="Saiba mais"></ButtonLink>
         <HistoryDivider />

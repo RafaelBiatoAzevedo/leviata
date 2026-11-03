@@ -178,6 +178,7 @@ export function AdminPeople() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(person)}
                     >
                       <FiTrash2 />

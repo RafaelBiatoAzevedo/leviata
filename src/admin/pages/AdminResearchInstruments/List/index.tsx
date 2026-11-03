@@ -49,7 +49,7 @@ export function AdminResearchInstruments() {
         await researchInstrumentsService.removeBySlug(researchInstrument.slug);
 
         showToast({
-          title: "Instrumento de Pesquisa excluído",
+          title: "Instrumento de pesquisa excluído",
           description: `${researchInstrument.title.toUpperCase()}`,
           type: "success",
         });
@@ -66,8 +66,8 @@ export function AdminResearchInstruments() {
   return (
     <Container>
       <AdminPageHeader
-        title="Instrumento de Pesquisas"
-        subtitle="Gerencie os instrumentos pesquisas cadastrados."
+        title="Instrumentos de pesquisa"
+        subtitle="Gerencie os instrumentos de pesquisa cadastrados."
       >
         <AdminButton
           onClick={() => navigate("/admin/instrumentos-pesquisa/novo")}
@@ -81,7 +81,7 @@ export function AdminResearchInstruments() {
         <AdminSearchBar
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Pesquisar instrumento de pesquisas..."
+          placeholder="Pesquisar instrumentos de pesquisa..."
         />
         <AdminSelect
           label="Tipo"
@@ -156,6 +156,7 @@ export function AdminResearchInstruments() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(researchInstrument)}
                     >
                       <FiTrash2 />

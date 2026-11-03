@@ -3,20 +3,23 @@ import { Footer } from "../../components/Footer";
 import { Navbar } from "../../components/NavBar";
 import { ScrollToTop } from "../../components/ScrollToTop";
 import { Portal, PortalGlobalStyle } from "./styles";
+import { ActivitiesProvider } from "../../contexts/ActivitiesContext";
 
 export function MainLayout() {
   return (
-    <Portal>
-      <PortalGlobalStyle />
-      <ScrollToTop />
+    <ActivitiesProvider>
+      <Portal>
+        <PortalGlobalStyle />
+        <ScrollToTop />
 
-      <Navbar />
+        <Navbar />
 
-      <main>
-        <Outlet />
-      </main>
+        <main>
+          <Outlet />
+        </main>
 
-      <Footer />
-    </Portal>
+        <Footer />
+      </Portal>
+    </ActivitiesProvider>
   );
 }

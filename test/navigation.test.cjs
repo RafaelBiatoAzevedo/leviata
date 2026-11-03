@@ -83,7 +83,16 @@ function harness(pathname = "/") {
             useLocation: () => ({ pathname }),
             useNavigate: () => (value) => navigations.push(value),
           }
-        : localRequire(id);
+        : id === "../../contexts/activities-context"
+          ? {
+              useActivities: () => ({
+                activities: menus.find((menu) => menu.path === "/atividades")
+                  .children,
+                loading: false,
+                error: false,
+              }),
+            }
+          : localRequire(id);
   loaded._compile(
     compile(fs.readFileSync(filename, "utf8"), filename),
     filename,

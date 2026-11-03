@@ -34,7 +34,11 @@ export function AdminBooks() {
 
   const { items, loading, error, load, pagination } = useAdminList(
     booksService.getPage,
-    { search: search.trim() || undefined },
+    {
+      search: search.trim() || undefined,
+      sortBy: "year",
+      sortOrder: "desc",
+    },
   );
 
   function handleDelete(book: BookResponseDto) {
@@ -150,6 +154,7 @@ export function AdminBooks() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(book)}
                     >
                       <FiTrash2 />

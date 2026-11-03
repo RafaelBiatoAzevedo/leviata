@@ -41,6 +41,7 @@ A aplicação reúne pesquisadores, produção acadêmica, instrumentos de pesqu
 - Login, renovação de sessão e edição da própria conta.
 - Dashboard com indicadores do acervo e atalhos para as áreas de conteúdo.
 - Cadastro e edição de conteúdo, imagens, galerias e vínculos entre registros.
+- Instituições com nome, sigla e país, busca, paginação e exclusão conforme as permissões da conta.
 - Participantes externos, com dados acadêmicos e de contato opcionais.
 - Editor de newsletters, prévia, PDF e acompanhamento dos envios.
 - Notificações e moderação de comentários, conforme as permissões da conta.
@@ -127,6 +128,7 @@ Para entrar no admin, use uma conta cadastrada na API. O frontend não cria uma 
 | `npm run lint` | Análise estática com ESLint |
 | `npm run test:admin` | Dashboard, login, menu e responsividade do admin |
 | `npm run test:people` | Pessoas e participantes externos |
+| `npm run test:institutions` | Cadastro, edição, detalhes e exclusão de instituições |
 | `npm run test:boards` | Bancas com data, hora e tipo: qualificação ou defesa |
 | `npm run test:portal` | Consumo da API e apresentação do portal |
 | `npm run test:navigation` | Navegação e menus |

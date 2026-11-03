@@ -50,7 +50,7 @@ export function AdminBoards() {
         await boardsService.removeBySlug(board.slug);
 
         showToast({
-          title: "Banca excluído",
+          title: "Banca excluída",
           description: `${board.title.toUpperCase()}`,
           type: "success",
         });
@@ -105,7 +105,7 @@ export function AdminBoards() {
             <th>Data e hora</th>
             <th>Candidato</th>
             <th>Orientador</th>
-            <th>N° Participantes</th>
+            <th>Nº de participantes</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -156,6 +156,7 @@ export function AdminBoards() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(board)}
                     >
                       <FiTrash2 />
@@ -169,7 +170,7 @@ export function AdminBoards() {
       <AdminPagination {...pagination} />
 
       {!loading && !error && items.length === 0 && (
-        <Empty>Nenhum banca encontrada.</Empty>
+        <Empty>Nenhuma banca encontrada.</Empty>
       )}
     </Container>
   );

@@ -7,6 +7,8 @@ export interface InstitutionResponseDto {
 
   acronym: string;
 
+  countryId: string;
+
   country?: CountryResponseDto;
 
   createdAt: string;

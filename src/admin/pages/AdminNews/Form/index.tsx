@@ -231,7 +231,7 @@ export function NewsForm() {
 
       showToast({
         title: "Capa atualizada com sucesso",
-        description: "A Capa do notícia foi atualizada.",
+        description: "A capa da notícia foi atualizada.",
         type: "success",
       });
 
@@ -269,14 +269,14 @@ export function NewsForm() {
               <AdminFormGrid>
                 <AdminInput
                   label="Título"
-                  placeholder="Título do notícia"
+                  placeholder="Título da notícia"
                   required
                   error={errors.title?.message}
                   {...register("title")}
                 />
 
                 <AdminInput
-                  label="Slug (Gerado automaticamente)"
+                  label="Slug (gerado automaticamente)"
                   value={slug ?? ""}
                   disabled
                 />

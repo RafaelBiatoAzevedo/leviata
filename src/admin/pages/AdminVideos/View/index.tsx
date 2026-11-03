@@ -28,7 +28,7 @@ export function VideoView() {
       setVideo(response.data);
     } catch (error) {
       showToast({
-        title: "Ops! Não foi possível carregar a video",
+        title: "Ops! Não foi possível carregar o vídeo",
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });
@@ -44,7 +44,7 @@ export function VideoView() {
   }, [video, loadVideo]);
 
   if (!video) {
-    return <AdminLoading text="Carregando video..." />;
+    return <AdminLoading text="Carregando vídeo..." />;
   }
 
   return (
@@ -62,7 +62,7 @@ export function VideoView() {
           </AdminButton>
         </HeaderActions>
 
-        <Title>Banca</Title>
+        <Title>Vídeo</Title>
       </Header>
 
       <AdminFormCard>

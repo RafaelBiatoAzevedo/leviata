@@ -287,7 +287,7 @@ export function MeetingForm() {
                 />
 
                 <AdminInput
-                  label="Slug (Gerado automaticamente)"
+                  label="Slug (gerado automaticamente)"
                   value={slug ?? ""}
                   disabled
                 />
@@ -334,19 +334,19 @@ export function MeetingForm() {
           <AdminSection title="Links">
             <AdminInput
               label="Link de inscrições"
-              placeholder="ex: https://eventos.unicamp.br/inscricao"
+              placeholder="Ex.: https://eventos.unicamp.br/inscricao"
               error={errors.registrationUrl?.message}
               {...register("registrationUrl")}
             />
             <AdminInput
               label="Link do conteúdo"
-              placeholder=" ex: https://meet.google.com/abc-defg-hij"
+              placeholder="Ex.: https://meet.google.com/abc-defg-hij"
               error={errors.recordingUrl?.message}
               {...register("recordingUrl")}
             />
             <AdminInput
               label="Link da transmissão"
-              placeholder="ex: https://www.youtube.com/watch?v=abc123"
+              placeholder="Ex.: https://www.youtube.com/watch?v=abc123"
               error={errors.meetingUrl?.message}
               {...register("meetingUrl")}
             />

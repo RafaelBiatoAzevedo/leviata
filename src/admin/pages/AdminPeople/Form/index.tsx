@@ -188,7 +188,7 @@ export function PersonForm() {
                 />
 
                 <AdminInput
-                  label="Slug (Gerado automaticamente)"
+                  label="Slug (gerado automaticamente)"
                   value={slug ?? ""}
                   disabled
                 />
@@ -260,7 +260,7 @@ export function PersonForm() {
 
               <AdminInput
                 label="Título honorífico"
-                placeholder="ex: Professor, Prof."
+                placeholder="Ex.: Professor, Prof."
                 {...register("honorificTitle")}
               />
 

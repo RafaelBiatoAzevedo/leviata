@@ -25,6 +25,8 @@ export function AdminNewsletters() {
     newsletterService.getPage,
     {
       search: search.trim() || undefined,
+      sortBy: "publishedAt",
+      sortOrder: "desc",
     },
   );
 
@@ -121,6 +123,7 @@ export function AdminNewsletters() {
                     </AdminIconButton>
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => remove(item)}
                     >
                       <FiTrash2 />

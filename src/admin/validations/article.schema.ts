@@ -33,7 +33,7 @@ export const articleSchema = z.object({
 
   year: z
     .number({
-      message: "Informe o ano. Ex: 2020",
+      message: "Informe o ano. Ex.: 2020",
     })
     .int("Informe um ano válido.")
     .min(1, "Informe um ano válido."),
@@ -48,7 +48,7 @@ export const articleSchema = z.object({
 
   externalUrl: z
     .string()
-    .min(1, "Informe uma url.")
+    .min(1, "Informe uma URL.")
     .url("Informe uma URL válida."),
 
   authors: z.array(z.string()).min(1, "Adicione pelo menos um autor."),

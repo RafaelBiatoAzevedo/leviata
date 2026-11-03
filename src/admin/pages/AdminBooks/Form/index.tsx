@@ -237,7 +237,7 @@ export function BookForm() {
 
       showToast({
         title: "Capa atualizada com sucesso",
-        description: "A Capa do livro foi atualizada.",
+        description: "A capa do livro foi atualizada.",
         type: "success",
       });
 
@@ -298,7 +298,7 @@ export function BookForm() {
 
                 <AdminInput
                   label="ISBN"
-                  labelHint="Pode conter números e hífens"
+                  labelHint="Pode conter números e hifens"
                   type="text"
                   placeholder="Ex.: 978-85-359-3392-9"
                   error={errors.isbn?.message}
@@ -323,7 +323,7 @@ export function BookForm() {
               </AdminFormGrid>
               <AdminInput
                 label="Link"
-                placeholder="Url do livro"
+                placeholder="URL do livro"
                 required
                 error={errors.externalUrl?.message}
                 {...register("externalUrl")}

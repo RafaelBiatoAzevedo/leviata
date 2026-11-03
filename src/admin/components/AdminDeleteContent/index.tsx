@@ -8,7 +8,7 @@ export function AdminDeleteContent({ title }: AdminConfirmContentProps) {
   return (
     <Container>
       <Message>
-        Tem certeza que deseja excluir <strong>{title}</strong>?
+        Tem certeza de que deseja excluir <strong>{title}</strong>?
       </Message>
 
       <Warning>Esta ação não poderá ser desfeita.</Warning>

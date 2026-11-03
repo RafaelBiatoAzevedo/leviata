@@ -271,7 +271,7 @@ export function ResearchInstrumentForm() {
                 />
 
                 <AdminInput
-                  label="Slug (Gerado automaticamente)"
+                  label="Slug (gerado automaticamente)"
                   value={slug ?? ""}
                   disabled
                 />
@@ -308,7 +308,7 @@ export function ResearchInstrumentForm() {
           <AdminSection title="Links">
             <AdminInput
               label="Link do conteúdo"
-              placeholder="Url do instrumento de pesquisa"
+              placeholder="URL do instrumento de pesquisa"
               required
               error={errors.externalUrl?.message}
               {...register("externalUrl")}

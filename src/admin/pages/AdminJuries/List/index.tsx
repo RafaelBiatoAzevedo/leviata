@@ -108,7 +108,7 @@ export function AdminJuries() {
             <th>Capa</th>
             <th>Título</th>
             <th>Data</th>
-            <th>N° Participantes</th>
+            <th>Nº de participantes</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -159,6 +159,7 @@ export function AdminJuries() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(jury)}
                     >
                       <FiTrash2 />

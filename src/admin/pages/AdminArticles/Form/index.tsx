@@ -230,7 +230,7 @@ export function ArticleForm() {
 
       showToast({
         title: "Capa atualizada com sucesso",
-        description: "A Capa do artigo foi atualizada.",
+        description: "A capa do artigo foi atualizada.",
         type: "success",
       });
 
@@ -275,7 +275,7 @@ export function ArticleForm() {
                 />
 
                 <AdminInput
-                  label="Slug (Gerado automaticamente)"
+                  label="Slug (gerado automaticamente)"
                   value={slug ?? ""}
                   disabled
                 />
@@ -297,7 +297,7 @@ export function ArticleForm() {
 
                 <AdminYearInput
                   label="Ano de publicação"
-                  placeholder="ex: 2025"
+                  placeholder="Ex.: 2025"
                   required
                   {...register("year", { valueAsNumber: true })}
                   error={errors.year?.message}
@@ -313,7 +313,7 @@ export function ArticleForm() {
 
                 <AdminInput
                   label="Link"
-                  placeholder="Url do artigo ou dossiê"
+                  placeholder="URL do artigo ou dossiê"
                   required
                   error={errors.externalUrl?.message}
                   {...register("externalUrl")}

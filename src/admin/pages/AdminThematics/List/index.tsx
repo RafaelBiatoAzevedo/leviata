@@ -45,7 +45,7 @@ export function AdminThematics() {
         await thematicsService.removeBySlug(thematic.slug);
 
         showToast({
-          title: "Temática excluído",
+          title: "Temática excluída",
           description: `${thematic.title.toUpperCase()}`,
           type: "success",
         });
@@ -136,6 +136,7 @@ export function AdminThematics() {
 
                     <AdminIconButton
                       title="Excluir"
+                      permission="delete"
                       onClick={() => handleDelete(thematic)}
                     >
                       <FiTrash2 />
@@ -149,7 +150,7 @@ export function AdminThematics() {
       <AdminPagination {...pagination} />
 
       {!loading && !error && items.length === 0 && (
-        <Empty>Nenhum temática encontrada.</Empty>
+        <Empty>Nenhuma temática encontrada.</Empty>
       )}
     </Container>
   );

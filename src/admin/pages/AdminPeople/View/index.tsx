@@ -150,7 +150,7 @@ export function PersonView() {
       <AdminFormCard>
         <AdminSection title="Contato">
           <AdminDescriptionList>
-            <AdminDescriptionItem label="Email" value={person.email} />
+            <AdminDescriptionItem label="E-mail" value={person.email} />
 
             <AdminDescriptionItem label="Lattes" value={person.lattesUrl} />
 

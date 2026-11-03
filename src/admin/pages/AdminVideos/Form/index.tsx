@@ -91,7 +91,7 @@ export function VideoForm() {
 
   function handleModal() {
     showModal({
-      title: "Adicionar Participante",
+      title: "Adicionar participante",
 
       content: (
         <div style={{ padding: "2rem 0rem" }}>
@@ -101,7 +101,7 @@ export function VideoForm() {
             options={[
               {
                 value: "",
-                label: "Selecione um Participante",
+                label: "Selecione um participante",
               },
               ...people
                 .filter((person) => !(_people || []).includes(person.id))
@@ -169,7 +169,7 @@ export function VideoForm() {
         await videosService.updateBySlug(slug!, data);
 
         showToast({
-          title: "Video atualizada",
+          title: "Vídeo atualizado",
           description: "Os dados foram atualizados com sucesso.",
           type: "success",
         });
@@ -177,8 +177,8 @@ export function VideoForm() {
         await videosService.create(mapVideoToCreateDto(data));
 
         showToast({
-          title: "Video criada",
-          description: "A video foi cadastrada com sucesso.",
+          title: "Vídeo criado",
+          description: "O vídeo foi cadastrado com sucesso.",
           type: "success",
         });
       }
@@ -189,7 +189,7 @@ export function VideoForm() {
         error instanceof Error ? error.message : "Erro desconhecido";
 
       showToast({
-        title: isEdit ? "Erro ao atualizar video" : "Erro ao criar video",
+        title: isEdit ? "Erro ao atualizar vídeo" : "Erro ao criar vídeo",
         description:
           message ?? "Não foi possível salvar os dados. Tente novamente.",
         type: "danger",
@@ -200,8 +200,8 @@ export function VideoForm() {
   return (
     <Container>
       <AdminPageHeader
-        title={isEdit ? "Editar video" : "Novo video"}
-        subtitle="Cadastre ou atualize os dados da video."
+        title={isEdit ? "Editar vídeo" : "Novo vídeo"}
+        subtitle="Cadastre ou atualize os dados do vídeo."
       />
 
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -210,22 +210,22 @@ export function VideoForm() {
             <AdminFormGrid>
               <AdminInput
                 label="Título"
-                placeholder="Título da video"
+                placeholder="Título do vídeo"
                 required
                 error={errors.title?.message}
                 {...register("title")}
               />
 
               <AdminInput
-                label="Slug (Gerado automaticamente)"
+                label="Slug (gerado automaticamente)"
                 value={slug ?? ""}
                 disabled
               />
             </AdminFormGrid>
             <AdminInput
-              label="Link do video"
+              label="Link do vídeo"
               required
-              placeholder="ex: https://www.youtube.com/watch?v=abc123"
+              placeholder="Ex.: https://www.youtube.com/watch?v=abc123"
               error={errors.videoUrl?.message}
               {...register("videoUrl")}
             />
@@ -244,7 +244,7 @@ export function VideoForm() {
 
         <AdminFormCard>
           <AdminSection
-            title="Participantes do video"
+            title="Participantes do vídeo"
             action={
               <AdminButton size="medium" type="button" onClick={handleModal}>
                 <FiPlus />

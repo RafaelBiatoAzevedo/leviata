@@ -105,6 +105,7 @@ export function AdminGallery({
                   variant="outline"
                   disabled={disabled}
                   aria-label={`Remover imagem ${index + 1}`}
+                  permission={image.id ? "delete" : undefined}
                   onClick={() => gallery.remove(image.key)}
                 >
                   <FiTrash2 /> Remover imagem

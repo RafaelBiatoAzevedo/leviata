@@ -39,7 +39,7 @@ export function ArticleView() {
       setArticle(response.data);
     } catch (error) {
       showToast({
-        title: "Ops! Não foi possível carregar a artigo ou dossiê",
+        title: "Ops! Não foi possível carregar o artigo ou dossiê",
         description: `Ocorreu um erro ao buscar os dados. Tente novamente. \n ${error}`,
         type: "danger",
       });
@@ -105,7 +105,7 @@ export function ArticleView() {
 
               <AdminDescriptionItem label="Editora" value={article.journal} />
 
-              <AdminDescriptionItem label="Doi" value={article.doi} />
+              <AdminDescriptionItem label="DOI" value={article.doi} />
 
               <AdminDescriptionItem label="Link" value={article.externalUrl} />
             </AdminDescriptionList>

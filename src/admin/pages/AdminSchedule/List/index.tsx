@@ -31,6 +31,8 @@ export function AdminSchedule() {
     scheduleService.getPage,
     {
       search: search.trim() || undefined,
+      sortBy: "date",
+      sortOrder: "desc",
     },
   );
 
@@ -122,6 +124,7 @@ export function AdminSchedule() {
                       </AdminIconButton>
                       <AdminIconButton
                         title="Excluir"
+                        permission="delete"
                         onClick={() => handleDelete(item)}
                       >
                         <FiTrash2 />

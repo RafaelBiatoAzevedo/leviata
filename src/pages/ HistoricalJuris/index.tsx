@@ -11,7 +11,7 @@ import { GiInjustice } from "react-icons/gi";
 const text = `“Júris Históricos: reflexões críticas sobre passado, presente, história e justiça no Brasil” 
     é um projeto que teve início em 2018, com a realização de um Júri Simulado baseado em um processo criminal 
     de 1848. A atividade é uma iniciativa dos professores doutores Ricardo Alexandre Ferreira e Paulo Cesar Correia 
-    Borges, dos cursos de graduação e de pós-graduação em História e Direito do UNESP/campus de Franca.\n
+    Borges, dos cursos de graduação e de pós-graduação em História e Direito da UNESP, campus de Franca.\n
     Lançamos mão de processos criminais instaurados na Comarca de Franca durante o século XIX, lotados no 
     Arquivo Histórico Municipal “Capitão Hipólito Antônio Pinheiro”, para a apuração de crimes de homicídio, 
     reproduzindo os julgamentos com alunos e com a participação da comunidade externa à UNESP, além de colocar 
