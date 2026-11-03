@@ -779,6 +779,67 @@ test("external jury participants remain visible in the portal and admin without 
   assert.ok(!admin.includes("undefined"));
 });
 
+test("each jury list hides the external unmentioned person and keeps actual participants", () => {
+  const roles = [
+    ["judges", "Juízes", "Não Mencionado"],
+    ["jurors", "Jurados", "  não mencionado  "],
+    ["prosecutors", "Acusação", "NÃO MENCIONADO"],
+    ["defenders", "Defesa", "Nao   Mencionado"],
+    ["bailiffs", "Oficiais de justiça", "Na\u0303o\tMencionado"],
+  ];
+  for (const [visibleRole, visibleTitle] of roles) {
+    reset();
+    records.juries = {
+      id: "jury",
+      title: "Júri com participantes informados",
+      date: "2026-11-03T00:00:00Z",
+      images: [],
+      ...Object.fromEntries(roles.map(([role, , name]) => [
+        role,
+        [person("unmentioned", name, {
+          category: "EXTERNO",
+          imageUrl: "https://example.test/nao-mencionado.png",
+          academicTitle: null,
+          institution: null,
+        })],
+      ])),
+    };
+    records.juries[visibleRole].push(person("actual", "Ana Convidada", {
+      category: "EXTERNO", academicTitle: null, institution: null,
+    }));
+    const html = render(GalleryDetails, { resource: "juries", label: "o júri" });
+    assert.ok(html.includes("Ana Convidada"));
+    assert.ok(html.includes("Participante externo"));
+    for (const [, title] of roles) assert.equal(html.includes(title), title === visibleTitle);
+    assert.ok(!html.includes("Mencionado"));
+    assert.ok(!html.includes("mencionado"));
+    assert.ok(!html.includes("✠"), "Hidden groups must not leave separators");
+  }
+});
+
+test("a jury with only unmentioned people has no participant lists or extra separators, while the admin retains the saved links", () => {
+  reset();
+  const placeholder = person("unmentioned", "Não Mencionado", {
+    category: "EXTERNO", academicTitle: null, institution: null,
+  });
+  records.juries = {
+    id: "jury",
+    title: "Júri com participantes não informados",
+    date: "2026-11-03T00:00:00Z",
+    images: [],
+    recordingUrl: "https://example.test/gravacao",
+    judges: [placeholder], jurors: [placeholder], prosecutors: [placeholder],
+    defenders: [placeholder], bailiffs: [placeholder],
+  };
+  const html = render(GalleryDetails, { resource: "juries", label: "o júri" });
+  for (const title of ["Juízes", "Jurados", "Acusação", "Defesa", "Oficiais de justiça", "Não Mencionado"])
+    assert.ok(!html.includes(title), title);
+  assert.ok(html.includes(records.juries.title));
+  assert.ok(html.includes('href="https://example.test/gravacao"'));
+  assert.equal((html.match(/✠/g) || []).length, 1);
+  assert.ok(render(JuryView).includes("Não Mencionado"));
+});
+
 test("external people linked to research appear as participants rather than researchers", () => {
   reset();
   const external = person("external", "Convidado da pesquisa", { category: "EXTERNO" });
@@ -1523,7 +1584,7 @@ test("internal news have a real detail view and valid related destinations", () 
   assert.ok(html.includes('src="https://example.org/noticia.jpg"'));
   assert.equal((html.match(/❧/g) || []).length, 2);
   assert.ok(html.includes("Acessos e materiais"));
-  assert.ok(html.includes("<span>Acessar fonte original</span>"));
+  assert.ok(html.includes("<span>Acessar conteúdo</span>"));
   assert.ok(
     html.includes(
       'href="https://example.org/fonte" target="_blank" rel="noopener noreferrer"',

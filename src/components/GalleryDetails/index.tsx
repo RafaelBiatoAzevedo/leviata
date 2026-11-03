@@ -71,6 +71,16 @@ interface PeopleGroup {
   showAcademicAbbreviation?: boolean;
 }
 
+function isUnmentionedParticipant(person: Partial<PersonResponseDto>) {
+  const name = person.name
+    ?.normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLocaleLowerCase("pt-BR");
+  return person.category === PersonCategory.EXTERNO && name === "nao mencionado";
+}
+
 export function GalleryDetails({
   resource,
   label,
@@ -190,9 +200,16 @@ export function GalleryDetails({
                 },
               ]
             : [{ title: "Pesquisadores", people: data.people }];
-  const visibleGroups = groups.filter((group) =>
-    group.people?.some((person) => person?.name?.trim()),
-  );
+  const visibleGroups = groups
+    .map((group) => ({
+      ...group,
+      people: group.people?.filter(
+        (person) =>
+          person?.name?.trim() &&
+          (resource !== "juries" || !isUnmentionedParticipant(person)),
+      ),
+    }))
+    .filter((group) => group.people?.length);
   const commentTargets: Partial<Record<GalleryResource, CommentTarget>> = {
     boards: "BOARD",
     juries: "JURY",
