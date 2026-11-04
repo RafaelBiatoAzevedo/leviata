@@ -217,9 +217,21 @@ export function AdminAnalytics() {
           <S.Eyebrow>Pronto para os primeiros acessos</S.Eyebrow>
           <h2>A próxima história começa com dados reais.</h2>
           <p>
-            O Observatório está preparado. A coleta ainda precisa ser
-            configurada e ativada no portal e no servidor, conforme o guia de
-            implantação. Os gráficos serão preenchidos a partir dessa ativação.
+            A API respondeu, mas a coleta está desativada ou há variáveis de
+            ambiente ausentes ou inválidas no servidor. Os gráficos serão
+            preenchidos a partir da ativação.
+          </p>
+          {!!report.missing?.length && (
+            <p>
+              <strong>Variáveis da API que precisam de ajuste:</strong>
+              <br />
+              <code>{report.missing.join(", ")}</code>
+            </p>
+          )}
+          <p>
+            Revise essas variáveis no ambiente da API usado por este portal e
+            faça uma nova publicação do backend. A criação das tabelas no banco
+            e a ativação da coleta são etapas separadas.
           </p>
           <p>
             Não há histórico anterior à coleta. Nenhuma integração paga é

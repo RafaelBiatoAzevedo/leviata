@@ -107,6 +107,13 @@ metadados e `data`. Sem configuração/conexão, `data: null`; ativo e sem event
 totais zero. Métricas não suportadas são `null`. Datas impossíveis/futuras,
 intervalos acima de 90 dias ou fora da janela e campos extras são rejeitados.
 
+O estado “Aguardando configuração” corresponde a `not_configured`, antes de
+qualquer consulta ao banco. O painel mostra os nomes das variáveis ausentes ou
+inválidas retornados em `missing`, sem seus valores. Revise essas variáveis no
+ambiente da API indicado por `VITE_API_BASE_URL` e republique o backend. Ter as
+tabelas `AnalyticsEvent` e `AnalyticsMonth` não ativa a coleta. Falha na migration
+ou na conexão, após a configuração válida, corresponde a `unavailable`.
+
 Cache interno de cinco minutos, 32 intervalos e quatro consultas simultâneas;
 falhas em cache por 15 segundos. Atualização manual respeita o cache.
 `generatedAt` é a hora do snapshot, não a hora do último visitante. HTTP privado
