@@ -136,6 +136,7 @@ test("user management stays exclusive to superadmins even through search", () =>
     assert.deepEqual(adminMenuGroups(role, "usuarios"), []);
     assert.deepEqual(destinations(adminMenuGroups(role, "administração")), [
       "/admin/instituicoes",
+      "/admin/inscritos-newsletter",
     ]);
   }
   assert.deepEqual(destinations(adminMenuGroups("SUPER_ADMIN", "usuarios")), [
@@ -152,6 +153,8 @@ test("menu search accepts accents, case, multiple words and group names", () => 
     ["linhas TEMÁTICAS", ["/admin/tematicas"]],
     ["instituições", ["/admin/instituicoes"]],
     ["países", ["/admin/instituicoes"]],
+    ["inscritos", ["/admin/inscritos-newsletter"]],
+    ["destinatários", ["/admin/inscritos-newsletter"]],
     ["comunicacao", ["/admin/noticias", "/admin/agenda", "/admin/newsletter"]],
     ["nenhuma seção assim", []],
   ])
@@ -166,6 +169,7 @@ test("nested pages highlight only their own section and collapsed links retain a
     for (const [pathname, expected] of [
       ["/admin", "/admin"],
       ["/admin/juris/ii-juri/editar", "/admin/juris"],
+      ["/admin/inscritos-newsletter/inscrito/editar", "/admin/inscritos-newsletter"],
       ["/admin/jurisdicao", null],
     ]) {
       const html = renderToStaticMarkup(

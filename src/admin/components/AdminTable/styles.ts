@@ -101,11 +101,21 @@ const cards = css`
     border-top: 1px solid ${({ theme }) => theme.colors.border};
   }
   td[data-kind="actions"] {
+    display: flex;
+    flex-wrap: wrap;
     align-self: end;
     align-items: center;
+    gap: 8px 12px;
     margin-top: 4px;
     border-top: 1px solid ${({ theme }) => theme.colors.border};
     background: ${({ theme }) => theme.colors.background};
+    ${CellLabel} {
+      flex: 1 0 auto;
+    }
+    ${CellValue} {
+      max-width: 100%;
+      margin-left: auto;
+    }
     ${CellValue} > div {
       display: flex;
       flex-wrap: wrap;

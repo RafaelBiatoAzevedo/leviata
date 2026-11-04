@@ -1,5 +1,29 @@
 # Envio de newsletters no admin
 
+## Gerenciar inscritos
+
+Em **Administração → Inscritos da newsletter**, logo abaixo de **Instituições**,
+administradores podem listar, pesquisar, visualizar, cadastrar, editar e remover
+inscritos. A lista reúne os cadastros feitos pelo portal e pelo painel, com
+paginação e filtro por status. O formulário aceita e-mail, nome e telefone,
+além das opções de cadastro ativo e recebimento por e-mail.
+
+A inscrição pública pelo portal continua em `POST /newsletter/subscribe`.
+O CRUD administrativo usa `GET /newsletter-subscribers` e
+`POST /newsletter-subscribers`, além de `GET`, `PATCH` e `DELETE` no endereço
+`/newsletter-subscribers/:id`. A remoção fica disponível para administradores
+e superadministradores nessa seção; as permissões das outras seções continuam
+as mesmas.
+
+Remover um inscrito desativa seu recebimento, retira-o da lista e preserva os
+registros de entregas anteriores. Um novo cadastro do mesmo e-mail reutiliza
+sua identidade para evitar entregas duplicadas de edições já recebidas.
+E-mails já cadastrados e não removidos devem ser alterados pela edição.
+
+Validação do cadastro administrativo: `npm run test:newsletter-subscribers`.
+
+## Salvar e enviar edições
+
 O formulário oferece **Enviar para todos os inscritos após salvar**, desmarcado
 por padrão. Se escolhida, a edição é cadastrada primeiro e depois encaminhada à
 fila de envio pelo seu ID. Para enviar, a data de publicação deve ser de hoje ou

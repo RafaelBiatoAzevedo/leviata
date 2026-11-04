@@ -58,6 +58,9 @@ import { AdminNotifications } from "../pages/AdminNotifications";
 import { AdminInstitutions } from "../pages/AdminInstitutions/List";
 import { InstitutionForm } from "../pages/AdminInstitutions/Form";
 import { InstitutionView } from "../pages/AdminInstitutions/View";
+import { AdminNewsletterSubscribers } from "../pages/AdminNewsletterSubscribers/List";
+import { NewsletterSubscriberForm } from "../pages/AdminNewsletterSubscribers/Form";
+import { NewsletterSubscriberView } from "../pages/AdminNewsletterSubscribers/View";
 
 export const adminRoutes = (
   <Route
@@ -79,6 +82,22 @@ export const adminRoutes = (
     <Route path="instituicoes/novo" element={<InstitutionForm />} />
     <Route path="instituicoes/:id" element={<InstitutionView />} />
     <Route path="instituicoes/:id/editar" element={<InstitutionForm />} />
+    <Route
+      path="inscritos-newsletter"
+      element={<AdminNewsletterSubscribers />}
+    />
+    <Route
+      path="inscritos-newsletter/novo"
+      element={<NewsletterSubscriberForm />}
+    />
+    <Route
+      path="inscritos-newsletter/:id"
+      element={<NewsletterSubscriberView />}
+    />
+    <Route
+      path="inscritos-newsletter/:id/editar"
+      element={<NewsletterSubscriberForm />}
+    />
     <Route element={<SuperAdminRoute />}>
       <Route path="usuarios" element={<AdminUsers />} />
       <Route path="usuarios/novo" element={<UserForm />} />

@@ -9,7 +9,6 @@ import {
   FiFileText,
   FiFolder,
   FiHome,
-  FiGlobe,
   FiLayers,
   FiMail,
   FiMic,
@@ -19,7 +18,7 @@ import {
   FiVideo,
 } from "react-icons/fi";
 import { GiInjustice } from "react-icons/gi";
-import { TbFolderSearch } from "react-icons/tb";
+import { TbFolderSearch, TbSchool } from "react-icons/tb";
 
 interface MenuItem {
   to: string;
@@ -110,8 +109,14 @@ const groups: MenuGroup[] = [
       {
         to: "/admin/instituicoes",
         label: "Instituições",
-        icon: FiGlobe,
+        icon: TbSchool,
         keywords: "universidades faculdades siglas países",
+      },
+      {
+        to: "/admin/inscritos-newsletter",
+        label: "Inscritos da newsletter",
+        icon: FiMail,
+        keywords: "assinantes destinatários contatos e-mail",
       },
       {
         to: "/admin/usuarios",

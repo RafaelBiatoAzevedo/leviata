@@ -151,6 +151,7 @@ test("the panorama covers every content area in the sidebar exactly once, separa
           "/admin/observatorio",
           "/admin/documentacao",
           "/admin/instituicoes",
+          "/admin/inscritos-newsletter",
         ].includes(to),
     );
   assert.deepEqual(
