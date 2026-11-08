@@ -15,6 +15,8 @@ const Details = styled.details`
   color: inherit;
   summary {
     cursor: pointer;
+    text-align: center;
+    list-style-position: inside;
     text-decoration: underline;
     text-underline-offset: 4px;
   }
